@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
+
+ <head>
+  <title> </title>
+  <script type="text/javascript" src="__PUBLIC__/js/jquery-1.5.2.min.js"></script>
+  <script type="text/javascript" src="http://192.168.61.100:8080/socket.io/socket.io.js"></script>
+  <!--{literal}-->
+  <script>
+		  var socket = io.connect('http://192.168.61.100:8080');
+		  var content = $('#content');
+		  socket.on('news', function (data) {
+		  var dataObj=eval("("+data.msg+")");
+		  	  if(dataObj.BJGG) {
+		  	  	$("#bjgg_num").html(parseInt($("#bjgg_num").html()) + dataObj.BJGG.length);
+		  	  }
+		  	  if(dataObj.BJZY) {
+		  	  	$("#bjzy_num").html(parseInt($("#bjzy_num").html()) + dataObj.BJZY.length);
+		  	  }
+		  	  
+		  });
+  </script>
+  <!--{/literal}-->
+ </head>
+ <body>
+ <div id="msg">
+		你有<span id="bjgg_num">0</span>条班级公告未读！<br/>
+		你有<span id="bjzy_num">0</span>条班级作业未读！
+	</div>
+ </body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="JS代码,相册代码,JS广告代码,JS特效代码" />
+<meta name="description" content="此代码内容为腾讯jquery图片浏览代码，属于站长常用代码，更多相册代码代码请访问懒人图库JS代码频道。" />
+<title>腾讯jquery图片浏览代码_懒人图库</title>
+<link rel=stylesheet type=text/css href="__PUBLIC__/sns/tupian/css/lrtk.css"></link>
+<script type=text/javascript src="__PUBLIC__/js/jquery-1.5.2.js"></script>
+<script type=text/javascript src="__PUBLIC__/sns/tupian/js/slide.js"></script>
+</head>
+
+<body style="text-align:center">
+
+<DIV style="PADDING-TOP: 20px" class="wrap picshow"><!--大图轮换区-->
+<DIV id=picarea>
+	<DIV id=smallpicarea>
+		<DIV id=thumbs>
+			<UL>
+			  <LI class="first btnPrev"><IMG id=play_prev src="__PUBLIC__/sns/tupian/images/left.png"></LI>
+			  {foreach from="$albumPhotos" item=val name=img}<LI class=slideshowItem>
+			  <A id=thumb_xixi-{$smarty.foreach.img.iteration} href="#"><IMG src="{$val.photo_min_urlall}" width=90 height=60></A>
+			  </LI>
+			  {/foreach}
+			  <!-- <LI class=slideshowItem>
+			  <A id=thumb_xixi-02 href="#"><IMG src="__PUBLIC__/tupian/images/42813171.jpg" width=90 height=60></A>
+			  </LI>
+			  <LI class=slideshowItem>
+			  <A id=thumb_xixi-03 href="#"><IMG src="__PUBLIC__/tupian/images/42813178.jpg" width=90 height=60></A>
+			  </LI>
+			  <LI class=slideshowItem>
+			  <A id=thumb_xixi-04 href="#"><IMG src="__PUBLIC__/tupian/images/42813186.jpg" width=90 height=60></A>
+			  </LI>
+			  <LI class=slideshowItem>
+			  <A id=thumb_xixi-05 href="#"><IMG src="__PUBLIC__/tupian/images/42766362.jpg" width=90 height=60></A>
+			  </LI>
+			  <LI class=slideshowItem>
+			  <A id=thumb_xixi-06 href="#"><IMG src="__PUBLIC__/tupian/images/42766274.jpg" width=90 height=60></A>
+			  </LI>
+			  <LI class="last_img slideshowItem">
+			  <A id=thumb_xixi-07 href="#"><IMG src="__PUBLIC__/tupian/images/42766298.jpg" width=90 height=60></A>
+			  </LI> -->
+			  <LI class="last btnNext"><IMG id=play_next src="__PUBLIC__/sns/tupian/images/right.png"></LI>
+			</UL>
+		</DIV>
+	</DIV>
+	<DIV style="MARGIN: 0px auto;">
+		<DIV style="MARGIN: 0px auto;" id=bigpicarea>
+			<P class=bigbtnPrev><SPAN id=big_play_prev></SPAN></P>
+			{foreach from="$albumPhotos" item=val name=img}
+			<DIV id=image_xixi-{$smarty.foreach.img.iteration} class=image><A href="#" align="center" target=_blank><IMG alt="" 
+			src="{$val.photo_urlall}"/></A> 
+			<DIV class=word>
+			<H3>舞动青春</H3></DIV></DIV>
+			{/foreach}
+			<!-- <DIV id=image_xixi-02 class=image><A href="http://www.lanrentuku.com/" target=_blank><IMG alt="" 
+			src="__PUBLIC__/tupian/images/42813100.jpg" width=772 height=434></A> 
+			<DIV class=word>
+			<H3>台球厅的生活</H3></DIV></DIV>
+			<DIV id=image_xixi-03 class=image><A href="http://www.lanrentuku.com/" target=_blank><IMG alt="" 
+			src="__PUBLIC__/tupian/images/42813102.jpg" width=772 height=434></A> 
+			<DIV class=word>
+			<H3>采访进行中</H3></DIV></DIV>
+			<DIV id=image_xixi-04 class=image><A href="http://www.lanrentuku.com/" target=_blank><IMG alt="" 
+			src="__PUBLIC__/tupian/images/42813139.jpg" width=772 height=434></A> 
+			<DIV class=word>
+			<H3>美女代言人</H3></DIV></DIV>
+			<DIV id=image_xixi-05 class=image><A href="http://www.lanrentuku.com/" target=_blank><IMG alt="" 
+			src="__PUBLIC__/tupian/images/42766145.jpg" width=772 height=434></A> 
+			<DIV class=word>
+			<H3>红色经典</H3></DIV></DIV>
+			<DIV id=image_xixi-06 class=image><A href="http://www.lanrentuku.com/" target=_blank><IMG alt="" 
+			src="__PUBLIC__/tupian/images/42766146.jpg" width=772 height=434></A> 
+			<DIV class=word>
+			<H3>回眸</H3></DIV></DIV>
+			<DIV id=image_xixi-07 class=image><A href="http://www.lanrentuku.com/" target=_blank><IMG alt="" 
+			src="__PUBLIC__/tupian/images/42766159.jpg" width=772 height=434></A> 
+			<DIV class=word>
+			<H3>眩光的诱惑</H3></DIV></DIV> -->
+			<P class=bigbtnNext><SPAN id=big_play_next></SPAN></P>
+		</DIV>
+	</DIV>
+</DIV>
+<SCRIPT>
+var target = ["xixi-1","xixi-2","xixi-3","xixi-4","xixi-5","xixi-6","xixi-7"];
+</SCRIPT>
+</DIV>
+
+</body>
+</html>
