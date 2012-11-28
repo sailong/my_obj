@@ -15,33 +15,6 @@ class AlbumApi extends ApiController {
         parent::_initialize();
     }
     
-    public function show_class($class_code) {
-        echo 11111111111;
-        
-        dump(file_exists(WEB_ROOT_DIR  . '/Common_wmw/aaa.html'));
-        dump(method_exists($this, 'display'));
-        //die;
-        if(empty($class_code)) {
-            $class_code = $this->objInput->getInt('class_code');
-        }
-        if(empty($class_code)) {
-           //return false;
-        }
-        //$this->assign('grants', $this->class_grants());
-        
-        $this->display(WEB_ROOT_DIR  . '/Common_wmw/aaa.html');
-    }
-    
-    private function class_grants() {
-        return array(
-                    0 => '公开',
-                    1 => '本班',
-                    2 => '本校'
-                );
-    }
-    public function show_person(){
-        
-    }
 //班级相册------------------------------------------------------------------------------------------------------------    
     /**
      * 创建班级相册
@@ -253,11 +226,79 @@ class AlbumApi extends ApiController {
         return true;
     }
     
+    /*
+     * 通过相册id获取相册信息
+     * @$album_id int 相册id
+     * @return json
+     */
+    
+    public function getByAlbumId($album_id) {
+        if(empty($album_id)) {
+            return false;
+        }
+        
+        //获取相处信息
+        $mAlbum = ClsFactory::Create('Model.Album.mAlbum');
+        $rs = $mAlbum->getAlbumByAlbumId($album_id);
+        if(empty($rs)) {
+            return false;
+        }
+        $grant = $this->getGrantByClassAlbumId($album_id);
+        
+        $rs[$album_id]['grant'] = $grant['grant'];
+        
+        return json_decode($rs);
+    }
+    /**
+     * 通过相册id获取班级相册权限
+     * @param $album_id
+     * return array  一维数组
+     */
+    private function getGrantByClassAlbumId($album_id) {
+        if(empty($album_id)) {
+            return false;
+        }
+        $mAlbumClassGrants = ClsFactory::Create('Model.Album.mAlbumClassGrants');
+        $rs = $mAlbumClassGrants->getAlbumClassGrantByAlbumId($album_id);
+        if(empty($rs)) {
+            return false;
+        }
+        $rs = reset($rs[$album_id]);
+        
+        return $rs;
+    }
+//相册-------------------------------------------------------------------------------------------------    
     /**
      * 设置相册封面
+     * @$data array 封面数据
+     * @$album_id int 相册Id
+     * @return json
      */
     public function setAlbumImg($data, $album_id) {
+        if(empty($data) || empty($album_id)) {
+            return false;
+        }
+        //检查相册是否存在
+        $mAlbum = ClsFactory::Create('Model.Album.mAlbum');
+        $rs = $mAlbum->getAlbumByAlbumId($album_id);
         
+        if(empty($rs)) {
+            return false;
+        }
+        
+        $data_arr = array(
+                    'album_img'   => $data['album_img'],
+                    'upd_account' => $data['uid'],
+                    'upd_time'    => time()
+        );
+        unset($data, $rs);
+        
+        $rs = $mAlbum->modifyAlbumByAlbumId($data_arr, $album_id);
+        if(empty($rs)) {
+            return false;
+        }
+        
+        return true;
     }
     
 //个人相册-------------------------------------------------------------------------------------------------
@@ -399,6 +440,48 @@ class AlbumApi extends ApiController {
         
         return json_decode($album_list);
         
+    }
+    
+    /*
+     * 通过相册id获取相册信息
+     * @$album_id int 相册id
+     * @return json
+     */
+    
+    public function getByPersonAlbumId($album_id) {
+        if(empty($album_id)) {
+            return false;
+        }
+        
+        //获取相处信息
+        $mAlbum = ClsFactory::Create('Model.Album.mAlbum');
+        $rs = $mAlbum->getAlbumByAlbumId($album_id);
+        if(empty($rs)) {
+            return false;
+        }
+        $grant = $this->getGrantByPersonAlbumId($album_id);
+        
+        $rs[$album_id]['grant'] = $grant['grant'];
+        
+        return json_decode($rs);
+    }
+    /**
+     * 通过相册id获取班级相册权限
+     * @param $album_id
+     * return array  一维数组
+     */
+    private function getGrantByPersonAlbumId($album_id) {
+        if(empty($album_id)) {
+            return false;
+        }
+        $mAlbumPersonGrants = ClsFactory::Create('Model.Album.mAlbumPersonGrants');
+        $rs = $mAlbumPersonGrants->getAlbumPersonGrantByAlbumId($album_id);
+        if(empty($rs)) {
+            return false;
+        }
+        $rs = reset($rs[$album_id]);
+        
+        return $rs;
     }
     
 }
