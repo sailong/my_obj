@@ -4,7 +4,7 @@ class mClassTeacherSet {
     protected $_dClassTeacherSet = null;
     
     public function __construct() {
-        import('@.RData.Feed.dClassTeacherSet');
+        import('RData.Common.dClassTeacherSet');
         $this->_dClassTeacherSet = new dClassTeacherSet();
     }
     /**

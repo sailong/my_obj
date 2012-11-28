@@ -6,7 +6,15 @@ class mPersonconfig extends mBase {
     public function __construct() {
         $this->_dPersonconfig = ClsFactory::Create('Data.dPersonconfig');
     }
-	 /**
+    
+    /*
+     * 根据where条件查询数据
+     * 
+     */
+    public function getPsersonConfigInfo($where, $orderby, $offset, $limit) {
+        return $this->_dPersonconfig->getInfo($where, $orderby, $offset, $limit);
+    }
+	/**
 	 * 按用户名读取用户配置信息
 	 * @param $account
 	 */	

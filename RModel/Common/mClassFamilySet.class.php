@@ -3,7 +3,7 @@ class mClassFamilySet {
     protected $_dClassFamilySet = null;
     
     public function __construct() {
-        import('@.RData.Feed.dClassFamilySet');
+        import('RData.Common.dClassFamilySet');
         $this->_dClassFamilySet = new dClassFamilySet();
     }
     

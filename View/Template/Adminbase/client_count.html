@@ -36,55 +36,33 @@
 		}
 		myform.submit();
 	}
-	
-	function showcotent(){
-		document.getElementById("comment").style.display="block"; 
-	}
 
 </script>
 {/literal}
 </head>
 
-<body style="padding-top:30px; _width:98%">
-<div class="tj_title">
-  <h3>用户总体情况统计</h3>
-</div>
-<table width="92%" border="0" cellspacing="1" cellpadding="0" class="tj_main">
-  <tr>
-    <td height="30" colspan="2" bgcolor="#c2daee">用户总计：{$user_count.total_people_count}</td>
-  </tr>
-  <tr>
-    <td width="80" height="30" bgcolor="#f0f8ff">老师：</td>
-    <td bgcolor="#f0f8ff">{$user_count.teacher_count}</td>
-  </tr>
-  <tr>
-    <td height="30" bgcolor="#f0f8ff">学生： </td>
-    <td bgcolor="#f0f8ff">{$user_count.student_count}</td>
-  </tr>
-  <tr>
-    <td height="30" bgcolor="#f0f8ff">家长：</td>
-    <td bgcolor="#f0f8ff">{$user_count.parents_count}</td>
-  </tr>
-</table>
-<table width="92%" border="0" cellspacing="1" cellpadding="0" class="tj_main">
-  <tr>
-    <td height="30" colspan="2" bgcolor="#c2daee">绑定手机总计：{$phone_count.total_phone_count}</td>
-  </tr>
-  <tr>
-    <td width="80" height="30" bgcolor="#f0f8ff">老用户：</td>
-    <td bgcolor="#f0f8ff">{$phone_count.phone_old_count}</td>
-  </tr>
-  <tr>
-    <td height="30" bgcolor="#f0f8ff">新用户： </td>
-    <td bgcolor="#f0f8ff">{$phone_count.phone_new_count}</td>
-  </tr>
-</table>
-<div class="tj_title qy_title">
-  <h3>区域用户情况统计</h3>
-</div>
+<body style="padding-top:10px; _width:98%">
 
-<table width="92%" border="0" cellspacing="0" cellpadding="0" class="qy_main">
+<table width="92%" border="0" cellspacing="1" cellpadding="0" class="tj_main">
+  <tr height="30" bgcolor="#c2daee">
+    <td colspan="3"><h3>注册用户总计：{$user_count.total_people_count}</h3></td>
+    <td colspan="2"><h3>绑定手机用户总计：{$phone_count.total_phone_count}</h3></td>
+  </tr>
+  <tr height="30" bgcolor="#f0f8ff">
+    <td width="80">老师：{$user_count.teacher_count}</td>
+    <td width="80">学生：{$user_count.student_count}</td>
+    <td width="80">家长：{$user_count.parents_count}</td>
+    <td width="80">老用户：{$phone_count.phone_old_count}</td>
+    <td width="80">新用户：{$phone_count.phone_new_count}</td>
+    
+  </tr>
+</table>
+
+<div class="tj_title"><h3>&nbsp;</h3></div>
+
+<table width="92%" border="0" cellspacing="0" cellpadding="0">
   <tr>
+  	<td width="140"><h3>&nbsp;&nbsp;区域用户情况统计&nbsp;</h3></td>
     <td class="xzqy">
 	    <form action="/Adminbase/Userstatistics/getschoolusernum" method="post">
 	    	<div>
@@ -93,7 +71,7 @@
 			    </div>
 				<div style="float:left;margin-left:5px;" >
 				<input style="height:20px;" name="school_name" id="schoolAddress_Content" type="text" value="{$school_name}" class="wbk" /><span class="xhao"></span><span id="schoolAddress_Content_err" style="color:Red;"></span>
-				<input type="submit" value="查找" class="qd_btn" onclick="showcotent()" />
+				<input type="submit" value="查找" class="qd_btn" />
 				</div>
 			</div>
 			{foreach from = $user_count item=val key=key}
@@ -107,70 +85,79 @@
   </tr>
   {if !empty($area_schoolInfos)}
   <tr>
-    <td>
-      <div class="tj_cotent" id="comment">
-  		<p class="tj_left">用户总计：{$area_user_count.total_people_count}<br />老师：{$area_user_count.teacher_count}&nbsp;&nbsp;学生：{$area_user_count.student_count}&nbsp;&nbsp;家长：{$area_user_count.parents_count}</p>
-  		<p class="tj_right">绑定手机总计：{$area_phone_count.total_phone_count}<br />老用户：{$area_phone_count.old_phone_count}&nbsp;&nbsp;新用户：{$area_phone_count.new_phone_count}</p>
-        <div class="clean">
-        	
-        </div>
-        
+    <td colspan="2">
+        <table width="100%" border="0" cellspacing="1" cellpadding="0" class="qy_main">
+		  <tr height="30" bgcolor="#c2daee">
+		    <td colspan="3"><h3>区域注册用户总计：{$area_user_count.total_people_count}</h3></td>
+		    <td colspan="2"><h3>区域绑定手机用户总计：{$area_phone_count.total_phone_count}</h3></td>
+		  </tr>
+		  <tr height="30" bgcolor="#f0f8ff">
+		    <td width="80">老师：{$area_user_count.teacher_count}</td>
+		    <td width="80">学生：{$area_user_count.student_count}</td>
+		    <td width="80">家长：{$area_user_count.parents_count}</td>
+		    <td width="80">老用户：{$area_phone_count.old_phone_count}</td>
+		    <td width="80">新用户：{$area_phone_count.new_phone_count}</td>
+		    
+		  </tr>
+		</table>
+     </td>   
+   </tr>
+   <tr>
+   	<td colspan="2">    
         <table id="mytable" width="100%" border="0" cellspacing="1" cellpadding="0" class="tj_tab">
-  <tr>
-    <th width="120">省</th>
-    <th width="80">市</th>
-    <th width="80">区/县</th>
-    <th width="400">学校</th>
-    <th width="80">用户数</th>
-    <th width="80">老师</th>
-    <th>学生</th>
-    <th>家长</th>
-    <th>手机绑定数</th>
-    <th>老用户</th>
-    <th>新用户</th>
-  </tr>
-  {foreach from=$area_schoolInfos item=val}
-  <tr onmouseover="this.className='bj_color'" onmouseout="this.className=''">
-    <td>{$val.province}</td>
-    <td>{$val.city}</td>
-    <td>{$val.county}</td>
-    <td style="text-algin:center;">{$val.school_name}</td>
-    <td>{if $val.people_total_count}{$val.people_total_count}{else}0{/if}</td>
-    <td>{if $val.teacher_count}{$val.teacher_count}{else}0{/if}</td>
-    <td>{if $val.student_count}{$val.student_count}{else}0{/if}</td>
-    <td>{if $val.parents_count}{$val.parents_count}{else}0{/if}</td>
-    <td>{if $val.total_phone_count}{$val.total_phone_count}{else}0{/if}</td>
-    <td>{if $val.old_phone_count}{$val.old_phone_count}{else}0{/if}</td>
-    <td>{if $val.new_phone_count}{$val.new_phone_count}{else}0{/if}</td>
-  </tr>
-  {/foreach}
-  <tr>
-	  	<td colspan="11">
-		当前第{$page}页 
-		{if $page<2}
-			上一页
-		{else}
-			<a href="javascript:changepage(1);">上一页</a>
-		{/if}
-		{if $no_next}
-			下一页
-		{else}
-			<a href="javascript:changepage(2);">下一页</a>
-		{/if}
-		</td>
-	</tr>
-  {else}
-  <tr>
-  <td colspan="11">暂无数据</td>
-  </tr>
-  {/if}
-</table>
-	  </div>
-      
-
+		  <tr>
+		    <th width="120">省</th>
+		    <th width="80">市</th>
+		    <th width="80">区/县</th>
+		    <th width="400">学校</th>
+		    <th width="80">用户数</th>
+		    <th width="80">老师</th>
+		    <th>学生</th>
+		    <th>家长</th>
+		    <th>手机绑定数</th>
+		    <th>老用户</th>
+		    <th>新用户</th>
+		  </tr>
+		  {foreach from=$area_schoolInfos item=val}
+		  <tr onmouseover="this.className='bj_color'" onmouseout="this.className=''">
+		    <td>{$val.province}</td>
+		    <td>{$val.city}</td>
+		    <td>{$val.county}</td>
+		    <td style="text-algin:center;">{$val.school_name}</td>
+		    <td>{if $val.people_total_count}{$val.people_total_count}{else}0{/if}</td>
+		    <td>{if $val.teacher_count}{$val.teacher_count}{else}0{/if}</td>
+		    <td>{if $val.student_count}{$val.student_count}{else}0{/if}</td>
+		    <td>{if $val.parents_count}{$val.parents_count}{else}0{/if}</td>
+		    <td>{if $val.total_phone_count}{$val.total_phone_count}{else}0{/if}</td>
+		    <td>{if $val.old_phone_count}{$val.old_phone_count}{else}0{/if}</td>
+		    <td>{if $val.new_phone_count}{$val.new_phone_count}{else}0{/if}</td>
+		  </tr>
+		  {/foreach}
+		  <tr>
+			  	<td colspan="11">
+				当前第{$page}页 
+				{if $page<2}
+					上一页
+				{else}
+					<a href="javascript:changepage(1);">上一页</a>
+				{/if}
+				{if $no_next}
+					下一页
+				{else}
+					<a href="javascript:changepage(2);">下一页</a>
+				{/if}
+				</td>
+			</tr>
+		  {else}
+		  <tr>
+		  <td colspan="11">暂无数据</td>
+		  </tr>
+		  {/if}
+		</table>
     </td>
   </tr>
 </table>
+
 <form id="uppage" action="/Adminbase/Userstatistics/getschoolusernum" method="post">
 	<input type="hidden" name="school_name" value="{$school_name}"/>
 	<input type="hidden" name="area_id" value="{$area_id}"/>

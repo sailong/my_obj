@@ -1,5 +1,5 @@
 <?php
-import('@.RData.RedisCommonKey');
+import('RData.RedisCommonKey');
 
 class dUserFriendSet extends rBase {
     /**
@@ -27,6 +27,10 @@ class dUserFriendSet extends rBase {
             return false;
         }
         
+        if(FEED_DEBUG) {
+            return $this->getUserFriendSet($uid);
+        }
+        
         $this->loader($uid);
         
         $redis_key_live_user = RedisCommonKey::getLiveUserSetKey();
@@ -45,14 +49,15 @@ class dUserFriendSet extends rBase {
             return false;
         }
         
+        $friend_accounts = array_unique((array)$friend_accounts);
+        
         $redis_key = RedisCommonKey::getUserFriendSetKey($uid);
         
-        $add_nums = 0;
-        foreach((array)$friend_accounts as $friend_uid) {
-            if($this->sAdd($redis_key, $friend_uid)) {
-                $add_nums++;
-            }
+        $pipe = $this->multi(Redis::PIPELINE);
+        foreach($friend_accounts as $friend_uid) {
+            $pipe->sAdd($redis_key, $friend_uid);
         }
+        $add_nums = $pipe->exec();
         
         return $add_nums ? $add_nums : false;
     }
@@ -67,31 +72,17 @@ class dUserFriendSet extends rBase {
             return false;
         }
         
+        $friend_accounts = array_unique((array)$friend_accounts);
+        
         $redis_key = RedisCommonKey::getUserFriendSetKey($uid);
         
-        $delete_nums = 0;        
-        foreach((array)$friend_accounts as $friend_uid) {
-            if($this->sRem($redis_key, $friend_uid)) {
-                $delete_nums++;
-            }
+        $pipe = $this->multi(Redis::PIPELINE);       
+        foreach($friend_accounts as $friend_uid) {
+            $pipe->sRem($redis_key, $friend_uid);
         }
+        $delete_nums = $pipe->exec();
         
         return $delete_nums ? $delete_nums : false;
-    }
-    
-   /**
-     * 判断是否存在
-     * @param $uid
-     */
-    private function isExistUserFriendSet($uid) {
-        if(empty($uid)) {
-            return false;
-        }
-        
-        $redis_key = RedisCommonKey::getUserFriendSetKey($uid);
-        $keys = $this->keys($redis_key);
-        
-        return !empty($keys) ? $keys : false;
     }
     
     /**
@@ -99,13 +90,23 @@ class dUserFriendSet extends rBase {
      * @param $uid
      */
     private function loader($uid) {
-        if(empty($uid) || $this->isExistUserFriendSet($uid)) {
+        if(empty($uid)) {
             return false;
         }
         
-        import('@.RData.Common.Loader.LoaderUser');
-        $loaderObject = new LoaderUser();
+        $redis_key = RedisCommonKey::getUserFriendSetKey($uid);
         
-        return $loaderObject->load($uid);
+        $GlobalKeys = ClsFactory::Create('RData.GlobalKeys');
+        if(!$GlobalKeys->isExists($redis_key)) {
+            
+            $GlobalKeys->addKey($redis_key);
+            
+            import('RData.Common.Loader.LoaderUser');
+            $loaderObject = new LoaderUser();
+        
+            return $loaderObject->load($uid);
+        }
+        
+        return true;
     }
 }

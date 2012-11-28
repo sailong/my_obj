@@ -1,5 +1,5 @@
 <?php
-import('@.Control.Api.ExtractFeed.ExtractAbstract');
+import('@.Control.Api.FeedImpl.ExtractFeed.ExtractAbstract');
 
 /**
  * 提取相册中的动态信息

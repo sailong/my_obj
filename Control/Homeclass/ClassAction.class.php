@@ -471,6 +471,8 @@ class ClassAction extends SnsController{
 	       return false;
 	    }
 
+	    $uid = $this->user['client_account'];
+	    
 		$mUser = ClsFactory::Create('Model.mUser');
 		$mClientClass = ClsFactory::Create('Model.mClientClass');
 
@@ -509,6 +511,7 @@ class ClassAction extends SnsController{
 		        if(!empty($type)) {
 		            $dataarr = array(
 		                'client_class_role' => $type,
+		            	'upd_account' => $uid,
 		                'upd_time' => time(),
 		            );
 		            $rs = $mClientClass->modifyClientClass($dataarr , $client_class_id);
@@ -533,6 +536,7 @@ class ClassAction extends SnsController{
     	        if($class_admin_nums < 3) {
     	            $dataarr = array(
     	                'class_admin' => IS_CLASS_ADMIN,
+    	            	'upd_account' => $uid,
     	            	'upd_time' => time(),
     	            );
     	            $mClientClass->modifyClientClass($dataarr , $client_class_id);
@@ -545,6 +549,7 @@ class ClassAction extends SnsController{
     		    if($class_admin_nums > 1) {
         		    $dataarr = array(
         		        'class_admin' => NO_CLASS_ADMIN,
+        		    	'upd_account' => $uid,
         		        'upd_time' => time(),
         		    );
         		    $mClientClass->modifyClientClass($dataarr , $client_class_id);

@@ -4,7 +4,7 @@ class mClassStudentSet {
     protected $_dClassStudentSet = null;
     
     public function __construct() {
-        import('@.RData.Feed.dClassStudentSet');
+        import('RData.Common.dClassStudentSet');
         $this->_dClassStudentSet = new dClassStudentSet();
     }
     

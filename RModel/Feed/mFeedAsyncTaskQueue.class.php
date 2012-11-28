@@ -3,7 +3,7 @@ class mFeedAsyncTaskQueue {
     private $_dFeedAsyncTask = null;
     
     public function __construct() {
-        import('@.RData.Feed.dFeedAsyncTaskQueue');
+        import('RData.Feed.dFeedAsyncTaskQueue');
         $this->_dFeedAsyncTask = new dFeedAsyncTaskQueue();
     }
     

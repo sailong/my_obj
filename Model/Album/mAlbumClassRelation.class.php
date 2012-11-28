@@ -18,7 +18,7 @@ class mAlbumClassRelation extends mBase {
         return $this->_dAlbumClassRelation->delAlbumClassRelById($id);
     }
     
-    public function getAlbumClassRelByClassCode($class_code) {
-        return $this->_dAlbumClassRelation->getAlbumClassRelByClassCode($class_code);
+    public function getAlbumClassRelByClassCode($class_code, $offset = null, $limit = null) {
+        return $this->_dAlbumClassRelation->getAlbumClassRelByClassCode($class_code, $offset, $limit);
     }
 }

@@ -4,7 +4,7 @@ class dLiveUserSet {
     protected $_dLiveUserSet = null;
     
     public function __construct() {
-        import('@.RData.Feed.dLiveUser');
+        import('RData.Common.dLiveUser');
         $this->_dLiveUserSet = new dLiveUserSet();
     }
     

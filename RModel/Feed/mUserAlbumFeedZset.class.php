@@ -3,7 +3,7 @@ class mUserAlbumFeedZset {
     protected $_dUserAlbumFeedZset = null;
     
     public function __construct() {
-        import('@.RData.Feed.dUserAlbumFeedZset');
+        import('RData.Feed.dUserAlbumFeedZset');
         
         $this->_dUserAlbumFeedZset = new dUserAlbumFeedZset();
     }

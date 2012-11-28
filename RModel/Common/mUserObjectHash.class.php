@@ -4,7 +4,7 @@ class mUserObjectHash {
     protected $_dUserObjectHash = null;
     
     public function __construct() {
-        import('@.RData.Feed.dUserObjectHash');
+        import('RData.Common.dUserObjectHash');
         $this->_dUserObjectHash = new dUserObjectHash();
     }
     

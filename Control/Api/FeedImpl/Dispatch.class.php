@@ -3,6 +3,11 @@ class Dispatch {
     
     public function dispatchFeed() {
         $queue_datas = $this->getTaskFromRedisQueue();
+        
+        if(empty($queue_datas)) {
+             FEED_DEBUG && trigger_error('异步队列中提取数据失败', E_USER_ERROR);
+        }
+        
         if($queue_datas['context'] == FEED_CONTEXT_PERSON) {
             //初始化用户的信息
             $uid = $queue_datas['uid'];

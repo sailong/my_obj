@@ -506,4 +506,12 @@ class LoginapiAction extends UcController {
         return false;
     }
     
+    public function test($param1, $param2, $param3) {
+    	
+    	dump(array($param1, $param2, $param3));
+    	
+    	//$callback = $this->objInput->postStr('callback');
+    	echo 'licheng si liumeng';
+    }
+    
 }

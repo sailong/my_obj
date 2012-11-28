@@ -76,6 +76,7 @@ class ActivateAction extends UcController {
             'client_password' => md5($password),
             'status' => CLIENT_STOP_FLAG_NORMAL,
         	'upd_time'=>time(),
+        	'active_date'=>time(),
         );
         $mUser = ClsFactory::Create('Model.mUser');
         $effect_row = $mUser->modifyUserClientAccount($datas, $this->user['client_account']);

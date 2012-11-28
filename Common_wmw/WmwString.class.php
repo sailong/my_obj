@@ -215,7 +215,7 @@ class WmwString {
     		return 0;
     	}
     	
-    	$chiness_word_width = !empty($chiness_word_width) && in_array($chiness_word_width, array(1, 2)) ? $chiness_word_width : false;
+    	$chiness_word_width = in_array($chiness_word_width, array(1, 2)) ? $chiness_word_width : 1;
     	
     	$string = trim($string);
     	$pre = chr(1);

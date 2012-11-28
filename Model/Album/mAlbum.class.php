@@ -10,8 +10,8 @@ class mAlbum extends mBase {
         return $this->_dAlbum->addAlbum($data,$is_return_id);
     }
     //修改相册
-    public function modifyAlbumByAlbum_id($data,$album_id) {
-        return $this->_dAlbum->modifyAlbumByAlbum_id($data,$album_id);
+    public function modifyAlbumByAlbumId($data,$album_id) {
+        return $this->_dAlbum->modifyAlbumByAlbumId($data,$album_id);
     }
     
     //删除相册

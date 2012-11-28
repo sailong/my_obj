@@ -21,7 +21,7 @@ class dAlbum extends dBase {
         return $this->add($data,$is_return_id);
     }
     //修改相册
-    public function modifyAlbumByAlbum_id($data,$album_id) {
+    public function modifyAlbumByAlbumId($data,$album_id) {
         return $this->modify($data,$album_id);
     }
     

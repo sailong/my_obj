@@ -1,5 +1,5 @@
 <?php
-import('@.RData.RedisCommonKey');
+import('RData.RedisCommonKey');
 
 class dLiveUserSet extends rBase {
     /**

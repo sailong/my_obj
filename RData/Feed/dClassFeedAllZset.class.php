@@ -1,5 +1,5 @@
 <?php
-import('@.RData.RedisFeedKey');
+import('RData.RedisFeedKey');
 
 class dClassFeedAllZset extends rBase {
     protected $zset_size = 100;
@@ -35,7 +35,8 @@ class dClassFeedAllZset extends rBase {
         
         $redis_key = RedisFeedKey::getClassFeedAllZsetKey($class_code);
         
-        $min_feed_id = reset($this->zRange($redis_key, 0, 0));
+        $feed_ids = $this->zRange($redis_key, 0, 0);
+        $min_feed_id = !empty($feed_ids) ? reset($feed_ids) : 0;
         
         return array($this->zset_size, $min_feed_id);
     }
@@ -105,33 +106,28 @@ class dClassFeedAllZset extends rBase {
     }
     
     /**
-     * 判断对应的key是否存在
+     * 加载班级动态信息
      * @param $class_code
      */
-    private function isExistClassFeedAllZset($class_code) {
+    private function loader($class_code) {
         if(empty($class_code)) {
             return false;
         }
         
         $redis_key = RedisFeedKey::getClassFeedAllZsetKey($class_code);
-        $keys = $this->keys($redis_key);
         
-        return !empty($keys) ? true : false;
-    }
-    
-    /**
-     * 加载班级动态信息
-     * @param $class_code
-     */
-    private function loader($class_code) {
-        if(empty($class_code) || $this->isExistClassFeedAllZset($class_code)) {
-            return false;
+        $GlobalKeys = ClsFactory::Create('RData.GlobalKeys');
+        if(!$GlobalKeys->isExists($redis_key)) {
+            
+            $GlobalKeys->addKey($redis_key);
+            
+            import('RData.Feed.Loader.LoaderFeed');
+            $loaderObject = new LoaderFeed();
+        
+            return $loaderObject->loadClassFeed($class_code);
         }
         
-        import('@.RData.Feed.Loader.LoaderFeed');
-        $loaderObject = new LoaderFeed();
-        
-        return $loaderObject->loadClassFeed($class_code);
+        return true;
     }
     
 }

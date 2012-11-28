@@ -3,7 +3,7 @@ class mClassFeedAllZset {
     protected $_dClassFeedAllZset = null;
     
     public function __construct() {
-        import('@.RData.Feed.dClassFeedAllZset');
+        import('RData.Feed.dClassFeedAllZset');
         $this->_dClassFeedAllZset = new dClassFeedAllZset();
     }
     

@@ -15,7 +15,7 @@ class mFeedContent extends mBase{
         return $this->_dFeedContent->getFeedContentById($feed_ids);
     }
     
-    public function addFeedContent($datas, $is_return_id) {
+    public function addFeedContent($datas, $is_return_id = false) {
         if(empty($datas) || !is_array($datas)) {
             return false;
         }

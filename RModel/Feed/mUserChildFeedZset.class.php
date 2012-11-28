@@ -4,7 +4,7 @@ class mUserChildFeedZset {
     protected $_dUserChildFeedZset = null;
     
     public function __construct() {
-        import('@.RData.Feed.dUserChildFeedZset');
+        import('RData.Feed.dUserChildFeedZset');
         
         $this->_dUserChildFeedZset = new dUserChildFeedZset();
     }

@@ -27,9 +27,9 @@ class LoaderClassSet {
         
         list($student_accounts, $teacher_accounts, $family_accounts) = $this->getDatasFromDatabase($class_code);
         
-        $dClassStudentSet = ClsFactory::Create('@.RData.Common.dClassStudentSet');
-        $dClassTeacherSet = ClsFactory::Create('@.RData.Common.dClassTeacherSet');
-        $dClassFamilySet = ClsFactory::Create('@.RData.Common.dClassFamilySet');
+        $dClassStudentSet = ClsFactory::Create('RData.Common.dClassStudentSet');
+        $dClassTeacherSet = ClsFactory::Create('RData.Common.dClassTeacherSet');
+        $dClassFamilySet = ClsFactory::Create('RData.Common.dClassFamilySet');
         
         $dClassStudentSet->addClassStudentSet($class_code, $student_accounts);
         $dClassTeacherSet->addClassTeacherSet($class_code, $teacher_accounts);

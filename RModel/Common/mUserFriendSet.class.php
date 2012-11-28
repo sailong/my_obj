@@ -4,7 +4,7 @@ class mUserFriendSet {
     protected $_dUserFriendSet = null;
     
     public function __construct() {
-        import('@.RData.Feed.dUserFriendSet');
+        import('RData.Common.dUserFriendSet');
         $this->_dUserFriendSet = new dUserFriendSet();
     }
     

@@ -1,5 +1,5 @@
 <?php
-import('@.RData.RedisCommonKey');
+import('RData.RedisCommonKey');
 
 class dUserObjectHash extends rBase {
     /**
@@ -14,7 +14,6 @@ class dUserObjectHash extends rBase {
         $this->loader($uid);
         
         $redis_key = RedisCommonKey::getUserObjectHashKey($uid);
-        
         $user_datas = $this->hGetAll($redis_key);
         
         return $this->parseDatas($user_datas);
@@ -92,34 +91,29 @@ class dUserObjectHash extends rBase {
         return $user_datas;
     }
     
-	/**
-     * 判断是否存在
-     * @param $uid
-     */
-    private function isExistUserObjectHashSet($uid) {
-        if(empty($uid)) {
-            return false;
-        }
-        
-        $redis_key = RedisCommonKey::getUserObjectHashKey($uid);
-        $keys = $this->keys($redis_key);
-        
-        return !empty($keys) ? $keys : false;
-    }
-    
     /**
      * 加载用户相关的数据
      * @param $uid
      */
     private function loader($uid) {
-        if(empty($uid) || $this->isExistUserObjectHashSet($uid)) {
+        if(empty($uid)) {
             return false;
         }
         
-        import('@.RData.Common.Loader.LoaderUserObject');
-        $loaderObject = new LoaderUserObject();
+        $redis_key = RedisCommonKey::getUserObjectHashKey($uid);
         
-        return $loaderObject->load($uid);
+        $GlobalKeys = ClsFactory::Create('RData.GlobalKeys');
+        if(!$GlobalKeys->isExists($redis_key)) {
+            
+            $GlobalKeys->addKey($redis_key);
+            
+            import('RData.Common.Loader.LoaderUserObject');
+            $loaderObject = new LoaderUserObject();
+        
+            return $loaderObject->load($uid);
+        }
+        
+        return true;
     }
     
 }

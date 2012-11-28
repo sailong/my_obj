@@ -7,6 +7,17 @@ class mCurriculum extends mBase {
 		$this->_dCurriculum = ClsFactory::Create('Data.dCurriculum');
 	}
 	
+    /*
+     * 按照$where 条件查询数据
+     * @param $where 查询条件可以为空 
+     */
+    public function getCurriculumInfo($where, $orderby, $offset = 0 , $limit = 10) {
+
+        return $this->_dCurriculum->getInfo($where, $orderby, $offset, $limit);
+    }
+	
+	
+	
 	/**
      * 按课程表Id读取课程表是否存在
      * @param $curriculum_ids

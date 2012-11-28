@@ -1,6 +1,6 @@
 <?php
 class dExamInfo extends dBase {
-	protected $_tablename = 'wmw_exam_info';
+	protected $_tablename = 'old_wmw_exam_info';
 	protected $_fields = array(
 		'exam_id',
 		'school_id',

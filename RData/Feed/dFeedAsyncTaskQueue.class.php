@@ -1,5 +1,5 @@
 <?php
-import('@.RData.RedisFeedKey');
+import('RData.RedisFeedKey');
 
 class dFeedAsyncTaskQueue extends rBase {
     /**
@@ -19,6 +19,6 @@ class dFeedAsyncTaskQueue extends rBase {
     public function getAsyncTask() {
         $datas = $this->lPop(RedisFeedKey::getFeedAsyncTaskQueueKey());
         
-        return !empty($datas) ? json_decode($datas) : false;
+        return !empty($datas) ? json_decode($datas, true) : false;
     }
 }

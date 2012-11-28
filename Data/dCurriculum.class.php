@@ -1,7 +1,8 @@
 <?php
 
 class dCurriculum extends dBase {
-    protected $_tablename = 'wmw_curriculum_info';
+    //protected $_tablename = 'wmw_curriculum_info';
+    protected  $_tablename = 'old_wmw_curriculum_info';  //todo sns 改版暂时改变表名 
     protected $_fields = array(
 		'curriculum_id',
 		'class_code', 

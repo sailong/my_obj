@@ -16,7 +16,7 @@ class mAccountrelation extends mBase{
 	        return false;
 	    }
 	    
-	    return $this->$this->_dAccountrelation->getAccountRelationByClientAccout($client_accounts);
+	    return $this->_dAccountrelation->getAccountRelationByClientAccout($client_accounts);
 	}
     
 	/*统计好友数量*/

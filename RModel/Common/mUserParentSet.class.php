@@ -4,7 +4,7 @@ class mUserParentSet {
     protected $_dUserParentSet = null;
     
     public function __construct() {
-        import('@.RData.Feed.dUserParentSet');
+        import('RData.Common.dUserParentSet');
         $this->_dUserParentSet = new dUserParentSet();
     }
     

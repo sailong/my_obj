@@ -4,7 +4,7 @@ class dUserChildrenSet {
     protected $_dUserChildrenSet = null;
     
     public function __construct() {
-        import('@.RData.Feed.dUserChildrenSet');
+        import('RData.Common.dUserChildrenSet');
         $this->_dUserChildrenSet = new dUserChildrenSet();
     }
     

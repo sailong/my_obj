@@ -1,5 +1,6 @@
 <?php
-import('@.RData.RedisCommonKey');
+import('RData.RedisCommonKey');
+import('RData.GlobalKeys');
 
 class dClassFamilySet extends rBase {
     /**
@@ -27,6 +28,10 @@ class dClassFamilySet extends rBase {
             return false;
         }
         
+        if(FEED_DEBUG) {
+            return $this->getClassFamilySet($class_code);
+        }
+        
         $this->loader($class_code);
         
         $redis_key_live_user = RedisCommonKey::getLiveUserSetKey();
@@ -45,14 +50,16 @@ class dClassFamilySet extends rBase {
             return false;
         }
         
+        $family_accounts = array_unique((array)$family_accounts);
+        
         $redis_key = RedisCommonKey::getClassFamilySetKey($class_code);
         
-        $add_nums = 0;
-        foreach((array)$family_accounts as $uid) {
-            if($this->sAdd($redis_key, $uid)) {
-                $add_nums++;
-            }
+        //批量添加班级家长成员
+        $pipe = $this->multi(Redis::PIPELINE);
+        foreach($family_accounts as $uid) {
+            $pipe->sAdd($redis_key, $uid);
         }
+        $add_nums = $pipe->exec();
         
         return $add_nums ? $add_nums : false;
     }
@@ -67,14 +74,15 @@ class dClassFamilySet extends rBase {
             return false;
         }
         
+        $family_accounts = array_unique((array)$family_accounts);
+        
         $redis_key = RedisCommonKey::getClassFamilySetKey($class_code);
         
-        $delete_nums = 0;        
-        foreach((array)$family_accounts as $uid) {
-            if($this->sRem($redis_key, $uid)) {
-                $delete_nums++;
-            }
+        $pipe = $this->multi(Redis::PIPELINE);
+        foreach($family_accounts as $uid) {
+            $pipe->sRem($redis_key, $uid);
         }
+        $delete_nums = $pipe->exec();
         
         return $delete_nums ? $delete_nums : false;
     }
@@ -84,27 +92,23 @@ class dClassFamilySet extends rBase {
      * @param $class_code
      */
     private function loader($class_code) {
-        if(empty($class_code) || $this->isExistClassFamilySet($class_code)) {
-            return false;
-        }
-        
-        import('@.RData.Common.Loader.LoaderClassSet');
-        $loaderObject = new loaderClassSet();
-        return $loaderObject->load($class_code);
-    }
-    
-    /**
-     * 判断家长对应的集合是否存在
-     * @param $class_code
-     */
-    private function isExistClassFamilySet($class_code) {
         if(empty($class_code)) {
             return false;
         }
         
         $redis_key = RedisCommonKey::getClassFamilySetKey($class_code);
-        $keys = $this->keys($redis_key);
         
-        return !empty($keys) ? true : false;
+        $GlobalKeys = ClsFactory::Create('RData.GlobalKeys');
+        if(!$GlobalKeys->isExists($redis_key)) {
+            
+            $GlobalKeys->addKey($redis_key);
+            
+            import('RData.Common.Loader.LoaderClassSet');
+            $loaderObject = new loaderClassSet();
+            return $loaderObject->load($class_code);
+        }
+        
+        return true;
     }
+    
 }

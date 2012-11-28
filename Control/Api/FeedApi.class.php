@@ -1,5 +1,78 @@
 <?php
+
+define('FEED_DEBUG', true);
+
+include WEB_ROOT_DIR . '/Debug.class.php';
+
 class FeedApi extends ApiController {
+    
+    public function index() {
+        
+        dump($this->_type);
+        
+        dump($this->_method);
+        
+        Debug::start();
+        
+        $redis = new rBase();
+        
+//        $keys = $redis->keys('*');
+//        foreach($keys as $key) {
+//            $redis->del($key);
+//        }
+//        
+//        dump($redis->keys('*'));
+//        exit;
+        
+        $datas = array(
+            'blog_id' => 1,
+            'add_account' => 11070004,
+            'feed_content' => '我的日志测试',
+            'add_time' => time(),
+        );
+        
+//        $mUser = ClsFactory::Create('Model.mUser');
+//        $userlist = $mUser->getUserByUid(11070004);
+//        dump($userlist);
+        
+        //dump($redis->hGetAll('usr:11070004:obj'));
+        
+        
+        //$this->user_create($datas, FEED_BLOG, 11070004);
+        $this->class_create($datas, FEED_ALBUM, 11070004, 6102);
+        
+        //$this->dispatch();
+        
+        dump($redis->lRange('feed:queue', 0, -1));
+        
+        //dump($redis->keys('*'));
+        
+//        dump($this->user_all(89288947, 99, 15));
+//        
+//        dump($this->user_all(89288947, 19, 10));
+//        
+        dump($this->class_all(6102, 0, 100));
+        
+        Debug::end();
+        
+//        dump($redis->keys('usr:11070004:*'));
+        
+        //dump($redis->keys('feed:usr:11070004:*'));
+        
+//        dump($redis->sMembers('usr:11070004:friend'));
+//        
+//        dump($redis->hGetAll('usr:11070004:obj'));
+
+        $this->display(WEB_ROOT_DIR . '/View/Template/Sns/Album/index.html');
+        
+    }
+    
+    public function dispatch() {
+        import('@.Control.Api.FeedImpl.Dispatch');
+        
+        $des = new Dispatch();
+        $des->dispatchFeed();
+    }
     
     /**
      * 创建用户动态信息
@@ -7,7 +80,7 @@ class FeedApi extends ApiController {
      * @param $feed_type    int    枚举值
      * @param $uid          bigint 添加动态的用户账号信息
      */
-    public function urs_create($entity_datas, $feed_type, $uid) {
+    public function user_create($entity_datas, $feed_type, $uid) {
         if(empty($entity_datas) || empty($feed_type) || empty($uid)) {
             return false;
         }
@@ -25,7 +98,7 @@ class FeedApi extends ApiController {
      * @param $uid			  bigint 添加动态的用户账号信息
      * @param $class_code     int    用户当前所在的班级
      */
-    public function cls_create($entity_datas, $feed_type, $uid, $class_code) {
+    public function class_create($entity_datas, $feed_type, $uid, $class_code) {
         if(empty($entity_datas) || empty($feed_type) || empty($uid)) {
             return false;
         }
@@ -42,7 +115,7 @@ class FeedApi extends ApiController {
      * @param $offset	 int    动态信息的起始位置
      * @param $limit     int    要获取动态信息的长度，默认为10，可能大于10
      */
-    public function usr_all($uid, $offset = 0, $limit = 10) {
+    public function user_all($uid, $offset = 0, $limit = 10) {
         if(empty($uid)) {
             return false;
         }
@@ -59,7 +132,7 @@ class FeedApi extends ApiController {
      * @param $offset  int    动态信息的起始位置
      * @param $limit   int    要获取动态信息的长度，默认为10，可能大于10
      */
-    public function usr_album($uid, $offset = 0, $limit = 10) {
+    public function user_album($uid, $offset = 0, $limit = 10) {
         if(empty($uid)) {
             return false;
         }
@@ -76,7 +149,7 @@ class FeedApi extends ApiController {
      * @param $offset	   int    动态信息的起始位置
      * @param $limit	   int    要获取动态信息的长度，默认为10，可能大于10
      */
-    public function cls_all($class_code, $offset = 0, $limit = 10) {
+    public function class_all($class_code, $offset = 0, $limit = 10) {
         if(empty($class_code)) {
             return false;
         }
@@ -93,7 +166,7 @@ class FeedApi extends ApiController {
      * @param $offset   int    动态信息的起始位置
      * @param $limit    int    要获取动态信息的长度，默认为10，可能大于10
      */
-    public function usr_my($uid, $offset = 0, $limit = 10) {
+    public function user_my($uid, $offset = 0, $limit = 10) {
         if(empty($uid)) {
             return false;
         }
@@ -110,7 +183,7 @@ class FeedApi extends ApiController {
      * @param $offset   int    动态信息的起始位置
      * @param $limit    int    要获取动态信息的长度，默认为10，可能大于10
      */
-    public function usr_child($uid, $offset = 0, $limit = 10) {
+    public function user_child($uid, $offset = 0, $limit = 10) {
         if(empty($uid)) {
             return false;
         }

@@ -18,8 +18,8 @@ class mAlbumPersonRelation extends mBase {
         return $this->_dAlbumPersonRelation->delAlbumPersonRelById($id);
     }
     
-    public function getAlbumPersonRelByUid($uid) {
-        return $this->_dAlbumPersonRelation->getAlbumPersonRelByUid($uid);
+    public function getAlbumPersonRelByUid($uid, $offset = null, $limit = null) {
+        return $this->_dAlbumPersonRelation->getAlbumPersonRelByUid($uid, $offset, $limit);
     }
     
 }

@@ -24,7 +24,8 @@ class dAlbumClassRelation extends dBase {
         return $this->delete($id);
     }
     
-    public function getAlbumClassRelByClassCode($class_code) {
-        return $this->getInfoByFk($class_code,'class_code');
+    public function getAlbumClassRelByClassCode($class_code, $offset = null, $limit = null) {
+        $orderby = $this->_pk.' desc';
+        return $this->getInfoByFk($class_code,'class_code', $orderby, $offset, $limit);
     }
 }

@@ -570,6 +570,7 @@ class AmsclasslistAction  extends AmsController{
                 $client_class_data = array(
                     'teacher_class_role' => TEACHER_CLASS_ROLE_CLASSTEACHER,
                 	'class_admin' => NO_CLASS_ADMIN,
+                	'upd_account' => $uid,
                     'upd_time' => $now_time,
                 );
                 $mClientClass->modifyClientClass($client_class_data, $client_class_id);
@@ -750,6 +751,7 @@ class AmsclasslistAction  extends AmsController{
             $clientclass_data = array(
                 'teacher_class_role' => $teacher_class_role,
                 'class_admin' => IS_CLASS_ADMIN,
+            	'upd_account' => $uid,
                 'upd_time' => time(),
             );
             $mClientClass->modifyClientClass($clientclass_data, $client_class_id);

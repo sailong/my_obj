@@ -68,4 +68,11 @@ class RedisCommonKey {
     public static function getUserObjectHashKey($uid) {
         return str_replace("[client_account]", $uid, "usr:[client_account]:obj");
     }
+    
+    /**
+     * 获取redis的全部key信息
+     */
+    public static function getGlobalKeyPre() {
+        return "global_keys:";
+    }
 }

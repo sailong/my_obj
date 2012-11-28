@@ -1,5 +1,5 @@
 <?php
-import('@.RData.RedisCommonKey');
+import('RData.RedisCommonKey');
 
 class dUserParentSet extends rBase {
     /**
@@ -27,6 +27,10 @@ class dUserParentSet extends rBase {
             return false;
         }
         
+        if(FEED_DEBUG) {
+            return $this->getUserParentSet($uid);
+        }
+        
         $this->loader($uid);
         
         $redis_key_live_user = RedisCommonKey::getLiveUserSetKey();
@@ -45,13 +49,17 @@ class dUserParentSet extends rBase {
             return false;
         }
         
+        $parent_accounts = array_unique((array)$parent_accounts);
+        
         $redis_key = RedisCommonKey::getUserParentSetKey($uid);
         
-        foreach((array)$parent_accounts as $uid) {
-            $this->sAdd($redis_key, $uid);
+        $pipe = $this->multi(Redis::PIPELINE);
+        foreach($parent_accounts as $uid) {
+            $pipe->sAdd($redis_key, $uid);
         }
+        $add_nums = $pipe->exec();
         
-        return true;
+        return $add_nums ? $add_nums : false;
     }
     
 	/**
@@ -64,31 +72,17 @@ class dUserParentSet extends rBase {
             return false;
         }
         
+        $parent_accounts = array_unique((array)$parent_accounts);
+        
         $redis_key = RedisCommonKey::getUserParentSetKey($uid);
         
-        $delete_nums = 0;        
-        foreach((array)$parent_accounts as $parent_uid) {
-            if($this->sRem($redis_key, $parent_uid)) {
-                $delete_nums++;
-            }
+        $pipe = $this->multi(Redis::PIPELINE);        
+        foreach($parent_accounts as $parent_uid) {
+            $pipe->sRem($redis_key, $parent_uid);
         }
+        $delete_nums = $pipe->exec();
         
         return $delete_nums ? $delete_nums : false;
-    }
-    
-	/**
-     * 判断是否存在
-     * @param $uid
-     */
-    private function isExistUserParentSet($uid) {
-        if(empty($uid)) {
-            return false;
-        }
-        
-        $redis_key = RedisCommonKey::getUserParentSetKey($uid);
-        $keys = $this->keys($redis_key);
-        
-        return !empty($keys) ? $keys : false;
     }
     
     /**
@@ -96,13 +90,23 @@ class dUserParentSet extends rBase {
      * @param $uid
      */
     private function loader($uid) {
-        if(empty($uid) || $this->isExistUserParentSet($uid)) {
+        if(empty($uid)) {
             return false;
         }
         
-        import('@.RData.Common.Loader.LoaderUser');
-        $loaderObject = new LoaderUser();
+        $redis_key = RedisCommonKey::getUserParentSetKey($uid);
         
-        return $loaderObject->load($uid);
+        $GlobalKeys = ClsFactory::Create('RData.GlobalKeys');
+        if(!$GlobalKeys->isExists($redis_key)) {
+            
+            $GlobalKeys->addKey($redis_key);
+            
+            import('RData.Common.Loader.LoaderUser');
+            $loaderObject = new LoaderUser();
+        
+            return $loaderObject->load($uid);
+        }
+        
+        return true;
     }
 }

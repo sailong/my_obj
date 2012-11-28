@@ -27,7 +27,7 @@ class mCount extends mBase{
     /**
      * 统计所选区域的用户统计数
      */
-    public function getClientCountByArea($area_id) {
+    public function getClientCountByArea($area_id,$school_name) {
         if(empty($area_id)) {
             return false;
         }
@@ -38,10 +38,16 @@ class mCount extends mBase{
 
 a,wmw_class_info b,wmw_client_class c
 		where ';
+        
+        if(!empty($school_name)) {
+        	$school_name = addslashes(str_replace(array('%', '_'), "", $school_name));
+        	$sql .= "a.school_name like '$school_name%' AND ";
+        }
+        
         $sql .= $where_area.' AND a.school_id=b.school_id 
 				AND b.class_code=c.class_code ) d 
 				GROUP BY d.school_id,d.client_type';
-        //$sql .= " limit $offset,$length";
+
         $rs['people'] = $this->_dCount->query($sql);
         $count_arr = array();
         foreach($rs['people'] as $key=>$val) {
@@ -113,24 +119,40 @@ a,wmw_class_info b,wmw_client_class c
         if(empty($where_area) && empty($school_name)) {
             return false;
         }
-        $length = $length*3;
-        $sql = 'SELECT d.school_id,d.school_name,d.area_id,COUNT(d.client_account) count,d.client_type FROM
-        		(SELECT DISTINCT a.school_name,a.school_id,a.area_id,c.client_account,c.client_type 
-				FROM wmw_school_info a,wmw_class_info b,wmw_client_class c
-				where ';
+        
+        $school_sql = 'SELECT school_id,school_name,area_id FROM wmw_school_info a WHERE school_status=1 AND ' . $where_area;
+        
         if(!empty($school_name)) {
         	$school_name = addslashes(str_replace(array('%', '_'), "", $school_name));
-        	$sql .= "a.school_name like '$school_name%' AND ";
+        	$school_sql .= " AND a.school_name like '$school_name%' ";
         }
-        $sql .= $where_area.' AND a.school_id=b.school_id 
-				AND b.class_code=c.class_code) d 
-				GROUP BY d.school_id,d.client_type';
-        $sql .= " limit $offset,$length";
-        $rs = $this->_dCount->query($sql);
+        
+        $school_sql .= "limit $offset,$length";
+   
+        $rs_school = $this->_dCount->query($school_sql);
+
+        $school_ids = array();
         $count_arr = array();
-        foreach($rs as $key=>$val) {
-            $count_arr['people'][$val['school_id']]['school_name'] = $val['school_name'];
+        
+        foreach($rs_school as $key=>$val) {
+        	$school_ids[$val['school_id']] = $val['school_id'];
+        	$count_arr['people'][$val['school_id']]['school_name'] = $val['school_name'];
             $count_arr['people'][$val['school_id']]['area_id'] = $val['area_id'];
+        }
+        unset($rs_school);
+        
+        $school_id_str = implode(',', $school_ids);
+
+        $sql = 'SELECT d.school_id,COUNT(d.client_account) count,d.client_type FROM
+        		(SELECT DISTINCT b.school_id,c.client_account,c.client_type 
+				FROM wmw_class_info b,wmw_client_class c
+				where ';
+
+        $sql .= 'b.school_id in (' . $school_id_str . ') AND b.class_code=c.class_code) d GROUP BY d.school_id,d.client_type';
+        
+        $rs = $this->_dCount->query($sql);
+
+        foreach($rs as $key=>$val) {
             $count_arr['people'][$val['school_id']]['people_total_count'] += $val['count'];
            
             if($val['client_type'] == 0) {
@@ -141,10 +163,9 @@ a,wmw_class_info b,wmw_client_class c
                 $type = 'parents_count';
             }
             $count_arr['people'][$val['school_id']][$type] = $val['count'];
-            $school_ids[$val['school_id']] = $val['school_id'];
             unset($rs[$key]);
         }
-        
+      
         $count_arr['phone'] = $this->getPhoneBdingCountByArea($school_ids);
         
         return $count_arr;

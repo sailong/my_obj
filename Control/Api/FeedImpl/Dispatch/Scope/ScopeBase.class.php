@@ -17,6 +17,14 @@ abstract class ScopeBase {
         
         $mUserFeedAllZset = ClsFactory::Create('RModel.Feed.mUserFeedAllZset');
         
+        //debug
+        if(FEED_DEBUG) {
+            echo '<pre>follow关系为:';
+            echo implode(',', (array)$follows);
+            echo '。个人全部动态信息中增加feed_id为：' . $feed_id . '的记录!';
+            echo '</pre>';
+        }
+        
         $add_nums = 0;
         foreach($follows as $uid) {
             if($mUserFeedAllZset->addUserFeedAllZset($uid, $add_time, $feed_id)) {
@@ -37,6 +45,14 @@ abstract class ScopeBase {
             return false;
         }
         
+       //debug
+        if(FEED_DEBUG) {
+            echo '<pre>follow关系为:';
+            echo implode(',', (array)$class_code);
+            echo '。班级全部动态信息中增加feed_id为：' . $feed_id . '的记录!';
+            echo '</pre>';
+        }
+        
         $mClassFeedAllZset = ClsFactory::Create('RModel.Feed.mClassFeedAllZset');
         
         return $mClassFeedAllZset->addClassFeedAllZset($class_code, $add_time, $feed_id);
@@ -50,6 +66,14 @@ abstract class ScopeBase {
     public function dispatchUserMy($follows, $add_time, $feed_id) {
         if(empty($follows) || empty($feed_id)) {
             return false;
+        }
+        
+      //debug
+        if(FEED_DEBUG) {
+            echo '<pre>follow关系为:';
+            echo implode(',', (array)$follows);
+            echo '。与我相关的动态信息中增加feed_id为：' . $feed_id . '的记录!';
+            echo '</pre>';
         }
         
         $mUserMyFeedZset = ClsFactory::Create('RModel.Feed.mUserMyFeedZset');
@@ -74,6 +98,14 @@ abstract class ScopeBase {
             return false;
         }
         
+      //debug
+        if(FEED_DEBUG) {
+            echo '<pre>follow关系为:';
+            echo implode(',', (array)$follows);
+            echo '。孩子的动态信息中增加feed_id为：' . $feed_id . '的记录!';
+            echo '</pre>';
+        }
+        
         $mUserChildrenSet = ClsFactory::Create('RModel.Feed.mUserChildSet');
         
         $add_nums = 0;
@@ -94,6 +126,14 @@ abstract class ScopeBase {
     public function dispatchUserAlbum($follows, $add_time, $feed_id) {
         if(empty($follows) || empty($feed_id)) {
             return false;
+        }
+        
+      //debug
+        if(FEED_DEBUG) {
+            echo '<pre>follow关系为:';
+            echo implode(',', (array)$follows);
+            echo '。好友的动态信息中增加feed_id为：' . $feed_id . '的记录!';
+            echo '</pre>';
         }
         
         $mUserAlbumFeedSet = ClsFactory::Create('RModel.Feed.mUserAlbumFeedSet');

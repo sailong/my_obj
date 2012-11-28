@@ -1,7 +1,7 @@
 <?php
 
 class dCurriculumskin extends dBase {
-	protected $_tablename = 'wmw_curriculum_skin';
+	protected $_tablename = 'old_wmw_curriculum_skin';
 	protected $_fields = array(
 		'skin_id', 
 		'skin_name', 

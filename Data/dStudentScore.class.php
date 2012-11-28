@@ -4,7 +4,7 @@ class dStudentScore extends  dBase {
      * 通过考试id获取学生的成绩信息
      * @param $exam_ids
      */
-    protected $_tablename = 'wmw_student_score';
+    protected $_tablename = 'old_wmw_student_score';
     protected $_fields = array(
         'score_id',
         'client_account',

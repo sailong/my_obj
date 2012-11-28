@@ -56,7 +56,7 @@ class LoaderUser {
             }
         }
         
-        $dUserFriendSet = ClsFactory::Create('@.RData.Common.dUserFriendSet');
+        $dUserFriendSet = ClsFactory::Create('RData.Common.dUserFriendSet');
         return $dUserFriendSet->addUserFriendSet($uid, $friend_uids);
     }
     
@@ -80,7 +80,7 @@ class LoaderUser {
             }
         }
         
-        $dUserChildrenSet = ClsFactory::Create('@.RData.Common.dUserChildrenSet');
+        $dUserChildrenSet = ClsFactory::Create('RData.Common.dUserChildrenSet');
         return $dUserChildrenSet->addUserChildrenSet($uid, $children_uids);
     }
     
@@ -104,7 +104,7 @@ class LoaderUser {
             }
         }
         
-        $dUserParentSet = ClsFactory::Create('@.RData.Common.dUserParentSet');
+        $dUserParentSet = ClsFactory::Create('RData.Common.dUserParentSet');
         return $dUserParentSet->addUserParentSet($uid, $parent_uids);
     }
 }

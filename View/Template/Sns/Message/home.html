@@ -1,33 +1,21 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-	   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en_US" xml:lang="en_US">
-
- <head>
-  <title> </title>
-  <script type="text/javascript" src="__PUBLIC__/js/jquery-1.5.2.min.js"></script>
-  <script type="text/javascript" src="http://192.168.61.100:8080/socket.io/socket.io.js"></script>
-  <!--{literal}-->
-  <script>
-		  var socket = io.connect('http://192.168.61.100:8080');
-		  var content = $('#content');
-		  socket.on('news', function (data) {
-		  var dataObj=eval("("+data.msg+")");
-		  	  if(dataObj.BJGG) {
-		  	  	$("#bjgg_num").html(parseInt($("#bjgg_num").html()) + dataObj.BJGG.length);
-		  	  }
-		  	  if(dataObj.BJZY) {
-		  	  	$("#bjzy_num").html(parseInt($("#bjzy_num").html()) + dataObj.BJZY.length);
-		  	  }
-		  	  
-		  });
-  </script>
-  <!--{/literal}-->
- </head>
- <body>
- <div id="msg">
-		你有<span id="bjgg_num">0</span>条班级公告未读！<br/>
-		你有<span id="bjzy_num">0</span>条班级作业未读！
-	</div>
- </body>
+<html>
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <head>
+        <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+        <script type="text/javascript" src="__PUBLIC__/js/jquery-1.5.2.min.js"></script>
+        <script type="text/javascript" src="http://192.168.61.100:8080/socket.io/socket.io.js"></script>
+        <script type="text/javascript" src="__PUBLIC__/sns/js/message/message.js"></script>
+    </head>
+    <body>
+    <input type="hidden" id="uid" value="{$uid}"/>
+    <div id="news_num" style="background:green; float:right; display:none; width:150px; index:100;">你有<span id="new_news_num">1</span>条新消息</div>
+    <div style="border:1px red solid; height:20px; width:200px; float:right;">消息<span id="new_show">》</span></div>
+    <ul id="news" style="width:200px; float:right; display:none;">
+    	<li>查看班级公告<span id="bjgg_num"></span></li>
+    	<li>查看班级作业<span id="bjzy_num"></span></li>
+    	<li>查看班级成绩<span id="bjcj_num"></span></li>
+    	<li>查看评论<span id="comments_num"></span></li>
+    	<li>查看邀请<span id="req_num"></span></li>
+    </ul>
+    </body>
 </html>

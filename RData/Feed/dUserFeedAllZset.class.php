@@ -1,5 +1,5 @@
 <?php
-import('@.RData.RedisFeedKey');
+import('RData.RedisFeedKey');
 
 class dUserFeedAllZset extends rBase {
     protected $zset_size = 100;
@@ -36,7 +36,8 @@ class dUserFeedAllZset extends rBase {
         
         $redis_key = RedisFeedKey::getUserFeedAllZsetKey($uid);
         
-        $min_feed_id = reset($this->zRange($redis_key, 0, 0));
+        $feed_ids = $this->zRange($redis_key, 0, 0);
+        $min_feed_id = !empty($feed_ids) ? reset($feed_ids) : 0;
         
         return array($this->zset_size, $min_feed_id);
     }
@@ -125,14 +126,24 @@ class dUserFeedAllZset extends rBase {
      * @param $class_code
      */
     private function loader($uid) {
-        if(empty($uid) || $this->isExistUserFeedAllZset($uid)) {
+        if(empty($uid)) {
             return false;
         }
         
-        import('@.RData.Feed.Loader.LoaderFeed');
-        $loaderObject = new LoaderFeed();
+        $redis_key = RedisFeedKey::getUserFeedAllZsetKey($uid);
         
-        return $loaderObject->loadUserFeed($uid);
+        $GlobalKeys = ClsFactory::Create('RData.GlobalKeys');
+        if(!$GlobalKeys->isExists($redis_key)) {
+            
+            $GlobalKeys->addKey($redis_key);
+            
+            import('RData.Feed.Loader.LoaderFeed');
+            $loaderObject = new LoaderFeed();
+        
+            return $loaderObject->loadUserFeed($uid);
+        }
+        
+        return true;
     }
     
 }

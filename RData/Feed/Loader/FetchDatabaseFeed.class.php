@@ -103,7 +103,7 @@ class FetchDatabaseFeed  {
             return false;
         }
         
-        $mUserChildrenSet = ClsFactory::Create('@.RModel.Common.mUserChildrenSet');
+        $mUserChildrenSet = ClsFactory::Create('RModel.Common.mUserChildrenSet');
         $child_uids = $mUserChildrenSet->getUserChildrenSet($uid);
         
         $mFeed = ClsFactory::Create('Model.Feed.mFeed');
@@ -167,8 +167,8 @@ class FetchDatabaseFeed  {
             return false;
         }
         
-        $mClassStudentSet = ClsFactory::Create('@.RModel.Common.mClassStudentSet');
-        $mClassTeacherSet = ClsFactory::Create('@.RModel.Common.mClassTeacherSet');
+        $mClassStudentSet = ClsFactory::Create('RModel.Common.mClassStudentSet');
+        $mClassTeacherSet = ClsFactory::Create('RModel.Common.mClassTeacherSet');
         
         $student_uids = $mClassStudentSet->getClassStudentSet($class_code);
         $teacher_uids = $mClassTeacherSet->getClassTeacherSet($class_code);
@@ -186,7 +186,7 @@ class FetchDatabaseFeed  {
             return false;
         }
         
-        $mUserFriendSet = ClsFactory::Create('@.RModel.Common.mUserFriendSet');
+        $mUserFriendSet = ClsFactory::Create('RModel.Common.mUserFriendSet');
         
         return $mUserFriendSet->getUserFriendSet($uid);
     }
@@ -200,7 +200,7 @@ class FetchDatabaseFeed  {
             return false;
         }
         
-        $mUserChildrenSet = ClsFactory::Create('@.RModel.Common.mUserChildrenSet');
+        $mUserChildrenSet = ClsFactory::Create('RModel.Common.mUserChildrenSet');
         return $mUserChildrenSet->getUserChildrenSet($uid);
     }
 }

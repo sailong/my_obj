@@ -22,6 +22,7 @@ class UserstatisticsAction extends WmsController{
 	    $page = max(1, $page);
 	    $length = 10;
 	    $offset = ($page-1)*$length;
+
 	    if(empty($area_id)){
 	        $area_id = 11008000;
 	    }
@@ -32,13 +33,13 @@ class UserstatisticsAction extends WmsController{
 	    }
 	    $no_next = true;
         if(empty($area_user_count) || empty($area_phone_count)) {
-            $a = $this->getClientCountByArea($area_id);
+            $a = $this->getClientCountByArea($area_id,$school_name);
             $area_user_count = $a['people'];
             $area_phone_count = $a['phone'];//$this->phoneCountByArea($area_id);
         }
         $mCount = ClsFactory::Create('Model.mCount');
 	    $area_schoolInfos = $mCount->getCountByAreaSchooName($school_name, $area_id, $offset, $length + 1);
-	    
+
 	    if(count($area_schoolInfos)>$length) {
 	        $no_next = false;
 	        $area_schoolInfos = array_slice($area_schoolInfos, 0, $length, true);
@@ -146,12 +147,12 @@ class UserstatisticsAction extends WmsController{
 	 * 区域用户统计
 	 * 
 	 */
-	protected function getClientCountByArea($area_id) {
+	protected function getClientCountByArea($area_id,$school_name) {
 	    if(empty($area_id)) {
             return false;
         }
 	    $mCount = ClsFactory::Create('Model.mCount');
-	    $peopleCount = $mCount->getClientCountByArea($area_id);
+	    $peopleCount = $mCount->getClientCountByArea($area_id,$school_name);
 	    $peoples_count = array(
             'total_people_count'=>0,
             'student_count'     =>0,

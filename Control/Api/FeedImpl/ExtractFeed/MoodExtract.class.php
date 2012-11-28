@@ -1,5 +1,5 @@
 <?php
-import('@.Control.Api.ExtractFeed.ExtractAbstract');
+import('@.Control.Api.FeedImpl.ExtractFeed.ExtractAbstract');
 
 class MoodExtract extends ExtractAbstract {
 	/**

@@ -5,7 +5,7 @@ class LoaderFeed {
     protected $fetchFeedObject = null;
     
     public function __construct() {
-        import('@.RData.Feed.Loader.FetchDatabaseFeed');
+        import('RData.Feed.Loader.FetchDatabaseFeed');
         $this->fetchFeedObject = new FetchDatabaseFeed();
     }
     

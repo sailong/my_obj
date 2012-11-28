@@ -49,4 +49,46 @@ class RedisFeedKey {
         return str_replace('[client_account]', $uid, 'feed:usr:[client_account]:my');
     }
     
+    /**
+     * 获取与我相关的班级作业消息的key
+     * @param unknown_type $uid
+     */
+    public static function getUserHomeworkMsgKey($uid) {
+        return str_replace("[client_account]", $uid, "msg:[client_account]:homework");
+    }
+    
+	/**
+     * 获取与我相关的班级公告消息的key
+     * @param unknown_type $uid
+     */
+    public static function getUserNoticeMsgKey($uid) {
+        return str_replace("[client_account]", $uid, "msg:[client_account]:notice");
+    }
+    
+	/**
+     * 获取与我相关的班级成绩消息的key
+     * @param unknown_type $uid
+     */
+    public static function getUserExamMsgKey($uid) {
+        return str_replace("[client_account]", $uid, "msg:[client_account]:exam");
+    }
+    
+    
+	/**
+     * 获取与我相关的好友请求消息的key
+     * @param unknown_type $uid
+     */
+    public static function getUserReqMsgKey($uid) {
+        return str_replace("[client_account]", $uid, "msg:[client_account]:req");
+    }
+    
+    
+	/**
+     * 获取与我相关的评论消息的key
+     * @param unknown_type $uid
+     */
+    public static function getUserCommentsMsgKey($uid) {
+        return str_replace("[client_account]", $uid, "msg:[client_account]:comments");
+    }
+    
 }

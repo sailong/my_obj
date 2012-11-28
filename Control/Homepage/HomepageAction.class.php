@@ -9,16 +9,24 @@ class HomepageAction extends SnsController{
 
 	function index(){
 		$class_code = $_REQUEST['class_code'];
-		if(empty($class_code)){
-
-			$class_code = key($this->user['class_info']);
-			if(empty($class_code)){
-			    $this->showError("您不属于任何班级!", "/Homeuser/Index/spacehome/spaceid/".$this->getCookieAccount());
-			}
+		$class_code_list = array_keys($this->user['class_info']);
+		
+		//如果没有传入对应的class_code值
+		if(empty($class_code)) {
+			$class_code = reset($class_code_list);
+		}
+		
+		//如果没有班级信息了
+		if(empty($class_code_list)) {
+			$this->showError("您不属于任何班级!", "/Homeuser/Index/spacehome/spaceid/".$this->getCookieAccount());
+		}
+		//判断对应的班级是否是登陆用户
+		if(!in_array($class_code, (array)$class_code_list)) {
+			$this->showError("您不属于该班级!", "/Homepage/Homepage/index/class_code/" . reset($class_code_list));
 		}
 		
 		list($need_show, $need_upgrade, $secret_key) = $this->Upgrade($class_code);
-		if($need_show) {
+		if(!empty($need_show)) {
 		    if($need_upgrade) {
 		        $this->assign('uid', $this->user['client_account']);
 		        $this->assign('class_code', $class_code);
@@ -29,7 +37,7 @@ class HomepageAction extends SnsController{
 		    $this->display("Homeclass/upgrade_tip");
 		    
 		} else {
-    		$client_type = ($this->user['client_type']);
+    		$client_type = ($this->user['client_type']);    //CLIENT_TYPE_TEACHER 1 老师
     		if($client_type == CLIENT_TYPE_TEACHER){
     			$this->redirect("../Homeclass/Myclass/index/class_code/".$class_code);
     		} else {
@@ -41,17 +49,22 @@ class HomepageAction extends SnsController{
   
     //班级升级和毕业拦截器
     protected function Upgrade($class_code) {
-        $class_code_list = array();
-        foreach($this->user['class_info'] as $code=>$class_info) {
-            $class_code_list[] = $code;
-        }
+    	if(empty($class_code)) {
+    		return false;
+    	}
+    	
+        $class_code_list = array_keys($this->user['class_info']);
         $class_code = in_array($class_code, (array)$class_code_list) ? $class_code : array_shift($class_code_list);
         
         //判断是否是班主任
         $class_info = $this->user['class_info'][$class_code];
         
-        import("@.Control.Api.Upgrade.Core.reflectClassInfo");
-        $classUpdateObj = new reflectClassInfo($class_code);
+        try {
+        	import("@.Control.Api.Upgrade.Core.reflectClassInfo");
+        	$classUpdateObj = new reflectClassInfo($class_code);
+        } catch(Exception $e) {
+        	return false;
+        }
         
         $need_upgrade = $need_show = false;
         //$is_headteacher = $this->user['client_type'] == CLIENT_TYPE_TEACHER && $class_info['headteacher_account'] == $this->user['client_account'];

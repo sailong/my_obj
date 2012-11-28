@@ -637,7 +637,7 @@ class ClassmanageAction extends SnsController{
 	        $HandlePHPExcel->export($pFileName,$excel_datas[0]['title']);
 	        unset($excel_datas);
 	    }elseif($stamp == 'stamp') {
-            $userId = $this->user['ams_account'];
+            $userId = $this->user['client_account'];
             $schoolModel = ClsFactory::Create('Model.mSchoolInfo');
             $schoolinfo_arr = $schoolModel->getSchoolInfoByNetManagerAccount($userId);
             $schoolInfo = & $schoolinfo_arr[$userId];
@@ -676,7 +676,7 @@ class ClassmanageAction extends SnsController{
         $gradeId = $this->objInput->postInt('grade');
         $class_code = $this->objInput->postInt('classcode');
         
-        $uid = $this->user['ams_account'];
+        $uid = $this->user['client_account'];
         if($oldheaderId != $headTeacherUid){
         	$mSquadron = ClsFactory::Create('Model.mSquadron');
         	if($mSquadron->getSquadronById($class_code)){
@@ -915,6 +915,7 @@ class ClassmanageAction extends SnsController{
                 $client_class_data = array(
                     'teacher_class_role' => TEACHER_CLASS_ROLE_CLASSTEACHER,
                 	'class_admin' => NO_CLASS_ADMIN,
+                	'upd_account' => $uid,
                     'upd_time' => time(),
                 );
                 $mClientClass->modifyClientClass($client_class_data, $client_class_id);
@@ -985,7 +986,7 @@ class ClassmanageAction extends SnsController{
         $gradeId            = $this->objInput->postInt('gradeid');
         $teacherInfo        = htmlspecialchars_decode($this->objInput->postStr('teacherinfo'));
         
-        $uid = $this->user['ams_account'];
+        $uid = $this->user['client_account'];
 	    //保证json串的正确解析
         if(function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc()) {
             $teacherInfo = stripslashes($teacherInfo);
@@ -1091,6 +1092,7 @@ class ClassmanageAction extends SnsController{
             $clientclass_data = array(
                 'teacher_class_role' => $teacher_class_role,
                 'class_admin' => IS_CLASS_ADMIN,
+            	'upd_account' => $uid,
                 'upd_time' => time(),
             );
             $mClientClass->modifyClientClass($clientclass_data, $client_class_id);
@@ -1259,7 +1261,7 @@ class ClassmanageAction extends SnsController{
                  }
              }
          }
-         $currentAccount=$this->user['ams_account'];
+         $currentAccount=$this->user['client_account'];
          $client_account = $client_info = $family_relation = $client_class = array();     //定义空数组
          foreach($new_names as $key=>$val) {
              $account = array();

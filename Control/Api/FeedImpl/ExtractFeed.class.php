@@ -1,11 +1,4 @@
 <?php
-define('FEED_ALBUM', 1);
-define('FEED_BLOG', 2);
-define('FEED_EXAM', 3);
-define('FEED_HOMEWORK', 4);
-define('FEED_MOOD', 5);
-define('FEED_NOTICE', 6);
-
 class ExtractFeed {
     
     /**

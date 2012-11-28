@@ -5,6 +5,17 @@ class mExamInfo extends mBase {
     public function __construct() {
 		$this->_dExamInfo = ClsFactory::Create('Data.dExamInfo');    	
     }
+    
+    /*
+     * 通过where 条件 查询记录
+     *  
+     */
+    public function getExamInfo($where, $orderby, $offset, $limit) {
+        
+        return $this->_dExamInfo->getInfo($where, $orderby, $offset, $limit);
+        
+    }
+    
     /**
      * 通过主键获取考试的基本信息
      * @param $exam_ids

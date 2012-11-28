@@ -7,7 +7,12 @@ class mStudentScore extends mBase {
         $this->_dStudentScore = ClsFactory::Create('Data.dStudentScore');       
     }
     
-    
+    /*通过where条件查询*/
+    public function getStudentScoreInfo($where, $orderby, $offset, $limit) {
+        
+        return $this->_dStudentScore->getInfo($where, $orderby, $offset, $limit);
+    }
+
     //通过主键 score_id获取学生成绩信息
     public function getStudentScoreById($score_ids) {
         if(empty($score_ids)) {
