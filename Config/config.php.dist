@@ -1,15 +1,15 @@
-<?php
+﻿<?php
 return array(
         //'配置项'=>'配置值'
-        'UC_DOMAIN'				=> 'vm.wmw.cn',    			//正式环境配置 UC域名
+        'UC_DOMAIN'				=> 'my.wmw.cn',    			//正式环境配置 UC域名
       
         'COOKIEDOMAIN'			=> '.wmw.cn',        			//UC域名        
       	
-      	'WMW_SERVER'			=> 'http://vm.wmw.cn',				//主站网址
+      	'WMW_SERVER'			=> 'http://home.wmw.cn',				//主站网址
       	
       	'ZSCY_SERVER'			=> 'http://www.zscy.cn',				//雏鹰网址
       	  
-        'APP_DOMAINS'			=> array('vm.wmw.cn', 'www.zscy.cn'),       
+        'APP_DOMAINS'			=> array('home.wmw.cn', 'www.zscy.cn'),       
         
         'SHOW_ERROR_MSG'        => true,
 
@@ -51,6 +51,24 @@ return array(
                                                         )
                                         ),                           //支持的社会化登录,比如QQ,新浪等		
 		    
+        'GEARMAN_INFO' => array(
+              'master'=> array(
+                    'host' => '127.0.0.1',
+                    'port' => '4730'
+                    ),
+              'slave'=> array(
+                    'host' => '127.0.0.1',
+                    'port' => '4731'
+                    ),
+                    
+        ),                                  
+                                        
+ 		'LOG_RECORD'            => true,   // 默认不记录日志
+
+		'LOG_FILE_SIZE'         => 2097152, // 日志文件大小限制
+
+        'LOG_RECORD_LEVEL'      => array('EMERG','ALERT','CRIT','ERR'),// 允许记录的日志级别                 		    
+		    
                 
         //如果需要修改以下资源配置，请联系杨益
         //DB配置
@@ -58,139 +76,145 @@ return array(
                 //默认db资源
                 'main' => array(
                     array(
-                        'host' => '192.168.23.128',
+                        'host' => '192.168.1.254',
                         'port' => '3306',
                         'user' => 'root',
-                        'password' => 'root',
-                        'db_name' => 'aries'
+                        'password' => 'www.wmw.cn',
+                        'db_name' => 'wmw_develop'
                         ),
                     array(
-                        'host' => '192.168.23.128',
+                        'host' => '192.168.1.254',
                         'port' => '3306',
                         'user' => 'root',
-                        'password' => 'root',
-                        'db_name' => 'aries'
+                        'password' => 'www.wmw.cn',
+                        'db_name' => 'wmw_develop'
                         )
                     ),
                 'sgip_sms' => array(
                     array(
-                        'host' => '192.168.23.128',
+                        'host' => '192.168.1.254',
                         'port' => '3306',
                         'user' => 'root',
-                        'password' => 'root',
-                        'db_name' => 'aries'
+                        'password' => 'www.wmw.cn',
+                        'db_name' => 'wmw_develop'
                         ),
                     array(
-                        'host' => '192.168.23.128',
+                        'host' => '192.168.1.254',
                         'port' => '3306',
                         'user' => 'root',
-                        'password' => 'root',
-                        'db_name' => 'aries'
+                        'password' => 'www.wmw.cn',
+                        'db_name' => 'wmw_develop'
                         )
                     ),
                 'bms' => array(
                     array(
-                        'host' => '192.168.23.128',
+                        'host' => '192.168.1.254',
                         'port' => '3306',
                         'user' => 'root',
-                        'password' => 'root',
-                        'db_name' => 'aries'
+                        'password' => 'www.wmw.cn',
+                        'db_name' => 'wmw_develop'
                         ),
                     array(
-                        'host' => '192.168.23.128',
+                        'host' => '192.168.1.254',
                         'port' => '3306',
                         'user' => 'root',
-                        'password' => 'root',
-                        'db_name' => 'aries'
+                        'password' => 'www.wmw.cn',
+                        'db_name' => 'wmw_develop'
                         )
                     ),
                 'wm_cy' => array(
                         array(
-                            'host' => '192.168.23.128',
+                            'host' => '192.168.1.254',
                             'port' => '3306',
                             'user' => 'root',
-                            'password' => 'root',
+                            'password' => 'www.wmw.cn',
                             'db_name' => 'cy_online'
                             ),
                         array(
-                            'host' => '192.168.23.128',
+                            'host' => '192.168.1.254',
                             'port' => '3306',
                             'user' => 'root',
-                            'password' => 'root',
+                            'password' => 'www.wmw.cn',
                             'db_name' => 'cy_online'
                             )
                         ),
                         
                'old_resource' => array(
                         array(
-                            'host' => '192.168.23.128',
+                            'host' => '192.168.1.254',
                             'port' => '3306',
                             'user' => 'root',
-                            'password' => 'root',
+                            'password' => 'www.wmw.cn',
                             'db_name' => 'xiaoyuan-ziyuan'
                             ),
                         array(
-                            'host' => '192.168.23.128',
+                            'host' => '192.168.1.254',
                             'port' => '3306',
                             'user' => 'root',
-                            'password' => 'root',
+                            'password' => 'www.wmw.cn',
                             'db_name' => 'xiaoyuan-ziyuan'
                             )
                         ),
                 'resource' => array(
                         array(
-                            'host' => '192.168.23.128',
+                            'host' => '192.168.1.254',
                             'port' => '3306',
                             'user' => 'root',
-                            'password' => 'root',
+                            'password' => 'www.wmw.cn',
                             'db_name' => 'study_resource'
                             ),
                         array(
-                            'host' => '192.168.23.128',
+                            'host' => '192.168.1.254',
                             'port' => '3306',
                             'user' => 'root',
-                            'password' => 'root',
+                            'password' => 'www.wmw.cn',
                             'db_name' => 'study_resource'
                             )
                         ),
                 'oa' => array(
                         array(
-                            'host' => '192.168.23.128',
+                            'host' => '192.168.1.254',
                             'port' => '3306',
                             'user' => 'root',
-                            'password' => 'root',
-                            'db_name' => 'aries'
+                            'password' => 'www.wmw.cn',
+                            'db_name' => 'wmw_develop'
                             ),
                         array(
-                            'host' => '192.168.23.128',
+                            'host' => '192.168.1.254',
                             'port' => '3306',
                             'user' => 'root',
-                            'password' => 'root',
-                            'db_name' => 'aries'
+                            'password' => 'www.wmw.cn',
+                            'db_name' => 'wmw_develop'
                             )
                         ),        
                 'user' => array(
                         array(
-                            'host' => '192.168.23.128',
+                            'host' => '192.168.1.254',
                             'port' => '3306',
                             'user' => 'root',
-                            'password' => 'root',
-                            'db_name' => 'aries'
+                            'password' => 'www.wmw.cn',
+                            'db_name' => 'wmw_develop'
                             ),
                         array(
-                            'host' => '192.168.23.128',
+                            'host' => '192.168.1.254',
                             'port' => '3306',
                             'user' => 'root',
-                            'password' => 'root',
-                            'db_name' => 'aries'
+                            'password' => 'www.wmw.cn',
+                            'db_name' => 'wmw_develop'
                             )
                         ),
                 ),
+                
+                'REDIS_INFO' => array(
+                    'host' => '127.0.0.1',
+                    'port' => '6379',
+                ),
+                
                 //如果需要修改以下资源配置，请联系杨益
                 //MC配置
                 'MC_INFO' => array(
                         'main' => array(
-                            'host' => '192.168.23.128',
+                            'host' => '192.168.1.254',
                             'port' => '11211'
                             )
                         ),
@@ -209,5 +233,5 @@ return array(
                             'grade_id',
                             'gradeid'
                         ),
-                  ),
+                  ),       
                 );

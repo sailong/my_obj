@@ -6,6 +6,20 @@ class mAlbumPhotos extends mBase {
         $this->_dAlbumPhotos = ClsFactory::Create('Data.Album.dAlbumPhotos');
     }
     
+	/**
+     * 通过相册获取图片信息
+     * @param $album_ids
+     * @param $offset
+     * @param $limit
+     */
+    public function getPhotosByAlbumId($album_ids, $offset = 0, $limit = 10) {
+        if(empty($album_ids)) {
+            return false;
+        }
+        
+        return $this->_dAlbumPhotos->getPhotosByAlbumId($album_ids, $offset, $limit);
+    }
+    
     //添加照片
     public function addPhoto($data, $is_return_id) {
         return $this->_dAlbumPhotos->addPhoto($data, $is_return_id);
@@ -24,5 +38,9 @@ class mAlbumPhotos extends mBase {
     //获得照片信息
     public function getPhotosByPhotoId($photo_ids) {
         return $this->_dAlbumPhotos->getPhotosByPhotoId($photo_ids);
+    }
+    
+    public function getByAlbumId($album_id, $offset=null, $limit=null) {
+        return $this->_dAlbumPhotos->getByAlbumId($album_id, $offset, $limit);
     }
 }

@@ -22,6 +22,7 @@ alias_import(array(
 	'WmsController' => WEB_ROOT_DIR.'/Control/WmsController.class.php',
 	'UcController' => WEB_ROOT_DIR.'/Control/UcController.class.php',
 	'ApiController' => WEB_ROOT_DIR.'/Control/ApiController.class.php',
+	'BackGroundController' => WEB_ROOT_DIR.'/Control/BackGroundController.class.php',
     )
 );
 ?>

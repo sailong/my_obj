@@ -23,7 +23,6 @@ if(!defined('VENDOR_UPLOAD_DIR')) {
 include_once VENDOR_UPLOAD_DIR . "/UploadfileInterface.php";
 
 class Uploadfile implements UploadfileInterface {
-
     public $path;//文件的绝对路径
     public $subpath;//文件的相对路径
     public $allow_type = array (
@@ -73,7 +72,6 @@ class Uploadfile implements UploadfileInterface {
             $this->_loadExtFile('ConvertImage.class.php');
             $obj = new ConvertImage($this->upfile['filename']);
             if ($obj->isAllowType($this->ext)) {
-
                 $this->_get_ext($this->upfile['name']);
 
                 $tmp_name = substr($this->upfile['filename'], 0, strrpos($this->upfile['filename'], '.')).'.jpg';

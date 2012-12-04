@@ -45,13 +45,25 @@ class AlbumExtract extends ExtractAbstract {
     /**
      * 获取相册中的第一张照片
      * @param $album_id
-     * 
-     * todolist
      */
     private function getAlbumFirstPhoto($album_id) {
+        if(empty($album_id)) {
+            return false;
+        }
         
+        $mAlbumPhotos = ClsFactory::Create('Model.Album.mAlbumPhotos');
+        $photo_arr = $mAlbumPhotos->getPhotosByAlbumId($album_id, 0, 1);
+        $photo_list = & $photo_arr[$album_id];
+        
+        $photo = !empty($photo_list) ? reset($photo_list) : array();
+        
+        return !empty($photo['file_middle']) ? $photo['file_middle'] : false;
     }
     
+    /**
+     * 格式化动态的内容信息
+     * @param $album_datas
+     */
     private function formatContent($album_datas) {
         if(empty($album_datas)) {
             return false;

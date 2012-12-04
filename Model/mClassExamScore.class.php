@@ -18,7 +18,7 @@ class mClassExamScore extends mBase {
     } 
        
     //通过考试id获取学生的成绩信息
-    public function getClassExamScoreExamId($exam_ids) {
+    public function getClassExamScoreByExamId($exam_ids) {
         if(empty($exam_ids)) {
             return false;
         }
@@ -27,7 +27,7 @@ class mClassExamScore extends mBase {
     }
     
     // 通过考试id和账号获取成绩信息
-    public function getClassExamScoreByExamIdAccount($exam_ids,$Account) {
+    public function getClassExamScoreByExamIdAndAccount($exam_ids, $Account) {
         if(empty($exam_ids) || empty($Account)) {
             return false;
         }
@@ -83,6 +83,22 @@ class mClassExamScore extends mBase {
         }
         
         return $this->_dClassExamScore->delClassExamScore($score_id);
+    }
+    
+    //批量删除学生成绩信息
+    public function delBatClassExamScore($score_ids) {
+        if(empty($score_ids) || !is_array($score_ids)) {
+            return false;
+        }
+        
+        $res = true;
+        foreach($score_ids as $score_id) {
+           $success =  $this->_dClassExamScore->delClassExamScore($score_id);
+           if (!$success) {
+               $res = false;
+           }
+        }
+        return $res;
     }
     
 }

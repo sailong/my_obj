@@ -57,7 +57,8 @@ class dUserChildrenSet extends rBase {
         foreach($child_accounts as $child_uid) {
             $pipe->sAdd($redis_key, $child_uid);
         }
-        $add_nums = $pipe->exec();
+        $replies = $pipe->exec();
+        $add_nums = $this->getPipeSuccessNums($replies);
         
         return $add_nums ? $add_nums : false;
     }
@@ -80,7 +81,8 @@ class dUserChildrenSet extends rBase {
         foreach($child_accounts as $child_uid) {
             $pipe->sRem($redis_key, $child_uid);
         }
-        $delete_nums = $pipe->exec();
+        $replies = $pipe->exec();
+        $delete_nums = $this->getPipeSuccessNums($replies);
         
         return $delete_nums ? $delete_nums : false;
     }

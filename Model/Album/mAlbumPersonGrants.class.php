@@ -19,7 +19,8 @@ class mAlbumPersonGrants extends mBase {
     }
     
     public function getAlbumPersonGrantByUid($uid) {
-        return $this->_dAlbumPersonGrants->getAlbumPersonGrantByUid($uid');
+        echo 333;die;
+        return $this->_dAlbumPersonGrants->getAlbumPersonGrantByUid($uid);
     }
     
     public function getAlbumPersonGrantByAlbumId($album_id) {

@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" /> 
+
+<title>成绩_班级成绩管理</title>
+
+<link rel="stylesheet" type="text/css" href="{$smarty.const.IMG_SERVER}__PUBLIC__/css/newhomepage.css"  />
+<link rel="stylesheet" type="text/css" href="{$smarty.const.IMG_SERVER}__PUBLIC__/css/class.css"  />
+
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/jquery-1.5.2.min.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/my97datepicker/WdatePicker.js" defer="defer"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/class_exam/exam_list.js"></script>
+
+</head>
+
+<body>
+<div class="box">
+<div class="nav">
+{insert name="publicHeader" class_code = $class_code}
+<div class="main">
+{insert name="account_left" class_code = $class_code}
+
+
+<div class="sub_right">
+<div class="sub_class">
+<div class='classTitle'>{$tpl_school_Name} <span class='class_tag'>班级成绩</span></div>
+
+<div class="class_work">
+	<ul>
+		<li id="work1"><a href="/Sns/ClassExam/Exam/index/class_code/{$class_code}" class="cjtmenu1">成绩管理</a></li>
+		<li id="work2"><a href="/Sns/ClassExam/Publish/index/class_code/{$class_code}" class="cjtmenu2">成绩发布</a></li>
+	</ul>
+</div><!--sub_class_gg end-->
+
+<div class='cjk' style='height:70px;'>
+  <form id="searchsubmit" name="form" action="/Sns/ClassExam/Exam/index/class_code/{$class_code}" method="post">
+    <span>&nbsp;&nbsp;&nbsp;班级名称：{$tpl_class_name}</span>
+
+    
+    <span style="margin-left:10px;">科目：</span>
+        <select name="subject_id" style="width:120px;" id="subject_id" class="cjt_select">
+        <option value="">所有科目</option>
+  
+	    {foreach from=$subject_list item=subject}
+	    	{if $subject.subject_id == $subject_id}
+				<option value={$subject.subject_id} selected="selected">{$subject.subject_name}{if $subject.teacher_name}({$subject.teacher_name}){/if}</option>
+			{else}
+				<option value={$subject.subject_id}>{$subject.subject_name}{if $subject.teacher_name}({$subject.teacher_name}){/if}</option>
+			{/if}
+		{/foreach}          
+        </select>
+		<div style='width:560px;height:40px;line-height:40px;'>
+			 <span style="margin-left:10px;">考试名称：</span>
+      	<input type="text" size=10 name="exam_name" id="exam_name" maxlength="10" value="{$exam_name}" class="cjt_text"/>
+        
+		<span>考试时间：</span>
+		<input type="text" class="cjt_text" name="start_time" value="{$start_time}" id="start_time"  {literal}onclick="WdatePicker({el:'start_time'})"{/literal}  readonly="readonly" style="width:80px;"/>
+		到
+		<input type="text"  class="cjt_text" name="end_time" value="{$end_time}" id="end_time"  {literal}onclick="WdatePicker({el:'end_time'})"{/literal}  readonly="readonly" style="width:100px;"/>
+      	<input type="submit" value="查找" class="inputbg2" />
+
+    	<input type="hidden" name="class_code" id="class_code" value="{$class_code}"/>
+		
+		</div>
+      	
+    </form>
+	</div>
+    <table width="600" border="0" cellpadding="3" cellspacing="1" bgcolor="#d8e4f0" style='margin-top:20px;'>
+      <tr>
+      	<td height="35" align="center" bgcolor="#effdff">考试名称</td>
+        <td width="20%" height="35" align="center" bgcolor="#effdff">考试科目</td>
+        <td width="20%" height="35" align="center" bgcolor="#effdff">考试日期</td>
+        <td width="15%" align="center" bgcolor="#effdff">短信发送状态</td>
+        <td width="15%" align="center" bgcolor="#effdff">操作</td>
+      </tr>
+      {if $exam_list}
+      {foreach from=$exam_list item=exam}
+	      <tr bgcolor="#ffffff">
+	        <td height="30" align="center">{$exam.exam_name}</td>
+	        <td height="30" align="center">{$exam.subject_name}</td>
+	        <td height="30" align="center">{$exam.exam_time}</td>
+	        <td align="center">
+			{if $exam.is_sms == 1}
+				已发短信
+			{elseif $exam.is_sms == 2}
+				<a href="/Sns/ClassExam/Exam/reissueSms/exam_id/{$exam.exam_id}/class_code/{$class_code}" title="修改过成绩">补发短信</a>
+		    {else}
+		    	<a href="/Sns/ClassExam/Exam/saveSms/exam_id/{$exam.exam_id}/class_code/{$class_code}" title="没发送过">发送短信</a>
+			{/if}
+			</td>
+	        <td height="30" align="center">
+	         <a href="/Sns/ClassExam/Exam/selectExam/exam_id/{$exam.exam_id}/class_code/{$class_code}" class="cjt_a" >查看</a>
+			{if $exam.is_del == 1}
+			<a href="/Sns/ClassExam/Exam/delExam/exam_id/{$exam.exam_id}/class_code/{$class_code}" class="cjt_a" onclick="return confirm('成绩删除后将不能恢复，确定删该成绩吗？')" >删除</a>		
+			{/if}	
+		    </td>
+	      </tr>
+      {/foreach}
+      <tr bgcolor="#FFFFFF">
+         <td colspan="6">
+          <div class='divpageinfo'>
+          <input type="hidden" id="page" value="{$page}"/>
+          {if $page==1}
+          	<a href="javascript:;" title="没有上一页了">上一页</a> 
+          {else}
+          	<a href="#" id="last_page" title="点击显示上一页">上一页</a> 
+          {/if}
+          | 
+          
+          {if $is_next_page}
+          	<a href="#" id="next_page" title="点击显示下一页">下一页</a>
+          {else}
+          	<a href="javascript:;" title="没有下一页了" >下一页</a>
+          {/if}
+          </div>
+        </tr> 
+      
+      {else}
+        <tr bgcolor="#FFFFFF">
+         <td colspan="6">
+          <div class="class_code_tishi">
+        	<!-- <B>请选择您要查询的科目或考试名称或考试时间或班级列表，点击查找查询您想要的数据!</B> --> 
+        	<B>没有您要查询的成绩！</B>  
+          </div>         
+         </td>
+        </tr> 
+         
+      
+      {/if}
+      
+    </table>
+
+
+
+</div>
+<!--sub_class end-->
+
+
+
+</div>
+<!--sub_right end-->
+<div class="kong"></div>
+</div><!--main end-->
+
+<div class="footer">
+<p>{$smarty.const.COPYRIGHT}</p>
+</div><!-- footer end-->
+
+
+
+</div><!--nav end-->
+</div><!--box end-->
+</body>
+</html>

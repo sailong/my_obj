@@ -3,7 +3,7 @@ class mAlbumPersonRelation extends mBase {
     protected $_dAlbumPersonRelation = null;
 
     public function __construct() {
-        $this->_dAlbumPersonRelation = ClsFacotry::Create('Data.Album.dAlbumPersonRelation');
+        $this->_dAlbumPersonRelation = ClsFactory::Create('Data.Album.dAlbumPersonRelation');
     }
     
     public function addAlbumPersonRel($data, $is_return_id) {
@@ -21,5 +21,13 @@ class mAlbumPersonRelation extends mBase {
     public function getAlbumPersonRelByUid($uid, $offset = null, $limit = null) {
         return $this->_dAlbumPersonRelation->getAlbumPersonRelByUid($uid, $offset, $limit);
     }
-    
+    public function getAlbumPersonRelByUidAlbumId($album_id, $uid) {
+        if(empty($album_id) || empty($uid)) {
+            return false;
+        }
+        $wherearr['client_account'] = $uid;
+        $wherearr['album_id'] = $album_id;
+        $orderby = ' client_account asc';
+        return $this->_dAlbumPersonRelation->getInfo($wherearr, $orderby);
+    }
 }

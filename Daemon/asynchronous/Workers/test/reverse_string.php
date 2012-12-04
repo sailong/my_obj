@@ -1,17 +1,22 @@
 <?php
 
-function reverse_string($job, &$log) {
+class reverse_string {
 
-    $workload = $job->workload();
+    public function run($job, &$log) {
 
-    $result = strrev($workload);
+        $workload = $job->workload();
+
+        $result = strrev($workload);
+        
+        file_put_contents('/tmp/gearman-test.log', date('Y-m-d H:i:s') .':'. $result . "\n", FILE_APPEND );
     
-    file_put_contents('/tmp/gearman-test.log', date('Y-m-d H:i:s') .':'. $result . "\n", FILE_APPEND );
+        $log[] = "Success";
+    
+        return $result;
 
-    $log[] = "Success";
-
-    return $result;
+    }
 
 }
+
 
 ?>

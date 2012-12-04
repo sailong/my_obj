@@ -1,6 +1,7 @@
 <?php
 
 class CourseAction extends SnsController {
+    public $_checkClsssCode = true;
     
     public function __construct() {
         parent::__construct ();
@@ -14,7 +15,7 @@ class CourseAction extends SnsController {
         //从$this->user 中找到有用信息
         $class_code = $this->getClassCode();   //获取当前账号的当前班级
         $isEditCourse = $this->isEditCourse($class_code);
-        dump($isEditCourse);
+
         //查询当前班级所有课程
         $mClassCourse = ClsFactory::Create('Model.mClassCourse');
         $class_course_list = $mClassCourse->getClassCourseByClassCode($class_code);
@@ -154,8 +155,7 @@ class CourseAction extends SnsController {
      * 判断当前用户在当前班级是否有修改课程表权限
      */
     private function isEditCourse($class_code) {
-        $user_class_list = $this->user['client_class'];
-        if(empty($user_class_list) || empty($class_code)) {
+        if(empty($class_code)) {
             return false;
         }
         
@@ -166,51 +166,6 @@ class CourseAction extends SnsController {
         }
 
         return ($client_class['class_admin'] == 1 || $client_class['client_type'] == 1) ? true :  false;
-    }
-    
-    /*
-     * 获取并检查当前用户的当前班级
-     * 如果没有通过GET或POST方式设置当前班级  默认所属班级的第一个
-     * 
-     */
-    protected function getClassCode() {
-
-        $class_code = $this->objInput->getInt('class_code');
-        if (empty($class_code)) {
-            $class_code = $this->objInput->postInt('class_code');
-        }
-        
-        if(empty($class_code)) {
-            $client_class = reset($this->user['client_class']);
-            $class_code   = $client_class['class_code'];
-
-            unset($client_class);
-        }
-        
-        $client_class = $this->getClientClass($class_code);
-        
-        return !empty($client_class) ? $client_class['class_code'] : false;      
-    }
-    
-    /*
-     * 获取当前账号的当前班级关系 
-     */
-    private function getClientClass($class_code) {
-        $user_class_list = $this->user['client_class'];
-        if(empty($class_code) || empty($user_class_list)) {
-            return false;
-        }
-
-        $current_client_class = array();
-        foreach($user_class_list as $key=>$client_class) {
-            if($class_code == $client_class['class_code']) {
-                $current_client_class = $client_class;
-                unset($user_class_list);
-                break;
-            } 
-        }
-
-        return !empty($current_client_class) ? $current_client_class : false;
     }
     
     /*

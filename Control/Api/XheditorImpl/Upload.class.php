@@ -3,10 +3,10 @@ class Upload {
     public function __construct() {
         import("@.Common_wmw.Pathmanagement_sns");
 	}
-    public function uploadfun() {
+    public function uploadfun($uploadPath,$showPath) {
         $inputName='filedata';//表单文件域name
-        $attachDir=Pathmanagement_sns::uploadjsupload();
-        $showpath = Pathmanagement_sns::getjsupload();
+        $attachDir=$uploadPath;
+        $showpath = $showPath;
         $dirType=1;//1:按天存入目录 2:按月存入目录 3:按扩展名存目录  建议使用按天存
         $maxAttachSize=2097152;//最大上传大小，默认是2M
         $upExt='txt,rar,zip,jpg,jpeg,gif,png,swf,wmv,avi,wma,mp3,mid';//上传扩展名

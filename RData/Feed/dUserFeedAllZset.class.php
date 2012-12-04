@@ -64,6 +64,63 @@ class dUserFeedAllZset extends rBase {
         return $add_nums ? $add_nums : false;
     }
     
+	/**
+     * 批量添加用户的全部动态集合
+     * @param $dataarr	array  数据格式:<p>
+     * array(<p>
+     * 		0 => array(
+     * 				'uid' => '用户账号',
+     * 				'feed_id' => '动态id',
+     * 				'add_time' => '动态的添加时间'
+     * 			),</p><p>
+     * 		1 => array(
+     * 				'uid' => '用户账号',
+     * 				'feed_id' => '动态id',
+     * 				'add_time' => '动态的添加时间'
+     * 			),
+     * )</p>
+     * </p>
+     */
+    public function addUserFeedAllZsetBat($dataarr) {
+        if(empty($dataarr) || !is_array($dataarr)) {
+            return false;
+        }
+        
+        $chunk_arr = array_chunk($dataarr, 200, true);
+        unset($dataarr);
+        
+        $add_nums = 0;
+        $uid_list = array();
+        foreach($chunk_arr as $key=>$chunk_list) {
+            $pipe = $this->multi(Redis::PIPELINE);
+            foreach($chunk_list as $datas) {
+                $uid = $datas['uid'];
+                $add_time = $datas['add_time'];
+                $feed_id = $datas['feed_id'];
+                if(empty($uid) || empty($feed_id)) {
+                    continue;
+                }
+                
+                //记录添加的用户信息
+                $uid_list[$uid] = $uid;
+                
+                $redis_key = RedisFeedKey::getUserFeedAllZsetKey($uid);
+                $pipe->zAdd($redis_key, $add_time, $feed_id);
+            }
+            $replies = $pipe->exec();
+            $add_nums += intval($this->getPipeSuccessNums($replies));
+            
+            unset($chunk_arr[$key]);
+        }
+        
+        //如果添加成功，修整有序集合的长度
+        foreach((array)$uid_list as $uid) {
+            $this->clipUserFeedAllZset($uid);
+        }
+        
+        return $add_nums ? $add_nums : false;
+    }
+    
     /**
      * 删除指定集合中的某些值
      * @param $class_code
@@ -77,12 +134,12 @@ class dUserFeedAllZset extends rBase {
         $feed_ids = array_unique((array)$feed_ids);
         $redids_key = RedisFeedKey::getUserFeedAllZsetKey($uid);
         
-        $delete_nums = 0;
+        $pipe = $this->multi(Redis::PIPELINE);
         foreach($feed_ids as $feed_id) {
-           if($this->zDelete($redids_key, $feed_id)) {
-               $delete_nums++;
-           }
+           $pipe->zDelete($redids_key, $feed_id);
         }
+        $replies = $pipe->exec();
+        $delete_nums = $this->getPipeSuccessNums($replies);
         
         return $delete_nums ? $delete_nums : false;
     }

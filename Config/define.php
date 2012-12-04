@@ -157,4 +157,12 @@ define('RESOURCE_FEED_STATE_DEL' , 0);            		//资源导入删除的状�
 define('RESOURCE_FEED_STATE_REAL' , 1);           		//资源导入真实有用的状态
 define('RESOURCE_FEED_STATE_USELESS' , 2);           	//资源导入附加的状态
 
+define('FEED_ALBUM', 1);
+define('FEED_BLOG', 2);
+define('FEED_EXAM', 3);
+define('FEED_HOMEWORK', 4);
+define('FEED_MOOD', 5);
+define('FEED_NOTICE', 6);
 
+define('FEED_CONTEXT_PERSON', 1);
+define('FEED_CONTEXT_CLASS', 2);

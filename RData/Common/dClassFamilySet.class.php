@@ -46,20 +46,28 @@ class dClassFamilySet extends rBase {
      * @param $family_accounts
      */
     public function addClassFamilySet($class_code, $family_accounts) {
-        if(empty($class_code)) {
+        if(empty($class_code) || empty($family_accounts)) {
             return false;
         }
         
         $family_accounts = array_unique((array)$family_accounts);
+        $chunk_arr = array_chunk($family_accounts, 200, true);
+        unset($family_accounts);
         
         $redis_key = RedisCommonKey::getClassFamilySetKey($class_code);
         
-        //批量添加班级家长成员
-        $pipe = $this->multi(Redis::PIPELINE);
-        foreach($family_accounts as $uid) {
-            $pipe->sAdd($redis_key, $uid);
+        $add_nums = 0;
+        foreach($chunk_arr as $key=>$chunk_list) {
+            //批量添加班级家长成员
+            $pipe = $this->multi(Redis::PIPELINE);
+            foreach($chunk_list as $uid) {
+                $pipe->sAdd($redis_key, $uid);
+            }
+            $replies = $pipe->exec();
+            $add_nums += intval($this->getPipeSuccessNums($replies));
+            
+            unset($chunk_arr[$key]);
         }
-        $add_nums = $pipe->exec();
         
         return $add_nums ? $add_nums : false;
     }
@@ -75,14 +83,22 @@ class dClassFamilySet extends rBase {
         }
         
         $family_accounts = array_unique((array)$family_accounts);
+        $chunk_arr = array_chunk($family_accounts, 200, true);
+        unset($family_accounts);
         
         $redis_key = RedisCommonKey::getClassFamilySetKey($class_code);
         
-        $pipe = $this->multi(Redis::PIPELINE);
-        foreach($family_accounts as $uid) {
-            $pipe->sRem($redis_key, $uid);
+        $delete_nums = 0;
+        foreach($chunk_arr as $key=>$chunk_list) {
+            $pipe = $this->multi(Redis::PIPELINE);
+            foreach($chunk_list as $uid) {
+                $pipe->sRem($redis_key, $uid);
+            }
+            $replies = $pipe->exec();
+            $delete_nums += intval($this->getPipeSuccessNums($replies));
+            
+            unset($chunk_arr[$key]);
         }
-        $delete_nums = $pipe->exec();
         
         return $delete_nums ? $delete_nums : false;
     }

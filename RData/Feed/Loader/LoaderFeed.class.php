@@ -53,17 +53,22 @@ class LoaderFeed {
         
         //获取班级成员的全部动态信息
         $class_feed_list = $this->fetchFeedObject->getClassFeedAllFromDatabase($class_code, null, 0, $this->feed_size);
+        if(empty($class_feed_list)) {
+            return false;
+        }
+        
+        $dataarr = array();
+        foreach($class_feed_list as $feed_id=>$feed) {
+            $dataarr[] = array(
+                'class_code'  => $class_code,
+                'feed_id'     => $feed_id,
+                'add_time'    => $feed['add_time'],
+            );
+        }
         
         $dClassFeedAllZset = ClsFactory::Create('RData.Feed.dClassFeedAllZset');
         
-        $load_nums = 0;
-        foreach($class_feed_list as $feed_id => $feed) {
-            if($dClassFeedAllZset->addClassFeedAllZset($class_code, $feed['add_time'], $feed_id)) {
-                $load_nums++;
-            }
-        }
-        
-        return $load_nums ? $load_nums : false;
+        return $dClassFeedAllZset->addClassFeedAllZsetBat($dataarr);
     }
     
     /**
@@ -77,17 +82,22 @@ class LoaderFeed {
         
         //获取好友的相册动态信息
         $friend_album_feed_list = $this->fetchFeedObject->getUserAlbumFeedFromDatabase($uid, null, 0, $this->feed_size);
+        if(empty($friend_album_feed_list)) {
+            return false;
+        }
+        
+        $dataarr = array();
+        foreach($friend_album_feed_list as $feed_id=>$feed) {
+            $dataarr[] = array(
+                'uid'      => $uid,
+                'feed_id'  => $feed_id,
+                'add_time' => $feed['add_time'],
+            );
+        }
         
         $dUserAlbumFeedZset = ClsFactory::Create('RData.Feed.dUserAlbumFeedZset');
         
-        $load_nums = 0;
-        foreach($friend_album_feed_list as $feed_id => $feed) {
-            if($dUserAlbumFeedZset->addUserAlbumFeedZset($uid, $feed['add_time'], $feed_id)) {
-                $load_nums++;
-            }
-        }
-        
-        return $load_nums ? $load_nums : false;
+        return $dUserAlbumFeedZset->addUserAlbumFeedZsetBat($dataarr);
     }
     
     /**
@@ -101,17 +111,22 @@ class LoaderFeed {
         
         //获取用户的孩子动态信息
         $child_feed_list = $this->fetchFeedObject->getUserChildrenFeedFromDatabase($uid, null, 0, $this->feed_size);
+        if(empty($child_feed_list)) {
+            return false;
+        }
+        
+        $dataarr = array();
+        foreach($child_feed_list as $feed_id=>$feed) {
+            $dataarr[] = array(
+                'uid'      => $uid,
+                'feed_id'  => $feed_id,
+                'add_time' => $feed['add_time'],
+            );
+        }
         
         $dUserChildFeedZset = ClsFactory::Create('RData.Feed.dUserChildFeedZset');
         
-        $load_nums = 0;
-        foreach($child_feed_list as $feed_id => $feed) {
-            if($dUserChildFeedZset->addUserChildFeedZset($uid, $feed['add_time'], $feed_id)) {
-                $load_nums++;
-            }
-        }
-        
-        return $load_nums ? $load_nums : false;
+        return $dUserChildFeedZset->addUserChildFeedZsetBat($dataarr);
     }
     
     /**
@@ -124,17 +139,22 @@ class LoaderFeed {
         }
         
         $feed_list = $this->fetchFeedObject->getUserAllFeedFromDatabase($uid, null, 0, $this->feed_size);
+        if(empty($feed_list)) {
+            return false;
+        }
+        
+        $dataarr = array();
+        foreach($feed_list as $feed_id=>$feed) {
+            $dataarr[] = array(
+                'uid'      => $uid,
+                'feed_id'  => $feed_id,
+                'add_time' => $feed['add_time'],
+            );
+        }
         
         $dUserFeedAllZset = ClsFactory::Create('RData.Feed.dUserFeedAllZset');
         
-        $load_nums = 0;
-        foreach($feed_list as $feed_id => $feed) {
-            if($dUserFeedAllZset->addUserFeedAllZset($uid, $feed['add_time'], $feed_id)) {
-                $load_nums++;
-            }
-        }
-        
-        return $load_nums ? $load_nums : false;
+        return $dUserFeedAllZset->addUserFeedAllZsetBat($dataarr);
     }
     
     /**
@@ -147,16 +167,21 @@ class LoaderFeed {
         }
         
         $feed_list = $this->fetchFeedObject->getUserMyFeedFromDatabase($uid, null, 0, $this->feed_size);
+        if(empty($feed_list)) {
+            return false;
+        }
+        
+        $dataarr = array();
+        foreach($feed_list as $feed_id=>$feed) {
+            $dataarr[] = array(
+                'uid'      => $uid,
+                'feed_id'  => $feed_id,
+                'add_time' => $feed['add_time'],
+            );
+        }
         
         $dUserMyFeedZset = ClsFactory::Create('RData.Feed.dUserMyFeedZset');
         
-        $load_nums = 0;
-        foreach($feed_list as $feed_id => $feed) {
-            if($dUserMyFeedZset->addUserMyFeedZset($uid, $feed['add_time'], $feed_id)) {
-                $load_nums++;
-            }
-        }
-        
-        return $load_nums ? $load_nums : false;
+        return $dUserMyFeedZset->addUserMyFeedZsetBat($dataarr);
     }
 }

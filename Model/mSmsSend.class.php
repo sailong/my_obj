@@ -35,7 +35,6 @@ class mSmsSend extends mBase{
             return false;
         }
         $result = $this->_dSmsSend->addBat($dataarr);
-
         return $result;
     }
     

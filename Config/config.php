@@ -1,15 +1,15 @@
 ﻿<?php
 return array(
         //'配置项'=>'配置值'
-        'UC_DOMAIN'				=> 'sailong.wmw.cn',    			//正式环境配置 UC域名
+        'UC_DOMAIN'				=> 'vm.wmw.cn',    			//正式环境配置 UC域名
       
         'COOKIEDOMAIN'			=> '.wmw.cn',        			//UC域名        
       	
-      	'WMW_SERVER'			=> 'http://sailong.wmw.cn',				//主站网址
+      	'WMW_SERVER'			=> 'http://vm.wmw.cn',				//主站网址
       	
       	'ZSCY_SERVER'			=> 'http://www.zscy.cn',				//雏鹰网址
       	  
-        'APP_DOMAINS'			=> array('sailong.wmw.cn', 'www.zscy.cn'),       
+        'APP_DOMAINS'			=> array('vm.wmw.cn', 'www.zscy.cn'),       
         
 //        'SHOW_ERROR_MSG'        => true,
 //
@@ -29,7 +29,7 @@ return array(
 
         'URL_MODEL' 			=>	2,			//启用REWRITE模式 
         
-        'APP_GROUP_LIST'		=>'Adminapplication,Adminbase,Admingroup,Adminlogin,Adminuser,Amscontrol,Api,Basecontrol,Homeclass,Homefriends,Homepage,Homepzone,Homeuser,Homeusernews,Oa,Public,Resource,Smssend,Sso,Thirdapp,Uc,Unicominterface,Sns,Wms',//分组列表 
+        'APP_GROUP_LIST'		=>'Adminapplication,Adminbase,Admingroup,Adminlogin,Adminuser,Amscontrol,Api,Basecontrol,Homeclass,Homefriends,Homepage,Homepzone,Homeuser,Homeusernews,Oa,Public,Resource,Smssend,Sso,Thirdapp,Uc,Unicominterface,Sns,Wms,Xheditor',//分组列表 
 
         'DEFAULT_GROUP'			=>'Homeuser', 	//默认分组
 
@@ -47,7 +47,7 @@ return array(
 		
         'SUPPORTED_OAUTH2_TYPE' => array('qzone'=> array('client_id'     => '100314837',
                                                          'client_secret' => '195f266d454a15d2dd977ddcec2cb5f4',
-                                                         'callback'		 => 'http://my.wmw.cn'
+                                                         'callback'		 => 'http://vm.wmw.cn'
                                                         )
                                         ),                           //支持的社会化登录,比如QQ,新浪等		
 		    
@@ -62,14 +62,14 @@ return array(
                         'port' => '3306',
                         'user' => 'root',
                         'password' => 'www.wmw.cn',
-                        'db_name' => 'xiaoyuan-home-test'
+                        'db_name' => 'wmw_aries'
                         ),
                     array(
                         'host' => '192.168.1.254',
                         'port' => '3306',
                         'user' => 'root',
                         'password' => 'www.wmw.cn',
-                        'db_name' => 'xiaoyuan-home-test'
+                        'db_name' => 'wmw_aries'
                         )
                     ),
                 'sgip_sms' => array(
@@ -78,14 +78,14 @@ return array(
                         'port' => '3306',
                         'user' => 'root',
                         'password' => 'www.wmw.cn',
-                        'db_name' => 'xiaoyuan-home-test'
+                        'db_name' => 'wmw_aries'
                         ),
                     array(
                         'host' => '192.168.1.254',
                         'port' => '3306',
                         'user' => 'root',
                         'password' => 'www.wmw.cn',
-                        'db_name' => 'xiaoyuan-home-test'
+                        'db_name' => 'wmw_aries'
                         )
                     ),
                 'bms' => array(
@@ -94,14 +94,14 @@ return array(
                         'port' => '3306',
                         'user' => 'root',
                         'password' => 'www.wmw.cn',
-                        'db_name' => 'xiaoyuan-home-test'
+                        'db_name' => 'wmw_aries'
                         ),
                     array(
                         'host' => '192.168.1.254',
                         'port' => '3306',
                         'user' => 'root',
                         'password' => 'www.wmw.cn',
-                        'db_name' => 'xiaoyuan-home-test'
+                        'db_name' => 'wmw_aries'
                         )
                     ),
                 'wm_cy' => array(
@@ -159,14 +159,14 @@ return array(
                             'port' => '3306',
                             'user' => 'root',
                             'password' => 'www.wmw.cn',
-                            'db_name' => 'xiaoyuan-home-test'
+                            'db_name' => 'wmw_aries'
                             ),
                         array(
                             'host' => '192.168.1.254',
                             'port' => '3306',
                             'user' => 'root',
                             'password' => 'www.wmw.cn',
-                            'db_name' => 'xiaoyuan-home-test'
+                            'db_name' => 'wmw_aries'
                             )
                         ),        
                 'user' => array(
@@ -175,14 +175,14 @@ return array(
                             'port' => '3306',
                             'user' => 'root',
                             'password' => 'www.wmw.cn',
-                            'db_name' => 'xiaoyuan-home-test'
+                            'db_name' => 'wmw_aries'
                             ),
                         array(
                             'host' => '192.168.1.254',
                             'port' => '3306',
                             'user' => 'root',
                             'password' => 'www.wmw.cn',
-                            'db_name' => 'xiaoyuan-home-test'
+                            'db_name' => 'wmw_aries'
                             )
                         ),
                 ),

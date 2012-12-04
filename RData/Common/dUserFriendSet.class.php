@@ -50,14 +50,22 @@ class dUserFriendSet extends rBase {
         }
         
         $friend_accounts = array_unique((array)$friend_accounts);
+        $chunk_arr = array_chunk($friend_accounts, 200, true);
+        unset($friend_accounts);
         
         $redis_key = RedisCommonKey::getUserFriendSetKey($uid);
         
-        $pipe = $this->multi(Redis::PIPELINE);
-        foreach($friend_accounts as $friend_uid) {
-            $pipe->sAdd($redis_key, $friend_uid);
+        $add_nums = 0;
+        foreach($chunk_arr as $key=>$chunk_list) {
+            $pipe = $this->multi(Redis::PIPELINE);
+            foreach($chunk_list as $friend_uid) {
+                $pipe->sAdd($redis_key, $friend_uid);
+            }
+            $replies = $pipe->exec();
+            $add_nums += intval($this->getPipeSuccessNums($replies));
+            
+            unset($chunk_arr[$key]);
         }
-        $add_nums = $pipe->exec();
         
         return $add_nums ? $add_nums : false;
     }
@@ -73,14 +81,22 @@ class dUserFriendSet extends rBase {
         }
         
         $friend_accounts = array_unique((array)$friend_accounts);
+        $chunk_arr = array_chunk($friend_accounts);
+        unset($friend_accounts);
         
         $redis_key = RedisCommonKey::getUserFriendSetKey($uid);
         
-        $pipe = $this->multi(Redis::PIPELINE);       
-        foreach($friend_accounts as $friend_uid) {
-            $pipe->sRem($redis_key, $friend_uid);
+        $delete_nums = 0;
+        foreach($chunk_arr as $key=>$chunk_list) {
+            $pipe = $this->multi(Redis::PIPELINE);       
+            foreach($chunk_list as $friend_uid) {
+                $pipe->sRem($redis_key, $friend_uid);
+            }
+            $replies = $pipe->exec();
+            $delete_nums += intval($this->getPipeSuccessNums($replies));
+            
+            unset($chunk_arr[$key]);
         }
-        $delete_nums = $pipe->exec();
         
         return $delete_nums ? $delete_nums : false;
     }

@@ -16,13 +16,15 @@ class GlobalKeys extends rBase {
             return false;
         }
         
-        $add_nums = 0;
-        foreach((array)$keys as $key) {
+        $keys = array_unique((array)$keys);
+        
+        $pipe = $this->multi(Redis::PIPELINE);
+        foreach($keys as $key) {
             $redis_key = $this->getRedisKey($key);
-            if($this->sAdd($redis_key, $key)) {
-                $add_nums++;
-            }
+            $pipe->sAdd($redis_key, $key);
         }
+        $replies = $pipe->exec();
+        $add_nums = $this->getPipeSuccessNums($replies);
         
         return $add_nums ? $add_nums : false;
     }
@@ -37,13 +39,15 @@ class GlobalKeys extends rBase {
             return false;
         }
         
-        $delete_nums = 0;        
-        foreach((array)$keys as $key) {
+        $keys = array_unique((array)$keys);
+        
+        $pipe = $this->multi(Redis::PIPELINE);
+        foreach($keys as $key) {
             $redis_key = $this->getRedisKey($key);
-            if($this->sRem($redis_key, $key)) {
-                $delete_nums++;
-            }
+            $pipe->sRem($redis_key, $key);
         }
+        $replies = $pipe->exec();
+        $delete_nums = $this->getPipeSuccessNums($replies);
         
         return $delete_nums ? $delete_nums : false;
     }

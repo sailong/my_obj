@@ -199,4 +199,5 @@ class mClassInfo extends mBase{
         
         return !empty($class_nums) ? $class_nums : 0;
     }
+    
 }

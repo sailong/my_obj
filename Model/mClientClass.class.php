@@ -138,5 +138,21 @@ class mClientClass extends mBase {
 	    
 	    return ! empty ( $clientclass ) ? $clientclass : false;
 	}
+	
+	/*
+	 * 根据班级编号和类型查询学生帐号
+	 */
+	public function getStudentInfoByClassCodeAndType($class_code,$client_type) {
+	    if(empty($class_code) || $client_type != 0) {
+	        return false;
+	    }
+	    $dataarr = array(
+	        'class_code = ' .$class_code,
+	        'client_type = ' .$client_type,
+	    );
+	    
+	    $resault = $this->_dClientClass->getInfo($dataarr);
+	    return !empty($resault) ? $resault : false;
+	}
 }
 

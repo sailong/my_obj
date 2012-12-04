@@ -8,6 +8,9 @@ class Pathmanagement_sns extends Pathmanagement {
     private static $jsupload = 'jsupload/';             //js上传路径
     private static $tmp = 'tmp/';                       //说说临时目录
     private static $resouce = 'uploads/';               //用户上传资源的目录
+    private static $homework = 'homework/';            //班级作业上传附件路径
+    private static $xheditorimgpath = 'xheditor/';     //xheditor编辑器图片上传路径
+    
     
     /** 获取用户头像显示路径
 	 * $photoname 数据库存储的头像名称
@@ -56,13 +59,7 @@ class Pathmanagement_sns extends Pathmanagement {
 	public static function uploadTalkIco() {
 	    return self::getWebroot() . self::getAttachment() . self::$talk;
 	}
-	/**
-	 * 得到作业的上传路径
-	 * @return String
-	 */
-	public static function uploadHomeWork() {
-	    return self::getWebroot() . self::getAttachment() . self::$work;
-	}
+
 	
 	/**
 	 * 得到用户说说图片临时路径
@@ -101,7 +98,35 @@ class Pathmanagement_sns extends Pathmanagement {
         return self::getWebroot() . self::getAttachment() . self::$resouce;
     }
     
+    
     public function getResource() {
         return "/" . self::getAttachment() . self::$resouce;
     }
+    
+    /*
+     * 上传班级作业附件的路径
+     */
+    public function uploadHomework() {
+        return  self::getAttachment() . self::$homework;
+    }
+    
+    public function getHomework() {
+        return WEB_ROOT_DIR . "/" . self::getAttachment() . self::$homework;
+    }
+    
+    /*
+     * xheditor编辑器图片上传路径
+     */
+    public function uploadXheditor() {
+        return self::getWebroot() . self::getAttachment() . self::$xheditorimgpath;
+    }
+    
+    /*
+     * 获取xheditor编辑图片的路径
+     */
+    public function getXheditorimgPath() {
+        return "/" .  self::getAttachment() . self::$xheditorimgpath;
+    }
+    
+    
 }

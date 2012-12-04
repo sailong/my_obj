@@ -11,10 +11,6 @@ class uClientClass extends uBase {
     public function runGraduate() {
         $clientclass_list = $this->packDatas();
         
-     	foreach((array)$clientclass_list as $clientclass) {
-            $client_class_id = $clientclass['client_class_id'];
-        }
-        
         //添加班级的历史信息
         $mClientClassHistory = ClsFactory::Create('Model.mClientClassHistory');
         $mClientClassHistory->addClientClassHistoryBat($clientclass_list);

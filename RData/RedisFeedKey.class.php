@@ -14,7 +14,7 @@ class RedisFeedKey {
      * @param $class_code
      */
     public static function getClassFeedAllZsetKey($class_code) {
-        return str_replace('[class_code]', $class_code, 'feed:cls:[class_code]');   
+        return sprintf('feed:cls:%s', $class_code);
     }
     
     /**
@@ -22,7 +22,7 @@ class RedisFeedKey {
      * @param $uid
      */
     public static function getUserAblumFeedZsetKey($uid) {
-        return str_replace('[client_account]', $uid, 'feed:usr:[client_account]:album');
+        return sprintf('feed:usr:%s:album', $uid);
     }
     
     /**
@@ -30,7 +30,7 @@ class RedisFeedKey {
      * @param $uid
      */
     public static function getUserChildFeedZsetKey($uid) {
-        return str_replace('[client_account]', $uid, 'feed:usr:[client_account]:children');
+        return sprintf('feed:usr:%s:children', $uid);
     }
     
     /**
@@ -38,7 +38,7 @@ class RedisFeedKey {
      * @param $uid
      */
     public static function getUserFeedAllZsetKey($uid) {
-        return str_replace('[client_account]', $uid, 'feed:usr:[client_account]:all');
+        return sprintf('feed:usr:%s:all', $uid);
     }
     
     /**
@@ -46,7 +46,7 @@ class RedisFeedKey {
      * @param $uid
      */
     public static function getUserMyFeedZsetKey($uid) {
-        return str_replace('[client_account]', $uid, 'feed:usr:[client_account]:my');
+        return sprintf('feed:usr:%s:my', $uid);
     }
     
     /**
@@ -54,7 +54,7 @@ class RedisFeedKey {
      * @param unknown_type $uid
      */
     public static function getUserHomeworkMsgKey($uid) {
-        return str_replace("[client_account]", $uid, "msg:[client_account]:homework");
+        return sprintf("msg:%s:homework", $uid);
     }
     
 	/**
@@ -62,7 +62,7 @@ class RedisFeedKey {
      * @param unknown_type $uid
      */
     public static function getUserNoticeMsgKey($uid) {
-        return str_replace("[client_account]", $uid, "msg:[client_account]:notice");
+        return sprintf("msg:%s:notice", $uid);
     }
     
 	/**
@@ -70,7 +70,7 @@ class RedisFeedKey {
      * @param unknown_type $uid
      */
     public static function getUserExamMsgKey($uid) {
-        return str_replace("[client_account]", $uid, "msg:[client_account]:exam");
+        return sprintf("msg:%s:exam", $uid);
     }
     
     
@@ -79,7 +79,7 @@ class RedisFeedKey {
      * @param unknown_type $uid
      */
     public static function getUserReqMsgKey($uid) {
-        return str_replace("[client_account]", $uid, "msg:[client_account]:req");
+        return sprintf("msg:%s:req", $uid);
     }
     
     
@@ -88,7 +88,7 @@ class RedisFeedKey {
      * @param unknown_type $uid
      */
     public static function getUserCommentsMsgKey($uid) {
-        return str_replace("[client_account]", $uid, "msg:[client_account]:comments");
+        return sprintf("msg:%s:comments", $uid);
     }
     
 }

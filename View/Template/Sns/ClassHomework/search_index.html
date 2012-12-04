@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/wmw_js/jquery-1.5.2.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/my97datepicker/WdatePicker.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/classhomework/searchhomework.js"></script>
+</head>
+<body>
+<form action="/Sns/ClassHomework/Published/index" id="form_search" method="post">
+	<select name="subject_id">
+		<option>全部</option>
+	{foreach from=$subject_infos item=subject}
+		<option value="{$subject.subject_id}" {if $subject_id == $subject.subject_id}selected{/if}>{$subject.subject_name}</option>
+	{/foreach}
+	</select>
+	
+	<select name="timetype">
+		<option value="FBZY" {if $timetype == 'FBZY'}selected{/if}>发布作业日期</option>
+		<option value="JZY"  {if $timetype == 'JZY'}selected{/if}>交作业日期</option>
+	</select>
+	
+	从<input type="text" name="startdate" id="startdate"/>至<input type="text" name="enddate" id="enddate"/>
+	<input type="button" value="查询" id="search"/>
+</form>
+
+<div>
+{foreach from=$homeworkInfos item=val}
+	<span>
+	{$val.subject_name}<br/>状态：{$val.status} <br/>接收人：{$val.accepters} <input type="button" id="click_accepters_{$val.homework_id}" value="点击"/><br/>
+	查看作业详情:<a href="{$val.down_attachment}" target="__blank;">下载作业</a><br/>
+	{if $val.is_sms == 1}
+		已发短信
+	{else}
+		<input type="button" value="发送短信" />
+	{/if}
+	<br/>
+	发布日期:{$val.add_time}<br/>
+	发布人：{$val.client_name}<br/>
+	<input type="button" value="删除" id="del_{$val.homework_id}"/><br/><br/>
+	</span> 
+{/foreach}
+</div>
+</body>
+</html>

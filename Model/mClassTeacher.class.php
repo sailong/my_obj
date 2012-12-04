@@ -74,4 +74,18 @@ class mClassTeacher extends mBase {
     }
     
     
+    //通过帐号和科目id获取班级信息
+    public function getClassInfoByuidAndsubjectid($client_account,$subject_id) {
+        if(empty($client_account) || empty($subject_id)) {
+            return false;
+        }
+        
+        $dataarr = array(
+            'client_account = ' . $client_account,
+            'subject_id = ' . $subject_id,
+        );
+        $class_info = $this->_dClassTeacher->getInfo($dataarr);
+        return !empty($class_info) ? $class_info : false;
+    }
+    
 }

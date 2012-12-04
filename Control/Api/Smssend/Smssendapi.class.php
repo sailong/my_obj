@@ -40,7 +40,7 @@ class Smssendapi extends ApiController {
 
         //格式要发送的短信数据
         $dataarr = $this->formatData();
-
+        
         return $this->initDatabaseBat(& $dataarr);
     }
     /**

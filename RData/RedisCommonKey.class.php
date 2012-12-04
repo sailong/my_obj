@@ -4,6 +4,7 @@
  * @author Administrator
  * 注明：
  * 1. 因为在不同rdata文件中可能涉及到集合求交集的情况，因此需要key的共享和集中处理
+ * 2. 数据库中的int类型表示范围比php的int表示的范围要大，因此格式化整数的时候使用:%s;
  */
 class RedisCommonKey {
     /**
@@ -18,7 +19,7 @@ class RedisCommonKey {
      * @param $class_code
      */
     public static function getClassStudentSetKey($class_code) {
-        return str_replace("[class_code]", $class_code, "cls:[class_code]:student");
+        return sprintf("cls:%s:student", $class_code);
     }
     
     /**
@@ -26,7 +27,7 @@ class RedisCommonKey {
      * @param $class_code
      */
     public static function getClassTeacherSetKey($class_code) {
-        return str_replace("[class_code]", $class_code, "cls:[class_code]:teacher");
+        return sprintf("cls:%s:teacher", $class_code);
     }
     
     /**
@@ -34,7 +35,7 @@ class RedisCommonKey {
      * @param $class_code
      */
     public static function getClassFamilySetKey($class_code) {
-        return str_replace("[class_code]", $class_code, "cls:[class_code]:family");
+        return sprintf("cls:%s:family", $class_code);
     }
     
     /**
@@ -42,7 +43,7 @@ class RedisCommonKey {
      * @param $class_code
      */
     public static function getUserChildrenSetKey($uid) {
-        return str_replace("[client_account]", $uid, "usr:[client_account]:children");
+        return sprintf("usr:%s:children", $uid);
     }
     
     /**
@@ -50,7 +51,7 @@ class RedisCommonKey {
      * @param $class_code
      */
     public static function getUserFriendSetKey($uid) {
-        return str_replace("[client_account]", $uid, "usr:[client_account]:friend");
+        return sprintf("usr:%s:friend", $uid);
     }
     
     /**
@@ -58,7 +59,7 @@ class RedisCommonKey {
      * @param $class_code
      */
     public static function getUserParentSetKey($uid) {
-        return str_replace("[client_account]", $uid, "usr:[client_account]:parent");
+        return sprintf("usr:%s:parent", $uid);
     }
     
    /**
@@ -66,7 +67,7 @@ class RedisCommonKey {
      * @param $class_code
      */
     public static function getUserObjectHashKey($uid) {
-        return str_replace("[client_account]", $uid, "usr:[client_account]:obj");
+        return sprintf("usr:%s:obj", $uid);
     }
     
     /**

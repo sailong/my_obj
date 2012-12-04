@@ -63,6 +63,64 @@ class dClassFeedAllZset extends rBase {
         return $add_nums ? $add_nums : false;
     }
     
+	/**
+     * 批量添加班级的动态集合
+     * @param $dataarr	array  数据格式:<p>
+     * array(<p>
+     * 		0 => array(
+     * 				'class_code' => '班级code',
+     * 				'feed_id' => '动态id',
+     * 				'add_time' => '动态的添加时间'
+     * 			),</p><p>
+     * 		1 => array(
+     * 				'class_code' => '班级code',
+     * 				'feed_id' => '动态id',
+     * 				'add_time' => '动态的添加时间'
+     * 			),
+     * )</p>
+     * </p>
+     */
+    public function addClassFeedAllZsetBat($dataarr) {
+        if(empty($dataarr) || !is_array($dataarr)) {
+            return false;
+        }
+        
+        //分组处理，每次批量处理最多200个命令
+        $chunk_arr = array_chunk($dataarr, 200, true);
+        unset($dataarr);
+        
+        $add_nums = 0;
+        $class_code_list = array();
+        foreach($chunk_arr as $key => $chunk_list) {
+            $pipe = $this->multi(Redis::PIPELINE);
+            foreach($chunk_list as $datas) {
+                $class_code = $datas['class_code'];
+                $add_time = $datas['add_time'];
+                $feed_id = $datas['feed_id'];
+                if(empty($feed_id) || empty($class_code)) {
+                    continue;
+                }
+                
+                $class_code_list[$class_code] = $class_code;
+                
+                $redis_key = RedisFeedKey::getClassFeedAllZsetKey($class_code);
+                $pipe->zAdd($redis_key, $add_time, $class_code);
+            }
+            $replies = $pipe->exec();
+            
+            $add_nums += intval($this->getPipeSuccessNums($replies));
+            
+            unset($chunk_arr[$key]);
+        }
+        
+        //如果添加成功，修整有序集合的长度
+        foreach((array)$class_code_list as $class_code) {
+            $this->clipClassFeedAllZset($class_code);
+        }
+        
+        return $add_nums ? $add_nums : false;
+    }
+    
     /**
      * 删除指定集合中的某些值
      * @param $class_code
@@ -76,12 +134,12 @@ class dClassFeedAllZset extends rBase {
         $feed_ids = array_unique((array)$feed_ids);
         $redids_key = RedisFeedKey::getClassFeedAllZsetKey($class_code);
         
-        $delete_nums = 0;
+        $pipe = $this->multi(Redis::PIPELINE);
         foreach($feed_ids as $feed_id) {
-           if($this->zDelete($redids_key, $feed_id)) {
-               $delete_nums++;
-           }
+           $pipe->zDelete($redids_key, $feed_id);
         }
+        $replies = $pipe->exec();
+        $delete_nums = $this->getPipeSuccessNums($replies);
         
         return $delete_nums ? $delete_nums : false;
     }

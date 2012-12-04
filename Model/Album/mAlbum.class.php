@@ -21,6 +21,6 @@ class mAlbum extends mBase {
     
     //获取相册信息
     public function getAlbumByAlbumId($album_ids) {
-        return $$this->_dAlbum->getAlbumByAlbumId($album_ids);
+        return $this->_dAlbum->getAlbumByAlbumId($album_ids);
     }
 }
