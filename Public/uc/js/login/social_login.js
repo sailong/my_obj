@@ -23,7 +23,7 @@ socialLoginCls.prototype.doLogin = function() {
 	
 	$.ajax({
 		type: "POST",
-		url: "/uc/login_api/social_login",
+		url: "/Uc/LoginApi/social_login",
 		dataType: "json",
 		data: {"grant_type":"password", "client_id":client_id, "username":username,  
 			   "callback":callback, "social_account": social_account, "social_type":social_type, "access_token": access_token},

@@ -4,8 +4,12 @@ class dFeed extends dBase{
     protected $_fields = array(
         'feed_id',
         'feed_type',
-        'add_account',
-        'add_time',
+        'title',
+    	'feed_content',
+    	'from_id',
+    	'add_account',
+        'img_url',
+    	'timeline',
     );
     protected $_pk = 'feed_id';
     protected $_index_list = array(
@@ -16,11 +20,7 @@ class dFeed extends dBase{
     public function getFeedById($feed_ids) {
         return $this->getInfoByPk($feed_ids);
     }
-    
-    public function getFeedByAddAccount($add_accounts) {
-        return $this->getInfoByFk($add_accounts, 'add_account', 'feed_id desc');
-    }
-    
+
     public function addFeed($datas, $is_return_id) {
         return $this->add($datas, $is_return_id);
     }

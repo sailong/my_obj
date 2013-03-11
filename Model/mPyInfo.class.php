@@ -52,7 +52,7 @@ class mPyInfo extends mBase {
 	}
 	
 	//按评语类型和属性读取评语
-	public function getpyCollectBypytypeatt($pytype,$pyatt) {
+	public function getpyCollectBypytypeatt($pytype, $pyatt) {
 	    if(empty($pyatt) && !empty($pytype)) {
 	        return false;
 	    }
@@ -63,4 +63,23 @@ class mPyInfo extends mBase {
 	    
 	    return $this->_dPyInfo->getInfo($wherearr);
 	}
+	
+	/**
+	 * 通过评语类型和评语属性获取评语信息
+	 * @param $py_types
+	 * @param $py_atts
+	 */
+	public function getPyInfoByPyTypeAndPyAtt($py_types, $py_atts, $offset=0, $limit=10) {
+	    $wherearr = array();
+	    if(!empty($py_types)) {
+	        $wherearr[] = "py_type in('" . implode("','", (array)$py_types) . "')";
+	    }
+	    
+	    if(!empty($py_atts)) {
+	        $wherearr[] = "py_att in('" . implode("','", (array)$py_atts) . "')";
+	    }
+	    
+	    return $this->_dPyInfo->getInfo($wherearr, 'py_id desc', $offset, $limit);
+	}
+	
 }

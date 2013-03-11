@@ -50,6 +50,12 @@ define('UPGRADE_MONTH' , 8);							//班级的年级升迁月份
 define('UPGRADE_SECRET_KEY', 'class_upgrade_secret_key_5381');   //班级升级密钥
 
 /*我们网常量定义 *********************************************************************************/
+
+
+define('ACTIVE_MINUTE', 20);                            //设定多少分钟内的用户为在线用户
+define('ACTIVE_DATE', 7);                            //设定多少分钟内的用户为在线用户
+define('REDIS_USER_MAX_LIFE', 10080);                   //设定用户缓存数据的过期时间  7天 * 24小时 * 60分钟  
+
 define('CLIENT_TYPE_STUDENT' , 0);						//用户类型为学生
 define('CLIENT_TYPE_TEACHER' , 1);						//用户类型为老师
 define('CLIENT_TYPE_FAMILY' , 2);						//用户类型为家长
@@ -131,7 +137,21 @@ define('WMW_ALLUSER' , 0);                                    //所有人
 define('WMW_FRIENDS' , 1);                                    //仅好友空间
 define('WMW_MYSELEF' , 2);                                    //仅自己
 
+/*班级成绩模块*/
+define("IS_SMS", 1);                                     //全部发送短信
+define("NO_SMS", 0);                                     //全部没有发短信
+define("PORTION_SMS", 2);                                //部分发送短信
 
+define("IS_PUBLISHED", 1);                               //发布 （非草稿）
+define("NO_PUBLISHED", 0);                               //未发布 （草稿）
+define("EXAM_EXCEL_EXPIRY_TIME", 3600 * 24);             //成绩导入模板 过期时间 
+define("EXAM_EXCEL_NAME_PREFIX", "exam_excel_");         //成绩导入模板文件名前缀 
+
+//成绩通知家长短信内容模板 %s 分别表示（学生姓名，科目名，考试名，本次考试成绩，老师评语，平均分，最高分，最低分）
+//eg:阿成的家长，您的孩子在语文期中考试的成绩为:75，一切只能靠你自己。 班平均分:80.8，最高分100，最低分59
+define("EXAM_SMS_TEMPLET", "%s的家长，您的孩子在%s%s的成绩为:%s，%s班平均分:%s，最高分%s，最低分%s"); 
+   
+     
 
 /*中少雏鹰网常量定义 *****************************************************************************/
 define('TEAM_DUTUDIES_TEAM_HEAD' , 1);             		//小队队长
@@ -157,12 +177,12 @@ define('RESOURCE_FEED_STATE_DEL' , 0);            		//资源导入删除的状�
 define('RESOURCE_FEED_STATE_REAL' , 1);           		//资源导入真实有用的状态
 define('RESOURCE_FEED_STATE_USELESS' , 2);           	//资源导入附加的状态
 
+/**
+ * 动态类型（feed_type）
+ */
 define('FEED_ALBUM', 1);
 define('FEED_BLOG', 2);
-define('FEED_EXAM', 3);
-define('FEED_HOMEWORK', 4);
 define('FEED_MOOD', 5);
-define('FEED_NOTICE', 6);
 
 define('FEED_CONTEXT_PERSON', 1);
 define('FEED_CONTEXT_CLASS', 2);

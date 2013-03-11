@@ -167,6 +167,7 @@ class AmsteacherAction extends AmsController{
         $duty = $this->objInput->getStr('duty');
         $role = $this->objInput->getInt('role');
         $is_use_office = $this->objInput->getStr('is_use_office');
+        
         //去掉重复数据
         $subjectId_Arr = array_unique($subjectId_Arr);
         
@@ -199,8 +200,8 @@ class AmsteacherAction extends AmsController{
             return false;
         }
 
-        
 		$mUser = ClsFactory::Create('Model.mUser');
+		
 		$newUid = $mUser->createNewUid();
 		
 		if ($newUid) {

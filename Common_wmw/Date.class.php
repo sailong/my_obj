@@ -785,5 +785,94 @@ class Date {
 			   }
 		  }
 	}    
+	
+	/**
+     * 检测是否是今天
+     * @param $daytime
+     * $daytime 格式
+     * 1.  整型           137005456768
+     * 2.  字符串       2013-01-01 11:11:11
+     * 
+     * return boolean
+     */
+	public static function isToday($daytime){
+	    if(empty($daytime)) {
+	        return false;
+	    }
+	    
+	    $daytime = (intval($daytime) == $daytime) ? $daytime : strtotime($daytime);
+	    
+	    $nowtime = time();
+	    
+	    return ($nowtime - $daytime) > strtotime("day", -1) ? false : true;
+	}
+	
+	/**
+     * 检测是否是昨天
+     * @param $daytime
+     * $daytime 格式
+     * 1.  整型           137005456768
+     * 2.  字符串       2013-01-01 11:11:11
+     * 
+     * return boolean
+     */
+	public static function isYestoday($daytime){
+	    if(empty($daytime)) {
+	        return false;
+	    }
+	    
+	    $daytime = (intval($daytime) == $daytime) ? $daytime : strtotime($daytime);
+	    
+	    $nowtime = time();
+	    
+	    return (strtotime("day", -2) > ($nowtime - $daytime)) && !Date::isToday($daytime) ? false : true;
+	}
+	
+	
+   /**
+     * 返回日期格式化数据，应用于 动态列表及评论列表 
+     * @param $timestamp
+     * timestamp 格式
+     *    1.  整型           137005456768
+     *    2.  字符串       2013-01-01 11:11:11
+     * 
+     * @return 格式如下: 
+     *  1. 如果日期为今天  则    ：   今天    14：29
+     *  2. 如果日期为昨天  则    ：   昨天    14：29
+     *  3. 如果为年内           则    :  12-19 14:29
+     *  4. 如果超过一年     则     ：   2012-12-29 14:29
+     */	
+	
+    public static function timestamp($timestamp) {
+
+       $timestamp = (intval($timestamp) == $timestamp) ? $timestamp : strtotime($timestamp);
+       
+       $format = '';
+       
+       $nowY = date("Y");
+       list($y, $m, $d, $h, $i) = explode("-", date("Y-m-d-H-i", $timestamp));
+       
+       
+       //4. 如果超过一年     则     ：   2012-12-29 14:29
+       if($nowY > $y){
+           $format.= "$y-";
+       }
+
+       //*  1. 如果日期为今天  则    ：   今天    14：29
+       //*  2. 如果日期为昨天  则    ：   昨天    14：29
+       //*  3. 如果为年内           则    :  12-19 14:29
+       
+       if (Date::isToday($timestamp)) {
+           $format.= "今天 ";
+       } else  if (Date::isYestoday($timestamp)) {
+           $format.= "昨天 ";
+       } else {
+           $format.= "$m-$d ";
+       }      
+       
+       $format.= "$h:$i";
+        
+       return $format;
+   }
     
 }

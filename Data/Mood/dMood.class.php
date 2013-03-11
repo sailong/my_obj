@@ -7,6 +7,7 @@ class dMood extends dBase{
         'img_url',
         'add_account',
         'add_time',
+        'comments',
     );
     protected $_pk = 'mood_id';
     protected $_index_list = array(

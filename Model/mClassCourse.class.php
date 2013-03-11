@@ -78,5 +78,16 @@ class mClassCourse extends mBase {
 	    return $this->_dClassCourse->modifyClassCourse($datas, $course_id);
 	}
 	
+	/**
+	 * 删除课程信息
+	 * @param $course_id
+	 */
+	public function delClassCourse($course_id) {
+	    if(empty($course_id)) {
+	        return false;
+	    }
+	    
+	    return $this->_dClassCourse->delClassCourse($course_id);
+	}
 	
 }

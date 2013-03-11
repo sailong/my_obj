@@ -15,7 +15,7 @@ class dAlbumPhotos extends dBase {
         'upd_time',
     );
 
-    protected $_indxe_list = array(
+    protected $_index_list = array(
         'photo_id',
     	'album_id',
     );
@@ -26,8 +26,9 @@ class dAlbumPhotos extends dBase {
      * @param $offset
      * @param $limit
      */
-    public function getPhotosByAlbumId($album_ids, $offset = 0, $limit = 10) {
-        return $this->getInfoByFk($album_ids, 'album_id', 'photo_id desc', $offset, $limit);
+    //todo delete
+    public function getPhotosByAlbumId($album_ids) {
+        return $this->getInfoByFk($album_ids, 'album_id', 'photo_id desc');
     }
     
     //添加照片
@@ -36,22 +37,53 @@ class dAlbumPhotos extends dBase {
     }
     
     //修改照片
-    public function modifyPhotoByPhotoId($data, $photo_id)　{
+    public function modifyPhotoByPhotoId($data, $photo_id){
         return $this->modify($data, $photo_id);
     }
     
     //删除照片
-    public function delPhotosByPhotoId($photo_id) {
+    public function delPhotosByPhotoId($photo_id){
         return $this->delete($photo_id);
     }
     
     //获得照片信息
-    public function getPhotosByPhotoId($photo_ids) {
+    public function getPhotosByPhotoId($photo_ids){
         return $this->getInfoByPk($photo_ids);
     }
     //获得照片信息
-    public function getByAlbumId($album_id, $offset=null, $limit=null) {
+    public function getByAlbumId($album_id, $offset=0, $limit=10){
         $orderby = ' photo_id asc';
-        return $this->getInfoByFk($album_id, 'album_id', $orderby, $offset, $limit);
+        $wherearr[] = "album_id={$album_id}";
+        
+        return $this->getInfo($wherearr, $orderby, $offset, $limit);
+    }
+    
+    //通过相册album_id删除相册信息
+    public function delByAlbumId($album_id) {
+        
+        $sql = "delete from {$this->_tablename} where album_id={$album_id}";
+        return $this->execute($sql);
+    }
+    
+    //根据相册ID获取相片的数量
+    public function getCountByAlbumId($album_id) {
+        if(empty($album_id)) {
+            return false;
+        }
+        $wherearr[] = "album_id={$album_id}";
+        
+        return $this->getCount($wherearr);
+        
+    }
+    
+    //修改相片评论数
+    //todo delte
+    public function updCommentCountByPhotoId($count, $photo_id) {
+        if(empty($photo_id) || empty($count)) {
+            return false;
+        }
+        $sql = "update {$this->_tablename} set comments=comments{$count} where photo_id={$photo_id}";
+         
+        return $this->execute($sql);
     }
 }

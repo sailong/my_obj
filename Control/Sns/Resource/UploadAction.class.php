@@ -36,7 +36,7 @@ class UploadAction extends SnsController {
         //文件上传
         $file_attrs = $this->uploadResourceFile();
         $file_attrs['md5_key'] = $this->getFileMd5key($file_attrs['filename']);
-
+        
         echo base64_encode(json_encode($file_attrs));
     }
     

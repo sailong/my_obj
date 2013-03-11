@@ -356,7 +356,6 @@ class ResourceAction extends SnsController{
     }
     
     private function resource($nav_str, $page) { 
-        
         $offset = ($page - 1) * $this->_limit;
         $nav_list = $this->show_nav_list($nav_str);
         $new_nav_arr = $this->ParamTransfor($nav_str);
@@ -382,7 +381,6 @@ class ResourceAction extends SnsController{
         list($total_num, $ResourceInfo) = $ResourceApi->getReourceInfoByCombinedKey($new_nav_arr_1, null,  $offset, $this->_limit);
         
         $ResourceInfo = $this->addresourceOperationbtn($ResourceInfo);
-        
         return array('resource_info' => $ResourceInfo, 'nav_list' => $nav_list, 'resource_total_num' => $total_num, 'checked_nav' => $new_nav_arr);
     }
     
@@ -426,7 +424,7 @@ class ResourceAction extends SnsController{
         $this->assign('nav_list', $resource['nav_list']);
         $this->assign('checked_nav', $resource['checked_nav']);
         $this->assign('resource', $resource['resource_info']);
-        
+       
         $this->display('synchroresource');
     }
     
@@ -1232,4 +1230,55 @@ class ResourceAction extends SnsController{
         
         return '0 kb';
     }
+    
+    public function getresource() { 
+        $grade_id = $this->user['class_info'][current(current($this->user['class_info']))]['grade_id'];
+        $resource_type = rand(1,3);
+        $nav_str = $resource_type .'_'.$grade_id;
+        $more_url = '/Sns/Resource/Resource/';
+        
+        switch ($resource_type){
+            case 1:
+                $more_url .= 'synchroresource/screening/' . $nav_str;
+                break;
+            case 2:
+                $more_url .= 'qualityschool/screening/' . $nav_str;
+                break;
+            case 3:
+                $more_url .= 'qualityresource/screening/' . $nav_str;
+                break;
+        }
+        
+        $limit = $this->objInput->getInt('limit');
+        $limit = empty($limit) ? 20 : max(1, $limit);
+        $page = 1;
+        $offset = ($page - 1) * $limit;
+        $nav_list = $this->show_nav_list($nav_str);
+        $new_nav_arr = $this->ParamTransfor($nav_str);
+        
+        array_pop($new_nav_arr);
+        foreach($new_nav_arr as $key => $val) {
+            if(!empty($val))
+                $new_nav_arr_1[$key] = "$key=$val";
+        }
+        
+        if(!empty($new_nav_arr)) {
+            foreach($new_nav_arr as $key => $val) {
+                if(empty($val)) {
+                    unset($new_nav_arr[$key]);
+                }
+            }
+        }
+        
+        import('@.Control.Api.Resource.ResourceApi');
+        $ResourceApi = new ResourceApi();
+        $new_nav_arr_1['resource_status'] = "resource_status=1";
+        
+        list($total_num, $ResourceInfo) = $ResourceApi->getReourceInfoByCombinedKey($new_nav_arr_1, null,  $offset, $limit);
+        
+        $ResourceInfo = $this->addresourceOperationbtn($ResourceInfo);
+        
+        !empty($ResourceInfo) ? $this->ajaxReturn(array('more_url'=>$more_url,'resource_info'=>$ResourceInfo), '获取资源成功！', 1, 'json') : $this->ajaxReturn(null, '获取资源失败！', -1, 'json');
+    }
+    
 }

@@ -21,7 +21,39 @@ class mUser extends mBase {
         if (empty($uids)) {
             return false;
         }
-        return $this->_dClientAccount->getUserClientAccountById($uids);
+        
+        $user_list = $this->_dClientAccount->getUserClientAccountById($uids);
+        
+        foreach($user_list as $uid=>$user) {
+            $user_list[$uid] = $this->parseUser($user);
+        }
+        
+        return !empty($user_list) ? $user_list : false;
+    }
+    
+    /**
+     * 获取所有用户信息
+     */
+    public function getUserInfo($offset,$limit) {
+         $client_info = $this->_dClientInfo->getInfo(null,null,$offset,$limit);
+         $account_arr = array_keys($client_info);
+         $user_info = $this->getUserBaseByUid($account_arr);
+         
+        return !empty($user_info) ? $user_info : false; 
+    }
+    
+    /**
+     * 根据帐号和姓名查询用户信息
+     */
+    public function getClientAccountByAccountAndName($user_name,$accounts,$offset=null,$limit=null) {
+        if(empty($user_name) || empty($accounts)) {
+            return false;
+        }
+        
+        $wheresql = "client_account in(". implode(',',$accounts) .") and client_name like '%$user_name%'";
+        $client_account_list = $this->_dClientAccount->getInfo($wheresql,null,$offset,$limit);
+        
+        return !empty($client_account_list) ? $client_account_list : false;
     }
     
     /**
@@ -679,7 +711,7 @@ class mUser extends mBase {
 	/********************************************************************************
      * 辅助类函数
      ********************************************************************************/
-/**
+	/**
 	 * 翻译用户中的部分数据
 	 * @param  $user
 	 */
@@ -914,24 +946,21 @@ class mUser extends mBase {
 	
     //自动生成账号
     public function createNewUid() {        
+        
 		$mAccountRule = ClsFactory::Create('Model.mAccountRule');
         $new_account = '';
 		$user_flag = 1;//使用标志
 	    $current_rule = $mAccountRule->getAccountRuleByUseFlag($user_flag);
 		$current_rule = array_shift($current_rule);
         $new_account  = $this->createAccount($current_rule['account_length']);
-        
 		//查询数据库$clientCoutn是否存在--$icount
 		$client_account = $this->getUserBaseByUid($new_account);
-
 		if (!empty($client_account)) {
 			$new_account = $this->createNewUid();
 		}
-		
 		//查询数据库wmw_account_lock锁定账号表--账号是否被锁定
 		$mAccountLock = ClsFactory::Create('Model.mAccountLock');
 		$account_lock = $mAccountLock->getAccountLockById($new_account);
-		
 		if (!empty($account_lock)) {
 			$new_account = $this->createNewUid();
 		}

@@ -1,5 +1,5 @@
 <?php
-class XheditorApi extends ApiController{
+class XheditorApi extends ApiController {
     function upload($uploadPath,$showPath) {
         import('@.Control.Api.XheditorImpl.Upload');
         $uploadobj = new Upload();

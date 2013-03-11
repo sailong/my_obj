@@ -40,6 +40,7 @@ var addWinFun={
                 obj.name += "," + obj1.attr("title");
             }
         });
+   
         var is_use_office = $("#is_use_office").attr('checked');
         if(is_use_office){
     		var department_id = $("#dpt_id").val();
@@ -85,6 +86,7 @@ var addWinFun={
         param.department_id = department_id;
         param.duty = duty;
         param.role = role;
+        
         $.ajax({
             type:"get",
             dataType:"json",

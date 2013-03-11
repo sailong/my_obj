@@ -400,6 +400,10 @@ class AmsclasslistAction  extends AmsController{
         //删除相关数据
         if(!empty($del_arr)) {
             $teacher_relation_arr = array();
+            
+            //更新redis 操作的client_account记录:
+            $del_client_accounts = array();
+            
             foreach($del_arr as $teacher) {
                 $old_teacherid = $teacher['old_teacherid'];
                 $class_teacher_id = $teacher['class_teacher_id'];
@@ -407,9 +411,17 @@ class AmsclasslistAction  extends AmsController{
                 
                 $teacher_relation_arr[$old_teacherid][] = $client_class_id;
                 //删除class_teacher表中的数据
+
+                //更新Redis数据
+                $class_teacher = $mClassTeacher->getClassTeacherById($class_teacher_id);
+                if (!empty($class_teacher)) {
+                    $class_teacher = reset($class_teacher);
+                    $del_client_accounts[] = $class_teacher['client_account'];
+                }
+                
                 $mClassTeacher->delClassTeacher($class_teacher_id);
             }
-            unset($del_arr);
+//            unset($del_arr);
             
             //调用的是对M层进行了再次封装的函数
             $clientclass_list = $this->getClientClassByClassCode($class_code);
@@ -629,6 +641,53 @@ class AmsclasslistAction  extends AmsController{
 //            moniter_control($this->user, __METHOD__ . ":addClientClass", 1);
             
         }
+        
+        
+        //===========================更新redis============================================================
+        
+        $mHashClientClass = ClsFactory::Create('RModel.Common.mHashClientClass');
+        // 更新redis 新旧班主任的Client_class;        
+        if($headTeacherUid !== $old_headTeacherUid) {
+            // 更新redis 新旧班主任的Client_class;
+            
+            $mHashClientClass->getClientClassbyUid($headTeacherUid, true);
+	        $mHashClientClass->getClientClassbyUid($old_headTeacherUid, true);            
+        }
+        
+        // 更新redis 教师帐号班级信息 包括add_arr del_arr upd_arr
+        if(!empty($add_arr)) {
+            foreach($add_arr as $teacher) {
+                $new_teacherid = intval($teacher['new_teacherid']);
+                if($new_teacherid <= 0) {
+                    continue;
+                }
+                $mHashClientClass->getClientClassbyUid($new_teacherid, true);   
+            }
+        }      
+        
+        //删除相关数据
+
+        if(!empty($del_client_accounts)) {
+            
+            foreach($del_client_accounts as $client_account) {
+                 $mHashClientClass->getClientClassbyUid($client_account, true);   
+            }
+        }        
+        
+        if(!empty($upd_arr)) {
+            $teacherid_arr = array();
+            foreach($upd_arr as $teacher) {
+                $mHashClientClass->getClientClassbyUid($teacher['old_teacherid'], true);   
+                $mHashClientClass->getClientClassbyUid($teacher['new_teacherid'], true);
+            }
+        }        
+
+        //更新redis  班级实体 班级老师
+        $mHashClass = ClsFactory::Create('RModel.Common.mHashClass');
+        $mHashClass->getClassById($class_code, true);         
+        
+        $mSetClassTeacher = ClsFactory::Create('RModel.Common.mSetClassTeacher');
+        $class_teacher = $mSetClassTeacher->getClassTeacherById($class_code, true);
         
         $this->redirect("Amsclasslist/classManager/schoolid/$schoolId/classCode/$class_code/gradeid/$gradeId/uid/$headTeacherUid");
     }

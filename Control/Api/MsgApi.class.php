@@ -12,65 +12,96 @@ class MsgApi extends ApiController{
      * 添加班级作业新消息
      * @param bigint $uid
      */
-    public function addHomeworkMsg($uid){
-        if(empty($uid)){
+    public function addHomeworkMsg($homework_id){
+        if(empty($homework_id)){
             return false;
         }
-        
-        $mMsgHomework = ClsFactory::Create("RModel.Msg.mMsgHomeworkList");
-        $mMsgHomework->addHomeworkMsg($uid);
+        $this->publishmsg($homework_id, 'homework');
+    }
+    
+	/**
+     * 添加私信新消息
+     * @param bigint $uid
+     */
+    public function addPrivateMsg($msg_id){
+        if(empty($msg_id)){
+            return false;
+        }
+        $this->publishmsg($msg_id, 'privatemsg');
     }
     
     /**
      * 添加评论新消息
      * @param bigint $uid
      */
-    public function addCommentsMsg($uid) {
-        if(empty($uid)){
+    public function addCommentsMsg($comments_id) {
+        if(empty($comments_id)){
             return false;
         }
         
-        $mMsgComments = ClsFactory::Create("RModel.Msg.mMsgCommentsList");
-        $mMsgComments->addCommentsMsg($uid);
+        $this->publishmsg($comments_id, 'comments');
     }
     
     /**
      * 添加班级成绩新消息
      * @param bigint $uid
      */
-    public function addExamMsg($uid){
-        if(empty($uid)){
+    public function addExamMsg($exam_id){
+        if(empty($exam_id)){
             return false;
         }
         
-        $mMsgExam = ClsFactory::Create("RModel.Msg.mMsgExamList");
-        $mMsgExam->addExamMsg($uid);
+        $this->publishmsg($exam_id, 'exam');
     }
     
     /**
      * 添加班级公告新消息
      * @param bigint $uid
      */
-    public function addNoticeMsg($uid) {
-        if(empty($uid)){
+    public function addNoticeMsg($notice_id) {
+        if(empty($notice_id)){
             return false;
         }
-        
-        $mMsgNotice = ClsFactory::Create("RModel.Msg.mMsgNoticeList");
-        $mMsgNotice->addNoticeMsg($uid);
+
+        $this->publishmsg($notice_id, 'notice');
+
     }
     
     /**
-     * 添加班级作业新消息
-     * @param bigint $uid
+     * 添加好友请求新消息
+     * @param $dataarr
+     * array(
+	 *	'req_id',
+	 *	'content',
+	 *	'to_account',
+	 *	'add_account',
+	 *	'add_time',
+	 * );
      */
-    public function addReqMsg($uid){
-        if(empty($uid)){
+    public function addReqMsg($req_id){
+        if(empty($req_id)){
             return false;
         }
         
-        $mMsgRequest = ClsFactory::Create("RModel.Msg.mMsgRequestList");
-        $mMsgRequest->addRequestMsg($uid);
+        $this->publishmsg($req_id, 'req');
+    }
+    
+    /**
+     * 添加好友请求回复新消息
+     * @param bigint $uid
+     * array(
+	 *	'res_id',
+	 *	'content',
+	 *	'to_account',
+	 *	'add_account',
+	 *  'add_time',
+	 * );
+     */
+    public function addResMsg($res_id){
+        if(empty($res_id)){
+            return false;
+        }
+        $this->publishmsg($res_id, 'res');
     }
     
     /**
@@ -82,8 +113,10 @@ class MsgApi extends ApiController{
             return false;
         }
         
-        $mMsgHomework = ClsFactory::Create("RModel.Msg.mMsgHomeworkList");
-        $mMsgHomework->clearHomeworkMsg($uid);
+        $mMsgHomework = ClsFactory::Create("RModel.Msg.mStringHomework");
+        $mMsgHomework->clearMsg($uid);
+        
+        return true;
     }
     
     /**
@@ -95,8 +128,10 @@ class MsgApi extends ApiController{
             return false;
         }
         
-        $mMsgComments = ClsFactory::Create("RModel.Msg.mMsgCommentsList");
-        $mMsgComments->clearCommentsMsg($uid);
+        $mMsgComments = ClsFactory::Create("RModel.Msg.mStringComments");
+        $mMsgComments->clearMsg($uid);
+        
+        return true;
     }
     
     /**
@@ -108,8 +143,10 @@ class MsgApi extends ApiController{
             return false;
         }
         
-        $mMsgExam = ClsFactory::Create("RModel.Msg.mMsgExamList");
-        $mMsgExam->clearExamMsg($uid);
+        $mMsgExam = ClsFactory::Create("RModel.Msg.mStringExam");
+        $mMsgExam->clearMsg($uid);
+        
+        return true;
     }
     
     /**
@@ -121,8 +158,10 @@ class MsgApi extends ApiController{
             return false;
         }
         
-        $mMsgNotice = ClsFactory::Create("RModel.Msg.mMsgNoticeList");
-        $mMsgNotice->clearNoticeMsg($uid);
+        $mMsgNotice = ClsFactory::Create("RModel.Msg.mStringNotice");
+        $mMsgNotice->clearMsg($uid);
+        
+        return true;
     }
     
     /**
@@ -134,8 +173,10 @@ class MsgApi extends ApiController{
             return false;
         }
         
-        $mMsgRequest = ClsFactory::Create("RModel.Msg.mMsgRequestList");
-        $mMsgRequest->clearRequestMsg($uid);
+        $mMsgRequest = ClsFactory::Create("RModel.Msg.mStringRequest");
+        $mMsgRequest->clearMsg($uid);
+        
+        return true;
     }
     
     /**
@@ -147,21 +188,54 @@ class MsgApi extends ApiController{
             return false;
         }
         
-        $mMsgRequest = ClsFactory::Create("RModel.Msg.mMsgRequestList");
+        $mMsgRequest = ClsFactory::Create("RModel.Msg.mStringRequest");
         $mMsgRequest->delRequestMsg($uid);
-    }
-    
-    private function publishmsg(){
         
+        return true;
     }
     
-    private function getliveuid() {
-        
-    }
-    
-    private function getUidByClassCode($class_code){
-        if(empty($class_code) || $class_code < 0 || !is_nan($class_code)) {
+ 	/**
+     * 清空请求新消息
+     * @param bigint $uid
+     */
+    public function clearResMsg($uid){
+        if(empty($uid)){
             return false;
         }
+        
+        $mMsgResponse = ClsFactory::Create("RModel.Msg.mStringResponse");
+        $mMsgResponse->clearMsg($uid);
+        
+        return true;
+    }
+    
+    /**
+     * 删除已经处理过得请求消息
+     * @param bigint $uid
+     */
+    public function delResMsg($uid){
+        if(empty($uid)){
+            return false;
+        }
+        
+        $mMsgResponse = ClsFactory::Create("RModel.Msg.mStringResponse");
+        $mMsgResponse->delMsg($uid);
+        
+        return true;
+    }
+    
+    /**
+     * 在线用户的消息推送
+     * @param unknown_type $uid
+     * @param unknown_type $msg_type
+     */
+    private function publishmsg($id, $msg_type){
+        
+        if(empty($id)){
+            return false;
+        }        
+        
+        $parm_list = serialize(array('id' => $id, 'msg_type' => $msg_type));
+        $result = Gearman::send('message_publish', $parm_list, PRIORITY_HIGH, false);
     }
 }

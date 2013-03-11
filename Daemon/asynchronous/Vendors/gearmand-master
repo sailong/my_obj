@@ -29,7 +29,7 @@ GM_PORT=4730
 #
 # mysql conf
 #
-LOG_FILE=/var/log/gearmand-master.log
+LOG_FILE=/var/log/wmw-gearmand-master.log
 MY_HOST=127.0.0.1
 MY_PORT=3306
 MY_USER=root
@@ -38,7 +38,7 @@ MY_DB=queue_db
 MY_TABLE=gearman_queue
 OPTIONS="-l $LOG_FILE -p $GM_PORT -q mysql --mysql-host=$MY_HOST --mysql-port=$MY_PORT --mysql-user=$MY_USER --mysql-password=$MY_PASSWORD --mysql-db=$MY_DB --mysql-table=gearman_queue"
 
-PIDDIR=/var/run/gearman
+PIDDIR=/var/run/gearmand
 [ -z "${PIDFILE}" ] && pidfile="/var/run/gearmand/gearmand-master.pid"
 [ -z "${LOCKFILE}" ] && lockfile="/var/lock/subsys/gearmand-master"
 

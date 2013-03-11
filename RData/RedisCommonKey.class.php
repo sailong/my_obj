@@ -15,6 +15,13 @@ class RedisCommonKey {
     }
     
     /**
+     * 获取活跃用户
+     */
+    public static function getActiveUserSetKey() {
+        return "active:usr";
+    }    
+    
+    /**
      * 获取班级学生
      * @param $class_code
      */
@@ -51,7 +58,7 @@ class RedisCommonKey {
      * @param $class_code
      */
     public static function getUserFriendSetKey($uid) {
-        return sprintf("usr:%s:friend", $uid);
+        return sprintf("usr:%s:friends", $uid);
     }
     
     /**
@@ -66,9 +73,33 @@ class RedisCommonKey {
      * 获取用户对象
      * @param $class_code
      */
-    public static function getUserObjectHashKey($uid) {
+    public static function getClientHashKey($uid) {
         return sprintf("usr:%s:obj", $uid);
     }
+    
+   /**
+     * 获取用户对应班级对象
+     * @param $class_code
+     */
+    public static function getClientClassHashKey($uid) {
+        return sprintf("usr:%s:client:class", $uid);
+    }       
+    
+   /**
+     * 获取班级对象
+     * @param $class_code
+     */
+    public static function getClassHashKey($class_code) {
+        return sprintf("cls:%s:obj", $class_code);
+    }   
+
+   /**
+     * 获取学校对象
+     * @param $class_code
+     */
+    public static function getSchoolHashKey($school_id) {
+        return sprintf("school:%s:obj", $school_id);
+    }      
     
     /**
      * 获取redis的全部key信息

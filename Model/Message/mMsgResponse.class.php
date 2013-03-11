@@ -6,6 +6,14 @@ class mMsgResponse {
 		$this->_dMsgResponse = ClsFactory::create("Data.Message.dMsgResponse");
 	}
 	
+    public function getMsgResponseById($res_id) {
+        if(empty($res_id)){
+			return false;
+		}
+		
+		return $this->_dMsgResponse->getInfoByPk($res_id);
+	}
+	
 	public function getMsgResponseByToAccount($to_account) {
 		if(empty($to_account)){
 			return false;

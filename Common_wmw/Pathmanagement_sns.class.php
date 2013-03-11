@@ -10,6 +10,10 @@ class Pathmanagement_sns extends Pathmanagement {
     private static $resouce = 'uploads/';               //用户上传资源的目录
     private static $homework = 'homework/';            //班级作业上传附件路径
     private static $xheditorimgpath = 'xheditor/';     //xheditor编辑器图片上传路径
+    private static $exam_tpl_path = 'exam/';     //成绩导入模板的保存路径
+    private static $private_msg_img = 'private_msg_img/'; //私信图片存储路径    
+    
+    private static $mood_img_path = 'mood_pic/';      //说说的存放目录
     
     
     /** 获取用户头像显示路径
@@ -98,9 +102,22 @@ class Pathmanagement_sns extends Pathmanagement {
         return self::getWebroot() . self::getAttachment() . self::$resouce;
     }
     
-    
     public function getResource() {
         return "/" . self::getAttachment() . self::$resouce;
+    }
+    
+    /**
+     * 获取说说的附件的存放路径
+     */
+    public static function uploadMood() {
+        return self::getWebroot() . self::getAttachment() . self::$mood_img_path;
+    }
+    
+    /**
+     * 获取说说附件的显示路径
+     */
+    public static function getMood() {
+        return "/" . self::getAttachment() . self::$mood_img_path;
     }
     
     /*
@@ -111,7 +128,7 @@ class Pathmanagement_sns extends Pathmanagement {
     }
     
     public function getHomework() {
-        return WEB_ROOT_DIR . "/" . self::getAttachment() . self::$homework;
+        return self::getAttachment() . self::$homework;
     }
     
     /*
@@ -121,12 +138,34 @@ class Pathmanagement_sns extends Pathmanagement {
         return self::getWebroot() . self::getAttachment() . self::$xheditorimgpath;
     }
     
+    /**
+     * 私信图片上传路径
+     */
+    public function upload_private_msg_img() {
+        return self::getWebroot() . self::getAttachment() . self::$private_msg_img;
+    }
+    
+	/**
+     * 私信图片读取路径
+     */
+    public function get_private_msg_img() {
+        return "/" . self::getAttachment() . self::$private_msg_img;
+    }
+    
     /*
      * 获取xheditor编辑图片的路径
      */
     public function getXheditorimgPath() {
         return "/" .  self::getAttachment() . self::$xheditorimgpath;
     }
+    
+	/**
+	 * 获取成绩导入模板的保存路径
+	 * @return String
+	 */
+	public static function getExamTplPath() {
+	    return self::getWebroot() . self::getExcel() . self::$exam_tpl_path;
+	}
     
     
 }

@@ -1,6 +1,6 @@
 <tr>
    <td height="27" class="line">
-    <a href="/Amscontrol/AmsclassList/classManager{$params_str}" class="bjgk" {if $mod == 'AmsclassList'}style="background:url({$smarty.const.IMG_SERVER}__PUBLIC__/amsmanage/images/zhgla2.gif) no-repeat; color:#000000;"{/if}>班级概况</a>
+    <a href="/Amscontrol/Amsclasslist/classManager{$params_str}" class="bjgk" {if $mod == 'Amsclasslist'}style="background:url({$smarty.const.IMG_SERVER}__PUBLIC__/amsmanage/images/zhgla2.gif) no-repeat; color:#000000;"{/if}>班级概况</a>
     <a href="/amscontrol/Classclientmanage/showclassClient{$params_str}" class="zhgl" {if $mod == 'Classclientmanage'}style="background:url({$smarty.const.IMG_SERVER}__PUBLIC__/amsmanage/images/zhgla2.gif) no-repeat; color:#000000;"{/if}>班级成员账号管理</a>
     <a href="/Amscontrol/Amssquadron/showSquadron{$params_str}" class="bjgk" {if $mod == 'Amssquadron'}style="background:url({$smarty.const.IMG_SERVER}__PUBLIC__/amsmanage/images/zhgla2.gif) no-repeat; color:#000000;"{/if}>中队设置</a>
     <a href="/Amscontrol/Amsteam/teamManage{$params_str}" class="bjgk" {if $mod == 'Amsteam'}style="background:url({$smarty.const.IMG_SERVER}__PUBLIC__/amsmanage/images/zhgla2.gif) no-repeat; color:#000000;"{/if}>小队设置</a>
@@ -10,7 +10,7 @@
    <td height="10">&nbsp;</td>
  </tr>
  
- {if $mod == 'AmsclassList'}
+ {if $mod == 'Amsclasslist'}
  <tr>
     <td height="25" colspan="2"><a href="/Amscontrol/Amsclasslist/vindicateSchoolClassInfo/schoolid/{$schoolid}/classcode/{$class_code}/gradeid/{$gradeid}/uid/{$headerTeacherUid}" class="bjwha">班级信息维护</a></td>
   </tr> 

@@ -242,21 +242,20 @@ class WmwString {
 		while($n < $strlen) {
 			$t = ord($string[$n]);
 			if($t == 9 || $t == 10 || (32 <= $t && $t <= 126)) {
-				$n++;
+				$n++; $length ++;
 			} elseif(194 <= $t && $t <= 223) {
-				$n += 2;
+				$n += 2; $length ++;
 			} elseif(224 <= $t && $t <= 239) {
-				$n += 3; 
+				$n += 3; $length += 2;
 			} elseif(240 <= $t && $t <= 247) {
-				$n += 4; 
+				$n += 4; $length ++;
 			} elseif(248 <= $t && $t <= 251) {
-				$n += 5;
+				$n += 5; $length ++;
 			} elseif($t == 252 || $t == 253) {
-				$n += 6;
+				$n += 6; $length ++;
 			} else {
-				$n++;
+				$n++; $length ++;
 			}
-			$length ++;
 		}
 		
     	return $length;

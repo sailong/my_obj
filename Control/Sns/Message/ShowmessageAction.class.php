@@ -15,6 +15,13 @@ class ShowmessageAction extends SnsController{
 		import('@.Control.Api.MsgApi');
 		$msgApi = new MsgApi();
 		$uid = $this->user['client_account'];
-		$msgApi->addHomeworkMsg($uid);
+		$dataarr = array(
+    		'content' => 'ssssssssssssssssss',
+    		'to_account' => 11070004,
+    		'add_account' => 11070004,
+    		'add_time' => time(),
+		);
+		
+		$msgApi->addExamMsg($uid);
 	}
 }

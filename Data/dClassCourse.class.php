@@ -60,4 +60,8 @@ class dClassCourse extends dBase {
 	public function modifyClassCourse($datas, $course_id) {
 	    return $this->modify($datas, $course_id);
 	}
+	
+    public function delClassCourse($course_id) {
+	    return $this->delete($course_id);
+	}
 }

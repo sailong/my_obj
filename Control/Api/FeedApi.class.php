@@ -1,196 +1,196 @@
 <?php
-
-define('FEED_DEBUG', true);
-
-include WEB_ROOT_DIR . '/Debug.class.php';
+/**
+ * Author: lnc<lnczx0915@gmail.com>
+ * 功能: 动态开放接口
+ * 说明:	作为C层业务的接口封装，与mFeedVm直接联系
+ * 
+*/
 
 class FeedApi extends ApiController {
-    
-    public function index() {
-        
-        dump($this->_type);
-        
-        dump($this->_method);
-        
-        Debug::start();
-        
-        $redis = new rBase();
-        
-//        $keys = $redis->keys('*');
-//        foreach($keys as $key) {
-//            $redis->del($key);
-//        }
-//        
-//        dump($redis->keys('*'));
-//        exit;
-        
-        $datas = array(
-            'blog_id' => 1,
-            'add_account' => 11070004,
-            'feed_content' => '我的日志测试',
-            'add_time' => time(),
-        );
-        
-//        $mUser = ClsFactory::Create('Model.mUser');
-//        $userlist = $mUser->getUserByUid(11070004);
-//        dump($userlist);
-        
-        //dump($redis->hGetAll('usr:11070004:obj'));
-        
-        
-        //$this->user_create($datas, FEED_BLOG, 11070004);
-        $this->class_create($datas, FEED_ALBUM, 11070004, 6102);
-        
-        //$this->dispatch();
-        
-        dump($redis->lRange('feed:queue', 0, -1));
-        
-        //dump($redis->keys('*'));
-        
-//        dump($this->user_all(89288947, 99, 15));
-//        
-//        dump($this->user_all(89288947, 19, 10));
-//        
-        dump($this->class_all(6102, 0, 100));
-        
-        Debug::end();
-        
-//        dump($redis->keys('usr:11070004:*'));
-        
-        //dump($redis->keys('feed:usr:11070004:*'));
-        
-//        dump($redis->sMembers('usr:11070004:friend'));
-//        
-//        dump($redis->hGetAll('usr:11070004:obj'));
 
-        $this->display(WEB_ROOT_DIR . '/View/Template/Sns/Album/index.html');
-        
-    }
+    /**
+     * 动态分发接口
+     * @param $uid       	  帐号
+     * @param $from_id       产生动态的实体id
+     * @param $feed_type     int    枚举值   1:说说  2：日志  3：相册
+     * 
+     */    
     
-    public function dispatch() {
-        import('@.Control.Api.FeedImpl.Dispatch');
-        
-        $des = new Dispatch();
-        $des->dispatchFeed();
+    public function dispatch($uid, $from_id, $feed_type) {
+        //todo
     }
     
     /**
      * 创建用户动态信息
-     * @param $entity_datas array  动态信息引用的实体，如：日志动态，则为日志在数据库中的字段信息，包括主键id在内
-     * @param $feed_type    int    枚举值
-     * @param $uid          bigint 添加动态的用户账号信息
+     * @param $uid       	  帐号
+     * @param $from_id       产生动态的实体id
+     * @param $feed_type     int    枚举值   1:说说  2：日志  3：相册
      */
-    public function user_create($entity_datas, $feed_type, $uid) {
-        if(empty($entity_datas) || empty($feed_type) || empty($uid)) {
+    public function user_create($uid, $from_id, $feed_type) {
+        if(empty($uid) || empty($from_id) || empty($feed_type)) {
             return false;
         }
         
         import('@.Control.Api.FeedImpl.CreateFeed');
         $createFeed = new CreateFeed();
         
-        return $createFeed->createPersonFeed($entity_datas, $feed_type, $uid);
+        return $createFeed->createPersonFeed($uid, $from_id, $feed_type);
     }
     
     /**
      * 添加用户在班级空间中产生的动态
-     * @param $entity_datas   array  动态信息引用的实体，如：日志动态，则为日志在数据库中的字段信息，包括主键id在内
-     * @param $feed_type      int    枚举值
-     * @param $uid			  bigint 添加动态的用户账号信息
-     * @param $class_code     int    用户当前所在的班级
+     * @param $class_code     int    用户当前所在的班级      
+     * @param $uid       	  帐号
+     * @param $from_id       产生动态的实体id
+     * @param $feed_type     int    枚举值   1:说说  2：日志  3：相册
+
      */
-    public function class_create($entity_datas, $feed_type, $uid, $class_code) {
-        if(empty($entity_datas) || empty($feed_type) || empty($uid)) {
+    public function class_create($class_code, $uid, $from_id, $feed_type) {
+        if(empty($class_code) || empty($uid) || empty($from_id) || empty($feed_type)) {
             return false;
         }
         
         import('@.Control.Api.FeedImpl.CreateFeed');
         $createFeed = new CreateFeed();
         
-        return $createFeed->createClassFeed($entity_datas, $feed_type, $uid, $class_code);
+        return $createFeed->createClassFeed($class_code, $uid, $from_id, $feed_type);
     }
     
+
     /**
-     * 获取用户的全部动态信息
-     * @param $uid       bigint 要获取动态的用户id
-     * @param $offset	 int    动态信息的起始位置
-     * @param $limit     int    要获取动态信息的长度，默认为10，可能大于10
+     * 得到班级全部动态
+     * @param int $class_code  班级id
+     * @param int $timeline    修改时间
+     * @param int $lastId      最后查询feed_id
+     * @param int $limit       查询数量
+     * 
+     * @return
+     * 
      */
-    public function user_all($uid, $offset = 0, $limit = 10) {
-        if(empty($uid)) {
-            return false;
-        }
-        
-        import('@.Control.Api.FeedImpl.UserAllFeed');
-        $userAllFeed = new UserAllFeed();
-        
-        return $userAllFeed->getUserAllFeed($uid, $offset, $limit);
-    }
-    
-    /**
-     * 获取用户的好友相册动态
-     * @param $uid     bigint 要获取动态的用户id
-     * @param $offset  int    动态信息的起始位置
-     * @param $limit   int    要获取动态信息的长度，默认为10，可能大于10
-     */
-    public function user_album($uid, $offset = 0, $limit = 10) {
-        if(empty($uid)) {
-            return false;
-        }
-        
-        import('@.Control.Api.FeedImpl.UserAlbumFeed');
-        $userAlbumFeed = new UserAlbumFeed();
-        
-        return $userAlbumFeed->getUserAlbumFeed($uid, $offset, $limit);
-    }
-    
-    /**
-     * 获取班级动态
-     * @param $class_code  int 要获取动态信息的班级code
-     * @param $offset	   int    动态信息的起始位置
-     * @param $limit	   int    要获取动态信息的长度，默认为10，可能大于10
-     */
-    public function class_all($class_code, $offset = 0, $limit = 10) {
+    public function getClassAllFeed($class_code, $timeline = 0, $lastId = 0, $limit = 10){
         if(empty($class_code)) {
             return false;
         }
         
-        import('@.Control.Api.FeedImpl.ClassAllFeed');
-        $classAllFeed = new ClassAllFeed();
+        $m = ClsFactory::Create("RModel.mFeedVm");
         
-        return $classAllFeed->getClassFeedAll($class_code, $offset, $limit);
+        $result = $m->getClassAllFeed($class_code, $timeline, $lastId, $limit);
+        
+        return !empty($result) ? $result : false;
     }
     
     /**
-     * 获取用户与我相关的动态
-     * @param $uid		bigint 要获取动态的用户id
-     * @param $offset   int    动态信息的起始位置
-     * @param $limit    int    要获取动态信息的长度，默认为10，可能大于10
+     * 得到班级相册动态
+     * @param int $class_code  班级id
+     * @param int $timeline    修改时间
+     * @param int $lastId      最后查询feed_id
+     * @param int $limit       查询数量
      */
-    public function user_my($uid, $offset = 0, $limit = 10) {
+    public function getClassAlbumFeed($class_code, $timeline = 0, $lastId = 0, $limit = 10) {
+        
+        if(empty($class_code)) {
+            return false;
+        }
+        
+        $m = ClsFactory::Create("RModel.mFeedVm");
+        
+        $result = $m->getClassAlbumFeed($class_code, $timeline, $lastId, $limit);
+        
+        return !empty($result) ? $result : false;
+    }
+    
+    /**
+     * 得到所有动态
+     * @param int $uid 		       我们网帐号
+     * @param int $timeline    修改时间
+     * @param int $lastId      最后查询feed_id
+     * @param int $limit       查询数量
+     */
+    public function getUserAllFeed($uid, $timeline = 0, $lastId = 0, $limit = 10) {
         if(empty($uid)) {
             return false;
         }
         
-        import('@.Control.Api.FeedImpl.UserMyFeed');
-        $userMyFeed = new UserMyFeed();
+        $m = ClsFactory::Create("RModel.mFeedVm");
+        $result = $m->getUserAllFeed($uid, $timeline, $lastId, $limit);
         
-        return $userMyFeed->getUserMyFeed($uid, $offset, $limit);
+        return !empty($result) ? $result : false;
     }
     
     /**
-     * 获取用户的孩子动态
-     * @param $uid      bigint 要获取动态的用户id
-     * @param $offset   int    动态信息的起始位置
-     * @param $limit    int    要获取动态信息的长度，默认为10，可能大于10
+     * 得到孩子动态
+     * @param int $uid 		       我们网帐号
+     * @param int $timeline    修改时间
+     * @param int $lastId      最后查询feed_id
+     * @param int $limit       查询数量
      */
-    public function user_child($uid, $offset = 0, $limit = 10) {
+    public function getUserChildrenFeed($uid, $timeline = 0, $lastId = 0, $limit = 10) {
         if(empty($uid)) {
             return false;
         }
         
-        import('@.Control.Api.FeedImpl.UserChildFeed');
-        $userChildFeed = new UserChildFeed();
+        $m = ClsFactory::Create("RModel.mFeedVm");
         
-        return $userChildFeed->getUserChildFeed($uid, $offset, $limit);
+        $result = $m->getUserChildrenFeed($uid, $timeline, $lastId, $limit);
+        
+        return !empty($result) ? $result : false;
     }
+
+    /**
+     * 得到全部相册动态
+     * @param int $uid 		       我们网账号
+     * @param int $timeline    修改时间
+     * @param int $lastId      最后查询feed_id
+     * @param int $limit       查询数量
+     */
+    public function getAblumAllFeed($uid, $timeline = 0, $lastId = 0, $limit = 10) {
+        if(empty($uid)) {
+            return false;
+        }
+        
+        $m = ClsFactory::Create("RModel.mFeedVm");
+        
+        $result = $m->getAblumAllFeed($uid, $timeline, $lastId, $limit);
+        
+        return !empty($result) ? $result : false;
+    }
+    
+    /**
+     * 得到与我相关动态
+     * @param int $uid 			我们网账号
+     * @param int $timeline    修改时间
+     * @param int $lastId      最后查询feed_id
+     * @param int $limit       查询数量
+     */
+    public function getUserMyFeed($uid, $timeline = 0, $lastId = 0, $limit = 10) {
+        if(empty($uid)) {
+            return false;
+        }
+        
+        $m = ClsFactory::Create("RModel.mFeedVm");
+        
+        $result = $m->getUserMyFeed($uid, $timeline, $lastId, $limit);
+        
+        return !empty($result) ? $result : false;
+    }
+    
+    /**
+     * 得到朋友动态
+     * @param int $uid 		       我们网账号
+     * @param int $timeline    修改时间
+     * @param int $lastId      最后查询feed_id
+     * @param int $limit       查询数量
+     */
+    public function getUserFriendFeed($uid, $timeline = 0, $lastId = 0, $limit = 10) {
+        if(empty($uid)) {
+            return false;
+        }
+        
+        $m = ClsFactory::Create("RModel.mFeedVm");
+        
+        $result = $m->getUserFriendFeed($uid, $timeline, $lastId, $limit);
+        
+        return !empty($result) ? $result : false;
+    }    
+    
 }

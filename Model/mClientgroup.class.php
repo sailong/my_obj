@@ -43,6 +43,19 @@ class mClientgroup extends mBase {
         
         return $this->_dClientgroup->getInfo($wheresql);
 	}
+	
+	public function getClientGroupByaddAccount($add_account) {
+	    if(empty($add_account)) {
+	        return false;
+	    }
+	    
+	    $wheresql = array(
+            'add_account = ' . $add_account
+        );
+        
+        return $this->_dClientgroup->getInfo($wheresql);
+	    
+	}
 
 
 	//添加分组

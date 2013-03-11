@@ -30,4 +30,15 @@ class mAlbumPersonRelation extends mBase {
         $orderby = ' client_account asc';
         return $this->_dAlbumPersonRelation->getInfo($wherearr, $orderby);
     }
+    public function getAlbumPersonRelByAlbumId($album_id) {
+        return $this->_dAlbumPersonRelation->getAlbumPersonRelByAlbumId($album_id);
+    }
+    
+    public function delByAlbumId($album_id) {
+        if(empty($album_id)) {
+            return false;
+        }
+        
+        return $this->_dAlbumPersonRelation->delByAlbum_id($album_id);
+    }
 }

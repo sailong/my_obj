@@ -55,7 +55,19 @@ class Uploadfile implements UploadfileInterface {
      * 上传文件
      * @param $field 上传文件表单名称
      * @param $options 上传配制文件属性数组
-     * @return boolean
+     * @return 成功:array(
+     *  name=>97c300fejw1dydnuchvdlg.gif
+        type=>application/octet-stream
+        tmp_name=>/tmp/phpCaY7Ys
+        error=>0
+        size=>296559
+        filename=>/opt/wmw/attachment/photo_pic/11070004/135768866550ecaf590fae3.jpg
+        getfilename=>/opt/wmw/attachment/photo_pic/11070004/135768866550ecaf590fae3.jpg
+        ext=>gif
+        getsmallfilename=>/opt/wmw/attachment/photo_pic/11070004/135768866550ecaf590fae3_small.jpg
+        md5_key=>7cc01f57ba9842fd22752d59ec8bd872
+     * )
+     * 失败: false
      */
     function upfile($field, $options = array()) {
         if ($_FILES[$field]['tmp_name'] == "") {
@@ -82,9 +94,12 @@ class Uploadfile implements UploadfileInterface {
             }
 
             if ($this->ifresize == true && ($this->ext == "gif" || $this->ext == "jpg" || $this->ext == "png")) {
-                $this->_loadExtFile("resizeimage.class.php");
-                $obj_small = new resizeimage($this->upfile['filename'], $this->resize_width, $this->resize_height, $this->cut);
-                $this->upfile['getsmallfilename'] = $obj_small->dstimg;
+               
+                    $this->_loadExtFile("resizeimage.class.php");
+                    $obj_small = new resizeimage($this->upfile['filename'], $this->resize_width, $this->resize_height, $this->cut);
+                    $this->upfile['getsmallfilename'] = $obj_small->dstimg;
+                
+                
             }
             return $this->upfile;
         }

@@ -24,7 +24,7 @@ ucLoginCls.prototype.attachEvent=function() {
 		if(!this.value) {
 			this.value = self.default_var;
 		}
-		self.doShowCaptcha("/uc/login_api/show_captcha");
+		self.doShowCaptcha("/Uc/LoginApi/show_captcha");
 	}).val(self.default_var);
 
 	$("#login_btn").bind('click', function() {
@@ -39,7 +39,7 @@ ucLoginCls.prototype.attachEvent=function() {
 
 	$("#change_captcha").bind('click', function(event) {
 		event.preventDefault();
-		self.doShowCaptcha("/uc/login_api/refresh_captcha");
+		self.doShowCaptcha("/Uc/LoginApi/refresh_captcha");
 	});
 
 	$("#addbookmark").bind('click', function(e) {
@@ -55,7 +55,7 @@ ucLoginCls.prototype.attachEvent=function() {
 	});
 
 	$("#qq_login_btn").bind('click', function() {
-		window.location.href = '/uc/Oauth2/login?connect=qzone';
+		window.location.href = '/Uc/Oauth2/login?connect=qzone';
 	});
 
     $(document).keydown(function(e){
@@ -126,7 +126,7 @@ ucLoginCls.prototype.doLogin = function() {
 	password = $.md5(password);
 	$.ajax({
 		type: "POST",
-		url: "/uc/login_api/login",
+		url: "/Uc/LoginApi/login",
 		dataType: "json",
 		data: {"grant_type":"password", "client_id":client_id, "username":username, "password":password,
 			   "callback":callback, "captcha":captcha_input_code, "social_account": social_account, "social_type":social_type,
@@ -140,9 +140,9 @@ ucLoginCls.prototype.doLogin = function() {
 				return false;
 			} else {
 				if (show_captcha == "block") {
-					self.doShowCaptcha("/uc/login_api/refresh_captcha");
+					self.doShowCaptcha("/Uc/LoginApi/refresh_captcha");
 				} else {
-					self.doShowCaptcha("/uc/login_api/show_captcha");
+					self.doShowCaptcha("/Uc/LoginApi/show_captcha");
 				}
 				self.makeTip(json.info);
 				return false;

@@ -32,14 +32,6 @@ class dClassExam extends dBase {
     }
     
     /**
-     * 通过科目id获取考试信息
-     * @param $subject_ids
-     */
-    public function getClassExamBySubjectId($subject_ids) {
-        return $this->getInfoByFk($subject_ids, 'subject_id');
-    }
-    
-    /**
      * 通过班级class_code 获取考试信息
      * @param $subject_ids
      */

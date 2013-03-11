@@ -33,4 +33,11 @@ class dAlbumPersonGrants extends dBase {
     public function getAlbumPersonGrantByAlbumId($album_id) {
         return $this->getInfoByFk($album_id, 'album_id');
     }
+    
+    public function delByAlbumId($album_id) {
+        $sql = "delete from {$this->_tablename} where album_id={$album_id}";
+        
+        return $this->execute($sql);
+    }
+    
 }

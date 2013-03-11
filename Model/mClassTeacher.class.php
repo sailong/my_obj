@@ -8,12 +8,32 @@ class mClassTeacher extends mBase {
 		$this->_dClassTeacher = ClsFactory::Create('Data.dClassTeacher');
 	}
 	
+    public function getClassTeacherById($class_teacher_ids) {
+        if(empty($class_teacher_ids)) {
+            return false;
+        }
+        
+        return $this->_dClassTeacher->getInfoByPk($class_teacher_ids);
+    }	
+	
     public function getClassTeacherByClassCode($class_codes) {
         if(empty($class_codes)) {
             return false;
         }
         
         return $this->_dClassTeacher->getClassTeacherByClassCode($class_codes);
+    }
+    
+    public function getClassTeacherByClassCodeAndSubjectId($subject_id, $class_code){
+        if(empty($subject_id) || empty($class_code)){
+            return false;
+        }
+        $where_arr = array(
+            'subject_id = ' . $subject_id,
+            'class_code = ' . $class_code
+        );
+        
+        return $this->_dClassTeacher->getInfo($where_arr);
     }
 	
     public function getClassTeacherByUid($uids, $filters = array()) {

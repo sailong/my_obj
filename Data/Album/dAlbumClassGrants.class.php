@@ -12,6 +12,9 @@ class dAlbumClassGrants extends dBase {
                     'class_code',
                     'album_id',
                 );
+    /**
+     * 添加关系信息
+     */            
     public function addAlbumClassGrant($data, $is_return_id) {
         return $this->add($data, $is_return_id);
     }
@@ -30,5 +33,11 @@ class dAlbumClassGrants extends dBase {
     
     public function getAlbumClassGrantByAlbumId($album_id) {
         return $this->getInfoByFk($album_id, 'album_id');
+    }
+    
+    //todo delete
+    public function delByAlbumId($album_id) {
+        $sql = "delete from {$this->_tablename} where album_id={$album_id}";
+        return $this->execute($sql);
     }
 }

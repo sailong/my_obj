@@ -30,4 +30,14 @@ class dAlbumPersonRelation extends dBase {
         return $this->getInfoByFk($uid, 'client_account', $orderby, $offset, $limit);
     }
     
+    public function getAlbumPersonRelByAlbumId($album_id) {
+        return $this->getInfoByFk($album_id, 'album_id');
+    }
+    
+    public function delByAlbum_id($album_id) {
+        $sql = "delete from {$this->_tablename} where album_id={$album_id}";
+        
+        return $this->execute($sql);
+    }
+    
 }

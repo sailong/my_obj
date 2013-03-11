@@ -471,7 +471,7 @@ SWFUpload.prototype.selectFiles = function () {
 // Public: startUpload starts uploading the first file in the queue unless
 // the optional parameter 'fileID' specifies the ID 
 SWFUpload.prototype.startUpload = function (fileID) {
-
+	
 	this.callFlash("StartUpload", [fileID]);
 };
 

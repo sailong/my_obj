@@ -8,6 +8,15 @@ class mClassExamScore extends mBase {
     }
     
     
+    /**
+     * 通过where 条件获取成绩列表
+     * 
+     */
+    public function getClassExamScoreInfo($where, $orderby, $offset = null, $limit = null) {
+        
+        return $this->_dClassExamScore->getInfo($where, $orderby, $offset, $limit);
+    }
+    
     //通过主键 score_id获取学生成绩信息
     public function getClassExamScoreById($score_ids) {
         if(empty($score_ids)) {
@@ -34,10 +43,9 @@ class mClassExamScore extends mBase {
         $exam_ids = implode("," , (array)$exam_ids);
         $Account =  is_array($Account) ? array_shift($Account) : $Account;
 
-        $wheresql = array(
+        $wheresql = array (
         	"client_account='$Account'",
-            "exam_id in($exam_ids)",
-            "exam_score!=-1"
+            "exam_id in($exam_ids)"
         );
              
         return $this->_dClassExamScore->getInfo($wheresql);        
@@ -57,23 +65,41 @@ class mClassExamScore extends mBase {
 	    return $this->_dClassExamScore->addBat($datas);
     }
     
-    public function modifyClassExamScore($score_data,$exam_id,$client_account) {
-        if(empty($score_data) || empty($exam_id) || empty($client_account)) {
+    //修改成绩
+    public function modifyClassExamScore($score_data, $score_id) {
+        if(empty($score_data) || empty($score_id)) {
             return false;
         }
-        $score_list = $this->getClassExamScoreByUid($client_account); //获取该学生参加过的所有的考试信息
-        foreach($score_list as $id=>$score_info ) {//获取本次考试中该学生的score_id（主键）
-            if($score_info['exam_id'] == $exam_id) {
-                $score_id = $id;
+
+        $mdf_rs = $this->_dClassExamScore->modifyClassExamScore($score_data, $score_id);
+		return !empty($mdf_rs) ? true : false;
+    }
+    
+    
+    //批量修改成绩信息 (只是针对一次考试的批量修改)
+    public function modeifyBatExamScore($datas, $exam_id) {
+        if (empty($datas) || !is_array($datas) || empty($exam_id)) {
+            return false;
+        }
+        
+        //循环修改
+         $res = true;
+        foreach ($datas as $score_id=>$score_info) {
+            //验证成绩是否属于该考试
+            $score_arr = $this->getClassExamScoreById($score_id);
+            $score = & $score_arr[$score_id];
+            if ($score['exam_id'] != $exam_id) {
+                continue;
+            }
+            
+            //修改成绩信息       
+            $res = $this->modifyClassExamScore($score_info, $score_id);
+            if (empty($res)) {
+                $res = false;  //所有都成功才算成功
             }
         }
-        if(!empty($score_id)) {
-            $mdf_rs = $this->_dClassExamScore->modifyClassExamScore($score_data, $score_id);
-        } else {
-            return false;
-        }
-		
-		return $mdf_rs;
+        
+        return $res;
     }
     
     //删除学生成绩信息
@@ -85,12 +111,22 @@ class mClassExamScore extends mBase {
         return $this->_dClassExamScore->delClassExamScore($score_id);
     }
     
-    //批量删除学生成绩信息
-    public function delBatClassExamScore($score_ids) {
-        if(empty($score_ids) || !is_array($score_ids)) {
+    /**
+     * 根据考试id批量删除学生成绩信息
+     */
+    public function delBatClassExamScoreByExamId($exam_id) {
+        if(empty($exam_id)) {
             return false;
         }
         
+        //获取成绩列表
+        $score_list = $this->getClassExamScoreByExamId($exam_id);
+        $score_list = & $score_list[$exam_id];
+        if (empty($score_list)) {
+            return true;
+        }
+        
+        $score_ids = array_keys($score_list);
         $res = true;
         foreach($score_ids as $score_id) {
            $success =  $this->_dClassExamScore->delClassExamScore($score_id);
@@ -98,6 +134,7 @@ class mClassExamScore extends mBase {
                $res = false;
            }
         }
+        
         return $res;
     }
     

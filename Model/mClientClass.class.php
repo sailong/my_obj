@@ -13,7 +13,7 @@ class mClientClass extends mBase {
 	        return false;
 	    }
 	    
-	    $client_class_arr = $this->_dClientClass->getClientClassByUid ( $uids );
+	    $client_class_arr = $this->_dClientClass->getClientClassByUid($uids );
 	    
 	    return !empty($client_class_arr) ? $client_class_arr : false;
 	}
@@ -43,6 +43,7 @@ class mClientClass extends mBase {
 	    if (empty ($classCodes)) {
 	        return false;
 	    }
+	    
 	    $tmp_clientclasslist = $this->_dClientClass->getClientClassByClassCode($classCodes);
 	    $clientclasslist = array();
 	    if ( !empty($tmp_clientclasslist) ) {
@@ -88,6 +89,20 @@ class mClientClass extends mBase {
 	        }
 	    }
 	    return ! empty ( $clientclasslist ) ? $clientclasslist : false;
+	}
+	
+	public function getClientClassId($class_code, $uid){
+	    if(empty($class_code) || empty($uid)) {
+	        return false;
+	    }
+	    
+	    $wheresql = array(
+	        'class_code='.$class_code,
+	    	'client_account='.$uid
+	    );
+	    
+	    
+	    return key($this->_dClientClass->getInfo($wheresql));
 	}
 	
 	public function modifyClientClass($clientInfo, $id) {
@@ -142,7 +157,7 @@ class mClientClass extends mBase {
 	/*
 	 * 根据班级编号和类型查询学生帐号
 	 */
-	public function getStudentInfoByClassCodeAndType($class_code,$client_type) {
+	public function getStudentInfoByClassCodeAndType($class_code,$client_type,$offset=null,$lenght=null) {
 	    if(empty($class_code) || $client_type != 0) {
 	        return false;
 	    }
@@ -151,8 +166,24 @@ class mClientClass extends mBase {
 	        'client_type = ' .$client_type,
 	    );
 	    
-	    $resault = $this->_dClientClass->getInfo($dataarr);
+	    $resault = $this->_dClientClass->getInfo($dataarr,'client_class_id',$offset,$lenght);
 	    return !empty($resault) ? $resault : false;
 	}
+	
+	/**
+	 * 根据需求添加 按条件查询方法 并对查询结果按要求进行排序
+	 * @param $where array 条件数组
+	 * @param $orderby 排序字段
+	 * @param $offset 分页 默认查询所有
+	 * @param $limit 每页条数
+	 * @return $client_class_list 用户id作为键 方便数据调用
+	 */
+	public function getClientClassInfo($where, $orderby, $offset=null, $limit=null) {
+            
+        $resault = $this->_dClientClass->getInfo($where, $orderby, $offset, $limit);
+        
+        return !empty($resault) ? $resault : false;
+	}
+	
 }
 

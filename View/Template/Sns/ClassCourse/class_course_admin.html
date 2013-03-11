@@ -1,161 +1,121 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" /> 
-
-<title>课程表</title> 
-
-<link rel="stylesheet" type="text/css" href="{$smarty.const.IMG_SERVER}__PUBLIC__/css/newhomepage.css"  />
-<link rel="stylesheet" type="text/css" href="{$smarty.const.IMG_SERVER}__PUBLIC__/css/diary.css"  />
-
-<link rel="stylesheet" type="text/css" href="{$smarty.const.IMG_SERVER}__PUBLIC__/js/ui/css/jquery-ui-min.css"  />
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<title>课程表</title>
+<link rel="stylesheet" href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/Common/sns_common.css" type="text/css" charset="utf-8">
+<link rel="stylesheet" href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/ClassCourse/list.css" type="text/css" charset="utf-8">
 
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/jquery-1.5.2.min.js"></script>
-<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/ui/jquery-ui.min.js"></script>
-<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/class_course/skin.js"></script>
-<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/class_course/course.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/artDialog4.1.6/artDialog.source.js?skin=idialog"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/artDialog4.1.6/plugins/iframeTools.source.js"></script>
+
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/ClassCourse/skin.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/ClassCourse/course.js"></script>
 
 </head>
 <body>
-<div class="box">
-<div class="nav">
-{insert name="publicHeader" class_code = $class_code}
-<div class="main">
-{insert name="account_left" class_code = $class_code}
-
-<div class="sub_right">
-<div class="sub_diary">
-<div >
-选择模板：
-<ul id='skin_show'>
-
-{foreach from=$skin_list item=skin}
-<li style="cursor: pointer;float:left;padding-left:10px;" title="点击切换模板">
-<img width="31px;" height="23px;" name="{$skin.skin_id}" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/images/class_course/course_skin/{$skin.url}" />
-</li>
-{/foreach} 
-</ul>
-</div>
-</div>
-<form action="/Homeclass/Curriculum/save/class_code/{$class_code}" method="post" name="form1" id="form1">
-
-<div style=" margin:10px auto 10px auto; width:750px;height:625px;" align="center">
-<!--startprint-->
-
-<div style="background:url('{$smarty.const.IMG_SERVER}__PUBLIC__/sns/images/class_course/course_skin/{if $user_course_skin}{$user_course_skin.url}{else}1.jpg{/if}')" id="skin_div" class="curriculmTable">
-<div class='curriculmData'>
-<div class="cur_content_left">
-<ul>
-<li>一</li>
-<li>二</li>
-<li>三</li>
-<li>四</li>
-
-
-
-
-</ul>
-</div>
-<div class="cur_content_right" >
-<div class="aline">
-<span class='blank2'></span>
-
-<ul id='ulam'>
-{foreach from=$am_course_list item=am_course_arr key=num_th}
-	{foreach from=$am_course_arr item=am_course key=weekday}
-	<li>
-	{if $am_course.name}
-		<span>{$am_course.name}</span>
-		<input type="hidden" value="{$am_course.weekday}:{$am_course.num_th}"/>
-	{else}
-		<span></span>
-		<input type="hidden" value="{$weekday}:{$num_th}"/>
-	{/if}	
-	</li>
-	{/foreach}
-{/foreach}
-</ul>
-</div>
-</div>
-</div>	
-
-<div class='curriculmMid'>午休~，吃完饭别乱跑啊，否则会肚子疼的</div>
-<div class='curriculmData1'>
-
-<div class="cur_content_left">
-<ul >
-<li>五</li>
-<li>六</li>
-<li>七</li>
-<li>八</li>
-
-</ul>
-</div>
-<div class="cur_content_right">
-<div class="aline">
-<span class='blank2'></span>
-<ul id="ulpm" title="ul_course">
-{foreach from=$pm_course_list item=pm_course_arr  key=num_th}
-	{foreach from=$pm_course_arr item=pm_course  key=weekday}
-	<li>
-	{if $pm_course.name}
-		<span>{$pm_course.name}</span>
-		<input type="hidden" value="{$pm_course.weekday}:{$pm_course.num_th}"/>
-	{else}
-		<span></span>
-		<input type="hidden" value="{$weekday}:{$num_th}"/>
-	{/if}	
-	</li>	
-	{/foreach}
-{/foreach}
-</ul>
-</div>
-</div>
-
-</div>
-</div>
-</div>
-<span class='blank2'></span>
-
-</div>
-</form>
-
-<!-- 修改课程弹出层 -->
-<div class="edit_course" id="edit_course" style="display:none;">
-	<div style="width:520px;">
-	<table id="course_table" width="500" border="0" align="center" cellpadding="3" cellspacing="3" bgcolor="#ffffff">
-	  <tr bgcolor="#FFFFFF">
-	  <!-- {foreach from=$subject_list item=subject name=rownumber} -->
-	    <td height="30"><span style="font-size:14px;cursor: pointer;">{$subject.subject_name}</span></td>
-	 	 <!--{if $smarty.foreach.rownumber.iteration % 5 ==0}   -->
-		</tr>
-		<tr bgcolor="#FFFFFF">
-		 <!--{/if}-->
-	  <!--{/foreach}-->
+<!-- 头部start -->
+{insert name="sns_header" uid = $uid}
+<!-- 头部end -->
+<!--tip star-->
+{insert name="sns_class_header" class_code = $class_code}
+<!--tip end--> 
+<!--content star-->
+<div class="content">
+  <!--main star-->
+   <div class="main">
+     <!--nav star-->
+    {insert name="sns_nav" class_code = $class_code}
+    <!--nav end-->
+    <h4></h4>
+    <!--publish_main star-->
+     <div class="publish_main">
+       <div class="course_top">
+         <h3>选择模板:</h3>
+         <p id='skin_show'>
+         {foreach from=$skin_list item=skin}
+         <a href="javascript:;">
+         <img id="{$skin.skin_id}" name="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/images/ClassCourse/list/{$skin.url}" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/images/ClassCourse/list/{$skin.small_img}">
+         </a>
+         {/foreach} 
+         </p>
+       </div>
+       <div id="skin_div" style="background:url('{$smarty.const.IMG_SERVER}__PUBLIC__/sns/images/ClassCourse/list/{if $user_course_skin}{$user_course_skin.url}{else}course_bj1.jpg{/if}') no-repeat scroll 0 0 transparent;" class="course_main">
+         <div class="course_main_left">
+           <p>上午</p>
+           <p class="after_p">下午</p>
+         </div>
+         <div id="course_main_div" class="course_main_right">
+         {foreach from=$am_course_list item=am_course_arr key=num_th}
+         <ul>
+			{foreach from=$am_course_arr item=am_course key=weekday}
+			<li>
+			<a href="javascript:;" class="course_name_a" >{if $am_course.name}{$am_course.name}{else}--{/if}</a>
+			<input class="course_keys" type="hidden" value="{$weekday}:{$num_th}"/>
+			<div class="icoo_tcc" style="display:none;"><a href="javascript:;"></a></div>
+			<input id="course_id" type="hidden" value="{$am_course.course_id}"/>
+			</li>
+         	{/foreach}
+         </ul>
+         {/foreach}
+          <div class="noon_main"></div>
+         {foreach from=$pm_course_list item=pm_course_arr key=num_th}
+         <ul>
+			{foreach from=$pm_course_arr item=pm_course key=weekday}
+			<li>
+			<a href="javascript:;" class="course_name_a" >{if $pm_course.name}{$pm_course.name}{else}--{/if}</a>
+			<input class="course_keys" type="hidden" value="{$weekday}:{$num_th}"/>
+			<div class="icoo_tcc" style="display:none;"><a href="javascript:;"></a></div>
+			<input id="course_id" type="hidden" value="{$pm_course.course_id}"/>
+			</li>
+         	{/foreach}
+         </ul>
+         {/foreach}
+       </div>
+       </div>
+       <div class="clear"></div>
+     </div>
+    <!--publish_main end-->
+    <div class="clear"></div>
+    <div class="main_bottom"></div>
+  </div>
+  <!--main end-->
+  <div class="clear"></div> 
+  </div>
+  
+  
+  <!--弹出层 star-->
+  <div id="edit_course" class="course_tcc" style="display:none;">
+    <h1>选择您要设置的课程</h1>
+    <div class="course_tcc_tab">
+    <table id="course_table" width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+      {foreach from=$subject_list item=subject name=rownumber}
+        <td><a href="javascript:;">{$subject.subject_name}</a></td>
+      {if $smarty.foreach.rownumber.iteration % 4 ==0}
 	  </tr>
-	    <tr bgcolor="#FFFFFF">
-	      <td height="30" align="center" colspan="5">&nbsp;</td>
-	    </tr>
-	    <tr bgcolor="#FFFFFF">
-	    <td height="30" align="left" colspan="5">
-	&nbsp;自定义课程<input type="text" name="subject" id="course_name" name="course_name" class="input_txt2" maxlength='10'/>
-	&nbsp;&nbsp;<input type="button"  value="确定" id="course_name_but" class="inputbg1"/>
-				<span id="span_course_name" style="color:red;"></span>
-				<input type="hidden"  id="course_name_old"/>
-				<input type="hidden"  value="{$class_code}" name="class_code" id="class_code"/>
-		</td>
-	  </tr>
-	</table>
+	  <tr>
+      {/if}
+	  {/foreach}
+      </tr>
+    </table>
+    <p>
+     	自定义课程:
+     <input  id="course_name" name="course_name" maxlength='10' type="text" class="tcc_text">
+     <input id="course_name_btn" type="button" value="添加" class="qd_btn">
+     <input type="hidden" id="course_name_old"/>
+	 <input type="hidden" id="class_code" value="{$class_code}" name="class_code"/>
+    </p>
+    <div style="padding: 10px 0 0 80px;"><span id="span_course_name" style="color:red;">&nbsp;</span></div>
     </div>
- </div>
-<!-- 修改课程弹出层 -->
+  </div>
+<!--弹出层 end-->
+<!--content end-->
 
-<span class='blank10'></span>
-
-{include file="Public/footer.html"}
-
-</div><!--nav end-->
-</div><!--box end-->
+<!-- 尾部start -->
+{include file="Public/sns_footer.html"}
+<!-- 尾部end -->
 </body>
 </html>

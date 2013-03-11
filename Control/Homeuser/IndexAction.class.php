@@ -1059,7 +1059,7 @@ class IndexAction extends SnsController {
 	//公用方法，个人相册列表统计 2012-3-21 by lyt:
 	public function getMAlbumInfoModel($account,$pagecount){
 		$mAlbuminfo = ClsFactory::Create('Model.mAlbuminfo');
-		$xiangce_result = $mAlbuminfo->getAlbumInfoByaccount($account,0,8);
+		$xiangce_result = $mAlbuminfo->getAlbumInfoByaccount($account,0,100);
 		$this->assign('pagecount',$pagecount);
 
 		return $xiangce_result;

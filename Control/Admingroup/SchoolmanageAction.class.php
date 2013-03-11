@@ -235,6 +235,11 @@ class SchoolmanageAction extends WmsController {
             $mSchool = ClsFactory::Create ( 'Model.mSchoolInfo' );
             $result = $mSchool->modifySchoolInfo($data,$schoolid);
             if($result){
+                
+                //更新redis 学校信息
+                $mHashSchool = ClsFactory::Create ( 'RModel.Common.mHashSchool' );
+                $mHashSchool->getSchoolbyId($schoolid, true);
+                
             	$this->showSuccess("修改成功", "/Admingroup/Schoolmanage/updateschool");
             }else{
             	$this->showError("修改失败", "/Admingroup/Schoolmanage/updateschool");

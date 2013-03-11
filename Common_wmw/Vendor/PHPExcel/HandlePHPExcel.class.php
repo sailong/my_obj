@@ -8,8 +8,11 @@ include_once VENDOR_PHPEXCEL_DIR . "/../WmwAutoLoader.class.php";
 
 //PHPExcel操作类
 class HandlePHPExcel implements PHPExcelInterface {
-    //允许处理的文件名后缀
-    protected $allow_filesuffix_arr = array('xls', 'xlsx');
+    //允许处理的文件名后缀和对应的content-type值
+    protected $allow_mine_types = array(
+        'xls' => 'application/vnd.ms-excel',
+        'xlsx' => 'application/octet-stream'
+    );
     protected $memory_limit = 512;
     protected $max_execution_time = 60;
     
@@ -44,61 +47,6 @@ class HandlePHPExcel implements PHPExcelInterface {
         if($max_execution_time < $this->max_execution_time) {
             ini_set('max_execution_time', $this->max_execution_time);
         }
-    }
-    
-    /**
-     * 解析和初始化文件的相关信息
-     */
-    protected function getFileAttribute($pFileName) {
-        if(empty($pFileName)) {
-            return false;
-        }
-        
-        $pFileName = trim($pFileName);
-        $file_name = end(explode('/', $pFileName));
-        $file_path = dirname($pFileName);
-        
-        //获取excel文件的后缀名和版本信息
-        list($suffix, $excel_version) = $this->getExcelSuffixAndVersion($file_name);
-        
-        //文件的基本属性信息
-        $file_attr = array(
-            'file_name' => $file_name,
-            'file_path' => $file_path,
-            'real_file' => $pFileName,
-            'suffix' => $suffix,
-            'version' => $excel_version,
-        );
-        
-        return $file_attr;
-    }
-    
-    /**
-     * 获取文件的后缀名和excel文件的版本信息
-     * @param $file_name excel的文件名
-     */
-    protected function getExcelSuffixAndVersion($file_name) {
-        if(empty($file_name)) {
-            return false;
-        }
-        
-        $suffix = $excel_version = "";
-        if(stripos($file_name, '.') !== false) {
-            $suffix = strtolower(end(explode('.', $file_name)));
-        }
-        
-        //检测文件后缀名是否正确
-        if(!empty($this->allow_filesuffix_arr) && !in_array($suffix, $this->allow_filesuffix_arr)) {
-            throw new Exception("文件后缀名错误!", -1);
-        }
-        
-        if($suffix == 'xls') {
-            $excel_version = 'Excel5';
-        } elseif($suffix == 'xlsx') {
-            $excel_version = 'Excel2007';
-        }
-        
-        return array($suffix, $excel_version);
     }
     
 	/**
@@ -146,12 +94,7 @@ class HandlePHPExcel implements PHPExcelInterface {
      * @param  $index
      */
     public function getSheetDatasByIndex($pFileName, $index = 0) {
-        if(empty($pFileName)) {
-            return false;
-        }
-        
-        $canRead = $this->canRead($pFileName);
-        if(!$canRead) {
+        if(empty($pFileName) || !$this->canRead($pFileName)) {
             return false;
         }
         
@@ -161,39 +104,14 @@ class HandlePHPExcel implements PHPExcelInterface {
         $PHPExcel = $PHPExcel_Reader->load($pFileName);
         $currentSheet = $PHPExcel->getSheet($index);
         
-        $array = array();
-        if(!empty($currentSheet)) {
-            $allColumn = PHPExcel_cell::columnIndexFromString($currentSheet->getHighestColumn());
-            $allRow = $currentSheet->getHighestRow();
-            $array["title"] =  $currentSheet->getTitle();       
-            $array["cols"] = $allColumn;
-            $array["rows"] = $allRow;
-            $arr = array();
-            for($currentRow = 1;$currentRow <= $allRow; $currentRow++) {
-                $row = array();
-                for($currentColumn=0; $currentColumn < $allColumn; $currentColumn++) {
-                    $row[$currentColumn] = $currentSheet->getCellByColumnAndRow($currentColumn, $currentRow)->getValue();
-                }
-                $arr[$currentRow] = $row;
-            }
-            
-            $array["datas"] = $arr;
-        }
-        
-        return !empty($array) ? $array : false;
+        return $this->parseSheet($currentSheet);
     }
     
     /**
      * 将Excel中数据转换成数组
      */
     public function toArray($pFileName) {
-        if(empty($pFileName)) {
-            return false;
-        }
-        
-        //检测文件是否可读
-        $canRead = $this->canRead($pFileName);
-        if(!$canRead) {
+        if(empty($pFileName) || !$this->canRead($pFileName)) {
             return false;
         }
         
@@ -202,29 +120,13 @@ class HandlePHPExcel implements PHPExcelInterface {
         $PHPExcel = $PHPExcel_Reader->load($pFileName);
         $SheetCount = $PHPExcel->getSheetCount();
         
-        $array = array();
-        for($i = 0; $i < $SheetCount; $i++) {
-            $currentSheet = $PHPExcel->getSheet($i);
-             
-            $allColumn = PHPExcel_cell::columnIndexFromString($currentSheet->getHighestColumn());
-            $allRow = $currentSheet->getHighestRow();
-            
-            $array[$i]["title"] =  $currentSheet->getTitle();       
-            $array[$i]["cols"] = $allColumn;
-            $array[$i]["rows"] = $allRow;
-            $arr = array();
-            for($currentRow = 1;$currentRow <= $allRow; $currentRow++) {
-                $row = array();
-                for($currentColumn=0; $currentColumn < $allColumn; $currentColumn++) {
-                    $row[$currentColumn] = $currentSheet->getCellByColumnAndRow($currentColumn, $currentRow)->getValue();
-                }
-                $arr[$currentRow] = $row;
-            }
-            
-            $array[$i]["datas"] = $arr;
+        $excel_datas = array();
+        for($index = 0; $index < $SheetCount; $index++) {
+            $currentSheet = $PHPExcel->getSheet($index);
+            $excel_datas[$index] = $this->parseSheet($currentSheet);
         }
         
-        return !empty($array) ? $array : false;
+        return !empty($excel_datas) ? $excel_datas : false;
     }
     
   	/**
@@ -241,6 +143,57 @@ class HandlePHPExcel implements PHPExcelInterface {
     }
     
     /**
+     * 直接输出Excel文件到浏览器
+     * @param $datas
+     * @param $filename
+     */
+    public function outputExcel($datas, $export_file_name) {
+        if(empty($datas)) {
+            return false;
+        }
+        
+        if(empty($export_file_name)) {
+            $export_file_name = "Excel文件.xls";
+        }
+        
+        //以"."作为分割标志
+        if(($pos = strrpos($export_file_name, '.')) !== false) {
+            $file_name = substr($export_file_name, 0, $pos);
+            $suffix = substr($export_file_name, $pos + 1);
+        } else {
+            $file_name = $export_file_name;
+            $suffix = 'xls';
+        }
+        
+        $suffix = strtolower($suffix);
+        $suffix = in_array($suffix, array_keys($this->allow_mine_types)) ? $suffix : 'xls';
+        
+        //处理下载文件名的乱码问题
+        $downname = $file_name . '.' . $suffix;
+        $user_agent = $_SERVER['HTTP_USER_AGENT'];
+        if(stripos($user_agent, 'MSIE') !== false) {
+            $downname = 'filename="' . str_replace('+', '%20', urlencode($downname)) . '"';
+        } elseif(stripos($user_agent, 'Firefox') !== false) {
+            $downname = 'filename*="utf8\'\'' . $downname . '"';
+        } else {
+            $downname = 'filename="' . $downname . '"';
+        }
+        
+        //输出文件内容信息
+        ob_end_clean();
+        header('Cache-control: max-age=31536000'); 
+		header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 31536000) . ' GMT'); 
+		header('Content-Type: ' . $this->allow_mine_types[$suffix]);
+		header('Content-Disposition:attachment;' . $downname);
+		
+		$PHPExcel = $this->createPHPExcelHandle($datas);
+		if($PHPExcel instanceof PHPExcel) {
+            $PHPExcel_Writer = PHPExcel_IOFactory::createWriter($PHPExcel, $suffix == 'xls' ? 'Excel5' : 'Excel2007');
+            $PHPExcel_Writer->save("php://output");
+		}
+    }
+    
+    /**
      * 将相应的数据保存到Excel文件中
      * @param $dataarr
      * @param $filename
@@ -249,18 +202,33 @@ class HandlePHPExcel implements PHPExcelInterface {
         if(empty($datas)) {
             return false;
         }
+       
+        $PHPExcel = $this->createPHPExcelHandle($datas);
+        if($PHPExcel instanceof PHPExcel) {
+            list($suffix, $excel_version) = $this->getExcelSuffixAndVersion($filename);
+            $PHPExcel_Writer = PHPExcel_IOFactory::createWriter($PHPExcel, $excel_version);
+            $PHPExcel_Writer->save($filename);
+        }
         
-        list($suffix, $excel_version) = $this->getExcelSuffixAndVersion($filename);
+        return file_exists($filename) ? true : false;
+    }
+    
+    /**
+     * 通过数据创建一个Excel的操作句柄
+     */
+    private function createPHPExcelHandle($datas) {
+        if(empty($datas) || !is_array($datas)) {
+            return false;
+        }
+        
         $PHPExcel = new PHPExcel();
-        $PHPExcel_Writer = PHPExcel_IOFactory::createWriter($PHPExcel, $excel_version);
         $PHPExcel->removeSheetByIndex(0);
-        
         $index = 0;
         foreach($datas as $sheet) {
             $cols = $sheet['cols'];
             $rows = $sheet['rows'];
             $title = $sheet['title'];
-            
+
             $PHPExcel->createSheet($index);
             $PHPExcel->setActiveSheetIndex($index);
             $objActiveSheet = $PHPExcel->getActiveSheet();
@@ -284,9 +252,94 @@ class HandlePHPExcel implements PHPExcelInterface {
             $index++;
         }
         
-        $PHPExcel_Writer->save($filename);
-        return file_exists($filename) ? true : false;
+        return $PHPExcel;
     }
     
+    /**
+     * 解析工作区
+     * @param $sheet
+     */
+    private function parseSheet($sheet) {
+        if(empty($sheet) || !($sheet instanceof PHPExcel_Worksheet)) {
+            return false;            
+        }
+        
+        $allColumn = PHPExcel_cell::columnIndexFromString($sheet->getHighestColumn());
+        $allRow = $sheet->getHighestRow();
+        
+        $sheet_datas = array(
+            'title' => $sheet->getTitle(),
+            'cols'  => $allColumn,
+            'rows'	=> $allRow,
+            'datas' => array(),
+        );
+        
+        for($currentRow = 1; $currentRow <= $allRow; $currentRow++) {
+            $row = array();
+            for($currentColumn=0; $currentColumn < $allColumn; $currentColumn++) {
+                $cell = $sheet->getCellByColumnAndRow($currentColumn, $currentRow);
+                $row[$currentColumn] = ($cell->getValue() instanceof PHPExcel_RichText) ? $cell->getValue()->getPlainText() : $cell->getValue();
+            }
+            $sheet_datas["datas"][$currentRow] = $row;
+        }
+        
+        return $sheet_datas;
+    }
+    
+	/**
+     * 解析和初始化文件的相关信息
+     */
+    private function getFileAttribute($pFileName) {
+        if(empty($pFileName)) {
+            return false;
+        }
+        
+        $pFileName = trim($pFileName);
+        $file_name = end(explode('/', $pFileName));
+        $file_path = dirname($pFileName);
+        
+        //获取excel文件的后缀名和版本信息
+        list($suffix, $excel_version) = $this->getExcelSuffixAndVersion($file_name);
+        
+        //文件的基本属性信息
+        $file_attr = array(
+            'file_name' => $file_name,
+            'file_path' => $file_path,
+            'real_file' => $pFileName,
+            'suffix' => $suffix,
+            'version' => $excel_version,
+        );
+        
+        return $file_attr;
+    }
+    
+    /**
+     * 获取文件的后缀名和excel文件的版本信息
+     * @param $file_name excel的文件名
+     */
+    private function getExcelSuffixAndVersion($file_name) {
+        if(empty($file_name)) {
+            return false;
+        }
+        
+        $suffix = $excel_version = "";
+        if(stripos($file_name, '.') !== false) {
+            $suffix = strtolower(end(explode('.', $file_name)));
+        }
+        
+        //检测文件后缀名是否正确
+        $allow_types = (array)array_keys($this->allow_mine_types);
+        if(!empty($allow_types) && !in_array($suffix, $allow_types)) {
+            throw new Exception("文件后缀名错误!", -1);
+        }
+        
+        if($suffix == 'xls') {
+            $excel_version = 'Excel5';
+        } elseif($suffix == 'xlsx') {
+            $excel_version = 'Excel2007';
+        }
+        
+        return array($suffix, $excel_version);
+    }
 }
 ?>

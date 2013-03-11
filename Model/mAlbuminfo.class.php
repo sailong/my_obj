@@ -22,7 +22,7 @@ class mAlbuminfo extends mBase {
    		return !empty($album_list) ? $album_list : false;
 	}
 	
-	public function getAlbumInfoByAddaccount($account, $orderby = null, $offset = 0, $limit = 10) {
+	public function getAlbumInfoByAddaccount($account, $orderby = null, $offset = 0, $limit = 100) {
 	    if (empty($account)) {
    			return false;
    		}

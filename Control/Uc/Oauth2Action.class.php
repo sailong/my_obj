@@ -35,7 +35,7 @@ class Oauth2Action extends UcController {
                 $client_secret = $supported_oauth2_type[$connect]['client_secret'];
                 $callback = $supported_oauth2_type[$connect]['callback'];
                 $this->oauth2_client = new QzoneTOAuth2($client_id, $client_secret);
-                $callback = $callback . '/uc/Oauth2/qzone_callback';
+                $callback = $callback . '/Uc/Oauth2/qzone_callback';
                 break;
             case 'sina'	 :
                 //todo

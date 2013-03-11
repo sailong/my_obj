@@ -13,10 +13,19 @@ class dMsgRequire extends dBase{
 	protected $_index_list = array(
 		'req_id',
 		'to_account',
+	    'add_account',
 	);
 	
-	public function getMsgRequireByToAccount($to_account) {
-		return $this->getInfoByFk($to_account, 'to_account');
+    public function getMsgRequireById($req_id) {
+		return $this->getInfoByPk($req_id);
+	}
+	
+	public function getMsgRequireByToAccount($to_account,$offset,$limit) {
+		return $this->getInfoByFk($to_account, 'to_account',null,$offset,$limit);
+	}
+	
+    public function getMsgRequireByAddAccount($wheresql) {
+		return $this->getInfo($wheresql);
 	}
 	
 	public function addMsgRequire($dataarr, $is_return_id) {

@@ -1,7 +1,6 @@
 <?php
 
 class CourseAction extends SnsController {
-    public $_checkClsssCode = true;
     
     public function __construct() {
         parent::__construct ();
@@ -12,10 +11,13 @@ class CourseAction extends SnsController {
      * 
      */
     public function index() {
-        //从$this->user 中找到有用信息
-        $class_code = $this->getClassCode();   //获取当前账号的当前班级
-        $isEditCourse = $this->isEditCourse($class_code);
-
+        $class_code = $this->objInput->getInt('class_code');
+        $class_code = $this->checkoutClassCode($class_code);
+        if(empty($class_code)) {
+            $this->showError('班级信息不存在!', '/Homeuser/Index/spacehome/spaceid/' . $this->user['client_account']);  //tudo 没有班级跳转到那
+        }
+        
+        $isEditCourse = $this->isEditCourse($class_code); //是否具有修改课程表的权限
         //查询当前班级所有课程
         $mClassCourse = ClsFactory::Create('Model.mClassCourse');
         $class_course_list = $mClassCourse->getClassCourseByClassCode($class_code);
@@ -63,13 +65,9 @@ class CourseAction extends SnsController {
         if($isEditCourse){
             $tpl = 'class_course_admin';
             //取出当前班级的所有科目
-            $mSubjectInfo = ClsFactory::Create('Model.mSubjectInfo');
-            $school_id = key($this->user['school_info']);
-            $subject_list = $mSubjectInfo->getSubjectInfoBySchoolid($school_id);
-            $subject_list = & $subject_list[$school_id];
-            
+            $subject_list = $this->getClassSubject($class_code);
+
             $this->assign('subject_list', $subject_list);
-            
         }
         
         $this->display($tpl);
@@ -88,7 +86,7 @@ class CourseAction extends SnsController {
         $old_skin = $user_skin_list[$this->user['client_account']];
         
         if (!empty($old_skin) && $old_skin['skin_id'] == $skin_id) {
-            $this->ajaxReturn(null, '没有更改哦', 1, 'JSON');
+            $this->ajaxReturn(null, '没有更改哦', -1, 'JSON');
         }
         
         if (empty($old_skin)) {
@@ -107,6 +105,7 @@ class CourseAction extends SnsController {
     
     //ajax 修改课程表
     public function saveCourseAjax() {
+        $course_id   = $this->objInput->postInt('course_id');
         $class_code  = $this->objInput->postInt('class_code');
         $weekday     = $this->objInput->postInt('weekday');
         $num_th      = $this->objInput->postInt('num_th');
@@ -114,21 +113,43 @@ class CourseAction extends SnsController {
 
         //数据验证正确性
         if($class_code <= 0 || $weekday < 1 || $weekday > 5 || $num_th < 1 || $num_th > 8 || empty($course_name)) {
-             $this->ajaxReturn(null, '非法数据', -1, 'JSON');
+             $this->ajaxReturn(null, '操作有误!', -1, 'JSON');
         }
         
         //验证用户是否具有修改权限
-        $is_edit = $this->isEditCourse($class_code);
-        if(empty($is_edit)) {
+        if(!$this->isEditCourse($class_code)) {
            $this->ajaxReturn(null, '您没有权限修改课程表', -1, 'JSON');
         }
-        $where = array("class_code=$class_code", "weekday=$weekday", "num_th=$num_th");
         
         $mClassCourse = ClsFactory::Create('Model.mClassCourse');
-        $old_course_list = $mClassCourse->getClassCourse($where, null, 0, 1);
-        if (empty($old_course_list)) {
-            //不存在就 添加课程
-            $data = array(
+        //根据班级class_code,weekday,num_th 检查课程是否已经存在
+        $where_arr = array(
+            "class_code='$class_code'",
+            "weekday='$weekday'",
+            "num_th='$num_th'"
+        );
+        $course_info = $mClassCourse->getClassCourse($where_arr, 'course_id desc', 0, 1);
+        $course_info = & reset($course_info);
+
+        if(!empty($course_info)) {
+            $course_id = $course_info['course_id'];
+
+            $class_course_list = $mClassCourse->getClassCourseById($course_id);
+            $class_course = & $class_course_list[$course_id];
+            if(empty($class_course) || $class_course['class_code'] != $class_code) {
+                $this->ajaxReturn(null, '操作有误!', -1, 'json');
+            }
+            $class_course_datas = array(
+            	'name'     => $course_name,
+                'upd_time' => time(),
+                'upd_account' => $this->user['client_account']
+            );
+            if(!$mClassCourse->modifyClassCourse($class_course_datas, $course_id)) {
+                unset($course_id);
+                unset($course_info);
+            }
+        } else {
+             $class_course_datas = array(
                 'class_code'  => $class_code,
                 'weekday'     => $weekday,
                 'num_th'      => $num_th,
@@ -136,20 +157,38 @@ class CourseAction extends SnsController {
                 'upd_account' => $this->user['client_account'],
                 'upd_time'    => time()
             );
-            $is_success = $mClassCourse->addClassCourse($data);
-           
-        } else {
-            //存在修改
-            $course_list = reset($old_course_list);
-            $data        = array('name' => $course_name);
-            $is_success  = $mClassCourse->modifyClassCourse($data, $course_list['course_id']);
+            $course_id = $mClassCourse->addClassCourse($class_course_datas, true);
         }
-
-        if(empty($is_success)) {
+        
+        if(empty($course_id)) {
             $this->ajaxReturn(null, '系统繁忙请稍后重试', -1, 'JSON');
         }
-       
-        $this->ajaxReturn(null, '修改成功', 1, 'JSON');
+        $this->ajaxReturn(array('course_id' => $course_id), '修改成功!', 1, 'json');
+    }
+    
+    //ajax 删除课程表
+    public function delCourseAjax() {
+        $class_code  = $this->objInput->postInt('class_code');
+        $course_id   = $this->objInput->postInt('course_id');
+
+        //验证用户是否具有修改权限
+        if(!$this->isEditCourse($class_code)) {
+           $this->ajaxReturn(null, '您没有权限修改课程表', -1, 'JSON');
+        }
+        
+        $mClassCourse = ClsFactory::Create('Model.mClassCourse');
+        $class_course_list = $mClassCourse->getClassCourseById($course_id);
+        $class_course = & $class_course_list[$course_id];
+        
+        if(empty($class_course) || $class_course['class_code'] != $class_code) {
+            $this->ajaxReturn(null, '没有权限删除!', -1, 'json');
+        }
+
+        if(!$mClassCourse->delClassCourse($course_id)) {
+            $this->ajaxReturn(null, '系统繁忙请稍后重试', -1, 'JSON');
+        }
+        
+        $this->ajaxReturn(null, '删除成功', 1, 'JSON');
     }
     /*
      * 判断当前用户在当前班级是否有修改课程表权限
@@ -160,12 +199,84 @@ class CourseAction extends SnsController {
         }
         
         //老师, 班级管理员具有修改课程表权限
-        $client_class = $this->getClientClass($class_code);  //获取当前用户的当前班级关系
-        if(empty($client_class)){
+        $client_class = $this->getUserClientClass($class_code);  //获取当前用户的当前班级关系
+        return ($client_class['class_admin'] == IS_CLASS_ADMIN || $client_class['client_type']==CLIENT_TYPE_TEACHER) ? true : false;
+    }
+    
+	/**
+	 * 获取用户在对应班级担任的班级角色
+	 * @param $class_code
+	 */
+	private function getUserClientClass($class_code) {
+	    if(empty($class_code)) {
+	        return false;
+	    }
+	    
+	    $current_client_class = array();
+	    
+	    $client_class_list = $this->user['client_class'];
+	    foreach($client_class_list as $client_class) {
+	        if($client_class['class_code'] == $class_code) {
+	            $current_client_class = $client_class;
+	            break;
+	        }
+	    }
+	    
+	    return !empty($current_client_class) ? $current_client_class : false;
+	}
+    
+    /*
+     * 获取当前班级的所有科目
+     * 并格式好数据添加上任课教师名称
+     */
+    private function getClassSubject($class_code) {
+        if(empty($class_code)) {
+            return false;
+        }
+        
+        //获取当前班级的所有科目
+        list($subject_list, $class_teacher_list) = $this->getSubjectAll($class_code);
+        //建立科目到老师的对应关系
+        foreach($class_teacher_list as $key=>$class_teacher) {
+            $teacher_uids[$class_teacher['subject_id']] = $class_teacher['client_account'];
+        }
+
+        $mUser = ClsFactory::Create('Model.mUser');
+        $user_list = $mUser->getUserBaseByUid(array_unique($teacher_uids));
+        
+        //数据拼装 老师名称  并且过滤掉没有任课老师的科目
+        foreach ($subject_list as $subject_id=>$subject) {
+            if(!isset($teacher_uids[$subject_id])) {
+                continue;
+            }
+            
+            $subject['teacher_name'] = $user_list[$teacher_uids[$subject_id]]['client_name'];
+            $new_subject_list[$subject_id] = $subject;
+        }
+  
+        return empty($new_subject_list) ? false : $new_subject_list;
+    }
+    
+	
+    /*
+     * 获取本班所有科目  getClassSubject 的辅助函数
+     * 并格式好数据添加上教师名称
+     */
+    private function getSubjectAll($class_code) {
+        if(empty($class_code)) {
             return false;
         }
 
-        return ($client_class['class_admin'] == 1 || $client_class['client_type'] == 1) ? true :  false;
+        $mClassTeacher = ClsFactory::Create('Model.mClassTeacher');
+        $class_teacher_arr = $mClassTeacher->getClassTeacherByClassCode($class_code);
+        $class_teacher_list = & $class_teacher_arr[$class_code];
+
+        $school_id = key($this->user['school_info']);
+        $mSubjectInfo = ClsFactory::Create('Model.mSubjectInfo');
+        $school_subject_arr = $mSubjectInfo->getSubjectInfoBySchoolid($school_id);
+        $subject_list = & $school_subject_arr[$school_id];
+        
+        return array($subject_list, $class_teacher_list);
     }
     
     /*
@@ -191,5 +302,3 @@ class CourseAction extends SnsController {
     
     
 }
-
-?>

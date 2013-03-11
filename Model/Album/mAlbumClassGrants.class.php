@@ -25,4 +25,11 @@ class mAlbumClassGrants extends mBase {
     public function getAlbumClassGrantByAlbumId($album_id) {
         return $this->_dAlbumClassGrants->getAlbumClassGrantByAlbumId($album_id);
     }
+    
+    public function delByAlbumId($album_id) {
+        if(empty($album_id)) {
+            return false;
+        }
+        return $this->_dAlbumClassGrants->delByAlbumId($album_id);
+    }
 }

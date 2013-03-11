@@ -671,6 +671,27 @@ class Constancearr{
 	    return self::get_name($dataarr, $key);
 	}
 	
+//***************************日志*********************************************		
+	//班级日志权限
+	public static function get_blog_class_grant($key = false) {
+	    $dataarr = array(
+            0=>'公开',
+            1=>'本班'
+	    );
+	    
+	    return self::get_name($dataarr, $key);
+	}
+	//个人日志 权限
+	public static function get_blog_person_grant($key = false) {
+	    $dataarr = array(
+            0=>'公开',
+            1=>'好友',
+            2=>'仅主人'
+	    );
+	    
+	    return self::get_name($dataarr, $key);
+	}
+	
     public static function get_resource_column_synchronization($key = false) {
 	    $dataarr = array(
 	    

@@ -26,7 +26,7 @@ class LoginAction extends UcController {
         
         if (empty($callback)) {
             $uc_domain = C('UC_DOMAIN');
-            $callback = urlencode('http://'.$uc_domain . '/uc/index');
+            $callback = urlencode('http://'.$uc_domain . '/Uc/index');
         }
         $callback_decode = urldecode($callback);
         

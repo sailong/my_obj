@@ -31,6 +31,13 @@ class mClassInfo extends mBase{
                 }
             }
          }
+        
+	    if(!empty($ClassInfoList)) {
+    	    //转换班级中的部分字段的含义
+    	    foreach($ClassInfoList as $classcode=>$classinfo) {
+    	        $ClassInfoList[$classcode] = $this->parseClassInfo($classinfo);
+    	    }
+        }
          
          return !empty($ClassInfoList) ? $ClassInfoList : false;
 	}

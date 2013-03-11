@@ -178,22 +178,7 @@ if(confirm("确定删除该条评论吗？")){
 }
 }
 
-//页面验证
-function checkinfo_XC(){
-var checkflag = true;
-if(($("#xm").val()).replace(/(^\s*)|(\s*$)/g, "") == ""){
-	$("#fgkqx").css("color","#FF0000").html("相册名称不能为空");
-	checkflag = false;
-}
-var ms = (($("#xcms").val()).replace(/(^\s*)|(\s*$)/g, ""));
-if(ms != ""){
-	if(ms.length > 60){
-		$("#fxcms").css("color","#FF0000").html("描述不能超过60字");
-		checkflag = false;	
-	}
-}
-return checkflag;
-}
+
 
 //上传照片
 function upphoto(xcid,class_code){

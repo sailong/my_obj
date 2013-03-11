@@ -15,6 +15,10 @@ class dMsgResponse  extends dBase{
 		'to_account',
 	);
 	
+    public function getMsgResponseById($res_id) {
+		return $this->getInfoByPk($res_id);
+	}
+	
 	public function getMsgResponseByToAccount($to_account) {
 		return $this->getInfoByFk($to_account, 'to_account');
 	}

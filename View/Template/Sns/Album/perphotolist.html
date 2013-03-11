@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" /> 
+
+<title>我的相册_相片管理</title>
+<link rel="stylesheet" type="text/css" href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/Album/photolist.css"/>
+<!-- dialog -->
+<link rel="stylesheet" type="text/css" href="{$smarty.const.IMG_SERVER}__PUBLIC__/js/ui/css/jquery-ui-min.css"/>
+
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/jquery-1.5.2.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/ui/jquery-ui.min.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/Album/jquery.masonry.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/Album/jquery.infinitescroll.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/Album/photolist.js"></script>
+{literal}
+<script type="text/javascript">
+var isWidescreen=screen.width>=1280; 
+if(isWidescreen){document.write("<style type='text/css'>.demo{width:1194px;}</style>");}
+</script>
+{/literal}
+</head>
+
+
+<body>
+
+<div>
+	<table>
+	  	<tr>
+	  		<th colspan="2">相册名称：{$album_info.album_name}</th>
+	  	</tr>
+		<tr>
+	  		<td colspan="2"><p align="center"><img src="{if $album_info.album_img}{$album_info.img_path}{else}{$smarty.const.IMG_SERVER}__PUBLIC__/images/new/no_photo_f.jpg{/if}" id="album_img" width="210" height="285" alt="{$album.album_name}"/></p></td>
+	  	</tr>
+	  	<tr>
+	  		<th>创建人：{$album_info.add_account}</th>
+	  		<td></td>
+	  	</tr>
+	  	<tr>
+	  		<th>创建时间：{$album_info.add_time}</th>
+	  		<td></td>
+	  	</tr>
+	  	<tr>
+	  		<th>更新时间：{$album_info.upd_time}</th>
+	  		<td></td>
+	  	</tr>
+	  	<tr>
+	  		<th>数量：{$album_info.photo_count}</th>
+	  		<td></td>
+	  	</tr>
+	  	<tr>
+	  		<th>相册描述：{$album_info.album_explain}</th>
+	  		<td></td>
+	  	</tr>
+	  	<tr>
+	  		<th>权限：{$album_info.grant_name}</th>
+	  		<td></td>
+	  	</tr>
+     </table>
+</div>
+<div class="demo clearfix">
+	<div class="item_list infinite_scroll">
+	    {foreach from=$photo_list item=pi}
+		<div class="item masonry_brick" id="photo_id_{$pi.photo_id}">
+			<div class="item_t">
+				<div class="img">
+					<a href="/Sns/Album/Personphoto/showone/photo_id/{$pi.photo_id}/album_id/{$album_id}" title="照片"><img src="{if $pi.file_small}{$pi.file_big}{else}{$smarty.const.IMG_SERVER}__PUBLIC__/images/new/no_photo_f.jpg{/if}" width="210" alt="{$pi.name}"/></a>
+					<!-- <span class="price">￥195.00</span> -->
+					<div class="btns">
+						<p class="img_album_btn"><a href="#" id="set_img_{$pi.photo_id}" title="{$pi.name}" name="{$pi.file_name}">设为封面</a><a href="#" id="del_photo_{$pi.photo_id}">删除</a><a href="#" id="move_{$pi.photo_id}">移动</a></p>
+					</div>
+				</div>
+				<div class="title"><p id="album_name_span_{$pi.album_id}">{$pi.name}</p></div>
+				<div><span>评论：{$pi.comments}</span> <a href="javascript:;" id="comment_a_{$pi.photo_id}" style="margin-left:20px;">评论<font>0</font></a></div>
+			</div>
+			<!-- <div class="item_b clearfix">
+				<div class="items_likes fl">
+					<a href="http://www.jsfoot.com" class="like_btn"></a>
+					<em class="bold">916</em>
+				</div>
+				<div class="items_comment fr"><a href="http://www.jsfoot.com">评论</a><em class="bold">(0)</em></div>
+			</div> -->
+		</div>
+		{/foreach}
+	</div>
+	<div id="more"><a href="#"></a></div>
+					
+	<div id="page" class="page" style="display:none;">
+		<div class="page_num">
+			<span class="unprev"></span>
+			<span class="current">1</span>
+			<a href="http://www.jsfoot.com">&nbsp;2&nbsp;</a>
+			<a href="http://www.jsfoot.com">&nbsp;3&nbsp;</a>
+			<a href="http://www.jsfoot.com">&nbsp;4&nbsp;</a>
+			<a href="http://www.jsfoot.com">&nbsp;5&nbsp;</a>
+			<span class="etc"></span>
+			<a href="http://www.jsfoot.com">12</a>
+			<a href="http://www.jsfoot.com" class="next"></a>
+		</div>
+	</div>
+</div>
+
+<!-- 
+<div class="demo clearfix">
+
+	<div class="item_list infinite_scroll" id="photo_list">
+	 {foreach from=$photo_list item=pi}
+		<div class="item masonry_brick" id="photo_id_{$pi.photo_id}">
+			<div class="item_t">
+				<div class="img">
+					<a href="/Sns/Album/Personphoto/showone/photo_id/{$pi.photo_id}/album_id/{$album_id}" title="照片"><img src="{if $pi.file_small}{$pi.file_big}{else}{$smarty.const.IMG_SERVER}__PUBLIC__/images/new/no_photo_f.jpg{/if}" width="210" height="285" alt="{$pi.name}"/></a>
+					<span class="price">￥195.00</span>
+					<div class="btns">
+						<p class="img_album_btn"><a href="#" id="set_img_{$pi.photo_id}" title="{$pi.name}" name="{$pi.file_name}">设为封面</a><a href="#" id="del_photo_{$pi.photo_id}">删除</a><a href="#" id="move_{$pi.photo_id}">移动</a></p>
+					</div>
+				</div>
+				<div class="title"><p id="album_name_span_{$pi.album_id}">{$pi.name}</p></div>
+				<div><span>评论：{$pi.comments}</span> <a href="javascript:;" id="comment_a_{$pi.photo_id}" style="margin-left:20px;">评论<font>0</font></a></div>
+			</div>
+			<div class="item_b clearfix">
+				<div class="items_likes fl">
+					<a href="http://www.jsfoot.com" class="like_btn"></a>
+					<em class="bold">916</em>
+				</div>
+				<div class="items_comment fr"><a href="http://www.jsfoot.com">评论</a><em class="bold">(0)</em></div>
+			</div>
+		</div><!--item 
+	  {/foreach}
+	</div>
+	<div id="more"><a href="/"></a></div>
+	<div id="page" class="page" style="display:none;">
+		<div class="page_num">
+			<span class="unprev"></span>
+			<span class="current">1</span>
+			<a href="http://www.jsfoot.com">&nbsp;2&nbsp;</a>
+			<a href="http://www.jsfoot.com">&nbsp;3&nbsp;</a>
+			<a href="http://www.jsfoot.com">&nbsp;4&nbsp;</a>
+			<a href="http://www.jsfoot.com">&nbsp;5&nbsp;</a>
+			<span class="etc"></span>
+			<a href="http://www.jsfoot.com">12</a>
+			<a href="http://www.jsfoot.com" class="next"></a>
+		</div>
+	</div>
+
+</div>
+<div id="album_list" style="display:none;">
+	<form name="listform" action="" method="post">
+		<div id="list">
+		</div>
+		<div><input type="button" name="list_submit" id="list_submit" value="确定"/></div>
+	</form>
+</div>
+<div id="comment" style="display:none;">
+	<table>
+		<tr>
+			<td><textarea cols="35" rows="4" name="comm_content" id="comm_content"></textarea></td>
+		</tr>
+		<tr>
+			<td><input type="submit" id="comm_sub" value="确定"/></td>
+		</tr>
+	</table>
+	<input type="hidden" id="comm_photo_id"/>
+</div> -->			
+<div style="display:none;" id="gotopbtn" class="to_top"><a title="返回顶部" href="javascript:void(0);"></a></div>
+{literal}
+<script type="text/javascript">
+$(function(){
+	$(window).scroll(function(){
+		$(window).scrollTop()>0 ? $("#gotopbtn").css('display','').click(function(){
+			$(window).scrollTop(0);
+		}):$("#gotopbtn").css('display','none');	
+	});
+	
+});
+</script>
+{/literal}
+<!-- <div>
+	<div>
+		{foreach from=$photo_list item=pi}
+			<dl>
+				<dt>
+				<a href="/Sns/Album/Personphoto/photolist1/photo_id/{$pi.photo_id}" title="照片"><img src="{if $pi.file_small}{$pi.file_small}{else}{$smarty.const.IMG_SERVER}__PUBLIC__/images/new/no_photo_f.jpg{/if}"/></a>
+				</dt>
+				<dd>
+				<p>{$pi.name}</p>
+				<p>评论：<span>{$pi.client_name}</span></p>
+				<p></p>
+				</dd>
+			</dl>
+		{/foreach}
+	</div>
+</div> -->
+</body>
+</html>

@@ -3,7 +3,7 @@ class dMoodClassRelation extends dBase{
     protected $_tablename = 'wmw_mood_class_relation'; //主表
     protected $_fields = array(
         'id',
-        'client_account',
+        'class_code',
         'mood_id',
     );
     protected $_pk = 'id';

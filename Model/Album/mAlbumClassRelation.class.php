@@ -25,9 +25,17 @@ class mAlbumClassRelation extends mBase {
         if(empty($album_id) || empty($class_code)) {
             return false;
         }
-        $wherearr['class_code'] = $class_code;
-        $wherearr['album_id'] = $album_id;
+        $wherearr[] = "class_code={$class_code}";
+        $wherearr[] = "album_id={$album_id}";
         $orderby = ' class_code asc';
+ 
         return $this->_dAlbumClassRelation->getInfo($wherearr, $orderby);
+    }
+    //通过相册album_id删除班级相册关系
+    public function delByAlbumId($album_id) {
+        if(empty($album_id)) {
+            return false;
+        }
+        return $this->_dAlbumClassRelation->delByAlbumId($album_id);
     }
 }

@@ -34,8 +34,8 @@ class dAccountrelation extends dBase{
 	 * 获取用户的好友关系
 	 * @param $client_accounts
 	 */
-	public function getAccountRelationByClientAccout($client_accounts) {
-	    return $this->getInfoByFk($client_accounts, 'client_account');
+	public function getAccountRelationByClientAccout($client_accounts,$orderby,$offset,$limit) {
+	    return $this->getInfoByFk($client_accounts, 'client_account',$orderby,$offset,$limit);
 	}
 	
 	//查找我的好友

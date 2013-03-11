@@ -356,6 +356,14 @@ class ClassclientmanageAction extends AmsController{
 //             	moniter_control($this->user, __METHOD__ . ":addFamilyRelationBat", count($family_relation));
              }
          }
+         
+         
+         //===========================更新redis============================================================
+         $mSetClassStudent = ClsFactory::Create('RModel.Common.mSetClassStudent');
+	     $mSetClassFamily = ClsFactory::Create('RModel.Common.mSetClassFamily');
+	     $class_student = $mSetClassStudent->getClassStudentById($cid, true);
+	     $class_family = $mSetClassFamily->getClassFamilyById($cid, true);
+         
          $this->redirect('/ClassClientManage/showclassClient/uid/'.$uid.'/classCode/'.$cid.'/gradeid/'.$gradeid.'/schoolid/'.$schoolid."/stop_flag/0");
      }
      //得到不同的账号
@@ -678,6 +686,10 @@ class ClassclientmanageAction extends AmsController{
         $child_account = $this->objInput->getStr('uid');
         $mFamilyRelation = ClsFactory::Create('Model.mFamilyRelation');
         $FamilyRelation = $mFamilyRelation->getFamilyRelationByUid($child_account);
+        
+        $m = ClsFactory::Create('Model.mClientClass');
+        $datas =  array_shift($m->getClientClassByUid($child_account));          
+        
         $del_uid = array(
             $child_account
         ); 
@@ -691,6 +703,31 @@ class ClassclientmanageAction extends AmsController{
                 $resault = $mClientClass->delClientClass($client_class_id);
             }
         }
+        
+        
+        //===========================更新redis============================================================
+
+        $client_info = reset($datas);
+        $class_code = $client_info['class_code'];
+
+        $mHashClientClass = ClsFactory::Create('RModel.Common.mHashClientClass');
+        
+        $client_class_info =  $mHashClientClass->getClientClassbyUid($child_account);
+
+
+        //更新学生redis  mHashClientClass
+        $mHashClientClass->getClientClassbyUid($child_account, true);
+        //更新学生家长帐号，也是 mHashClientClass
+        foreach($del_uid as $uid) {
+            $mHashClientClass->getClientClassbyUid($uid, true);
+        }
+        //更新班级成员，包括 学生和家长.
+        $mSetClassStudent = ClsFactory::Create('RModel.Common.mSetClassStudent');
+        $mSetClassFamily = ClsFactory::Create('RModel.Common.mSetClassFamily');        
+       
+        $mSetClassStudent->delClassStudentByMember($class_code, array($child_account));
+        $mSetClassFamily->delClassFamilyByMember($class_code, $del_uid);
+
         echo $resault;
     }
 }

@@ -1,18 +1,12 @@
 <?php
 class SnsController extends FrontController {
-    protected $_checkClsssCode = false;  //是否检查有班级
-    
 	/*
 	 * 构造函数
 	 * 用于smarty引入头文件
 	 */
 	public function __construct() {
 		parent::__construct();
-		import("@.Control.Insert.InsertSnsFunc", null,".php");
-		
-		if(method_exists($this,'checkAop')) {
-            $this->checkAop();        
-        }
+		import("@.Control.Sns.Insert.InsertSnsFunc", null,".php");
 	}
 	
 	/**
@@ -21,78 +15,87 @@ class SnsController extends FrontController {
 	protected function initCurrentUser() {
 	    $uid = $this->getCookieAccount();
         
-        $mUser = ClsFactory::Create('Model.mUser');
+        $mUser = ClsFactory::Create('RModel.mUserVm');
         $userlist = $mUser->getUserByUid($uid);
         
         $this->user = & $userlist[$uid];
 	}
 	
-	/*
-	 * 判断是否需要检查用户有没有班级
+	/**
+	 * 获取并检查当前用户的当前班级
+	 * @param $class_code 校验班级class_code是否正确
 	 */
-	public function checkAop() {
-	    if($this->_checkClsssCode) {
-	        $this->checkClsssCode();
-	    }
-	}
-	
-	/*
-	 * 检查当前账号是否有班级 
-	 */
-	protected function checkClsssCode() {
-	    $class_code = $this->getClassCode();
-	    if(empty($class_code)) {
-	        $this->showError("您不属于任何班级!", "/Homeuser/Index/spacehome/spaceid/".$this->getCookieAccount());
-	    }
-	}
-	
-    /*
-     * 获取并检查当前用户的当前班级
-     * 如果没有通过GET或POST方式设置当前班级 
-     * 或者该用户不属于设置的班级  默认取所属班级的第一个
-     * 
-     */
-    protected function getClassCode() {
+    protected function checkoutClassCode($class_code) {
+        
+        $class_code_list = $this->user['class_info'];
+        if(empty($class_code_list)) {
+           return false; 
+        }
 
-        $class_code = $this->objInput->getInt('class_code');
-        if (empty($class_code)) {
-            $class_code = $this->objInput->postInt('class_code');
+        if(!isset($class_code_list[$class_code])){
+            foreach($class_code_list as $classcode => $class_info) {
+                if($this->user["client_account"] == $class_info["headteacher_account"]){
+                    $class_code = $classcode;
+                    break;
+                }
+            }
         }
         
-        $client_class = array();
-        if(!empty($class_code)) {
-            $client_class = $this->getClientClass($class_code);  //判断当前用户是否属于当前班级
-        }
-        //没有设置或者当前用户不属于设置的班级，取第一个班级
-        if (empty($client_class)) {
-            $client_class = reset($this->user['client_class']); 
-        }
-        
-        $class_code = intval($client_class['class_code']);
-
-        return !empty($class_code) ? $class_code : false;      
+        return !in_array($class_code, $class_code_list) ? $class_code : reset($class_code_list);
     }
     
-    /*
-     * 获取当前账号的当前班级关系 
+	/**
+     * 判断用户是否是对应班级的班主任
+     * @param $class_code
      */
-    protected function getClientClass($class_code) {
-        $user_class_list = $this->user['client_class'];
-        if(empty($class_code) || empty($user_class_list)) {
+    protected function isClassAdminTeacher($class_code) {
+        if(empty($class_code)) {
             return false;
         }
-
+        
+        //获取用户当前的班级对应关系
         $current_client_class = array();
-        foreach($user_class_list as $key=>$client_class) {
-            if($class_code == $client_class['class_code']) {
+        foreach((array)$this->user['client_class'] as $client_class) {
+            if($client_class['class_code'] == $class_code) {
                 $current_client_class = $client_class;
-                $current_client_class['class_name'] = $this->user['class_info'][$class_code]['class_name'];
-                unset($user_class_list);
                 break;
-            } 
+            }
         }
-
-        return !empty($current_client_class) ? $current_client_class : false;
+        //班级管理员的角色设置值
+        $class_admin_list = array(
+            TEACHER_CLASS_ROLE_CLASSADMIN,
+            TEACHER_CLASS_ROLE_CLASSBOTH,
+        );
+        
+        return in_array($current_client_class['teacher_class_role'], $class_admin_list) ? true : false; 
+    }
+    
+    /**
+     * 判断用户是否是对应班级的管理员
+     * @param $class_code
+     */
+    protected function isClassAdmin($class_code) {
+        if(empty($class_code)) {
+            return false;
+        }
+        
+        //获取用户当前的班级对应关系
+        $current_client_class = array();
+        foreach((array)$this->user['client_class'] as $client_class) {
+            if($client_class['class_code'] == $class_code) {
+                $current_client_class = $client_class;
+                break;
+            }
+        }
+        //班级管理员的角色设置值
+        $class_admin_list = array(
+            TEACHER_CLASS_ROLE_CLASSADMIN,
+            TEACHER_CLASS_ROLE_CLASSBOTH,
+        );
+        
+        $teacher_class_role = $current_client_class['teacher_class_role'];
+        
+        return in_array($teacher_class_role, $class_admin_list) || $current_client_class['class_admin'] == IS_CLASS_ADMIN;
     }
     
 	/*

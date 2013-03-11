@@ -23,4 +23,13 @@ class mAlbum extends mBase {
     public function getAlbumByAlbumId($album_ids) {
         return $this->_dAlbum->getAlbumByAlbumId($album_ids);
     }
+    //根据相册ID获取修改相片的评论数
+    public function updPhotoCountByAlbumId($count, $album_id) {
+        if(empty($album_id) || empty($count)) {
+            return false;
+        }
+        
+        return $this->_dAlbum->updPhotoCountByAlbumId($count, $album_id);
+        
+    }
 }

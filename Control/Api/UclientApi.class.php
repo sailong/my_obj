@@ -48,7 +48,7 @@ class UclientApi extends ApiController {
      */    
     
     public function get_uc_login_url($app = 'uc', $callback = '') {
-        $uc_login_part = '/uc/login';
+        $uc_login_part = '/Uc/Login';
         return $this->generate_url($uc_login_part, $app, $callback);
         
     }
@@ -59,7 +59,7 @@ class UclientApi extends ApiController {
      */    
     
     public function get_uc_logout_url($app = 'uc', $callback = '') {
-        $uc_logout_part = '/uc/logout';
+        $uc_logout_part = '/Uc/Logout';
         $callback = 'http://'.$_SERVER['HTTP_HOST'];
         return $this->generate_url($uc_logout_part, $app, $callback);        
     }  
@@ -70,7 +70,7 @@ class UclientApi extends ApiController {
      */    
     
     public function get_uc_activate_url($app= 'uc', $callback = '') {
-        $uc_active_part = '/uc/activate';
+        $uc_active_part = '/Uc/Activate';
         return $this->generate_url($uc_active_part, $app, $callback);       
     }     
     
@@ -79,7 +79,7 @@ class UclientApi extends ApiController {
      */    
     
     public function get_uc_index_url() {
-        $url_part = '/uc/index';
+        $url_part = '/Uc/Index';
         $uc_domain = C('UC_DOMAIN');
         $uc_index_url = "http://$uc_domain$url_part";  
         if (empty($uc_domain)) {
@@ -111,8 +111,7 @@ class UclientApi extends ApiController {
         if (empty($uc_domain)) {
             $uc_domain = $_SERVER['SERVER_NAME'];
         }
-
-        $uc_get_cookie_url = '/uc/login_api/getcookie';        
+        $uc_get_cookie_url = '/Uc/LoginApi/getcookie';        
         $getcookie_url = "http://$uc_domain$uc_get_cookie_url";  
 
         return $getcookie_url;
@@ -253,7 +252,7 @@ class UclientApi extends ApiController {
         $params['redirect_url'] = urlencode($redirect_url);
         
         
-        $set_qq_bind_url =  'http://' . C('UC_DOMAIN') .'/uc/Oauth2/login?' . http_build_query($params);
+        $set_qq_bind_url =  'http://' . C('UC_DOMAIN') .'/Uc/Oauth2/login?' . http_build_query($params);
         
         $result['set_qq_bind_url'] = $set_qq_bind_url;
         if (!empty($qzone_user_info)) {
@@ -269,5 +268,24 @@ class UclientApi extends ApiController {
         
         return $result;
     }    
+    
+    /**
+     * 
+     * 用户在线状态加入
+     * 将cookies 对于的client_account 刷新在线用户库
+     * @param String $client_account   我们网帐号
+	 *
+     */    
+    
+    public function ping() {
+        
+        $cookies = $this->get_uc_cookie_token_info();
+        if (!empty($cookies)) {
+            $client_account = $cookies['username'];
+            
+            $mLiveUsr = ClsFactory::Create('RModel.Common.mSetLiveUser');
+            return $mLiveUsr->ping($client_account);
+        }
+    }
     
 }

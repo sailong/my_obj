@@ -11,6 +11,8 @@ class dAlbum extends dBase {
                     'add_time',
                     'upd_account',
                     'upd_time',
+                    'album_auto_img',
+                    'photo_num'
               );
     protected $_index_list = array(
                     'album_id'
@@ -24,14 +26,36 @@ class dAlbum extends dBase {
     public function modifyAlbumByAlbumId($data,$album_id) {
         return $this->modify($data,$album_id);
     }
+    //修改相册todo list
+    public function modifyByAlbumId($data,$album_id) {
+        return $this->modify($data,$album_id);
+    }
     
     //删除相册
     public function delAlbumByAlbumId($album_id) {
+        return $this->delete($album_id);
+    }
+    //删除相册todo list
+    public function delByAlbumId($album_id) {
         return $this->delete($album_id);
     }
     
     //获取相册信息
     public function getAlbumByAlbumId($album_ids) {
         return $this->getInfoByPk($album_ids);
+    }
+    //获取相册信息todo list
+    public function getByAlbumId($album_ids) {
+        return $this->getInfoByPk($album_ids);
+    }
+    //修改相片数todo delete
+    public function updPhotoCountByAlbumId($count, $album_id) {
+        if(empty($album_id) || empty($count)) {
+            return false;
+        }
+        
+        $sql = "update {$this->_tablename} set photo_num=photo_num{$count} where album_id={$album_id}";
+       
+        return $this->execute($sql);
     }
 }

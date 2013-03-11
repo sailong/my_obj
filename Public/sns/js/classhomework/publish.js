@@ -1,195 +1,171 @@
-var bSet = {};
-bSet.subject_mark = 'subject_id_{id}';
-bSet.subject_name_mark = 'subject_name_{id}';
-bSet.content = 'content';
-bSet.end_time = 'end_time';
-bSet.end_time_img = 'end_time_img';
-bSet.add_accept_btn = 'add_accept_btn';
-bSet.upload_file = 'file_name';
-bSet.preview_btn = 'preview_btn';
+(function($) {
+	$.showError=function(msg) {
+		art.dialog({
+			id:'show_error_dialog',
+			title:'错误提示',
+			content:msg || '操作失败!',
+			icon:'error'
+		}).lock().time(3);
+	};
+	$.showSuccess=function(msg) {
+		art.dialog({
+			id:'show_error_dialog',
+			title:'成功提示',
+			content:msg || '操作成功!',
+			icon:'succeed'
+		}).lock().time(3);
+	};
+})(jQuery);
 
-//弹层相应的id设置
-var pSet = {};
-pSet.pop_div = 'pop_div';
-pSet.class_list_select = 'class_list_select';
-pSet.check_all_btn = 'check_all_btn';
-pSet.sure_btn = 'sure_btn';
-pSet.close_pop_div_a = 'close_pop_div_a';
-//内容id标示
-pSet.list_tab = 'pop_student_list_tab';
-pSet.list = {};
-pSet.list.img_mark = 'img_{id}';
-pSet.list.user_name_mark = 'user_name_{id}';
-pSet.list.chkbox_mark = 'chkbox_{id}';
-//用户选择信息回显id设置
-var viewSet = {};
-viewSet.show_div_mark = 'show_div_{id}';
-viewSet.clone_div = 'accept_list_div_for_clone';
-
-//预览div设置
-var pvSet = {};
-pvSet.pop_div = 'preview_div';
-pvSet.subject_name = 'subject_name';
-pvSet.end_time = 'end_time';
-pvSet.content = 'content';
-pvSet.upload_file_name = 'upload_file_name';
-
-pvSet.block_container = 'accepters_list';
-
-pvSet.block = {};
-pvSet.block.class_name = 'class_name';
-pvSet.block.student_list = 'student_list';
-
-pvSet.pub_btn = 'pub_btn';
-pvSet.pub_with_msg_btn = 'pub_with_msg_btn';
+//去掉页面标签
+function tripTag(str) {
+	str = $.trim(str.toString() || '');
+	return str.replace(/<(.+?)>/gm, '');
+};
 
 //将事件的绑定和具体的实现函数分开
 function Publish() {
-	this.class_info_cache = {};
-	this.class_list_cache = {};
-	this.class_student_cache = {};
-	
 	this.editor = {};
-	
 	this.init();
-	this.attachEventForBase();
-	this.attachEventForPopdiv();
-	this.attachEventForPreview();
+	this.attachEvent();
+	this.attachEventUserDefine();
+	this.attachEventForIframe();
 }
 
 Publish.prototype.init=function() {
+	var context = $('#publish_main');
 	//加载编辑框
-	var bg = $('#ContentBg').val();
-	if(bg) $('#' + bSet.content).css('url', bg);
-	this.editor = $('#' + bSet.content).xheditor({
+	var bg = $('#ContentBg', context).val();
+	if(bg) $('#content', context).css('url', bg);
+	this.editor = $('#content', context).xheditor({
 		skin:'vista',
-		tools:'Separator,BtnBr,Blocktag,Fontface,FontSize,Bold,Italic,Underline,Strikethrough,FontColor,BackColor,SelectAll,Removeformat,Align,List,Outdent,Indent,Link,Unlink,Emot,Img',
-		upImgUrl:'/Sns/ClassHomework/Classhomework/uploadPath'
+		tools:'Separator,BtnBr,Blocktag,Fontface,FontSize,Bold,Italic,Underline,FontColor,BackColor,SelectAll',
+		upImgUrl:'/Sns/ClassHomework/Publish/uploadPath'
 	});
+};
+
+//绑定用户回调事件
+Publish.prototype.attachEventUserDefine=function() {
+	var me = this;
+	//班级选择的数据获取
+	$('body').bind('loadStudentDataEvent', function(evt, class_code, callback) {
+		if(typeof callback == 'function') {
+			var datas = $('#accept_list_' + class_code).data('data') || {};
+			callback(datas.selected_students || {});
+		}
+	});
+};
+
+//绑定iframe内部元素的相关事件
+Publish.prototype.attachEventForIframe=function() {
+	var me = this;
+	var ifr = $('#xhe0_iframe')[0];
+	if($.isEmptyObject(ifr)) {
+		return false;
+	}
+	//键盘的press事件负责内容超过时的提示
+	$(ifr.contentWindow.document).keypress(function(evt) {
+		var content = tripTag(me.editor.getSource());
+		if(content.length >= 180) {
+			var keyCode = evt.keyCode || evt.which;
+			//字符超过限制后只有Backspace键能够按
+			if(keyCode != 8) {
+				$.showError('公告内容不能超过180字!');
+				return false;
+			}
+		}
+	}).focus(function() {
+		//实时更新字符数统计
+		contentInterval = setInterval(function() {
+			var content = tripTag(me.editor.getSource());
+			$('#content_counter').html(180 - content.length);
+		}, 100);
+	}).blur(function() {
+		clearInterval(contentInterval);
+	});
+};
+
+Publish.prototype.popDivCallback=function(datas) {
+	var me = this;
+	if($.isEmptyObject(datas)) {
+		return false;
+		
+	}
+	var class_info = datas.class_info || {};
+	var selected_students = datas.selected_students || {};
+	//以class_code作为div的id
+	var div_id = 'accept_list_' + class_info.class_code;
+	var parentObj = $('#review_list_div');
+	var cloneDiv = $('.clone', parentObj);
+	if(!$.isEmptyObject(selected_students)) {
+		if($('#' + div_id, parentObj).length == 0) {
+			cloneDiv.clone().removeClass('clone').addClass('review').attr('id', div_id).appendTo(parentObj).show();
+		}
+		var divObj = $('#' + div_id, parentObj);
+		//绑定数据,将选中的数据绑定到对应的div中的data属性上,
+		divObj.data('data', datas || {});
+		var num_id = 1;
+		var html_str = "<tr>";
+		for(var i in selected_students) {
+			html_str += "<td>" + selected_students[i] + "</td>";
+			if(num_id++ % 8 == 0) {
+				html_str += "</tr><tr>";
+			}
+		}
+		var append_nums = 8 - (num_id - 1) % 8;
+		for(var i=1; i<=append_nums; i++) {
+			html_str += "<td>&nbsp;</td>";
+		}
+		html_str += "</tr>";
+		$('#student_list_tab', divObj).html(html_str);
+		$('#class_name', divObj).html(class_info.class_name);
+		//事件绑定
+		me.attachEventForAcceptList(div_id);
+	} else {
+		$('#' + div_id).remove();
+	}
 };
 
 /**
  * 绑定发布页面的基本事件
  * @return
  */
-Publish.prototype.attachEventForBase=function() {
-	var self = this;
+Publish.prototype.attachEvent=function() {
+	var me = this;
+	var context = $('#publish_main');
 	//绑定科目点击事件,todolist
-	$(':input[id^="' + bSet.subject_mark.replace('{id}', '') + '"]').change(function() {
+	$(':input[name="subject_id"]', context).change(function() {
 		//情况所有的数据信息
-		$('#' + bSet.end_time).val('');
-		$('#' + bSet.upload_file).val('');
-		
-		var show_div_prefix = viewSet.show_div_mark.replace('{id}', '');
-		$('*[id^="' + show_div_prefix + '"]').remove();
+		$('#end_time,#file_name', context).val('');
+		//移除回显的div信息
+		$('.review', context).remove();
 	});
-	
 	//绑定交付时间
-	$('#' + bSet.end_time).click(function() {
+	$('#end_time', context).click(function() {
 		WdatePicker({minDate:'%y-%M-%d'});
 	});
-	
-	$('#' + bSet.end_time_img).click(function() {
-		WdatePicker({el:bSet.end_time, minDate:'%y-%M-%d'});
+	$('#end_time_img', context).click(function() {
+		WdatePicker({el:'end_time', minDate:'%y-%M-%d'});
 	});
 	
 	//接受对象选择按钮
-	$('#' + bSet.add_accept_btn).click(function() {
-		self.initPopDiv();
+	$('#add_accept_btn', context).click(function() {
+		var subject_id = $(':input[name="subject_id"]:checked').val();
+		$('#pop_div').trigger('initPopDivEvent', [function(datas) {
+			me.popDivCallback(datas);
+		}, subject_id, {}]);
 	});
 	//预览发布按钮
-	$('#' + bSet.preview_btn).click(function() {
-		if(self.validator()) {
-			self.initPreviewDiv();
+	$('#preview_btn').click(function() {
+		if(me.validator()) {
+			var packDatas = me.packFormDatas();
+			$('body').trigger('initPreviewDivEvent', [packDatas]);
 		}
 	});
 	//表单提交时间
 	$('form:first').submit(function() {
-		self.formDataCollect();
-		return self.validator();
-	});
-};
-
-/**
- * 绑定预览相关的事件
- * @return
- */
-Publish.prototype.attachEventForPreview=function() {
-	var self = this;
-	var context = $('#' + pvSet.pop_div);
-	//发布作业按钮
-	$('#' + pvSet.pub_btn, context).click(function() {
-		$('#is_sms').remove();
-		$('form:first').submit();
-	});
-	//发布作业+短信按钮
-	$('#' + pvSet.pub_with_msg_btn, context).click(function() {
-		$('<input type="hidden" id="is_sms" name="is_sms" value="1"/>').appendTo($('form:first'));
-		$('form:first').submit();
-	});
-};
-
-/**
- * 绑定弹出相关的事件
- * @return
- */
-Publish.prototype.attachEventForPopdiv=function() {
-	var self = this;
-	//班级下拉框改变事件
-	$('#' + pSet.class_list_select).change(function() {
-		//获取已经选择的班级code
-		var class_code = $(this).val();
-		//加载班级的成员选择列表
-		var student_json = self.loadClassStudents(class_code);
-		self.fillClassStudents(student_json);
-	});
-	
-	//全选按钮点击事件
-	$('#' + pSet.check_all_btn).click(function() {
-		var chkbox_prefix = pSet.list.chkbox_mark.replace('{id}', '');
-		$(':checkbox[id^="' + chkbox_prefix + '"]').attr('checked', $(this).attr('checked'));
-	});
-	
-	//确定按钮点击事件
-	$('#' + pSet.sure_btn).click(function() {
-		//获取当前选中的班级
-		var class_code = $('#' + pSet.class_list_select).val();
-		//回显数据到页面
-		var selected_student = {};
-		var chkbox_prefix = pSet.list.chkbox_mark.replace('{id}', '');
-		$(':checkbox[id^="' + chkbox_prefix + '"]').filter(':checked').each(function() {
-			var uid = $(this).attr('id').toString().match(/(\d+)/)[1];
-			var user_name = $('#' + pSet.list.user_name_mark.replace('{id}', uid)).text();
-			selected_student[uid] = user_name;
-		});
-		
-		var div_id = viewSet.show_div_mark.replace('{id}', class_code);
-		if(!$.isEmptyObject(selected_student)) {
-			//判断相应班级的div是否存在
-			if($('#' + div_id).length == 0) {
-				//创建一个新的div对象
-				var cloneDiv = $('#' + viewSet.clone_div).clone().attr('id', div_id).show();
-			    $('.accept_list').append(cloneDiv);
-			}
-			//绑定数据,将选中的数据绑定到对应的div中的data属性上,
-			$('#' + div_id).data('data', selected_student || {});
-			//绑定事件
-			self.attachEventForAcceptList(div_id);
-			//此时的数据直接和班级关联，与科目无关
-			$('#' + div_id).children('span').remove();
-			for(var i in selected_student) {
-				$('<span style="padding-left:10px;">' + selected_student[i] + '</span>').appendTo($('#' + div_id));
-			}
-		} else {
-			$('#' + div_id).remove();
-		}
-		//关闭弹出层
-		$('#' + pSet.pop_div).dialog('close');
-	});
-	
-	//弹出右侧图片关闭按钮
-	$('#' + pSet.close_pop_div_a).click(function() {
-		$('#' + pSet.pop_div).dialog('close');
+		me.formDataCollect();
+		return me.validator();
 	});
 };
 
@@ -198,6 +174,7 @@ Publish.prototype.attachEventForPopdiv=function() {
  * @return
  */
 Publish.prototype.attachEventForAcceptList=function(div_id) {
+	var me = this;
 	var context = $('#' + div_id);
 	if(context.length == 0) {
 		return false;
@@ -205,268 +182,85 @@ Publish.prototype.attachEventForAcceptList=function(div_id) {
 	var self = this;
 	var class_code = context.attr('id').toString().match(/(\d+)/)[1];
 	//回显信息的编辑按钮,以班级组织数据
-	$('.edit_a', context).click(function() {
-		//弹出弹层，并选中相应的数据(选中年级信息和该年级下选择的成员列表)
-		$('#' + pSet.class_list_select).children('*[value="' + class_code + '"]').attr('selected', true);
-		//从对应的div的data属性上获取选中的数据信息
-		self.initPopDiv();
-		//选中班级成员的状态信息
-		self.checkClassStudent(class_code);
-		//取消全选按钮的选中状态
-		$('#' + pSet.check_all_btn).attr('checked', false);
+	$('#edit_a', context).click(function() {
+		var subject_id = $(':input[name="subject_id"]:checked', $('#publish_main')).val();
+		$('body').trigger('initPopDivEvent', [function(datas) {
+			me.popDivCallback(datas);
+		}, subject_id, context.data('data') || {}]);
 	});
-	
 	//回显信息的删除按钮
-	$('.delete_a', context).click(function() {
+	$('#delete_a', context).click(function() {
 		//删除改班级选择的用户信息
 		$('#' + div_id).remove();
 	});
 };
-//获取班级的学生信息
-Publish.prototype.loadClassStudents=function(class_code) {
-	var self = this;
-	var cache_key = "class_code:" + class_code;
-	var json = self.class_student_cache[cache_key];
-	if($.isEmptyObject(json)) {
-		$.ajax({
-			type:"post",
-			data:{'class_code' :class_code},
-			dataType:"json",
-			url:"/Sns/ClassHomework/Publish/student_info_json",
-			async:false,
-			success:function(_json) {
-				json = self.class_student_cache[cache_key] = _json;
-			}
-		});
-	}
+//收集整个表单的数据
+Publish.prototype.packFormDatas=function() {
+	var me = this;
 	
-	return json || {};
+	var context = $('#publish_main');
+	var subject_id = $(':input[name="subject_id"]:checked', context).val();
+	var subject_name = $('#subject_name_' + subject_id, context).text();
+	var end_time = $('#end_time', context).val();
+	var content = me.editor.getSource();
+	var upload_file_name = ($('#file_name', context).val().toString().split('/') || []).pop();
+	//收集接受对象,以class_code为key进行整理
+	var accepters_list = {};
+	$('.review', $('#review_list_div')).each(function() {
+		var class_code = ($(this).attr('id').toString().match(/(\d+)/) || [])[1];
+		accepters_list[class_code] = $(this).data('data') || {};
+	});
+	return {
+		'subject_id':subject_id,
+		'subject_name':subject_name,
+		'end_time':end_time,
+		'content':content,
+		'upload_file_name':upload_file_name,
+		'accepters_list':accepters_list
+	};
 };
-
-//填充学生列表
-Publish.prototype.fillClassStudents=function(json) {
-	//清空相应的数据
-	$('#' + pSet.list_tab + ' *').remove();
-	var self = this;
-	if(json.status <= 0) {
-		alert(json.info);
-		return false;
-	}
-	var data = json.data;
-	for(var i in data) {
-		//填充相应的数据
-		var trObj = $('<tr></tr>');
-		$('<td id="img_' + data[i].client_account + '">' + data[i].client_headimg + '</td>').appendTo(trObj);
-		$('<td id="user_name_' + data[i].client_account + '">' + data[i].client_name + '</td>').appendTo(trObj);
-		$('<input type="checkbox" id="chkbox_' + data[i].client_account + '" /><span>选择</span>').appendTo('<td></td>').appendTo(trObj);
-		trObj.appendTo($('#' + pSet.list_tab));
-	}
-	return true;
-};
-
-//勾选班级成员
-Publish.prototype.checkClassStudent=function(class_code) {
-	if(!class_code) {
-		return false;
-	}
-	var div_id = viewSet.show_div_mark.replace('{id}', class_code);
-	//获取当前班级选中的学生列表
-	var data = $('#' + div_id).data('data');
-	//将选中的成员勾选上
-	for(var uid in data) {
-		//把相应的checkbox对应的复选框勾上
-		var chkbox_id = pSet.list.chkbox_mark.replace('{id}', uid);
-		$('#' + chkbox_id).attr('checked', true);
-	}
-	return true;
-};
-
-//远程加载班级列表
-Publish.prototype.loadClassList=function(subject_id) {
-	if(!subject_id) {
-		return false;
-	}
-	var self = this;
-	var cache_key = "subject_id:" + subject_id;
-	var class_list_json = self.class_list_cache[cache_key];
-	if($.isEmptyObject(class_list_json)) {
-		$.ajax({
-			type:"post",
-			data:{'subject_id' :subject_id},
-			dataType:"json",
-			url:"/Sns/ClassHomework/Publish/class_info_json",
-			async:false,
-			success:function(_json) {
-				class_list_json = self.class_list_cache[cache_key] = _json;
-				$.extend(self.class_info_cache, _json.data || {});
-			}
-		});
-	}
-	return class_list_json || {};
-};
-
-//填充班级列表
-Publish.prototype.fillClassList=function(json) {
-	$('#' + pSet.class_list_select + ' option:gt(0)').remove();
-	
-	if(json.status <= 0) {
-		alert(json.info);
-		return false;
-	}
-	//数据填充
-	var parentObject = $('#' + pSet.class_list_select);
-	var data = json.data;
-	for(var i in data) {
-		$('<option value="' + data[i].class_code + '">' + data[i].class_name + '</option>').appendTo(parentObject);
-	}
-	//默认选择第一个班级
-	$('#' + pSet.class_list_select + ' option:eq(1)').attr('selected', true);
-	
-	return true;
-};
-
 //表单数据收集函数
 Publish.prototype.formDataCollect=function() {
-	$('.accepters').remove();
+	var parentObj = $('form:first');
+	$('.accepters', parentObj).remove();
 	//将当前活动的学生列表上的数据收集起来整理为数组格式或者以逗号分隔的字符串格式
-	var div_prefix = viewSet.show_div_mark.replace('{id}', '');
-	$('*[id^="' + div_prefix + '"]').each(function() {
-		var class_code = $(this).attr('id').toString().match(/(\d+)/)[1];
-		var data = $(this).data('data') || {};
+	var packDatas = this.packFormDatas() || {};
+	var accepters_list = packDatas.accepters_list || {};
+	
+	for(var class_code in accepters_list) {
+		var selected_students = accepters_list[class_code].selected_students || {};
 		var uids = [];
-		for(var uid in data) {
+		for(var uid in selected_students) {
 			uids.push(uid);
 		}
-		$('<textarea name="accept_list[' + class_code + ']" class="accepters"></textarea>').text(uids.join(',')).appendTo($('form:first'));
-	});
+		$('<textarea name="accept_list[' + class_code + ']" class="accepters"></textarea>').text(uids.join(',')).hide().appendTo(parentObj);
+	};
 };
-
-Publish.prototype.openPopDiv=function(div_id) {
-	$('#' + div_id).dialog({
-		autoOpen:false,
-		bgiframe:true,
-		/*
-		buttons:{
-			'确定':function() {
-				$(this).dialog('close');
-			},
-			'取消':function() {
-				$(this).dialog('close');
-			}
-		},
-		*/
-		draggable:true,
-		resizable:false,
-		width:550,
-		minHeight:300,
-		modal:true,
-		zIndex:9999,
-		stack:true,
-		position:'center',
-		dialogClass: 'alert',
-		beforeclose:function(event, ui) {
-			return true;
-		}
-	});
-	var title = $('#title', $('#' + div_id)).val();
-	$('#' + div_id).dialog('option', 'title', title);
-	$('#' + div_id).dialog('open');
-};
-
-//初始化弹出层的相关数据
-Publish.prototype.initPopDiv=function() {
-	var self = this;
-	//加载班级对象列表
-	var subject_prefix = bSet.subject_mark.replace('{id}', '');
-	var subject_id = $(':input[id^="' + subject_prefix + '"]:checked').val();
-	var class_list_json = self.loadClassList(subject_id);
-	self.fillClassList(class_list_json);
-	//获取已经选择的班级code
-	var class_code = $('#' + pSet.class_list_select).val();
-	//加载班级的成员选择列表
-	var student_list_json = self.loadClassStudents(class_code);
-	self.fillClassStudents(student_list_json);
-	//选中班级成员的状态信息
-	self.checkClassStudent(class_code);
-	//打开弹出层
-	self.openPopDiv(pSet.pop_div);
-};
-
-//初始化预览的相关数据
-Publish.prototype.initPreviewDiv=function() {
-	var self = this;
-	
-	var context = $('#' + pvSet.pop_div);
-	//科目信息
-	var subject_id = $('*[id^="' + bSet.subject_mark.replace('{id}', '') + '"]').filter(':checked').val();
-	var subject_name = $('#' + bSet.subject_name_mark.replace('{id}', subject_id)).html();
-	$('#' + pvSet.subject_name, context).html(subject_name);
-	//交付日期
-	var end_time = $('#' + bSet.end_time).val();
-	$('#' + pvSet.end_time, context).html(end_time);
-	
-	//作业内容
-	var content = self.editor.getSource();
-	$('#' + pvSet.content, context).html(content);
-	//作业附件
-	var upload_file_name = $('#' + bSet.upload_file).val().toString().split('/').pop();
-	$('#' + pvSet.upload_file_name, context).html(upload_file_name);
-	
-	//情况已经存在的成员列表信息
-	$('#' + pvSet.block_container, context).children('.pv_list').remove();
-	//接受对象,todolist
-	var div_id = viewSet.show_div_mark.replace('{id}', '');
-	$('*[id^="' + div_id + '"]').each(function() {
-		var class_code = $(this).attr('id').toString().match(/(\d+)/)[1];
-		var blockObj = $('.clone', context).clone().removeClass().addClass('pv_list').show();
-		//班级名称
-		var class_info = self.class_info_cache[class_code] || {};
-		$('#' + pvSet.block.class_name, blockObj).html(class_info.class_name);
-		//班级成员列表
-		var data = $(this).data('data');
-		for(var i in data) {
-			$('<span>' + data[i] + '</span>').appendTo($('#' + pvSet.block.student_list, blockObj));
-		}
-		blockObj.appendTo($('#' + pvSet.block_container, context));
-	});
-	//弹出层
-	self.openPopDiv(pvSet.pop_div);
-};
-
+//表单的审核
 Publish.prototype.validator=function() {
-	var self = this;
-	var subject_prefix = bSet.subject_mark.replace('{id}', '');
-	if($('*[id^="' + subject_prefix + '"]').filter(':checked').length == 0) {
-		alert('请选择科目!');
+	var me = this;
+	if($(':input[name="subject_id"]').filter(':checked').length == 0) {
+		$.showError('请选择科目!');
 		return false;
 	}
-	if(!$.trim($('#' + bSet.end_time).val())) {
-		alert('请交作业日期!');
+	if(!$.trim($('#end_time').val())) {
+		$.showError('请交作业日期!');
 		return false;
 	}
-	if(!self.editor.getSource()) {
-		alert('请填写作业内容!');
+	if(!me.editor.getSource()) {
+		$.showError('请填写作业内容!');
 		return false;
 	}
-	if(!self.isSelectAccepters()) {
-		alert('请选择接受对象!');
+	if(!me.isSelectAccepters()) {
+		$.showError('请选择接受对象!');
 		return false;
 	}
-	
 	return true;
 };
-
+//判断是否选择了接受对象
 Publish.prototype.isSelectAccepters=function() {
-	var div_id = viewSet.show_div_mark.replace('{id}', '');
-	var selected = false;
-	$('*[id^="' + div_id + '"]').each(function() {
-		var data = $(this).data('data');
-		if(!$.isEmptyObject(data)) {
-			selected = true;
-			return false;
-		}
-	});
-	return selected;
+	var packDatas = this.packFormDatas() || {};
+	return !$.isEmptyObject(packDatas.accepters_list) ? true : false;
 };
 
 $(document).ready(function() {

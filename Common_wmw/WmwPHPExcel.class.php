@@ -52,6 +52,15 @@ class WmwPHPExcel implements PHPexcelInterface {
     }
     
     /**
+     * 将Excel相关的数据直接输出到浏览器
+     * @param $datas
+     * @param $export_file_name
+     */
+    public function outputExcel($datas, $export_file_name) {
+        return $this->objPHPExcel->outputExcel($datas, $export_file_name);
+    }
+    
+    /**
      * 将相应的数据保存到Excel文件中
      * @param $dataarr
      * @param $filename

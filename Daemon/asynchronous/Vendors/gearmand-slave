@@ -29,7 +29,7 @@ GM_PORT=4731
 #
 # mysql conf
 #
-LOG_FILE=/var/log/gearmand-slave.log
+LOG_FILE=/var/log/wmw-gearmand-slave.log
 MY_HOST=127.0.0.1
 MY_PORT=3306
 MY_USER=root
@@ -41,7 +41,7 @@ OPTIONS="-l $LOG_FILE -p $GM_PORT -q mysql --mysql-host=$MY_HOST --mysql-port=$M
 [ -z "${PIDFILE}" ] && pidfile="/var/run/gearmand/gearmand-slave.pid"
 [ -z "${LOCKFILE}" ] && lockfile="/var/lock/subsys/gearmand-slave"
 
-PIDDIR=/var/run/gearman
+PIDDIR=/var/run/gearmand
 gearmand=/usr/local/sbin/gearmand
 prog=gearmand-slave
 

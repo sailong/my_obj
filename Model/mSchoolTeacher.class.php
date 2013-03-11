@@ -12,7 +12,9 @@ class mSchoolTeacher extends mBase{
         if(empty($schoolIds)) {
             return false;
         }
+        
         $SchoolTeacherInfos = $this->_dSchoolTeacher->getSchoolTeacherInfoBySchoolId($schoolIds);
+        
          if(!empty($SchoolTeacherInfos) && !empty($filters)) {
           foreach($filters as $field=>$values) {
               $values = is_array($values) ? $values : array($values);
@@ -26,7 +28,6 @@ class mSchoolTeacher extends mBase{
               }
           }
         }
-        
         return !empty($SchoolTeacherInfos) ? $SchoolTeacherInfos : false;
     }
     /**

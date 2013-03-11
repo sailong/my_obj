@@ -19,6 +19,7 @@ class dClientClass extends dBase{
         'upd_account',
         'upd_time',
         'client_type',
+        'sort_seq',
     );
     protected $_pk = 'client_class_id';
     protected $_index_list = array(
@@ -33,7 +34,7 @@ class dClientClass extends dBase{
      */
     //todolist 维度非规则
     public function getClientClassByUid($uids) {
-    	return $this->getInfoByFk($uids,'client_account');
+    	return $this->getInfoByFk($uids, 'client_account');
 
     }
 

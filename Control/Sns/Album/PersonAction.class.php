@@ -5,33 +5,48 @@ class PersonAction extends SnsController{
     }
     
     public function index() {
-        import('@.Control.Api.AlbumApi');
-        $albumobj = new AlbumApi();
-        $album_list = $albumobj->getPerson($this->user['client_account'],0,10);
-        $album_list = json_decode($album_list,true);
-        $this->assign('album_list', $album_list);
+        $uid = $this->user['client_account'];
+        import('@.Control.Api.AlbumImpl.ByPerson');
+        $ByPerson = new ByPerson();
+        $album_list = $ByPerson->getAlbumByUid($uid,0,10);
+        $path = Pathmanagement_sns::getAlbum($uid);
+        foreach($album_list as $album_id=>$val) {
+            if(!empty($val['album_img'])) {
+                $album_list[$album_id]['album_img'] = $path.$val['album_img'];
+            }
+            $tmp = file_exists(Pathmanagement_sns::uploadAlbum($uid).'/'.$val['album_img']);
+            if(!$tmp) {
+                $album_list[$album_id]['album_img']='';
+            }
+        }
         dump($album_list);
-        $this->display('personlist');
+        $this->assign('uid', $uid);
+        $this->assign('album_list', $album_list);
+        
+        //$this->display('class_list_album');//personlist
+        $this->display('personlist');//
     }
+    
     public function toaddAlbum() {
         $this->display('addalbum');
     }
+    
     public function addAlbum() {
         $album_name = $this->objInput->postStr('album_name');
         $explain    = $this->objInput->postStr('explain');
-        $grant      = $this->objInput->postStr('grant');
+        $grant      = $this->objInput->postStr('grants');
         $uid        = $this->user['client_account'];
         
-        //$albumobj = ClsFactory::Create('@.Control.Api.AlbumApi');
         $data = array(
             'album_name'=>$album_name,
-            'explain'=>$explain,
+            'album_explain'=>$explain,
             'grant'=>'1',
             'uid'=>$uid
         );
-        import('@.Control.Api.AlbumApi');
-        $albumobj = new AlbumApi();
-        $rs = $albumobj->createPerson($data);
-        dump($rs);
+        import('@.Control.Api.AlbumImpl.ByPerson');
+        $ByPerson = new ByPerson();
+        $rs = $ByPerson->create($data);
+        
+        $this->toaddAlbum();
     }
 }

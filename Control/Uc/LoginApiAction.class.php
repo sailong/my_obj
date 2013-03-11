@@ -40,7 +40,7 @@ class LoginapiAction extends UcController {
         //如果$callback 为空，则指定到用户中心首页
         if (empty($callback)) {
             $uc_domain = C('UC_DOMAIN');
-            $callback_decode = 'http://'.$uc_domain . '/uc/index';
+            $callback_decode = 'http://'.$uc_domain . '/Uc/index';
             $callback = urlencode($callback_decode);
         }        
 
@@ -108,7 +108,7 @@ class LoginapiAction extends UcController {
         //如果$callback 为空，则指定到用户中心首页
         if (empty($callback)) {
             $uc_domain = C('UC_DOMAIN');
-            $callback_decode = 'http://'.$uc_domain . '/uc/index';
+            $callback_decode = 'http://'.$uc_domain . '/Uc/index';
             $callback = urlencode($callback_decode);
         }
         
@@ -328,16 +328,14 @@ class LoginapiAction extends UcController {
         $userInfo = $mUser->getClientAccountById($client_account);        
         $stop_flag = intval($userInfo[$client_account]['status']);
         //校验4： 用户激活状态，如果未激活，则增加激活的情况，增加callback参考 callback，方便激活之后的跳转;
-        //http://vm.wmw.cn/uc/activate?callback=
+        //http://vm.wmw.cn/Uc/activate?callback=
         if ($stop_flag == CLIENT_STOP_FLAG) {
-            $data['callback'] = "http://" . C('UC_DOMAIN') . '/uc/activate?callback=' . $callback;
+            $data['callback'] = "http://" . C('UC_DOMAIN') . '/Uc/Activate?callback=' . $callback;
         }
         
-	    //记录登录登录时间
-	    $mUser->modifyUserClientAccount(array('lastlogin_date' =>time()), $client_account);       
+	    //记录登录登录时间，加入用户在线库，异步操作
+        Gearman::send('default_usr_login', $client_account);
 	    
-
-
         //用户token, 格式看本函数注释
         $json = $this->oauth2->grantAccessToken();
         if (empty($json)) {

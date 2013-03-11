@@ -34,9 +34,9 @@ class dClientgroup extends dBase {
 	    return $this->getInfoByPk($group_id);
 	}
 
-
+	
     public function addClientGroup($datas, $is_return_id = false) {
-        return $this->add($datas, $is_return_id);
+       return $this->add($datas, $is_return_id);
     }
 	
     public function modifyClientGroup($datas, $group_id) {

@@ -5,7 +5,6 @@
  */
 class CourseApi extends ApiController {
    /**
-     * 
      * 固定函数
      */
     public function __construct() {
@@ -15,59 +14,33 @@ class CourseApi extends ApiController {
 		parent::_initialize();        
     }	    
 
-	/**
-	 * 获取今天所有课程的接口
-	 * 如果当前时间为 周六周日 或者今天没有课程 返回 false;
-	 * 
-	 * @return json  array('day'=>array(1=>'语文',2=>'数学');)
-	 */
-    
-    public function showToday() {
-        $class_code = $this->objInput->getInt('class_code');
-        if(empty($class_code)) {
-            return false;
-        }
-        
-        import('@.Control.Api.Class.CourseImpl.CourseAll');
-        $courseAllObj = new CourseAll();
-        
-        $day = date('w', time());
-        $course_list = $courseAllObj->getTimeCourse($day, $class_code);
-        $new_course_list = $this->dataProcessing($course_list);
-        
-        exit(json_encode($new_course_list));
-    }
-    
-    
-	/**
-	 * 获取明天所有课程的接口
-	 * 
-	 * 如果当前时间为 五六周六 或者今天没有课程 返回 false;
+    /**
+     * 获取某天所有课程的接口
+     * 如果当前时间为 五六周六 或者今天没有课程 返回 false;
 	 * @return json array('day'=>array(1=>'语文',2=>'数学');)
-	 */
+     */
     
-    public function showTomorrow() {
+    public function getCourse(){
         $class_code = $this->objInput->getInt('class_code');
-        if(empty($class_code)) {
-            return false;
-        }
+        $weekday = $this->objInput->getInt('weekday');
         
         import('@.Control.Api.Class.CourseImpl.CourseAll');
         $courseAllObj = new CourseAll();
-        $day = date('w', time() + 24*3600);
         
-        $course_list =  $courseAllObj->getTimeCourse($day, $class_code);
+        $course_list =  $courseAllObj->getTimeCourse($weekday, $class_code);
         $new_course_list = $this->dataProcessing($course_list);
-
-        exit(json_encode($new_course_list));
+      
+        if(empty($new_course_list)) {
+            $this->ajaxReturn(null, '获取课程表失败！', -1, 'json');
+        }
+        $this->ajaxReturn($new_course_list, '获取课程表成功！', 1, 'json');
     }
     
-    /*
+    /**
      * 课程数据处理方便前台调用
      * 分出上下午 
      * 
      */
-    
     private function dataProcessing($class_course_list) {
         if(empty($class_course_list) || !is_array($class_course_list)) {
             return false;

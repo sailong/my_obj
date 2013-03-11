@@ -11,12 +11,12 @@ class mAccountrelation extends mBase{
 	 * 获取用户的好友关系
 	 * @param $client_accounts
 	 */
-	public function getAccountRelationByClientAccout($client_accounts) {
+	public function getAccountRelationByClientAccout($client_accounts,$orderby=null,$offset=null,$limit=null) {
 	    if(empty($client_accounts)) {
 	        return false;
 	    }
 	    
-	    return $this->_dAccountrelation->getAccountRelationByClientAccout($client_accounts);
+	    return $this->_dAccountrelation->getAccountRelationByClientAccout($client_accounts,$orderby,$offset,$limit);
 	}
     
 	/*统计好友数量*/
@@ -132,6 +132,28 @@ class mAccountrelation extends mBase{
         return !empty($Accountrelationinfo) ? $Accountrelationinfo : false;
     }
     
+    public function getGroupFriendsByarrData($arrdata,$offset,$limit) {
+        if(empty($arrdata)) {
+            return false;
+        }
+        
+       return  $this->_dAccountrelation->getInfo($arrdata,'relation_id desc',$offset,$limit);
+    }
+    
+    
+    
+    Public function getGroupFriendsByFriendGroup($group_ids,$orderby,$offset,$limit) {
+        if(empty($group_ids)) {
+            return false;
+        }
+
+        $wheresql = " friend_group in( ".implode(',' , (array)$group_ids)." )";
+        
+        $Accountrelationinfo = $this->_dAccountrelation->getInfo($wheresql,$orderby,$offset,$limit);
+        
+        return !empty($Accountrelationinfo) ? $Accountrelationinfo : false;
+    }
+    
     /**
      * 添加信息
      * @param $dataarr
@@ -150,7 +172,7 @@ class mAccountrelation extends mBase{
      * @param $dataarr
      * @param $relation_id
      */
-    private function modifyAccountRelation ($dataarr,$relation_id) {
+    public function modifyAccountRelation ($dataarr,$relation_id) {
         if(empty($dataarr) || empty($relation_id)) {
         	return false;
         }

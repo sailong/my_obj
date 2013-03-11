@@ -6,6 +6,7 @@ include_once(CONFIGE_DIR . '/define.php');
 include_once(CONFIGE_DIR . '/vocation.php');
 include_once(LIBRARIES_DIR . '/common.php');
 include_once(LIBRARIES_DIR . '/ClsFactory.class.php');
+include_once(LIBRARIES_DIR . '/Gearman.class.php');
 // 定义项目名称和路径 
 define('APP_NAME',  'wmw');
 //清除核心缓存

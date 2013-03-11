@@ -7,7 +7,18 @@ class mMypyCollect extends mBase {
         $this->_dPyCollect = ClsFactory::Create('Data.dMyPyCollect');
     }
     
-	/*按评语类型读取评语
+    /**
+     * 根据主键获取个人收藏的评语内容
+     */
+    public function getMyPycollectById($collect_id) {
+        if (empty($collect_id)) {
+            return false;
+        }
+        
+        return $this->_dPyCollect->getMyPycollectById($collect_id);
+    }
+    
+	/*按评语添加人读取评语
      * @param $account
      * return $py_collect_arr
      */
@@ -18,17 +29,27 @@ class mMypyCollect extends mBase {
 	    
 		return  $this->_dPyCollect->getMyPycollectByaccount($account);
 	}
+	
+	/*按where条件读取评语
+     * @param $account
+     * return $py_collect_arr
+     */
+	public function getMyPycollectInfo($where, $orderby, $offset = 0, $limit = 10) {
+	    $py_list = $this->_dPyCollect->getInfo($where, $orderby, $offset, $limit);
+
+		return  !empty($py_list)? $py_list : false;
+	}
 
 	/*删除评语
 	 * @param $py_id
 	 * return $effect_rows
 	 */
-	public function delMyCollect($py_id) {
-	    if(empty($py_id)) {
+	public function delMyCollect($collect_id) {
+	    if(empty($collect_id)) {
 	        return false;
 	    }
 	    
-	    return $this->_dPyCollect->delMyCollect($py_id);
+	    return $this->_dPyCollect->delMyCollect($collect_id);
 	}
 
 	/*收藏到我的评语库

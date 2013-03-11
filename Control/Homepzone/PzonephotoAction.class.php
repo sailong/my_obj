@@ -3,7 +3,6 @@ class PzonephotoAction extends SnsController{
    
 	public function _initialize(){
 	    parent::_initialize(); 
-	    
 		import("@.Common_wmw.Pathmanagement_sns");
 		import("@.Common_wmw.Constancearr");
 		import("@.Common_wmw.WmwString");
@@ -47,7 +46,7 @@ class PzonephotoAction extends SnsController{
 	//公用方法，个人相册列表统计 2012-3-21 by lyt:
 	public function getMAlbumInfoModel($account){
 		$mAlbuminfo = ClsFactory::Create('Model.mAlbuminfo');
-		$xiangce_result = $mAlbuminfo->getAlbumInfoByaccount($account,0,8);
+		$xiangce_result = $mAlbuminfo->getAlbumInfoByaccount($account,0,100);
 		if(!$xiangce_result){
 			$this->adddefaultxc($account,ALBUM_SYS_CREATE);
 			$xiangce_result = array_shift($xiangce_result);

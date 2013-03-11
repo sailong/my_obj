@@ -20,10 +20,10 @@ APP_DIR=/opt/wmw/Daemon/asynchronous
 DAEMON=$APP_DIR/Vendors/GearmanManager/pecl-manager.php
 PIDDIR=/var/run/gearmand
 PIDFILE=${PIDDIR}/gearmand-manager.pid
-LOGFILE=/var/log/gearmand-manager.log
+LOGFILE=/var/log/wmw-gearmand-manager.log
 CONFIGDIR=$APP_DIR
 GEARMANUSER="root"
-PARAMS="-c ${CONFIGDIR}/config.ini"
+PARAMS="-c ${CONFIGDIR}/config.ini -vvvvv"
 
 RETVAL=0
 
@@ -66,6 +66,7 @@ case "$1" in
         ;;
   restart|reload)
         stop
+        sleep 2
         start
         ;;
   condrestart|try-restart)

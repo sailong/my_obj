@@ -1,20 +1,40 @@
 <?php
-
 class mMsgRequire extends mBase{
 	protected $_dMsgRequire = null;
 	public function __construct() {
 		$this->_dMsgRequire = ClsFactory::Create("Data.Message.dMsgRequire");
 	}
 	
-	public function getMsgRequireByToAccount($to_account) {
+    public function getMsgRequireById($req_id) {
+        if(empty($req_id)){
+			return false;
+		}
+		$this->_dMsgRequire->getInfoByPk($req_id);
+		return $this->_dMsgRequire->getInfoByPk($req_id);
+	}
+	
+	public function getMsgRequireByToAccount($to_account,$offset,$limit) {
 		if(empty($to_account)){
 			return false;
 		}
 		
-		return $this->_dMsgRequire->getMsgRequireByToAccount($to_account);
+		return $this->_dMsgRequire->getMsgRequireByToAccount($to_account,$offset,$limit);
 	}
 	
-	public function addMsgRequire($dataarr, $is_return_id) {
+	//依据add_account查询
+    public function getMsgRequireByAddAccount($add_account,$new_friend_friend_arr) {
+		if(empty($add_account) ||empty($new_friend_friend_arr) ){
+			return false;
+		}
+		
+		$wheresql[] = "add_account={$add_account}";
+		$wheresql[] = "to_account in('".implode("','",$new_friend_friend_arr)."')";
+		
+		return $this->_dMsgRequire->getMsgRequireByAddAccount($wheresql);
+	}
+	
+	
+	public function addMsgRequire($dataarr, $is_return_id = false) {
 		if(empty($dataarr) || !is_array($dataarr)) {
 			return false;
 		}
@@ -43,4 +63,5 @@ class mMsgRequire extends mBase{
 			}
 		}
 	}
+	
 }

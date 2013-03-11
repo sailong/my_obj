@@ -14,6 +14,9 @@ The FileProgress class is not part of SWFUpload.
 function fileQueued(file) {
 	try {
 		var progress = new FileProgress(file, this.customSettings.progressTarget);
+		if(typeof selectUploadUserDefine == "function") {
+			selectUploadUserDefine();
+		}
 		progress.setStatus("等待上传...");
 		progress.toggleCancel(true, this);
 
@@ -156,6 +159,10 @@ function uploadError(file, errorCode, message) {
 
 // This event comes from the Queue Plugin
 function queueComplete(numFilesUploaded) {
+	if(typeof filesUploadComplete ==  "function") {
+		filesUploadComplete();
+		return true;
+	}
 	var status = document.getElementById("divStatus");
 	status.innerHTML = numFilesUploaded + " file" + (numFilesUploaded === 1 ? "" : "s") + " uploaded.";
 }

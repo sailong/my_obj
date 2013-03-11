@@ -1,25 +1,25 @@
 ﻿<?php
 return array(
         //'配置项'=>'配置值'
-        'UC_DOMAIN'				=> 'vm.wmw.cn',    			//正式环境配置 UC域名
+        'UC_DOMAIN'				=> 'vm1.wmw.cn',    			//正式环境配置 UC域名
       
         'COOKIEDOMAIN'			=> '.wmw.cn',        			//UC域名        
       	
-      	'WMW_SERVER'			=> 'http://vm.wmw.cn',				//主站网址
+      	'WMW_SERVER'			=> 'vm1.wmw.cn',				//主站网址
       	
       	'ZSCY_SERVER'			=> 'http://www.zscy.cn',				//雏鹰网址
       	  
-        'APP_DOMAINS'			=> array('vm.wmw.cn', 'www.zscy.cn'),       
+        'APP_DOMAINS'			=> array('vm1.wmw.cn', 'www.zscy.cn'),       
         
-//        'SHOW_ERROR_MSG'        => true,
-//
-//        'ERROR_MESSAGE'         =>'发生错误！',
-//
-//		'ERROR_PAGE'            =>'/Public/web_site_error',                 
+        'SHOW_ERROR_MSG'        => true,
+
+        'ERROR_MESSAGE'         =>'发生错误！',
+
+		'ERROR_PAGE'            =>'/Public/web_site_error',                 
         
         'APP_DEBUG' 			=> false , 		// 开启调试模式 
 
-        'URL_CASE_INSENSITIVE' 	=> true, 		//不区分大小写
+        'URL_CASE_INSENSITIVE' 	=> false, 		//不区分大小写
 
         'DB_TYPE'				=> 'Pdo',    	// 数据库类型 
 
@@ -29,9 +29,9 @@ return array(
 
         'URL_MODEL' 			=>	2,			//启用REWRITE模式 
         
-        'APP_GROUP_LIST'		=>'Adminapplication,Adminbase,Admingroup,Adminlogin,Adminuser,Amscontrol,Api,Basecontrol,Homeclass,Homefriends,Homepage,Homepzone,Homeuser,Homeusernews,Oa,Public,Resource,Smssend,Sso,Thirdapp,Uc,Unicominterface,Sns,Wms,Xheditor',//分组列表 
+        'APP_GROUP_LIST'		=>'Adminapplication,Adminbase,Admingroup,Adminlogin,Adminuser,Amscontrol,Api,Basecontrol,Homeclass,Homefriends,Homepage,Homepzone,Homeuser,Homeusernews,Oa,Public,Resource,Smssend,Sso,Thirdapp,Uc,Unicominterface,Sns,Wms,Message,ClassManage	',//分组列表 
 
-        'DEFAULT_GROUP'			=>'Homeuser', 	//默认分组
+        'DEFAULT_GROUP'			=>'Sns', 	//默认分组
 
         'TMPL_FILE_DEPR'		=>'_', 			//改变模板文件位置的显示（例如:Tpl/default/Home/Index/index.html，改变后为Tpl/default/Home/Index_index.html） 
 
@@ -47,9 +47,27 @@ return array(
 		
         'SUPPORTED_OAUTH2_TYPE' => array('qzone'=> array('client_id'     => '100314837',
                                                          'client_secret' => '195f266d454a15d2dd977ddcec2cb5f4',
-                                                         'callback'		 => 'http://vm.wmw.cn'
+                                                         'callback'		 => 'http://my.wmw.cn'
                                                         )
                                         ),                           //支持的社会化登录,比如QQ,新浪等		
+		    
+        'GEARMAN_INFO' => array(
+              'master'=> array(
+                    'host' => '127.0.0.1',
+                    'port' => '4730'
+                    ),
+              'slave'=> array(
+                    'host' => '127.0.0.1',
+                    'port' => '4731'
+                    ),
+                    
+        ),                                  
+                                        
+ 		'LOG_RECORD'            => true,   // 默认不记录日志
+
+		'LOG_FILE_SIZE'         => 2097152, // 日志文件大小限制
+
+        'LOG_RECORD_LEVEL'      => array('EMERG','ALERT','CRIT','ERR'),// 允许记录的日志级别                 		    
 		    
                 
         //如果需要修改以下资源配置，请联系杨益
@@ -186,6 +204,12 @@ return array(
                             )
                         ),
                 ),
+                
+                'REDIS_INFO' => array(
+                    'host' => '127.0.0.1',
+                    'port' => '6379',
+                ),
+                
                 //如果需要修改以下资源配置，请联系杨益
                 //MC配置
                 'MC_INFO' => array(
@@ -209,5 +233,5 @@ return array(
                             'grade_id',
                             'gradeid'
                         ),
-                  ),
+                  ),       
                 );

@@ -3,7 +3,8 @@ class Upload {
     public function __construct() {
         import("@.Common_wmw.Pathmanagement_sns");
 	}
-    public function uploadfun($uploadPath,$showPath) {
+	
+    public function uploadfun($uploadPath, $showPath) {
         $inputName='filedata';//表单文件域name
         $attachDir=$uploadPath;
         $showpath = $showPath;

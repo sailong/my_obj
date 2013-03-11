@@ -33,7 +33,7 @@ $(function() {
 		password = $.md5(password);
 		$.ajax({
 			type: "POST",
-			url: "/uc/login_api/login",
+			url: "/Uc/LoginApi/login",
 			dataType: "json",
 			data: {"grant_type":"password", "client_id":client_id, "username":username, "password":password, "callback":callback },
 			success: function(json) {

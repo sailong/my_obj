@@ -11,7 +11,7 @@ class LogoutAction extends UcController {
         $callback = $this->objInput->getStr('callback');
         if (empty($callback)) {
             $uc_domain = C('UC_DOMAIN');
-            $callback =  urlencode('http://'.$uc_domain . '/uc/index');
+            $callback =  urlencode('http://'.$uc_domain . '/Uc/index');
         }              
         
         $callback_decode = urldecode($callback);
@@ -51,7 +51,7 @@ echo <<<EOF
     var domains={$app_domains};
     var ajaxes = [];
     for ( var i = 0; i < domains.length ; i++ ) {
-    	var url =  "http://" + domains[i] + "/api/uclient/logout";
+    	var url =  "http://" + domains[i] + "/api/Uclient/logout";
     	ajaxes.push(url);
     }
 	var current = 0;

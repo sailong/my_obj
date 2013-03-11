@@ -11,21 +11,55 @@ class dAlbumClassRelation extends dBase {
                     'class_code',
                     'album_id',
                 );
-                
+    /**
+     * 添加班级相册关系
+     * @param unknown_type $data
+     * @param unknown_type $is_return_id
+     */            
     public function addAlbumClassRel($data, $is_return_id) {
         return $this->add($data, $is_return_id);
     }
+    //todo list
+    public function addClassRel($data, $is_return_id) {
+        return $this->add($data, $is_return_id);
+    }
+    
+    
+    
     
     public function modifyAlbumClassRelById($data, $id) {
         return $this->modify($data, $id);
     }
+    //todo list
+    public function modifyClassRelById($data, $id) {
+        return $this->modify($data, $id);
+    }
+    
+    
+    
     
     public function delAlbumClassRelById($id) {
         return $this->delete($id);
     }
+    //todo list
+    public function delClassRelById($id) {
+        return $this->delete($id);
+    }
     
     public function getAlbumClassRelByClassCode($class_code, $offset = null, $limit = null) {
-        $orderby = $this->_pk.' desc';
+        $orderby = $this->_pk.' asc';
         return $this->getInfoByFk($class_code,'class_code', $orderby, $offset, $limit);
+    }
+    
+    
+    //通过相册album_id删除班级相册关系
+    public function delByAlbumId($album_id) {
+        if(empty($album_id)) {
+            return false;
+        }
+         
+        $sql = "delete from {$this->_tablename} where album_id={$album_id}";
+        
+        return $this->execute($sql);
     }
 }
