@@ -68,9 +68,9 @@
               {if $draft_list}
 	              {foreach from=$draft_list item=draft}
 	              <tr>
-	                <td><a href="javascript:;" class="f464646">{$draft.title}</a></td>
+	                <td><a href="/Sns/Blog/Publish/index/draft_id/{$draft.blog_id}/class_code/{$class_code}" class="f464646">{$draft.title}</a></td>
 	                <td style="text-align:center"><span class="pr10">{$draft.add_time}</span></td>
-	                <td><a href="/Sns/Blog/Publish/index/draft_id/{$draft.blog_id}" class="mr10">编辑</a>|<a id="{$draft.blog_id}" href="javascript:;" class="ml10 delete_a">删除</a></td>
+	                <td><a href="/Sns/Blog/Publish/index/draft_id/{$draft.blog_id}/class_code/{$class_code}" class="mr10">编辑</a>|<a id="{$draft.blog_id}" href="javascript:;" class="ml10 delete_a">删除</a></td>
 	              </tr>
 	              {/foreach}
 			  {else}

@@ -27,39 +27,22 @@
 	        <p><span>创建人：</span><font>{$album.client_name}</font></p>
 	        <p><span>相片名称：</span><font id="photo_name"></font></p>
 	        <p><span>上传时间：</span><font id="add_date"></font></p>
-        <!--<table width="90%" border="0" cellspacing="0" cellpadding="0">
-          <tr>
-            <th>创建人：</th>
-            <td>{$album.client_name}</td>
-          </tr>
-          <tr>
-            <th>相片名称：</th>
-            <td id="photo_name"></td>
-          </tr>
-          <tr>
-            <th>上传时间：</th>
-            <td id="add_date"></td>
-          </tr>
-        </table>-->
-        
-        
-        
         </div>
-        <div class="photo_name">
+        <div class="photo_name" >
           <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td colspan="2">
             <div class="photo_info" {if $is_edit}title="点击"{/if}>
-            <p id="description"><a href="javascript:;">点此输入照片描述</a></p>
+            <p{if $is_edit} id="description"{/if}><a href="javascript:;">点此输入照片描述</a></p>
             </div>
             </td>
-            </tr>
+         </tr>
           <tr class="description" style="display:none;">
             <td colspan="2"><input type="text" class="text" maxlength="20"></td>
           </tr>
           <tr class="description" style="display:none;">
-            <th><span id="span_count">20</span>/20</th>
-            <td><input type="button" class="green_btn" value="确定"><input type="button" class="gray_btn" value="取消"></td>
+            <th><font id="span_count">20</font>/20</th>
+            <td><input type="button" class="green_btn" value="确定" /><input type="button" class="gray_btn" value="取消" /></td>
           </tr>
         </table>
 

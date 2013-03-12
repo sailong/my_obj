@@ -40,18 +40,20 @@
       <!--per_main_tab star-->
       <div id="friend_list_div">
       <div class="per_main_tab clone">
+      {literal}
           <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="photo_width"><img src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/images/Friend/nearest_visitor/pic01.jpg"></td>
+            <td class="photo_width"><img src="{user.client_headimg_url}"></td>
             <td>
-              <p><a href="#" class="f_main_green">王国强</a></p>
-              <p>男</p>
-              <p><a href="#" class="add_friend">加好友</a></p>
+              <p><a href="#" class="f_main_green">{user.client_name}</a></p>
+              <p>{if user.client_sex == 1}男{else}女{/if}</p>
+              <p><a href="javascript:;" class="add_friend" id="add_friend">加好友</a></p>
             </td>
             <td class="td_width"></td>
             <td class="align_right">2012-11-25&nbsp;13:20</td>
           </tr>
         </table>
+        {/literal}
         </div>
         </div>
         <!--per_main_tab end-->

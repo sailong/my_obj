@@ -16,7 +16,7 @@
     <p class="f13 f_green">{$school_name}</p><p id="width_length" ><a href="#" class="f13 f_green"><span>{$class_info.grade_id_name}  {$class_info.class_name}</span><span class="icon_01"></span></a></p>
     <p class="f13 f_green">班主任：{$class_info.headteacher_name}</p>
     {if !empty($is_admin)}
-    <p class="f13 f_green"><a class="f13 f_green" href="/Sns/ClassAdmin/Index/index/class_code/{$class_code}">班级管理>></a></p>
+    <a href="/Sns/ClassAdmin/Index/index/class_code/{$class_code}" class="bjgl">班级管理>></a>
     {/if}
     <div class="clear"></div>
    </div> 

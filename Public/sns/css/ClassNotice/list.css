@@ -10,7 +10,9 @@
 		.list_top_main span{float:left;}
 		.release_text{width:96px; height:25px; border:1px #ccc solid; line-height:25px; padding-left:4px; margin:0px 6px;}
 
-	.has_release_main{background:#fff7e0; padding:20px; margin-bottom:20px;}
+	.has_release_main{ padding:20px; margin-bottom:20px;}
+	.has_release_main01{background:#fff7e0;}
+	.has_release_main02{background:#def2be;}
 		.has_release_main h3{font:bold 14px "微软雅黑";}
 		.has_release_main p{text-indent:30px; line-height:24px;}
 		

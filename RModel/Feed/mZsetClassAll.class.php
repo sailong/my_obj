@@ -21,24 +21,23 @@ class mZsetClassAll extends mFeedBase {
      * 加载班级全部动态信息
      * @param $id			  班级id
      * @param $timeline      最后查询结果的时间点
-     * @param $lastId        最后查询结果的feed_id
+     * @param $lastFeedId        最后查询结果的feed_id
      * @param $limit   
      */
-    private function loader($id, $timeline = 0, $lastId = 0, $limit = 10) {
+    private function loader($id, $lastFeedId = 0, $limit = 10) {
         if(empty($id)) {
             return false;
         }
         	    
         $mFeed = ClsFactory::Create('Model.Feed.mFeedClassRelation');
          
-        $datas_from_db = $mFeed->getFeedByClassCode($id, $timeline, $lastId, $limit);
+        $datas_from_db = $mFeed->getFeedByClassCode($id, $lastFeedId, $limit);
         
         $result = array();
         foreach ($datas_from_db as $key => $val) {
             $result[] = array(
             	'value' => $val['feed_id'],
-                'score' => $val['timeline'],
-                'id' => $val['id'],
+                'score' => $val['feed_id']
             );
         }
         

@@ -338,12 +338,12 @@ $(document).ready(function(){
 	new show_type();
 	
 	
-	var max_width = 600;
+	var max_width = 450;
 	var $doc = $('#blog_list_div');
     setInterval(function() {
     	$('img', $doc).each(function() {
     		var imgObj = $(this);
-    		if(this.width > max_width) {
+    		if(imgObj.width() > max_width) {
     			imgObj.width(max_width).removeAttr('height');
     		}
     	});

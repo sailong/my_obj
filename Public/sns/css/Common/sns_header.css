@@ -42,7 +42,7 @@
 	.urse_tcc ul li a:hover{background:#2b6800;color:white;}		
 	
 .info_tcc{width:120px;}
-	.info_tcc ul li a{text-align:left; padding-left:10px; width:110px;}	
+	.info_tcc ul li a{text-align:left; padding-left:10px; }	
 		
 .news_tcc{width:142px; font:12px "宋体";}	
 	.news_tcc_top{background:url(../../images/Common/sns_header/news_top_bj.gif) 0 0 no-repeat; height:9px; overflow:hidden;}	

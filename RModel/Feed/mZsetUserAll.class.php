@@ -13,11 +13,10 @@ class mZsetUserAll extends mFeedBase {
      * 2. 我朋友的动态.
      * 3. 我所在班级的动态.
      * @param $id			  我们网帐号
-     * @param $timeline      最后查询结果的时间点
-     * @param $lastId        最后查询结果的feed_id
+     * @param $lastFeedId        最后查询结果的feed_id
      * @param $limit   
      */
-    protected function loader($id, $timeline = 0, $lastId = 0, $limit = 10) {
+    protected function loader($id, $lastFeedId = 0, $limit = 10) {
         if(empty($id)) {
             return false;
         }
@@ -49,21 +48,21 @@ class mZsetUserAll extends mFeedBase {
               $uids = array_slice($r, 0, 500);
             } else {
               $r_diff = array_diff($all_friends, $r);
-              $uids = array_slice($r + (array)$r_diff , 0, 500);
+              $r_adds = array_merge($r, (array)$r_diff);
+              $uids = array_slice($r_adds, 0, 500);
             }
             
         }
         
         $mFeedTimeLine = ClsFactory::Create('Model.Feed.mFeedTimeLine');
 
-        $datas_from_db = $mFeedTimeLine->getFeedByUids($uids, $timeline, $lastId, $limit);
+        $datas_from_db = $mFeedTimeLine->getFeedByUids($uids, $lastFeedId, $limit);
         
         $result = array();
         foreach ($datas_from_db as $key => $val) {
             $result[] = array(
-            	'value' => $val['feed_id'],
-                'score' => $val['timeline'],
-                'id' => $val['id'],
+                'value' => $val['feed_id'],
+                'score' => $val['feed_id']
             );
         }
         

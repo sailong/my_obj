@@ -63,6 +63,8 @@ publish.prototype.attachEventForStudentListDiv=function() {
 		//收集选中的相关数据
 		var accept_name_list = [];
 		var selected_accounts = [];
+		var phone_arr =[];
+		
 		$('.checked_selector', context).each(function() {
 			if(!$(this).attr('checked')) {
 				return true;
@@ -70,10 +72,14 @@ publish.prototype.attachEventForStudentListDiv=function() {
 			var trObj = $(this).parents('tr:first');
 			var client_account = trObj.attr('id').toString().match(/(\d+)/)[1];
 			var client_name = $('.client_name_selector', trObj).html();
+			var father_phone_id = $("#father_phone_id",trObj).val();
+			var mother_phone_id = $("#mother_phone_id",trObj).val();
 			
 			accept_name_list.push({
 				father_name : client_name + "父亲",
-				mother_name : client_name + "母亲"
+				mother_name : client_name + "母亲",
+			    father_phone_id: father_phone_id,
+			    mother_phone_id: mother_phone_id
 			});
 			
 			selected_accounts.push(client_account);
@@ -87,6 +93,13 @@ publish.prototype.attachEventForStudentListDiv=function() {
 		for(var i in accept_name_list) {
 			var data = accept_name_list[i] || {};
 			var trObj = trClone.clone().removeClass('clone').appendTo(tabContext).show();
+			if(data.father_phone_id) {
+				$('td:eq(0)', trObj).css('color','#317400');
+			}
+			if(data.mother_phone_id) {
+				$('td:eq(1)', trObj).css('color','#317400');
+			}
+			
 			$('td:eq(0)', trObj).html(data.father_name);
 			$('td:eq(1)', trObj).html(data.mother_name);
 		}

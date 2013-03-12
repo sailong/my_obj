@@ -32,6 +32,10 @@ class dMsgRequire extends dBase{
 		return $this->add($dataarr, $is_return_id);
 	}
 	
+	public function modifyMsgRequire($datarr,$req_id) {
+	    return $this->modify($datarr,$req_id);
+	}
+	
 	public function delMsgRequire($msg_id) {
 		return $this->delete($msg_id);
 	}

@@ -28,10 +28,10 @@ class mMsgRequire extends mBase{
 		}
 		
 		$wheresql[] = "add_account={$add_account}";
-		$wheresql[] = "to_account in('".implode("','",$new_friend_friend_arr)."')";
+		$wheresql[] = "to_account in('".implode("','",(array)$new_friend_friend_arr)."')";
 		
 		return $this->_dMsgRequire->getMsgRequireByAddAccount($wheresql);
-	}
+    }
 	
 	
 	public function addMsgRequire($dataarr, $is_return_id = false) {
@@ -48,6 +48,14 @@ class mMsgRequire extends mBase{
 		}
 		
 		return $this->_dMsgRequire->delMsgRequire($msg_id);
+	}
+	
+	public function modifyMsgRequire($datarr,$req_id) {
+	    if(empty($req_id) || empty($datarr)) {
+	        return false;
+	    }
+	    
+	    return $this->_dMsgRequire->modifyMsgRequire($datarr,$req_id);
 	}
 	
 	public function delMsgRequireForMe($to_account) {

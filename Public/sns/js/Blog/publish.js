@@ -269,9 +269,8 @@ $(document).ready(function(){
     setInterval(function() {
     	$('img', $doc).each(function() {
     		var imgObj = $(this);
-    		if(this.width > max_width) {
-    			imgObj.width(max_width).
-    			imgObj.height('');
+    		if(imgObj.width() > max_width) {
+    			imgObj.width(max_width).removeAttr('height');
     		}
     	});
     }, 500);

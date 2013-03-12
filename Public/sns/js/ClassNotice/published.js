@@ -98,47 +98,53 @@ published.prototype.fillNoticeList=function(notice_list) {
 	
 	var client_type = $('#client_type').val();
 	
+	var num = 1;
 	client_type = parseInt(client_type);
 	if(isNaN(client_type) || client_type < 0) {
 		client_type = 0;
 	}
 	for(var i in notice_list) {
 		var notice_info = notice_list[i];
+		var class_name = num % 2==0 ? 'has_release_main02' :'has_release_main01';
+		num++;
 		if(client_type == 0) {
-			me.createStudentDiv(notice_info);
+			me.createStudentDiv(notice_info,class_name);
 		} else if(client_type == 1) {
-			me.createTeacherDiv(notice_info);
+			me.createTeacherDiv(notice_info,class_name);
 		} else if(client_type == 2) {
-			me.createFamilyDiv(notice_info);
+			me.createFamilyDiv(notice_info,class_name);
 		}
 	}
 };
 //动态创建学生相应的div
-published.prototype.createStudentDiv=function(notice_info) {
+published.prototype.createStudentDiv=function(notice_info,class_name) {
 	notice_info = notice_info || {};
 	$('#clone_student').trigger('cloneEvent', [{
 		notice_datas:notice_info,
 		callback:function(divObj) {
+			divObj.addClass(class_name);
 			$('#notice_list_div').append(divObj);
 		}
 	}]);
 };
 //动态创建老师相应的div
-published.prototype.createTeacherDiv=function(notice_info) {
+published.prototype.createTeacherDiv=function(notice_info,class_name) {
 	notice_info = notice_info || {};
 	$('#clone_teacher').trigger('cloneEvent', [{
 		notice_datas:notice_info,
 		callback:function(divObj) {
+			divObj.addClass(class_name);
 			$('#notice_list_div').append(divObj);
 		}
 	}]);
 };
 //动态创建家长相应的div
-published.prototype.createFamilyDiv=function(notice_info) {
+published.prototype.createFamilyDiv=function(notice_info,class_name) {
 	notice_info = notice_info || {};
 	$('#clone_family').trigger('cloneEvent', [{
 		notice_datas:notice_info,
 		callback:function(divObj) {
+			divObj.addClass(class_name);
 			$('#notice_list_div').append(divObj);
 		}
 	}]);

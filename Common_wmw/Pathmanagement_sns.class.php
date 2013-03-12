@@ -167,5 +167,34 @@ class Pathmanagement_sns extends Pathmanagement {
 	    return self::getWebroot() . self::getExcel() . self::$exam_tpl_path;
 	}
     
+	
+	/*
+     * 获取xheditor编辑图片上传的路径 (绝对路径)
+     */
+    public function uploadXheditorimgPathTmp() {
+        return self::getWebroot() . self::getAttachment() . self::$tmp . self::$xheditorimgpath;
+    }
+    
+    /*
+     * 获取xheditor编辑图片的路径 (相对路径)
+     */
+    public function getXheditorimgPathTmp() {
+        return "/" . self::getAttachment() . self::$tmp . self::$xheditorimgpath;
+    }
+    
+    /**
+     * 获取临时文件路径（绝对路径）
+     * 
+     */
+    public function tmpPath() {
+        return self::getWebRoot() . self::$attachment_path . self::$tmp;
+    }
+    
+    /**
+     * 获取临时文件路径 （相对路径 ）
+     */
+    public function getTmpPath() {
+         return '/' . self::$attachment_path . self::$tmp;
+    }
     
 }

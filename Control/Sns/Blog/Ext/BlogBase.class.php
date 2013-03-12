@@ -117,48 +117,60 @@ abstract class BlogBase {
         import('@.Common_wmw.WmwString');
         // html 实体转换成一般的html 代码
         $content = WmwString::unhtmlspecialchars($content);
-        
-        
-        //拼装数据用于图片压缩处理
-/* 对外接口函数:scale($src_img, $dst_files);
- * 参数格式说明: $src_img: 源图片文件完整路径，如:/home/src.jpg
- * 				$dst_files:
- *                         array(
- *                           	array(
- *                        			'path' => '目标图片完整路径,如:/home/test.jpg'
- *                        			'scale' => '图片缩放比列,大于0的正整数'
- *                         		),
- *                         )
- */
+
         //提取日志中的所有图片
-        $HtmlParser = new HtmlParser($content);
-        $temp_list = array();
-        
         import('@.Common_wmw.HtmlParser');
+        $HtmlParser = new HtmlParser($content);
         $img_list = $HtmlParser->getElementsByTagName('img');
+        
+        //提取需要处理的图片并将图片移动到实际文件夹中（1 本地图片, 2 放在临时文件夹中的）
+        import("@.Common_wmw.Pathmanagement_sns");
+        $tmp_path  = Pathmanagement_sns::getXheditorimgPathTmp();    //临时文件夹
+        $new_path = Pathmanagement_sns::getXheditorimgPath();  //绝对路径 真实路径
+        $scale_list = array();
+       
+        import("@.Common_wmw.WmwImage");
+        $scaleObj = new WmwImage();
         if(!empty($img_list)) {
             foreach($img_list as $img) {
                 $ImgParser = HtmlParser::createTagParser('img', $img);
+                $tmp_src = $ImgParser->attr('src');
+                if ((stripos($tmp_src, 'http://') === false) && (stripos($tmp_src, $tmp_path) !== false)) {
+                    $new_src = str_replace($tmp_path, $new_path, $tmp_src);
+                    $old_url = WEB_ROOT_DIR . $tmp_src;
+                    $new_url = WEB_ROOT_DIR . $new_src;
+                    
+                    $scale_list [] = array(
+                                        'path' => $new_url,
+                                        'scale' => 100 
+                                    );
+                                    
+                   $scaleObj->scale($old_url, $scale_list);
+                   $content = str_replace($tmp_src, $new_src, $content); 
+                }
                 
-                $old_url = $ImgParser->attr('src');
-                $new_url = 
-                $temp_list [] = 
-                
-                $img_str = $ImgParser->attr('weight', '60px')->toString();
-                $img_str = $ImgParser->attr('alt', 'hdhhs')->toString();
-                var_dump($ImgParser->attr('src'));
-                
-                dump($img_str);
             }
         }
         
-        exit;
-        
-        //提取需要处理的图片并将图片移动到实际文件夹中（1 本地图片, 2 放在临时文件夹中的）
+        return $content;
         
         //处理图片 按比例缩放图片
+        /* 对外接口函数:scale($src_img, $dst_files);
+         * 参数格式说明: $src_img: 源图片文件完整路径，如:/home/src.jpg
+         * 				$dst_files:
+         *                         array(
+         *                           	array(
+         *                        			'path' => '目标图片完整路径,如:/home/test.jpg'
+         *                        			'scale' => '图片缩放比列,大于0的正整数'
+         *                         		),
+         *                         )
+         */
         if (!empty($max_width) && !empty($scale_arr)) {
-            
+//                $img_str = $ImgParser->attr('weight', '60px')->toString();
+//                $img_str = $ImgParser->attr('alt', 'hdhhs')->toString();
+//                var_dump($ImgParser->attr('src'));
+//                
+//                dump($img_str);
         }
         
         //替换处理后的图片路径

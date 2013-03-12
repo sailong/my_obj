@@ -10,27 +10,25 @@ class mFeedClassRelation extends mBase{
     /**
      * 通过班级id信息获取动态信息
      * @param $class_codes   班级id集合
-     * @param $timeline      最后查询结果的时间点
-     * @param $lastId        最后查询结果的feed_id
+     * @param $lastFeedId        最后查询结果的feed_id
      * @param $limit         
      */
-    public function getFeedByClassCode($class_codes, $timeline = 0, $lastId = 0, $limit = 10) {
+    public function getFeedByClassCode($class_codes, $lastFeedId = 0, $limit = 10) {
         if(empty($class_codes)) {
             return false;
         }
         
-       return $this->getFeedByClassCodeAndType($class_codes, 0, $timeline, $lastId, $limit);
+       return $this->getFeedByClassCodeAndType($class_codes, 0, $lastFeedId, $limit);
     } 
 
     /**
      * 通过班级id和动态类型信息获取动态信息
      * @param $class_codes   班级id集合
      * @param $feed_type     动态类型: 1：说说 2：日志  3：相册 
-     * @param $timeline      最后查询结果的时间点
-     * @param $lastId        最后查询结果的feed_id
+     * @param $lastFeedId        最后查询结果的feed_id
      * @param $limit         
      */
-    public function getFeedByClassCodeAndType($class_codes, $feed_type = 0, $timeline = 0, $lastId = 0, $limit = 10) {
+    public function getFeedByClassCodeAndType($class_codes, $feed_type = 0, $lastFeedId = 0, $limit = 10) {
         if(empty($class_codes)) {
             return false;
         }
@@ -42,15 +40,11 @@ class mFeedClassRelation extends mBase{
             $where_arr[] = " feed_type = $feed_type";
         }
         
-        if ($timeline > 0) {
-            $where_arr[] = " timeline <= $timeline";
+        if($lastFeedId > 0) {
+            $where_arr[] = "feed_id < $lastFeedId";
         }
         
-        if($lastId > 0) {
-            $where_arr[] = "feed_id < $lastId";
-        }
-        
-        return $this->_dFeedClassRelation->getInfo($where_arr, 'timeline, feed_id desc', 0, $limit);
+        return $this->_dFeedClassRelation->getInfo($where_arr, 'feed_id desc', 0, $limit);
     }    
     
     public function addFeedClassRelation($datas, $is_return_id) {

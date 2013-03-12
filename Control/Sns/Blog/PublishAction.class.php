@@ -102,8 +102,9 @@ class PublishAction extends SnsController {
         
         $BlogObj = $this->_initBlogObj($class_code);
         
-        dump($BlogObj->processBlogImage($content));
-        exit;
+        // 处理日志内容 主要是把图片从临时文件夹移动到真实路径
+        $content = $BlogObj->processBlogImage($content);  
+        
         // 提取日志摘要
         $summary = $BlogObj->getSummary($content, $this->summary_len);
               
@@ -331,8 +332,9 @@ class PublishAction extends SnsController {
      */
     public function uploadPath() {
         import("@.Common_wmw.Pathmanagement_sns");
-        $uploadPath = Pathmanagement_sns::uploadXheditor();
-        $showPath = Pathmanagement_sns::getXheditorimgPath();
+        $uploadPath = Pathmanagement_sns::uploadXheditorimgPathTmp();
+        $showPath = Pathmanagement_sns::getXheditorimgPathTmp();
+
         import('@.Control.Api.XheditorApi');
         $uploadobj = new XheditorApi();
         $uploadobj->upload($uploadPath, $showPath);

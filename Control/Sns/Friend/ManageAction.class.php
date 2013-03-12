@@ -477,15 +477,29 @@ class ManageAction extends SnsController{
         $accept_account = $this->objInput->postInt('accept_account');
         $client_account = $this->user['client_account'];
         
-        $dataarr = array(
-            'content' => $content,
-            'to_account' => $accept_account,
-            'add_account' => $client_account,
-            'add_time' => time(),    
-        );
-
         $mMsgRequire = ClsFactory::Create('Model.Message.mMsgRequire');
-        $req_id = $mMsgRequire->addMsgRequire($dataarr,'true');
+        $req_msg_info = $mMsgRequire->getMsgRequireByAddAccount($client_account,$accept_account);
+        
+        if(empty($req_msg_info)) {
+            $dataarr = array(
+                'content' => $content,
+                'to_account' => $accept_account,
+                'add_account' => $client_account,
+                'add_time' => time(),    
+            );
+            $req_id = $mMsgRequire->addMsgRequire($dataarr,'true');
+        } else {
+            $req_id = key($req_msg_info);
+            $dataarr = array(
+                'content' => $content,
+                'to_account' => $accept_account,
+                'add_account' => $client_account,
+                'add_time' => time(),    
+            );
+            
+            $resault = $mMsgRequire->modifyMsgRequire($dataarr,$req_id);
+        }
+        
         $mMsgNoticeList = ClsFactory::Create("RModel.Msg.mStringRequest");
         $mMsgNoticeList->publishMsg($req_id, 'req');
         if(empty($req_id)) {
@@ -610,12 +624,19 @@ class ManageAction extends SnsController{
         $date = strtotime(date('Y-m-d'));
         $dateline = time();  
         
-        $wheresql = array(
+         $wheresql = array(
             'uid = ' . $client_account,
             'timeline <= ' . $dateline, 
         );
+        
         $mPersonVistior = ClsFactory::Create('Model.PersonVistior.mPersonVistior');
         $vistior_list = $mPersonVistior->getPersonVistiorByDate($wheresql);
+        
+        $vistior_account_arr = array_keys($vistior_list);
+        
+        //获取当前登录人的好友信息
+        $client_account_relation_info = $this->getAccountRelationByClientAccount($client_account);
+        dump($client_account_relation_info);die;
         
         if(empty($vistior_list)) {
             $this->ajaxReturn($vistior_list,'获取访客列表成功',1,'json');

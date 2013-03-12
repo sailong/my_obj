@@ -10,7 +10,17 @@ class MailbookAction extends SnsController{
         $class_code = $this->checkoutClassCode($class_code);
         
         $student_infos = $this->getStudentsListByClassCode($class_code);
-        $student_infos = empty($student_infos) ? array() : $student_infos;
+        
+        $client_accounts = array_keys($student_infos);
+        
+        $student_infos = $this->getParentInfosByAccount($client_accounts);
+        
+        foreach($student_infos as $student_account => $val) {
+            if($val[0]['phone_id'] =='' && $val[1]['phone_id'] == '') {
+                unset($student_infos[$student_account]);
+            }
+        }
+        
         $this->assign('student_infos',$student_infos);
         $this->assign('class_code',$class_code);
         $this->display('publish');
@@ -62,7 +72,20 @@ class MailbookAction extends SnsController{
             $client_accounts[] = $val['client_account'];
         }
         
-        $mClientInfo = ClsFactory::Create('Model.mUser');
+        
+        $new_info_arr = $this->getParentInfosByAccount($client_accounts);
+        
+        $this->assign('class_code',$class_code);
+        $this->assign('next',$next);
+        $this->assign('page',$page);
+        $this->assign('new_info_arr',$new_info_arr);
+        $this->display('list');
+    }
+    
+    
+    //根据学生帐号获取父母信息列表
+    private function getParentInfosByAccount($client_accounts) {
+    $mClientInfo = ClsFactory::Create('Model.mUser');
         $student_account_infos = $mClientInfo->getClientAccountById($client_accounts);
         
         
@@ -72,6 +95,7 @@ class MailbookAction extends SnsController{
         foreach($student_account_infos as $account =>$account_info) {
             $new_student_arr[$account] = array_merge($account_info,$student_info[$account]);
         }
+        
         
         //依据学生帐号获取家长信息
         $mFamilyRelation = ClsFactory::Create('Model.mFamilyRelation');
@@ -100,6 +124,7 @@ class MailbookAction extends SnsController{
             $new_parents_arr[$account]['phone_id'] = $parents_phone[$account]['account_phone_id2'];
         }
         
+        
         $new_info_arr = array();
         foreach($new_student_arr as $account=>$val) {
             foreach($family_links[$account] as $family_account) {
@@ -118,15 +143,8 @@ class MailbookAction extends SnsController{
             $new_info_arr[$account] = $val;
         }
         
-        $new_info_arr = empty($new_info_arr) ? array() : $new_info_arr;
-        $this->assign('class_code',$class_code);
-        $this->assign('next',$next);
-        $this->assign('page',$page);
-        $this->assign('new_info_arr',$new_info_arr);
-        $this->display('list');
+        return !empty($new_info_arr) ? $new_info_arr : array();
     }
-    
-    
     
     /**
     * 通讯录群发短信

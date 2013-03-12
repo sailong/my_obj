@@ -22,7 +22,7 @@
 	
 	.publish_main_right{width:188px; float:left;background:#eef6e0; padding:10px;}
 		.publish_main_right h3{font:bold 15px/25px "微软雅黑";}
-		.publish_main_right span{display:inline-block; width:72px; text-align:right; font:bold 13px/22px "宋体"}
+		.publish_main_right span{display:inline-block; width:72px; font:bold 13px/22px "宋体"}
 			.publish_main_right span a{color:#464646;}
 			.publish_main_right span a:hover{color:#3a8a00;}
 
@@ -35,7 +35,8 @@
 
 			
 		.photo_name{width:188px;}
-			.photo_name table th{width:60px;font:12px "宋体"; text-align:left;}
+			.photo_name table th{width:60px;font:12px/24px "宋体"; text-align:left;}
+
 			.text{width:180px; height:22px; border:1px #ccc solid; line-height:22px; padding-left:4px; float:left;}
 			.green_btn{background:url(../../images/Album/class_photo_show/green_btn.gif) 0 0 no-repeat; width:57px; height:24px; color:#fff;border:none;cursor:pointer; float:left;margin-top:10px;}
 			.gray_btn{background:url(../../images/Album/class_photo_show/qx_btn.gif) 0 0 no-repeat; width:57px; height:24px; border:none;cursor:pointer;color:#73797c;float:left; margin-top:10px; margin-left:10px;}

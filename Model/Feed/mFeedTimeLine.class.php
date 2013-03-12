@@ -10,27 +10,25 @@ class mFeedTimeLine extends mBase{
     /**
      * 通过我们网帐号信息获取动态信息
      * @param $uids   		  帐号id集合
-     * @param $timeline      最后查询结果的时间点
-     * @param $lastId        最后查询结果的feed_id
+     * @param $lastFeedId        最后查询结果的feed_id
      * @param $limit         
      */
-    public function getFeedByUids($uids, $timeline = 0, $lastId = 0, $limit = 10) {
+    public function getFeedByUids($uids, $lastFeedId = 0, $limit = 10) {
         if(empty($uids)) {
             return false;
         }
         
-       return $this->getFeedByUidsAndType($uids, 0, $timeline, $lastId, $limit);
+       return $this->getFeedByUidsAndType($uids, 0, $lastFeedId, $limit);
     } 
 
     /**
      * 通过我们网帐号和动态类型信息获取动态信息
      * @param $uids   		  帐号id集合
      * @param $feed_type     动态类型: 1：说说 2：日志  3：相册 
-     * @param $timeline      最后查询结果的时间点
-     * @param $lastId        最后查询结果的feed_id
+     * @param $lastFeedId        最后查询结果的feed_id
      * @param $limit         
      */
-    public function getFeedByUidsAndType($uids, $feed_type = 0, $timeline = 0, $lastId = 0, $limit = 10) {
+    public function getFeedByUidsAndType($uids, $feed_type = 0, $lastFeedId = 0, $limit = 10) {
         if(empty($uids)) {
             return false;
         }
@@ -46,11 +44,11 @@ class mFeedTimeLine extends mBase{
             $where_arr[] = " timeline <= $timeline";
         }
         
-        if($lastId > 0) {
-            $where_arr[] = "feed_id < $lastId";
+        if($lastFeedId > 0) {
+            $where_arr[] = "feed_id < $lastFeedId";
         }
         
-        return $this->_dFeedTimeLine->getInfo($where_arr, 'timeline, feed_id desc', 0, $limit);
+        return $this->_dFeedTimeLine->getInfo($where_arr, 'feed_id desc', 0, $limit);
     }  
 
     public function addTimeLine($datas, $is_return_id) {
@@ -84,8 +82,7 @@ class mFeedTimeLine extends mBase{
         
         return $this->delTimeline($id);
     }    
-    
-    
+
     public function modifyTimeline($datas, $id) {
         if(empty($datas) || !is_array($datas) || empty($id)) {
             return false;
@@ -112,7 +109,6 @@ class mFeedTimeLine extends mBase{
         return $this->modifyTimeline($datas, $id);
     }   
 
-    
     /**
      * 通过我们网帐号和动态类型信息获取动态信息
      * @param $uids   		  帐号id集合
@@ -128,7 +124,6 @@ class mFeedTimeLine extends mBase{
 
         $where_arr[] = " feed_id = $feed_id";
 
-        return $this->_dFeedTimeLine->getInfo($where_arr, 'timeline desc', 0, 1);
-    }     
-    
+        return $this->_dFeedTimeLine->getInfo($where_arr, 'feed_id desc', 0, 1);
+    }
 }

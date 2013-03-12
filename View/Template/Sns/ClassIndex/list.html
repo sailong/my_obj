@@ -28,7 +28,7 @@
      <div class="publish_main">
        <!--list_main star-->
        {foreach from=$new_info_arr item=new_info name=loop}
-       <div class="list_main list_main_bg02 {if $smarty.foreach.loop.iteration % 2 !== 0}list_main_bg01{/if}" >
+       <div class="list_main {if $smarty.foreach.loop.iteration % 2 !== 0}list_main_bg01{else}list_main_bg02{/if}" >
          <dl>
           <dt><img src="{if $new_info.client_headimg}{$new_info.client_headimg_img}{else}{$smarty.const.IMG_SERVER}__PUBLIC__/images/head_pic.jpg{/if}"></dt>
           <dd class="client_name_selector">{$new_info.client_name}</dd>

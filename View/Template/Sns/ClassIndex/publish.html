@@ -55,7 +55,10 @@
                   <tr id="tr_{$studentinfo.client_account}">
                     <td class="td_check"><input class="checked_selector" type="checkbox" name="student_check"></td>
                     <td class="td_img"><img src="{if $studentinfo.client_headimg}{$studentinfo.client_headimg}{else}{$smarty.const.IMG_SERVER}__PUBLIC__/images/head_pic.jpg{/if}"></td>
-                    <td class="client_name_selector">{$studentinfo.client_name}</td>
+                    <td class="client_name_selector">{$studentinfo.client_name}
+                    <input type="hidden" value="{$studentinfo[0].phone_id}" id="father_phone_id"/>
+                    <input type="hidden" value="{$studentinfo[1].phone_id}" id="mother_phone_id"/>
+                    </td>
                   </tr>
                 {/foreach}
                 </table>
@@ -72,7 +75,7 @@
            </div>
          </div>
          <div id="accept_list_div" class="multi_main_right">
-           <h3>发送到对象</h3>
+           <h3>发送到家长手机</h3>
            <div class="multi_cen_main">
              <div class="multi_cenright_tab">
              <table id="accept_list_tab" width="100%" border="0" cellspacing="0" cellpadding="0">

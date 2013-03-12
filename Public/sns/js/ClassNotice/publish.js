@@ -114,6 +114,7 @@ Publish.prototype.attachEventForIframe=function() {
 	if($.isEmptyObject(ifr)) {
 		return false;
 	}
+	
 	//键盘的press事件负责内容超过时的提示
 	$(ifr.contentWindow.document).keypress(function(evt) {
 		var content = tripTag(me.editor.getSource());

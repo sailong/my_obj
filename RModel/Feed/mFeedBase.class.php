@@ -15,64 +15,60 @@ abstract class mFeedBase {
      * 4. redis_key 存在，并且已达到最大值，从数据库获取，数据库无数据，则返回空数组，空数组代表已结束. 
      * 
      * @param $id
-     * @param $offset
+     * @param $lastFeedId    
      * @param $limit
      * 
      * return array(
      * 		relation_id=>feed_id
      * )
      */
-    public function getFeedById($id, $timeline = 0, $lastId = 0, $limit = 10) {
+    public function getFeedById($id, $lastFeedId = 0, $limit = 10) {
         if(empty($id)) {
             return false;
         }
-        
-        if (empty($lastId)) $lastId = 0;
+
+        if (empty($lastFeedId)) $lastFeedId = 0;
         if (empty($limit)) $limit = 10;
         
-        $datas_from_redis = $this->_rdata->zGetRange($id, $lastId, $limit);
+        $datas_from_redis = $this->_rdata->zGetRange($id, $lastFeedId, $limit);
 
         if (empty($datas_from_redis)) {
             // 如果为空有两种情况:
-            $datas_from_db = $this->loader($id, $timeline, $lastId, $limit);
+            $datas_from_db = $this->loader($id, $lastFeedId, $limit);
             
             if (empty($datas_from_db)) return false;
             
             $is_exist = $this->_rdata->isExist($id);
+            $is_maxsize = $this->_rdata->isMaxSize($id);
             
-            if (!$is_exist) {
-                
-               //一种是key不存在，                         从数据库读取，并插入redis_key中
+            //一种是key不存在，                         从数据库读取，并插入redis_key中
+            //一种是未达到redis最大值，写入数据库.
+
+            if (!$is_exist || !is_maxsize) {                
                $this->setFeeds($id, $datas_from_db);
-               
-               return $this->getFeedById($id, $lastId, $limit);
-            } else {
-                
-               //一种是偏移量已经达到最大值,从数据库读取, 不插入redis_key中             
-               return $datas_from_db;
             }
+
+            return $datas_from_db;
         } 
         
         if (!empty($datas_from_redis)) {
         
             // 如果不为空，也分两种情况
-            
             $size = count($datas_from_redis);
             //一种是获取的数据达到limit个数，直接返回
             if ($size >= $limit) return $datas_from_redis;
             
-            //一种是获取的数据未达到limit个数，需要从数据库中获取补全.还有判断是否已达到最大值,来决定是否插入redis_key中.
+            //一种是获取的数据未达到limit个数，需要从数据库中获取补全.
             if ($size < $limit) {
 
-                  $lastId = end($datas_from_redis);
+                  $lastFeedId = end($datas_from_redis);
                   $limit = $limit - $size;
                   
-                  $datas_from_db = $this->loader($id, $lastId, $limit);
+                  $datas_from_db = $this->loader($id, $lastFeedId, $limit);
                   
                   if (!empty($datas_from_db)) {
                       foreach ($datas_from_db as $item) {
-                          $datas_from_redis["feed_id"][$item['id']] = $item['value'];
-                          $datas_from_redis["timeline"][$item['id'].$item['value']] = $item["timeline"];
+                          $datas_from_redis[]= $item;
                       }
                   }          
                   
@@ -150,5 +146,5 @@ abstract class mFeedBase {
      * 加载班级动态信息
      * @param $id
      */
-    abstract protected function loader($id, $timeline = 0, $lastId = 0, $limit = 10);
+    abstract protected function loader($id, $lastFeedId = 0, $limit = 10);
 }

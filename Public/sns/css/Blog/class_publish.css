@@ -17,7 +17,7 @@
 			.letter_paper .align_right a{color:#464646;}
 			.letter_paper .align_right a:hover{color:#3a8a00;}
 	.blog_title_text{padding:10px;text-align:center;}
-		.bt_text{width:650px; height:36px; border:1px #ccc solid; line-height:36px; padding-left:2px; color:#464646; font:bold 20px "微软雅黑";text-align:center;}		
+		.bt_text{text-align:center; width:650px; height:36px; border:1px #ccc solid; padding-left:2px; color:#464646; font:bold 20px/36px "微软雅黑";}		
 			
 	.edit_device{margin:0px 10px 10px 10px; }	
 	
