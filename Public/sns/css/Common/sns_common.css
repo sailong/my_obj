@@ -13,6 +13,7 @@ a[title]{text-decoration:none;}
 .f13{font:13px "宋体";}
 .f14{font:14px "微软雅黑";}
 .f16{font:16px "微软雅黑";}
+.f12_header{font:12px "宋体";}
 
 /*字体颜色*/
 .f_orange{color:#ff6600;}
@@ -30,13 +31,17 @@ a[title]{text-decoration:none;}
 		  .tip_main p a span:hover{text-decoration:underline;}
 	  .icon_01{background:url(../../images/Common/sns_images/triangle_green.gif) 0 0 no-repeat; width:9px; height:5px; display:inline-block; margin:4px 0px 0px 4px; float:left;}
 
-	  .bjgl{ margin-left:50px; color:#2b6800; font:bold 14px/32px "宋体"; text-decoration:underline; }
+	 .tip_main a.bjgl{ margin-left:50px; color:#2b6800; font:bold 14px/32px "宋体"; text-decoration:none; }
+
+/*上下箭头*/
+.icon_down{background:url(../../images/Common/sns_images/triangle_green.gif) 0 center no-repeat; width:9px; height:10px; display:inline-block; margin:2px 0px 0px 4px; }
+.icon_up{background:url(../../images/Common/sns_images/up_sjx_green.gif) 0 center no-repeat; width:9px; height:10px; display:inline-block; margin:2px 0px 0px 4px; }
+
 
 /*主要内容*/
 .content{background:url(../../images/Common/sns_images/cotent_bj.gif) 0 0 repeat; overflow:hidden; o}
 
 .main{width:960px; margin:0 auto; padding:26px 0px 0px; margin-bottom:20px;}
-
 /*导航样式*/
 .nav{ background:url(../../images/Common/sns_images/nav_bj.jpg) 0 0 no-repeat; height:56px; padding:0px 0px 0px 34px;}
 	.nav ul li{float:left;}

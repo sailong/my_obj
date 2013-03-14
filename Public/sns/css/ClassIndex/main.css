@@ -20,11 +20,12 @@
 	.active_member_title{height:30px;}
 		.active_member_title h3{float:left; font:16px "微软雅黑"; height:30px; width:110px;}
 		.active_member_title p{float:left; height:30px; color:#288c00;}
-		.p_width{width:590px;}
+		.p_width{width:590px;cursor:pointer;}
 		.icon_dsjx{background:url(../../images/Common/sns_images/triangle_green.gif) 0 0 no-repeat;width:9px;height:5px;display:inline-block;overflow:hidden;margin:0px 4px 2px;_margin-bottom:6px;}
 		.icon_upsjx{ background:url(../../images/Common/sns_images/up_sjx_green.gif) 0 0 no-repeat;width:9px;height:5px;display:inline-block;overflow:hidden;margin:0px 4px 2px;_margin-bottom:6px;}
+		.active_member_title p.pr10{float:right;padding-right:5px;}
 		.active_member_title p a{color:#288c00; font:18px "微软雅黑";}
-		.pr10{padding-right:10px;}	
+		.active_member_title p.pr10 a{text-decoration:none; }	
 	
 	.class_people{}
 		.class_people_small p{height:60px;}

@@ -1,11 +1,4 @@
 (function($) {
-	$.showError = function(msg) {
-		alert(msg);
-	};
-	$.showSuccess = function(msg) {
-		alert(msg);
-	};
-	
 	//简单的模板渲染
 	$.fn.simpleRender=function(datas) {
 		datas = datas || {};
@@ -290,11 +283,16 @@ sendBox.prototype = {
 		var cssHref = sendBoxRoot + "/skins/" + skin + ".css";
 		//加载样式文件
 		if($('link[href*="' + cssHref + '"]').length == 0) {
-			$('<link></link>').attr({
-				rel:'stylesheet',
-				href:cssHref,
-				type:'text/css'
-			}).appendTo($('head'));
+			//IE浏览器下的Css文件的动态加载问题
+			if(document.createStyleSheet) {
+				document.createStyleSheet(cssHref);
+			} else {
+				$('<link></link>').attr({
+					rel:'stylesheet',
+					href:cssHref,
+					type:'text/css'
+				}).appendTo($('head'));
+			}
 		}
 	},
 	

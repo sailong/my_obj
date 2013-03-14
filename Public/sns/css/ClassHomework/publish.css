@@ -10,7 +10,7 @@
 	.publish_main table th{text-align:right; font-weight:normal; width:90px; height:36px;}
 	.publish_main .pr20{padding-right:20px;}
 	.publish_main p{line-height:22px;}
-	.align{text-align:right;}
+	.align{text-align:left;}
 	
 	.work_receive{border:1px #ccc solid; margin-top:10px; padding:10px;}
 		.work_receive h3{font:14px "微软雅黑"; float:left;}

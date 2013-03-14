@@ -63,12 +63,6 @@ student_list.prototype.attachEvent=function() {
 			}
 		}]);
 	});
-	//下载Excel文件按钮
-	$('#down_excel_a').click(function() {
-		var class_code = $('#class_code').val();
-		$.downFile('/Sns/ClassAdmin/StudentList/importStudentsExcel/class_code/' + class_code);
-		return false;
-	});
 };
 
 //获取tr的数据信息

@@ -38,8 +38,12 @@
 /*弹出层*/	
 .urse_tcc{}	
 	.urse_tcc ul{background:#5eac25; border:#999 solid 2px;background-color:RGB(214,231,215);}
-	.urse_tcc ul li a{display:block; color:#fff; padding:8px 8px;  text-align:center; margin-bottom:1px;font:bold 12px "微软雅黑";color:#2b6800;}
-	.urse_tcc ul li a:hover{background:#2b6800;color:white;}		
+	.urse_tcc ul li a{display:block; color:#fff; padding:8px 42px 8px 8px;  text-align:center; margin-bottom:1px;font:bold 12px "微软雅黑";color:#2b6800;}
+	.urse_tcc ul li a:hover{background:#2b6800;color:white;}
+.urse_tcc_02{}	
+	.urse_tcc_02 ul{background:#5eac25; border:#999 solid 2px;background-color:RGB(214,231,215);}
+	.urse_tcc_02 ul li a{display:block; color:#fff; padding:8px 5px 8px 8px;  text-align:center; margin-bottom:1px;font:bold 12px "微软雅黑";color:#2b6800;}
+	.urse_tcc_02 ul li a:hover{background:#2b6800;color:white;}
 	
 .info_tcc{width:120px;}
 	.info_tcc ul li a{text-align:left; padding-left:10px; }	

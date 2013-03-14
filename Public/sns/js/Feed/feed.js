@@ -17,6 +17,14 @@
 	};
 })(jQuery);
 
+
+function dump(obj) {
+	for(var i in obj)
+		alert(i + "=>" + obj[i]);
+
+}
+
+
 function feed(options, elem) {
 	this.init(options, elem);
 	this.loadFeed(1);
@@ -175,9 +183,27 @@ $.fn.loadFeed=function(settings) {
 var feed_unit = {
 	//创建feed_unit对象
 	create:function(feed_datas) {
-		var divObj = $('#feed_unit').clone().removeAttr('id').show();
+		var divObj,
+			feed_type = feed_datas.feed_type || 1;
+		
+		//根据feed类型创建不同的对象
+		switch(feed_type) {
+			case 1:
+				divObj = $('#feed_unit_mood').clone().removeAttr('id').show();
+				break;
+			case 2:
+				divObj = $('#feed_unit_blog').clone().removeAttr('id').show();
+				break;
+			case 3:
+				divObj = $('#feed_unit_album').clone().removeAttr('id').show();
+				break;
+			default:
+				divObj = $('#feed_unit_mood').clone().removeAttr('id').show();
+				break;
+		}
+		
 		divObj.renderHtml({
-			feed:feed_datas
+			feed:feed_datas || {}
 		});
 		return divObj;
 	},
@@ -198,13 +224,6 @@ var feed_unit = {
 					ancestorObj.remove();
 				}
 			}]);
-		});
-		
-		//分享按钮
-		$('.feed_share_selector').live('click', function() {
-			var ancestorObj = $(this).parents('.feed_unit_selector:first');
-			var datas = ancestorObj.data('datas') || {};
-			var feed_id = datas.feed_id;
 		});
 		
 		//评论按钮, 点击有切换的效果

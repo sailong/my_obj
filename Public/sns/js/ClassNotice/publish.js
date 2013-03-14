@@ -30,7 +30,10 @@ function Publish() {
 	this.attachEvent();
 	this.attachEventForPreviewDiv();
 	this.attachEventUserDefine();
-	this.attachEventForIframe();
+};
+
+Publish.prototype.getEditor=function() {
+	return this.editor;
 };
 
 Publish.prototype.attachEventUserDefine=function() {
@@ -107,35 +110,6 @@ Publish.prototype.attachEventForPreviewDiv=function() {
 		return false;
 	});
 };
-//绑定iframe内部元素的相关事件
-Publish.prototype.attachEventForIframe=function() {
-	var me = this;
-	var ifr = $('#xhe0_iframe')[0];
-	if($.isEmptyObject(ifr)) {
-		return false;
-	}
-	
-	//键盘的press事件负责内容超过时的提示
-	$(ifr.contentWindow.document).keypress(function(evt) {
-		var content = tripTag(me.editor.getSource());
-		if(content.length >= 180) {
-			var keyCode = evt.keyCode || evt.which;
-			//字符超过限制后只有Backspace键能够按
-			if(keyCode != 8) {
-				$.showError('公告内容不能超过180字!');
-				return false;
-			}
-		}
-	}).focus(function() {
-		//实时更新字符数统计
-		contentInterval = setInterval(function() {
-			var content = tripTag(me.editor.getSource());
-			$('#content_counter').html(180 - content.length);
-		}, 100);
-	}).blur(function() {
-		clearInterval(contentInterval);
-	});
-};
 
 Publish.prototype.validator=function() {
 	var formContext = $('form:first');
@@ -157,5 +131,32 @@ Publish.prototype.validator=function() {
 };
 
 $(document).ready(function() {
-	new Publish();
+	var pub = new Publish();
+	var editor = pub.getEditor();
+	
+	var ifr = $('#xhe0_iframe')[0];
+	$(ifr.contentWindow.document).ready(function() {
+		//键盘的press事件负责内容超过时的提示
+		$(ifr.contentWindow.document).keypress(function(evt) {
+			var content = tripTag(editor.getSource());
+			if(content.length >= 180) {
+				var keyCode = evt.keyCode || evt.which;
+				//字符超过限制后只有Backspace键能够按
+				if(keyCode != 8) {
+					$.showError('公告内容不能超过180字!');
+					return false;
+				}
+			} else {
+				var content = tripTag(editor.getSource());
+				$('#content_counter').html(180 - content.length);
+				return true;
+			}
+		});
+		
+		//实时更新字符数统计
+		setInterval(function() {
+			var content = tripTag(editor.getSource());
+			$('#content_counter').html(180 - content.length);
+		}, 200);
+	});
 });

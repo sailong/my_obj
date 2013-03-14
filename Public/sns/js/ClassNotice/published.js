@@ -105,7 +105,7 @@ published.prototype.fillNoticeList=function(notice_list) {
 	}
 	for(var i in notice_list) {
 		var notice_info = notice_list[i];
-		var class_name = num % 2==0 ? 'has_release_main02' :'has_release_main01';
+		var class_name = num % 2==0 ? 'has_release_main01' :'has_release_main02';
 		num++;
 		if(client_type == 0) {
 			me.createStudentDiv(notice_info,class_name);
