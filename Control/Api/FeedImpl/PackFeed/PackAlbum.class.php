@@ -25,20 +25,20 @@ class PackAlbum implements IPack {
             return false;
         }
         
-        import("@.Comment_wmw.Pathmanagement_sns");
         $mAlbumPhotos = ClsFactory::Create("Model.Album.mAlbumPhotos");
         $photo_info = $mAlbumPhotos->getPhotosByPhotoId($photo_id);
         
         if(empty($photo_info)) return false;
         
         $photo_info = $photo_info[$photo_id];
-        
+        import("@.Common_wmw.Pathmanagement_sns");
         $feed_datas = array(
             'feed_type'     => FEED_ALBUM,
             'add_account'   => $photo_info['add_account'],
-            'timeline'		=> $photo_info['add_time'],
+            'timeline'		=> time(),
             'feed_content'  => null,
             'img_url'		=> Pathmanagement_sns::getAlbum($photo_info['add_account']) . $photo_info['file_middle'],
+            'from_id'       => $photo_id,
         );
         
         return $feed_datas;

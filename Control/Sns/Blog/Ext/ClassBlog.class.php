@@ -1,5 +1,4 @@
 <?php
-
 import('@.Control.Sns.Blog.Ext.BlogBase');
 class ClassBlog extends BlogBase {
     private $class_code = 0;
@@ -35,7 +34,7 @@ class ClassBlog extends BlogBase {
      * @param $blog_ids
      *  注明：最多返回20 篇日志
      */
-    public function getBlogInfoById($blog_ids) {
+    public function getBlogInfoById($blog_ids, $offset = 0, $limit = 20) {
         if(empty($blog_ids)) {
             return false;
         }
@@ -45,7 +44,7 @@ class ClassBlog extends BlogBase {
             "blog_id in($in_str)"
         );
         $mBlogClassRelation = ClsFactory::Create('Model.Blog.mBlogClassRelation');
-        $blog_list = $mBlogClassRelation->getClassBlogByClassCode($this->class_code, $where_arr, null, 0, 20);
+        $blog_list = $mBlogClassRelation->getClassBlogByClassCode($this->class_code, $where_arr, null, $offset, $limit);
         $blog_list = & $blog_list[$this->class_code];
         $blog_ids = array_keys($blog_list);
 
@@ -123,16 +122,16 @@ class ClassBlog extends BlogBase {
         }
 
         //权限表的数据保存
-        $blog_person_grants_datas = $this->extractBlogGrant($blog_datas);
-        $mBlogPersonGrants = ClsFactory::Create('Model.Blog.mBlogClassGrants');
-        if(!$mBlogPersonGrants->addGrant($blog_person_grants_datas)) {
+        $blog_class_grants_datas = $this->extractBlogGrant($blog_datas);
+        $mBlogClassGrants = ClsFactory::Create('Model.Blog.mBlogClassGrants');
+        if(!$mBlogClassGrants->addBlogClassGrants($blog_class_grants_datas)) {
             return false;
         }
         
         //班级和日志的关系表
-        $blog_person_relation_datas = $this->extractBlogRelation($blog_datas);
-        $mBlogPersonRelation = ClsFactory::Create('Model.Blog.mBlogClassRelation');
-        if(!$mBlogPersonRelation->addBlogClassRelation($blog_person_relation_datas, true)) {
+        $blog_class_relation_datas = $this->extractBlogRelation($blog_datas);
+        $mBlogClassRelation = ClsFactory::Create('Model.Blog.mBlogClassRelation');
+        if(!$mBlogClassRelation->addBlogClassRelation($blog_class_relation_datas, true)) {
             return false;
         }
 
@@ -194,16 +193,16 @@ class ClassBlog extends BlogBase {
         $mBlogClassGrants = ClsFactory::Create('Model.Blog.mBlogClassGrants');
         $grants_del = $mBlogClassGrants->delGrantByBlogId($blog_id);
 
-        //删除日志详细信息表
-        $mBlog = ClsFactory::Create('Model.Blog.mBlog');
-        $blog_del = $mBlog->delByBlogId($blog_id);
-        if (empty($blog_del)) {
-            return false;
-        }
-        
         //删除班级和日志的关系表
         $mBlogPersonRelation = ClsFactory::Create('Model.Blog.mBlogClassRelation');
         if(!$mBlogPersonRelation->delBlogClassRelationByBlogId($blog_id)) {
+            return false;
+        }
+        
+        //删除日志详细信息表
+        $mBlog = ClsFactory::Create('Model.Blog.mBlog');
+        $blog_del = $mBlog->delBlog($blog_id);
+        if (empty($blog_del)) {
             return false;
         }
 
@@ -223,7 +222,7 @@ class ClassBlog extends BlogBase {
         }
         
         $mBlogTypeClassRelation = ClsFactory::Create('Model.Blog.mBlogClassType');
-        $class_type_list = $mBlogTypeClassRelation->getListByClassCode($this->class_code);
+        $class_type_list = $mBlogTypeClassRelation->getBlogClassTypeByClassCode($this->class_code);
         $class_type_list = & $class_type_list[$this->class_code];
         if (!empty($class_type_list)) {
             foreach ($class_type_list as $key=>$type_relation) {
@@ -268,7 +267,7 @@ class ClassBlog extends BlogBase {
         //保存关系表
         $blog_type_relation_datas = $this->extractBlogTypeRelation($type_datas);
         $mBlogClassType = ClsFactory::Create('Model.Blog.mBlogClassType');
-        $is_succeed = $mBlogClassType->addBlogTypesClassRelation($blog_type_relation_datas);
+        $is_succeed = $mBlogClassType->addBlogClassType($blog_type_relation_datas);
         if (empty($is_succeed)) {
             return false;
         }
@@ -314,7 +313,7 @@ class ClassBlog extends BlogBase {
 
         //删除日志分类与班级关系表
         $mBlogClassType = ClsFactory::Create('Model.Blog.mBlogClassType');
-        $class_type_relations = $mBlogClassType->getListByTypeId($type_id);
+        $class_type_relations = $mBlogClassType->getBlogClassTypeByTypeId($type_id);
         $class_type_relations = $class_type_relations[$type_id];
         if (!empty($class_type_relations)) {
             $relation_ids = array_keys($class_type_relations);

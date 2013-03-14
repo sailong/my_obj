@@ -38,7 +38,7 @@ class mFeedVm {
         $mZsetClassAlbum = ClsFactory::Create("RModel.Feed.mZsetClassAlbum");
         
         $feed_id_list = $mZsetClassAlbum->getFeedById($class_code, $lastId, $limit);
-        
+
         return $this->getFeed($feed_id_list);
     }
     
@@ -140,19 +140,17 @@ class mFeedVm {
     /**
      * 获取feed内容并且添加relation_id
      * @param array $feed_id  array(
-     * 			'feed_id' => array('id' => feed_id),
-     * 			'timeline' => array('id.feed_id' => timeline)
-     * 		  )
+     * 								'feed_id' => array('id' => feed_id),
+     * 								'timeline' => array('id.feed_id' => timeline)
+     * 							)
      */
     
     private function getFeed($feed_ids) {
         if(empty($feed_ids)) {
             return false;
         }
-        
         $mFeed = ClsFactory::Create("Model.Feed.mFeed");
         $feed_list = $mFeed->getFeedByid($feed_ids);
-        
         return $feed_list;
     }
     

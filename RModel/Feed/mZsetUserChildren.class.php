@@ -31,7 +31,7 @@ class mZsetUserChildren extends mFeedBase {
         foreach ($datas_from_db as $key => $val) {
             $result[] = array(
             	'value' => $val['feed_id'],
-                'score' => $val['timeline']
+                'score' => $val['feed_id']
             );
         }
         

@@ -6,32 +6,9 @@ class mBlogClassGrants extends mBase {
         $this->_dBlogClassGrants = ClsFactory::Create('Data.Blog.dBlogClassGrants');
     }
     
-    //根据班级日志权限ID获取信息列表          
-    public function getById($ids) {
-        return $this->_dBlogClassGrants->getById($ids);
-    }
-    //根据class_code获取信息列表
-    public function getListByClassCode($class_code) {
-        //三维
-        return $this->_dBlogClassGrants->getListByClassCode($class_code);
-    }
-    //根据blog_id获取信息列表
-    public function getListByBlogId($blog_id, $class_code) {
-        //二维
-        $grantInfo = $this->_dBlogClassGrants->getListByBlogId($blog_id, $class_code);
-        if(empty($grantInfo)) {
-            return false;
-        }
-        $grant_arr = array();
-        foreach($grantInfo as $key=>$val) {
-            $grant_arr[$val['blog_id']] = $val;
-            unset($key);
-        }
-        return $grant_arr;
-    }
     //添加班级日志权限
-    public function addGrant($data, $is_return_id) {
-        return $this->_dBlogClassGrants->addGrant($data, $is_return_id);
+    public function addBlogClassGrants($data, $is_return_id) {
+        return $this->_dBlogClassGrants->addBlogClassGrants($data, $is_return_id);
     }
     
     //根据权限ID修改信息
@@ -40,18 +17,10 @@ class mBlogClassGrants extends mBase {
     }
     
     //根据权限ID删除信息
-    public function delById($id) {
-        return $this->_dBlogClassGrants->delById($id);   
+    public function delBlogClassGrants($id) {
+        return $this->_dBlogClassGrants->delBlogClassGrants($id);   
     }
     
-    //根据class_code批量删除信息
-    public function delAllByClassCode($class_code) {
-        if(empty($class_code)) {
-            return false;
-        }
-        
-        return $this->_dBlogClassGrants->delAllByClassCode($class_code);
-    }
     //根据blog_id删除信息
     public function delGrantByBlogId($blog_id) {
         if(empty($blog_id)) {
@@ -71,7 +40,6 @@ class mBlogClassGrants extends mBase {
         
         return $this->_dBlogClassGrants->modifyBlogClassGrantByWhere($data, $where_arr);
     }
-    
 
     /**
      * 根据where 条件获取班级日志权限列表

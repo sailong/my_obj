@@ -17,7 +17,7 @@ class generate extends BackGroundController{
         */
         
         $m = ClsFactory::Create("Model.Blog.mBlog");
-        $blog_data = $m->getByBlogId($id);
+        $blog_data = $m->getBlogById($id);
         
         print_r($blog_data);
         $log[] = "Success";

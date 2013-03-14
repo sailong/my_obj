@@ -21,7 +21,7 @@ function sendCommentBox(sendOptions){
 		//表单的提交类型，建议使用post的方式，支持(get, post)
 		type:'post',
 		//表单提交到的位置
-		url:'/Api/Album/addCommentByClass',
+		url:'/Api/Album/addCommentByPerson',
 		//数据返回格式，支持：json,html等数据格式，于success回调函数的数据格式保持一致
 		data:paramData,
 		dataType:'json',
@@ -47,7 +47,6 @@ function sendCommentBox(sendOptions){
 function class_show(){
 	this.login_account = $("#login_account").val();
 	this.client_account = $("#client_account").val();
-	this.class_code = $("#class_code").val();
 	this.album_id = $("#album_id").val();
 	this.is_edit = $("#is_edit").val();
 	this.img_server = $("#img_server").val();
@@ -84,44 +83,17 @@ class_show.delComment=function(obj) {
 	$.ajax({
 		type:"get",
 		dataType:"json",
-		url:"/Api/Album/delPhotoCommentByClass/comment_id/"+comment_id,
+		url:"/Api/Album/delPhotoCommentByPerson/comment_id/"+comment_id,
 		success:function(json) {
 			if(json.status < 0) {
 				$.showError('操作失败');
 				return false;
 			}
 			delObj.remove();
-			class_show.delPhotoCommentCount(json.data || 0,obj.photo_id || {});
 			$.showSuccess('删除成功');
 		}	
 	});
 };
-//添加评论数
-class_show.addCommentCount=function(photo_id) {
-	photo_id = photo_id || {};
-	$.ajax({
-		type:"get",
-		dataType:"json",
-		url:"/Api/Album/addPhotoCommentCount/photo_id/"+photo_id,
-		success:function(json) {
-			return true;
-		}
-	});
-};
-//删除评论数
-class_show.delPhotoCommentCount=function(count, photo_id) {
-	count = count || {};
-	photo_id = photo_id || {};
-	$.ajax({
-		type:"get",
-		dataType:"json",
-		url:"/Api/Album/minusPhotoCommentCountByPhotoId/photo_id/"+photo_id+"/count/"+count,
-		success:function(json) {
-			return true;
-		}
-	});
-}
-
 
 class_show.prototype = {
 	delegateEvent:function() {
@@ -158,7 +130,7 @@ class_show.prototype = {
 						textareaObj:$("#photo_comments"),
 						up_id:up_id,
 						photo_id:photo_id,
-						class_code:me.class_code || {},
+						client_account:me.client_account || {},
 						login_account:me.login_account || {},
 						callback:function(json){
 							if(json.status < 0){
@@ -166,8 +138,6 @@ class_show.prototype = {
 							}
 							//添加一条评论
 							var comment_info = json.data;
-							//添加评论记录数
-							class_show.addCommentCount(comment_info.photo_id);
 							var user_info = {
 									client_name:$("#client_name").val(),
 									client_head_img:$("#head_img").val()
@@ -192,7 +162,7 @@ class_show.prototype = {
 		var is_success = true;
 		$.ajax({
 			type:'get',
-			url:"/Api/Album/getPhotoCommentListByClass/up_id/"+up_id+"/page/"+page,
+			url:"/Api/Album/getPhotoCommentListByPerson/up_id/"+up_id+"/page/"+page,
 			dataType:'json',
 			async:false,
 			success:function(json) {
@@ -210,7 +180,7 @@ class_show.prototype = {
 function comment_1st_unit() {
 	this.login_account = $("#login_account").val();
 	this.client_account = $("#client_account").val();
-	this.class_code = $("#class_code").val();
+	this.client_account = $("#client_account").val();
 	this.album_id = $("#album_id").val();
 	this.head_img = $("#head_img").val();
 	
@@ -233,7 +203,7 @@ comment_1st_unit.prototype = {
 						textareaObj:$('textarea:first', ancestorObj),
 						up_id:up_id,
 						photo_id:photo_id,
-						class_code:me.class_code || {},
+						client_account:me.client_account || {},
 						login_account:me.login_account || {},
 						callback:function(json){
 							if(json.status < 0){
@@ -242,8 +212,6 @@ comment_1st_unit.prototype = {
 							}
 							//添加一条评论
 							var comment_info = json.data;
-							//添加评论记录数
-							class_show.addCommentCount(comment_info.photo_id);
 							var user_info = {
 									client_name:$("#client_name").val(),
 									client_head_img:$("#head_img").val()
@@ -306,7 +274,7 @@ comment_1st_unit.create=function(comment) {
 function comment_2nd_unit() {
 	this.login_account = $("#login_account").val();
 	this.client_account = $("#client_account").val();
-	this.class_code = $("#class_code").val();
+	this.client_account = $("#client_account").val();
 	this.album_id = $("#album_id").val();
 	this.head_img = $("#head_img").val();
 	$(".del_ids").remove();

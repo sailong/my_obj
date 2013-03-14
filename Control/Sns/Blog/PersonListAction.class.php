@@ -1,13 +1,14 @@
 <?php
 /**
- * 班级日志列表页面  控制类
+ * 个人日志列表页面  控制类
  * @author zlei 2013-1-5
  */
 class ListAction extends SnsController {
-    private $blog_perpage = 2;
-    private $draft_perpage = 2;
+    private $blog_perpage = 10;
+    private $draft_perpage = 4;
     public function __construct() {
         parent::__construct();
+        //tudo 检查是否有访问个人空间的权限权限
     }
     
     //自动分发班级还是个人 默认班级
@@ -24,16 +25,52 @@ class ListAction extends SnsController {
     
     public function index() {
         $class_code = $this->objInput->getInt('class_code');
+        $type_id    = $this->objInput->getInt('type_id');
+
+        $start_time = $this->objInput->getStr('start_time');
+        $end_time   = $this->objInput->getStr('end_time');
+        
         $class_code = $this->checkoutClassCode($class_code);
         if (empty($class_code)) {
             $this->showError('班级信息不存在', '/Homeuser/Index/spacehome/spaceid/' . $this->user['client_account']);
         }
         
+        $this->assign('can_publish_blog', $this->canPublishBlog($class_code));
         $this->assign('class_code', $class_code);
-        
+        $this->assign('type_id', $type_id);
+        $this->assign('start_time', $start_time);
+        $this->assign('end_time', $end_time);
+
         $this->display("class_list");
     } 
     
+    /**
+     * 草稿列表
+     */
+    public function draftList() {
+        $class_code = $this->objInput->getInt('class_code');
+        
+        $class_code = $this->checkoutClassCode($class_code);
+        if(empty($class_code)) {
+            $this->showError('班级信息不存在', '/Homeuser/Index/spacehome/spaceid/' . $this->user['client_account']);
+        }
+        
+        $blogObj = $this->_initBlogObj($class_code);
+        $where_arr = array(
+            "add_account='" . $this->user['client_account'] . "'",
+            "is_published=0"  //0 草稿 1 发布
+        );
+        
+        $draft_list = $blogObj->getBlogList($where_arr, 'blog_id desc', 0, 200);
+        $draft_list = $draft_list[$class_code];
+        $draft_list = $this->formatBlogList($draft_list);
+        //dump($draft_list);exit;
+        $this->assign('count_num', !empty($draft_list) ? count($draft_list) : 0);
+        $this->assign('class_code', $class_code);
+        $this->assign('draft_list', $draft_list);
+        
+        $this->display('class_draft_list');
+    }
     /**
      * 获取日志列表包括添加人等
      */
@@ -56,7 +93,7 @@ class ListAction extends SnsController {
         
         //拼装where 查询条件
         $where_arr = array("is_published=1");
-        if (!empty($type_id)) {
+        if ($type_id >= 0) {
             $where_arr[] = "type_id='$type_id'";
         }
         if (!empty($start_time)) {
@@ -151,7 +188,7 @@ class ListAction extends SnsController {
             $type_id = $blog_info['type_id'];
             
             $blog_info['add_time']     = date('Y-m-d', $blog_info['add_time']);
-            $blog_info['type_name']    = $type_list[$type_id]['name'];
+            $blog_info['type_name']    = !empty($type_list[$type_id]['name']) ? $type_list[$type_id]['name'] : '班级日志';
             $blog_info['client_name']  = $user_list[$add_account]['client_name'];
             
             //获取内容中的第一张图片
@@ -184,6 +221,18 @@ class ListAction extends SnsController {
         }
         
         return false;
+    }
+    
+    /**
+     * 验证是否具有发布班级日志的权限
+     * 只有家长不能写日志
+     */
+    private function canPublishBlog($class_code) {
+        if ($this->user['client_class'][$class_code]['client_type'] == CLIENT_TYPE_FAMILY) {
+            return false;
+        }
+        
+        return true;
     }
     
 }

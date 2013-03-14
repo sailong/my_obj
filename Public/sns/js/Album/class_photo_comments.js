@@ -91,37 +91,10 @@ class_show.delComment=function(obj) {
 				return false;
 			}
 			delObj.remove();
-			class_show.delPhotoCommentCount(json.data || 0,obj.photo_id || {});
 			$.showSuccess('删除成功');
 		}	
 	});
 };
-//添加评论数
-class_show.addCommentCount=function(photo_id) {
-	photo_id = photo_id || {};
-	$.ajax({
-		type:"get",
-		dataType:"json",
-		url:"/Api/Album/addPhotoCommentCount/photo_id/"+photo_id,
-		success:function(json) {
-			return true;
-		}
-	});
-};
-//删除评论数
-class_show.delPhotoCommentCount=function(count, photo_id) {
-	count = count || {};
-	photo_id = photo_id || {};
-	$.ajax({
-		type:"get",
-		dataType:"json",
-		url:"/Api/Album/minusPhotoCommentCountByPhotoId/photo_id/"+photo_id+"/count/"+count,
-		success:function(json) {
-			return true;
-		}
-	});
-}
-
 
 class_show.prototype = {
 	delegateEvent:function() {
@@ -166,8 +139,6 @@ class_show.prototype = {
 							}
 							//添加一条评论
 							var comment_info = json.data;
-							//添加评论记录数
-							class_show.addCommentCount(comment_info.photo_id);
 							var user_info = {
 									client_name:$("#client_name").val(),
 									client_head_img:$("#head_img").val()
@@ -242,8 +213,6 @@ comment_1st_unit.prototype = {
 							}
 							//添加一条评论
 							var comment_info = json.data;
-							//添加评论记录数
-							class_show.addCommentCount(comment_info.photo_id);
 							var user_info = {
 									client_name:$("#client_name").val(),
 									client_head_img:$("#head_img").val()

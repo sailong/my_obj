@@ -21,28 +21,17 @@ class dAlbumPhotoComments extends dBase {
     public function addAlbumPhotoComment($data, $is_return_id) {
         return $this->add($data, $is_return_id);
     }
-    //todo list
-    public function addPhotoComment($data, $is_return_id) {
-        return $this->add($data, $is_return_id);
-    }
-    
-    
-    
-    
+   
     public function modifyAlbumPhotoCommentByCommentId($data, $comment_id) {
         return $this->modify($data, $comment_id);
     }
-    //todo list
-    public function modifyPhotoCommentByCommentId($data, $comment_id) {
-        return $this->modify($data, $comment_id);
-    }
-    
+   
     public function delCommentByCommentId($comment_id) {
         return $this->delete($comment_id);
     }
-    //todo list
-    public function delPhotoCommentByCommentId($comment_id) {
-        return $this->delete($comment_id);
+    
+    public function getCommentByCommentId($comment_id) {
+        return $this->getInfoByPk($comment_id);
     }
     
     //通过相册ID获取评论信息
@@ -86,5 +75,16 @@ class dAlbumPhotoComments extends dBase {
         $sql = "delete from {$this->_tablename} where up_id in({$up_id})";
         
         return $this->execute($sql);
+    }
+    
+    //根据相片ID获取评论的数量
+    public function getCountByPhotoId($photo_id) {
+        if(empty($photo_id)) {
+            return false;
+        }
+        $wherearr[] = "photo_id={$photo_id}";
+        
+        return $this->getCount($wherearr);
+        
     }
 }

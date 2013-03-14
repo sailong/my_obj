@@ -42,7 +42,7 @@ create_album.prototype.attachEvent=function(){
 				var album_list = {};
 				$.ajax({
 					type:"get",
-					url:"/Api/Album/getAlbumByClass/class_code/" + options.class_code + '/album_id/' + json.data,
+					url:"/Api/Album/getAlbumByPerson/client_account/" + options.client_account + '/album_id/' + json.data,
 					dataType:"json",
 					async:false,
 					success:function(json) {
@@ -122,7 +122,7 @@ create_album.prototype.attachEventUserDefine=function() {
 				fixed: true,	//固定定位 ie 支持不好回默认转成绝对定位
 				init:function() {
 					me.clearInfo();
-					me.fillClassGrantList(options.class_code);
+					me.fillPersonGrantList(options.client_account);
 					me.initFormOptions(options);
 					me.reflushCounter();
 				}
@@ -137,15 +137,15 @@ create_album.prototype.attachEventUserDefine=function() {
 	});
 };
 
-create_album.prototype.fillClassGrantList=function(class_code) {
+create_album.prototype.fillPersonGrantList=function(client_account) {
 	var me = this;
-	var cache_key = "grant:" + class_code;
+	var cache_key = "grant:" + client_account;
 	var grant_list = me.grant_cache[cache_key] || {};
 	if($.isEmptyObject(grant_list)) {
 		$.ajax({
 			type:'get',
 			dataType:"json",
-			url:"/Api/Album/getClassGrantList/class_code/" + class_code,
+			url:"/Api/Album/getPersonGrantList/client_account/" + client_account,
 			async:false,
 			success:function(json) {
 				grant_list = me.grant_cache[cache_key] = json.data || {};

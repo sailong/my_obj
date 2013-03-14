@@ -13,22 +13,6 @@ class dBlogClassGrants extends dBase {
                     'class_code',
                     'blog_id',
               );
-              
-    
-    //根据班级日志权限ID获取信息列表          
-    public function getById($ids) {
-        return $this->getInfoByPk($ids);
-    }
-    //根据class_code获取信息列表
-    public function getListByClassCode($class_code) {
-        //三维
-        return $this->getInfoByFk($class_code, 'class_code');
-    }
-    //根据blog_id获取信息列表
-    public function getListByBlogId($blog_id) {
-        //三维
-        return $this->getInfoByFk($blog_id, 'blog_id');
-    }
     
     /**
      * 根据条件获取班级日志权限表信息
@@ -48,7 +32,7 @@ class dBlogClassGrants extends dBase {
     }
     
     //添加班级日志权限
-    public function addGrant($data, $is_return_id) {
+    public function addBlogClassGrants($data, $is_return_id) {
         return $this->add($data, $is_return_id);
     }
     
@@ -58,7 +42,7 @@ class dBlogClassGrants extends dBase {
     }
     
     //根据权限ID删除信息
-    public function delById($id) {
+    public function delBlogClassGrants($id) {
         return $this->delete($id);   
     }
     

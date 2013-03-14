@@ -248,21 +248,21 @@ var YAO = function(){
 			return C;
 		}(),
 		
-        extend: function(subClass, superClass, override){
-            if (!superClass || !subClass) {
+        extend: function(subPerson, superPerson, override){
+            if (!superPerson || !subPerson) {
                 throw new Error('extend failed, please check that all dependencies are included.');
             }
             var F = function(){};
-            F.prototype = superClass.prototype;
-            subClass.prototype = new F();
-            subClass.prototype.constructor = subClass;
-            subClass.superclass = superClass.prototype;
-            if (superClass.prototype.constructor == Object.prototype.constructor) {
-                superClass.prototype.constructor = superClass;
+            F.prototype = superPerson.prototype;
+            subPerson.prototype = new F();
+            subPerson.prototype.constructor = subPerson;
+            subPerson.superclass = superPerson.prototype;
+            if (superPerson.prototype.constructor == Object.prototype.constructor) {
+                superPerson.prototype.constructor = superPerson;
             }
             if (override) {
                 for (var p in override) {
-                    subClass.prototype[p] = override[p];
+                    subPerson.prototype[p] = override[p];
                 }
             }
         },
@@ -497,45 +497,45 @@ var YAO = function(){
 			}
 			return null;
 		},
-		hasClass: function(elem, className){
+		hasPerson: function(elem, className){
 			var has = new RegExp("(?:^|\\s+)" + className + "(?:\\s+|$)");
 			return has.test(elem.className);
 		},
-		addClass: function(elem, className){
-			if (YAO.hasClass(elem, className)) {
+		addPerson: function(elem, className){
+			if (YAO.hasPerson(elem, className)) {
 				return;
 			}
 			elem.className = [elem.className, className].join(" ");
 		},
 		removeClass: function(elem, className){
 			var replace = new RegExp("(?:^|\\s+)" + className + "(?:\\s+|$)", "g");
-			if (!YAO.hasClass(elem, className)) {
+			if (!YAO.hasPerson(elem, className)) {
 				return;
 			}
 			var o = elem.className;
 			elem.className = o.replace(replace, " ");
-			if (YAO.hasClass(elem, className)) {
+			if (YAO.hasPerson(elem, className)) {
 				YAO.removeClass(elem, className);
 			}
 		},
-		replaceClass: function(elem, newClass, oldClass){
-			if (newClass === oldClass) {
+		replacePerson: function(elem, newPerson, oldPerson){
+			if (newPerson === oldPerson) {
 				return false;
 			}
-			var has = new RegExp("(?:^|\\s+)" + newClass + "(?:\\s+|$)", "g");
-			if (!YAO.hasClass(elem, newClass)) {
-				YAO.addClass(elem, oldClass);
+			var has = new RegExp("(?:^|\\s+)" + newPerson + "(?:\\s+|$)", "g");
+			if (!YAO.hasPerson(elem, newPerson)) {
+				YAO.addPerson(elem, oldPerson);
 				return;
 			}
-			elem.className = elem.className.replace(has, " " + oldClass + " ");
-			if (YAO.hasClass(elem, newClass)) {
-				YAO.replaceClass(elem, newClass, oldClass);
+			elem.className = elem.className.replace(has, " " + oldPerson + " ");
+			if (YAO.hasPerson(elem, newPerson)) {
+				YAO.replacePerson(elem, newPerson, oldPerson);
 			}
 		},
-		getElByClassName: function(className, tag, rootTag){
+		getElByPersonName: function(className, tag, rootTag){
 			var elems = [], i, tempCnt = YAO.getEl(rootTag).getElementsByTagName(tag), len = tempCnt.length;
 			for (i = 0; i < len; ++i) {
-				if (YAO.hasClass(tempCnt[i], className)) {
+				if (YAO.hasPerson(tempCnt[i], className)) {
 					elems.push(tempCnt[i]);
 				}
 			}
@@ -897,19 +897,19 @@ var YAO = function(){
 			var j, length = arguments.length;
 			for (j = 0; j < length; ++j) {
 				(function(config){
-					var root = YAO.getEl(config.rootTag) || (config.root || null), rows = root.getElementsByTagName(config.rowTag) || (config.rows || null), i, len = rows.length, lastClass = [];
+					var root = YAO.getEl(config.rootTag) || (config.root || null), rows = root.getElementsByTagName(config.rowTag) || (config.rows || null), i, len = rows.length, lastPerson = [];
 					if (root && rows && len > 1) {
 						for (var i = 0; i < len; ++i) {
 							rows[i].className = i % 2 === 0 ? 'even' : 'odd';
-							lastClass[i] = rows[i].className;
+							lastPerson[i] = rows[i].className;
 							YAO.on(rows[i],'mouseover', function(index){
 								return function(){
-									YAO.replaceClass(this, lastClass[index], 'hover');
+									YAO.replacePerson(this, lastPerson[index], 'hover');
 								}
 							}(i),rows[i],true);
 							YAO.on(rows[i], 'mouseout', function(index){
 								return function(){
-									YAO.replaceClass(this, 'hover', lastClass[index]);
+									YAO.replacePerson(this, 'hover', lastPerson[index]);
 								}
 							}(i),rows[i],true);
 						}
@@ -1200,10 +1200,10 @@ YAO.Carousel.prototype.init = function(){
 	}
 	this.Container.style.overflow = 'hidden';
 	if (this.lnkBtnNext && this.movedNum === this.maxMovedNum) {
-		YAO.addClass(this.lnkBtnNext, 'dis');
+		YAO.addPerson(this.lnkBtnNext, 'dis');
 	}
 	if (this.lnkBtnPrevious && this.movedNum === 0) {
-		YAO.addClass(this.lnkBtnPrevious, 'dis');
+		YAO.addPerson(this.lnkBtnPrevious, 'dis');
 	}
 	YAO.on(this.btnPrevious, 'click', this.scrollPrevious, this.btnPrevious, oSelf);
 	YAO.on(this.btnNext, 'click', this.scrollNext, this.btnNext, oSelf);
@@ -1212,13 +1212,13 @@ YAO.Carousel.prototype.scrollPrevious = function(event){
 	var evt = event || window.event;
 	if (this.movedNum > 0) {
 		this.movedNum -= 1;
-		if (this.lnkBtnNext && YAO.hasClass(this.lnkBtnNext, 'dis')) {
+		if (this.lnkBtnNext && YAO.hasPerson(this.lnkBtnNext, 'dis')) {
 			YAO.removeClass(this.lnkBtnNext, 'dis');
 		}
 		if (this.movedNum <= 0) {
 			this.movedNum = 0;
 			if (this.lnkBtnPrevious) {
-				YAO.addClass(this.lnkBtnPrevious, 'dis');
+				YAO.addPerson(this.lnkBtnPrevious, 'dis');
 			}
 		}
 		this.scroll(this.movedNum);
@@ -1229,13 +1229,13 @@ YAO.Carousel.prototype.scrollNext = function(event){
 	var evt = event || window.event;
 	if (this.movedNum < this.maxMovedNum) {
 		this.movedNum += 1;
-		if (this.lnkBtnPrevious && YAO.hasClass(this.lnkBtnPrevious, 'dis')) {
+		if (this.lnkBtnPrevious && YAO.hasPerson(this.lnkBtnPrevious, 'dis')) {
 			YAO.removeClass(this.lnkBtnPrevious, 'dis');
 		}
 		if (this.movedNum >= this.maxMovedNum) {
 			this.movedNum = this.maxMovedNum;
 			if (this.lnkBtnNext) {
-				YAO.addClass(this.lnkBtnNext, 'dis');
+				YAO.addPerson(this.lnkBtnNext, 'dis');
 			}
 		}
 		this.scroll(this.movedNum);
@@ -1269,7 +1269,6 @@ YAO.YAlbum = function(){
 	this.max_length = 20;
 	
 	this.client_account = $("#client_account").val();
-	this.class_code = $("#class_code").val();
 	this.album_id = $("#album_id").val();
 	this.is_edit = $("#is_edit").val();
 	this.img_server = $("#img_server").val();
@@ -1343,7 +1342,7 @@ YAO.YAlbum.prototype.editor = function() {
 }
 YAO.YAlbum.prototype.init = function(){
 	var oSelf = this, i;
-	YAO.addClass(this.lastSample, 'current');
+	YAO.addPerson(this.lastSample, 'current');
 	this.btnPrevious = YAO.Builder.Node('a', {
 		href: oSelf.oSamples[oSelf.lastIndex].href,
 		id: oSelf.BTN_PREVIOUS_ID,
@@ -1392,7 +1391,7 @@ YAO.YAlbum.prototype.init = function(){
 	this.chgPhoto();
 };
 YAO.YAlbum.prototype.btnsEnabled = function(){
-	if (this.lastIndex !== 0 && YAO.hasClass(this.btnPrevious, this.BTN_DISABLED_CLASS)) {
+	if (this.lastIndex !== 0 && YAO.hasPerson(this.btnPrevious, this.BTN_DISABLED_CLASS)) {
 		YAO.removeClass(this.btnPrevious, this.BTN_DISABLED_CLASS);
 		if (YAO.ua.ie) {
 			this.btnPrevious.style.backgroundImage = this.IMG_BTN_PREVIOUS;
@@ -1402,7 +1401,7 @@ YAO.YAlbum.prototype.btnsEnabled = function(){
 	}
 	else {
 		if (this.lastIndex === 0) {
-			YAO.addClass(this.btnPrevious, this.BTN_DISABLED_CLASS);
+			YAO.addPerson(this.btnPrevious, this.BTN_DISABLED_CLASS);
 			if (YAO.ua.ie) {
 				this.btnPrevious.style.backgroundImage = 'none';
 			}
@@ -1412,7 +1411,7 @@ YAO.YAlbum.prototype.btnsEnabled = function(){
 			this.btnPrevious.name = this.oSamples[this.lastIndex - 1].id;
 		}
 	}
-	if (this.lastIndex !== (this.length - 1) && YAO.hasClass(this.btnNext, this.BTN_DISABLED_CLASS)) {
+	if (this.lastIndex !== (this.length - 1) && YAO.hasPerson(this.btnNext, this.BTN_DISABLED_CLASS)) {
 		YAO.removeClass(this.btnNext, this.BTN_DISABLED_CLASS);
 		if (YAO.ua.ie) {
 			this.btnNext.style.backgroundImage = this.IMG_BTN_NEXT;
@@ -1422,7 +1421,7 @@ YAO.YAlbum.prototype.btnsEnabled = function(){
 	}
 	else {
 		if (this.lastIndex === (this.length - 1)) {
-			YAO.addClass(this.btnNext, this.BTN_DISABLED_CLASS);
+			YAO.addPerson(this.btnNext, this.BTN_DISABLED_CLASS);
 			if (YAO.ua.ie) {
 				this.btnNext.style.backgroundImage = 'none';
 			}
@@ -1481,13 +1480,13 @@ YAO.YAlbum.prototype.resize = function(oImage){
 		});
 	}
 	if (this.lastIndex === 0) {
-		YAO.addClass(this.btnPrevious, this.BTN_DISABLED_CLASS);
+		YAO.addPerson(this.btnPrevious, this.BTN_DISABLED_CLASS);
 		if (YAO.ua.ie) {
 			this.btnPrevious.style.backgroundImage = 'none';
 		}
 	}
 	if (this.lastIndex === (this.length - 1)) {
-		YAO.addClass(this.btnNext, this.BTN_DISABLED_CLASS);
+		YAO.addPerson(this.btnNext, this.BTN_DISABLED_CLASS);
 		if (YAO.ua.ie) {
 			this.btnNext.style.backgroundImage = 'none';
 		}
@@ -1510,7 +1509,7 @@ YAO.YAlbum.prototype.resize = function(oImage){
 YAO.YAlbum.prototype.Previous = function(){
 	if (this.lastIndex !== 0) {
 		this.lastIndex -= 1;
-		if (YAO.hasClass(this.btnNext, this.BTN_DISABLED_CLASS)) {
+		if (YAO.hasPerson(this.btnNext, this.BTN_DISABLED_CLASS)) {
 			YAO.removeClass(this.btnNext, this.BTN_DISABLED_CLASS);
 		}
 		if (this.lastIndex >= 1) {
@@ -1519,7 +1518,7 @@ YAO.YAlbum.prototype.Previous = function(){
 		}
 		if (this.lastIndex < 0) {
 			this.lastIndex = 0;
-			YAO.addClass(this.btnPrevious, this.BTN_DISABLED_CLASS);
+			YAO.addPerson(this.btnPrevious, this.BTN_DISABLED_CLASS);
 		    this.btnPrevious.href = this.oSamples[this.lastIndex].href;
 		    this.btnPrevious.name = this.oSamples[this.lastIndex].id;
 		}
@@ -1531,7 +1530,7 @@ YAO.YAlbum.prototype.Previous = function(){
 YAO.YAlbum.prototype.Next = function(){
 	if (this.lastIndex < (this.length - 1)) {
 		this.lastIndex += 1;
-		if (YAO.hasClass(this.btnPrevious, this.BTN_DISABLED_CLASS)) {
+		if (YAO.hasPerson(this.btnPrevious, this.BTN_DISABLED_CLASS)) {
 			YAO.removeClass(this.btnPrevious, this.BTN_DISABLED_CLASS);
 		}
 		if (this.lastIndex <= (this.length - 2)) {
@@ -1540,7 +1539,7 @@ YAO.YAlbum.prototype.Next = function(){
 		}
 		if (this.lastIndex > (this.length - 1)) {
 			this.lastIndex = (this.length - 1);
-			YAO.addClass(this.btnNext, this.BTN_DISABLED_CLASS);
+			YAO.addPerson(this.btnNext, this.BTN_DISABLED_CLASS);
 			this.btnNext.href = this.oSamples[this.lastIndex].href;
 			this.btnNext.name = this.oSamples[this.lastIndex].id;
 		}
@@ -1572,7 +1571,7 @@ YAO.YAlbum.prototype.chgPhoto = function(){
 		$.ajax({
 			type:"get",
 			dataType:"json",
-			url:"/Api/Album/getClassPhotoByPhotoId/photo_id/"+photo_id+"/class_code/"+oSelf.class_code+"/client_account/"+oSelf.client_account,
+			url:"/Api/Album/getPersonPhotoByPhotoId/photo_id/"+photo_id+"/client_account/"+oSelf.client_account,
 			async:false,
 			success:function(json) {
 				if(json.status < 0) {
@@ -1596,7 +1595,7 @@ YAO.YAlbum.prototype.chgPhoto = function(){
 	this.sIntro = this.oSamples[this.lastIndex].title;
 	path = this.oSamples[this.lastIndex].href.replace('_s.','.');
 	YAO.removeClass(this.lastSample, 'current');
-	YAO.addClass(this.oSamples[this.lastIndex], 'current');
+	YAO.addPerson(this.oSamples[this.lastIndex], 'current');
 	
 	this.lastSample = this.oSamples[this.lastIndex];
 	this.photo.src = path;
@@ -1618,20 +1617,20 @@ YAO.YAlbum.prototype.scroll = function(){
 	if (curScreen != this.oCarousel.movedNum) {
 		this.oCarousel.scroll(curScreen);
 		this.oCarousel.movedNum = curScreen;
-		if (this.oCarousel.movedNum !== 0 && YAO.hasClass(this.oCarousel.lnkBtnPrevious, this.BTN_DISABLED_CLASS)) {
+		if (this.oCarousel.movedNum !== 0 && YAO.hasPerson(this.oCarousel.lnkBtnPrevious, this.BTN_DISABLED_CLASS)) {
 			YAO.removeClass(this.oCarousel.lnkBtnPrevious, this.BTN_DISABLED_CLASS);
 		}
 		else {
 			if (this.oCarousel.movedNum === 0) {
-				YAO.addClass(this.oCarousel.lnkBtnPrevious, this.BTN_DISABLED_CLASS);
+				YAO.addPerson(this.oCarousel.lnkBtnPrevious, this.BTN_DISABLED_CLASS);
 			}
 		}
-		if (this.oCarousel.movedNum !== this.oCarousel.maxMovedNum && YAO.hasClass(this.oCarousel.lnkBtnNext, this.BTN_DISABLED_CLASS)) {
+		if (this.oCarousel.movedNum !== this.oCarousel.maxMovedNum && YAO.hasPerson(this.oCarousel.lnkBtnNext, this.BTN_DISABLED_CLASS)) {
 			YAO.removeClass(this.oCarousel.lnkBtnNext, this.BTN_DISABLED_CLASS);
 		}
 		else {
 			if (this.oCarousel.movedNum === this.oCarousel.maxMovedNum) {
-				YAO.addClass(this.oCarousel.lnkBtnNext, this.BTN_DISABLED_CLASS);
+				YAO.addPerson(this.oCarousel.lnkBtnNext, this.BTN_DISABLED_CLASS);
 			}
 		}
 	}
@@ -1815,7 +1814,7 @@ YAO.YAlbum.prototype.delegateEvent=function() {
 			type:"post",
 			dataType:"json",
 			data:{"comment_id":comment_id},
-			url:"/Api/Album/delPhotoCommentByClass",
+			url:"/Api/Album/delPhotoCommentByPerson",
 			success:function(json) {
 				if(json.status < 0) {
 					$.showError(json.info);
@@ -1837,7 +1836,7 @@ YAO.YAlbum.prototype.delegateEvent=function() {
 			type:"post",
 			dataType:"json",
 			data:{"photo_id":photo_id,"content":content,"add_uid":add_uid},
-			url:"/Api/Album/addCommentByClass",
+			url:"/Api/Album/addCommentByPerson",
 			success:function(json) {
 				var dialogObj = art.dialog.list['edit_comment_div_dialog'];
 				if(!$.isEmptyObject(dialogObj)) {
@@ -1858,7 +1857,6 @@ YAO.YAlbum.prototype.delegateEvent=function() {
 									};
 				oSelf.fillPhotoComments(comment_list);
 				$.showSuccess(json.info);
-				oSelf.addPhotoCommentCount(photo_id);
 			}
 		});
 		
@@ -1883,7 +1881,7 @@ YAO.YAlbum.prototype.adddescription = function() {
 		data:{'photo_id':photo_id,'content':content},
 		dataType:"json",
 		async:false,
-		url:"/Api/Album/updPhotoDescriptionByClass",
+		url:"/Api/Album/updPhotoDescriptionByPerson",
 		success:function(json) {
 			if(json.status<0) {
 				$.showError(json.info);
@@ -1916,7 +1914,7 @@ YAO.YAlbum.prototype.setAlbumImg=function(obj) {
 		data:{'album_id':oSelf.album_id,'album_img':album_img},
 		dataType:"json",
 		async:false,
-		url:"/Api/Album/setAlbumImgByClass",
+		url:"/Api/Album/setAlbumImgByPerson",
 		success:function(json) {
 			if(json.status<0) {
 				$.showError(json.info);
@@ -1935,7 +1933,7 @@ YAO.YAlbum.prototype.delPhoto=function(obj) {
 	$.ajax({
 		type:"get",
 		dataType:"json",
-		url:"/Api/Album/delPhotoByClass/class_code/" + oSelf.class_code + "/photo_id/" + photo_id,
+		url:"/Api/Album/delPhotoByPerson/client_account/" + oSelf.client_account + "/photo_id/" + photo_id,
 		async:false,
 		success:function(json) {
 			if(json.status < 0) {
@@ -1987,7 +1985,7 @@ YAO.YAlbum.prototype.getAlbumList=function() {
 		$.ajax({
 			type:"get",
 			dataType:"json",
-			url:"/Api/Album/getOnlyAlbumListByClassCode/class_code/"+oSelf.class_code,
+			url:"/Api/Album/getOnlyAlbumListByClientAccount/client_account/"+oSelf.client_account,
 			async:false,
 			success:function(json) {
 				if(json.status < 0) {
@@ -2025,7 +2023,7 @@ YAO.YAlbum.prototype.movePhoto=function(album_id, photoObj) {
 		type:"post",
 		data:{'to_album_id':album_id,'photo_id':photo_id,'from_album_id':from_album_id,'img_name':img_name},
 		dataType:"json",
-		url:"/Api/Album/movePhotoByClass",
+		url:"/Api/Album/movePhotoByPerson",
 		success:function(json) {
 			if(json.status < 0) {
 				$.showError(json.info);

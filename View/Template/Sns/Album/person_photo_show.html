@@ -14,7 +14,7 @@
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/artDialog4.1.6/plugins/iframeTools.source.js"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/sendbox/sendbox.js"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/template/template.js"></script>
-<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/Album/photo_comments.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/Album/person_photo_comments.js"></script>
 
 </head>
 <body>
@@ -95,17 +95,17 @@
 <!--tip star-->
 {insert name="sns_header"}
 <!--tip star-->
-{insert name="sns_class_header" class_code = $class_code}
+{insert name="sns_class_header" client_account = $client_account}
 <!--tip end--> 
 <!--content star-->
 <div class="content">
   <!--main star-->
    <div class="main main_photo_show">
    <!--nav star-->
-    {insert name="sns_nav" class_code = $class_code}
+    {insert name="sns_nav" client_account = $client_account}
     <!--nav end-->
     <h4>
-	    <a href="/Sns/Album/Classphoto/photolist/album_id/{$album_id}/class_code/{$class_code}/client_account/{$client_account}" class="f14" title=""><span class="btn_left"></span><span class="btn_right">返回相册</span></a>
+	    <a href="/Sns/Album/Personphoto/photolist/album_id/{$album_id}/client_account/{$client_account}" class="f14" title=""><span class="btn_left"></span><span class="btn_right">返回相册</span></a>
 	    
     	
     </h4>
@@ -144,21 +144,7 @@
 			<div id="side"></div>
 			</div>
 		</div>
-		<!--<div class="main_left_icon"><a href="#" class="icon_left"></a></div>
-        <div class="single_pic">
-          <img src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/images/Album/class_upload/big_photo1.jpg">        
-        </div>
-        <div class="main_left_icon"><a href="#" class="icon_right"></a></div>
-        <div class="clear"></div>
-        <div class="main_left_bottom">
-          <div class="main_bottom_icon"><a href="#" class="icon_zuo"></a></div>
-          <div class="more_photo_show">
-            <a href="#"><img src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/images/Album/class_photo_show/small_pic01.jpg"></a><a href="#"><img src"{$smarty.const.IMG_SERVER}__PUBLIC__/sns/images/Album/class_photo_show/small_pic01.jpg"></a><a href="#"><img src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/images/Album/class_photo_show/small_pic01.jpg"></a><a href="#"><img src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/images/Album/class_photo_show/small_pic01.jpg"></a><a href="#"><img src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/images/Album/class_photo_show/small_pic01.jpg"></a>
-          </div>
-          <div class="main_bottom_icon"><a href="#" class="icon_you"></a></div>
-          <div class="clear"></div>
-        </div>
-	  --></div> 
+		</div> 
   	 <!--publish_main_left end--> 
   	 
  
@@ -193,14 +179,13 @@
 <input id="is_edit" class="del_ids" type="hidden" value="{$is_edit}"/>
 <input id="album_id" class="del_ids" type="hidden" value="{$album_id}">
 <input id="photo_id" class="del_ids" type="hidden">
-<input id="class_code" class="del_ids" type="hidden" value="{$class_code}">
 <input id="client_account" class="del_ids" type="hidden" value="{$client_account}">
 <input id="login_account" type="hidden" value="{$login_account}"/>
 <input id="client_name" type="hidden" value="{$client_name}"/>
 <input id="head_img" type="hidden" value="{$head_img}"/>
 <input id="img_server" class="del_ids" type="hidden" value="{$smarty.const.IMG_SERVER}__PUBLIC__"/>
 
-<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/Album/show_photo.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/Album/person_show_photo.js"></script>
 <script language="javascript" type="text/javascript">
 var Album = new YAO.YAlbum();
 </script>

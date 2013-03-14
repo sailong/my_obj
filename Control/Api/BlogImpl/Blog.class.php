@@ -99,7 +99,7 @@ class Blog {
             return false;
         }
         $this->_initmBlog();
-        return $this->_mBlog->getByBlogId($blog_ids);
+        return $this->_mBlog->getBlogById($blog_ids);
     }
 	/**
      * 通过班级日志列表获取日志类型
@@ -152,7 +152,7 @@ class Blog {
         }
         $blog_ids = array_keys($blog_list);
         $this->_initmBlogContent();
-        $blog_content_list = $this->_mBlogContent->getByBlogId($blog_ids);
+        $blog_content_list = $this->_mBlogContent->getBlogById($blog_ids);
         if(empty($blog_content_list)) {
             return false;
         }
@@ -417,7 +417,7 @@ class Blog {
         
         $this->_initmBlog();
         
-        return $this->_mBlog->delByBlogId($blog_id);
+        return $this->_mBlog->delBlog($blog_id);
     }
     
  	/**

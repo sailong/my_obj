@@ -146,21 +146,24 @@ class ByPerson extends Album {
         if(empty($client_account) || empty($album_id)) {
             return false;
         }
+        
         //个人是否存在
         $this->client_is_exist($client_account);
+        
         //通过相册album_id获取相册信息
         $album_list = $this->get($album_id);
+        
         //是否有相关相册的信息
         if(empty($album_list)) {
             return false;
         }
         //检测相册关系是否存在
         $rel = $this->get_rel_by_album_id($album_id, $client_account);
-       
         //该个人是否存在相册
         if(empty($rel)) {
             return false;
         }
+        
         //获取相处权限
         $grant_list = $this->get_grant_by_album_id($album_id);
         
@@ -183,7 +186,7 @@ class ByPerson extends Album {
             return false;
         }
         $mAlbum = ClsFactory::Create('Model.Album.mAlbumPersonRelation');
-        $rel = $mAlbum->getAlbumPersonRelByPersonAlbumId($album_id, $client_account);
+        $rel = $mAlbum->getAlbumPersonRelByUidAlbumId($album_id, $client_account);
         
         return !empty($rel) ? $rel : false;
     }
@@ -391,7 +394,7 @@ class ByPerson extends Album {
             return false;
         }
         $mAlbum = ClsFactory::Create('Model.Album.mAlbumPersonRelation');
-        $rel = $mAlbum->getAlbumPersonRelByPersonAlbumId($album_id, $client_account);
+        $rel = $mAlbum->getAlbumPersonRelByUidAlbumId($album_id, $client_account);
         //该个人是否存在相册
         if(empty($rel)) {
             return false;
@@ -484,8 +487,8 @@ class ByPerson extends Album {
     public function grant_arr($grant_id) {
         $grant_arr = array(
             0=>"公开（所有人可见）",
-            1=>"本班",
-            2=>"本学校"
+            1=>"本人",
+            2=>"好友"
         );
         if(empty($grant_id) && $grant_id==null) {
             return $grant_arr;

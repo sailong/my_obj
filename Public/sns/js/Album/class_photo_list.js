@@ -177,21 +177,6 @@ photo_list.prototype.attachEvent = function(){
 };
 
 //添加评论数
-photo_list.prototype.addPhotoCommentCount=function(photo_id) {
-	photo_id = photo_id || {};
-	$.ajax({
-		type:"get",
-		dataType:"json",
-		url:"/Api/Album/addPhotoCommentCount/photo_id/"+photo_id,
-		success:function(json) {
-			if(json.status < 0) {
-				return false;
-			}
-			return true;
-		}
-	});
-	
-};
 //渲染页面
 photo_list.prototype.reflushCounter=function() {
 	var me = this;
@@ -282,7 +267,6 @@ photo_list.prototype.delegateEvent=function() {
 					$pl_count = parseInt($(".pl_count", dl_obj).text());
 					$pl_count = $pl_count+1;
 					$(".pl_count", dl_obj).text($pl_count);
-					me.addPhotoCommentCount(photo_data.photo_id);
 				}
 		};
 		if(click_nums == 1) {

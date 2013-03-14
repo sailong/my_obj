@@ -4,6 +4,10 @@ import('@.Control.Api.BlogImpl.Blog');
  * 班级日志Api接口
  * 所有关于班级日志操作处理
  * @author sailong
+ * 
+ * todo zlei 2013-3-12
+ * 
+ * 这个接口因权限问现已废弃不要使用其中的任何方法
  *
  */
 class ByClass extends Blog {
@@ -426,7 +430,7 @@ class ByClass extends Blog {
      * 
      * @return int  $id
      */
-    private function addGrant($grant, $blog_id, $class_code) {
+    private function addBlogClassGrants($grant, $blog_id, $class_code) {
         if((empty($grant) && $grant=='')  || empty($blog_id) || empty($class_code)) {
             return false;
         }
@@ -439,7 +443,7 @@ class ByClass extends Blog {
         //添加班级日志权限表信息
         $mBlogClassGrants = ClsFactory::Create('Model.Blog.mBlogClassGrants');
         
-        return $mBlogClassGrants->addGrant($grant_data, true);
+        return $mBlogClassGrants->addBlogClassGrants($grant_data, true);
     }
     
     /**
@@ -489,7 +493,7 @@ class ByClass extends Blog {
         }
         $mBlogClassGrants = ClsFactory::Create('Model.Blog.mBlogClassGrants');
         //三维
-        $grant_list = $mBlogClassGrants->getListByBlogId($blog_id);
+        //$grant_list = $mBlogClassGrants->getListByBlogId($blog_id);
         //二维
         $grant_list = $grant_list[$blog_id];
         list($id, $grant_data) = each($grant_list);
@@ -513,7 +517,7 @@ class ByClass extends Blog {
         }
         $mBlogClassGrants = ClsFactory::Create('Model.Blog.mBlogClassGrants');
         
-        return $mBlogClassGrants->delById($id);
+        return $mBlogClassGrants->delBlogClassGrants($id);
     } 
     
 	/**
@@ -529,7 +533,7 @@ class ByClass extends Blog {
         }
         $mBlogClassGrants = ClsFactory::Create('Model.Blog.mBlogClassGrants');
         //三维
-        $grant_list = $mBlogClassGrants->getListByBlogId($blog_id);
+        //$grant_list = $mBlogClassGrants->getListByBlogId($blog_id);
         
         return !empty($grant_list) ? $grant_list : false;
     }

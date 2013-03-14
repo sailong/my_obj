@@ -2,9 +2,9 @@
 	$.sendCommentBox = function(sendOptions){
 		var photo_id = sendOptions.photo_id || {};
 		var login_account = sendOptions.login_account || {};
-		var class_code = sendOptions.class_code || {};
+		var client_account = sendOptions.client_account || {};
 		var up_id = photo_id || {};
-		var paramData = {"photo_id":photo_id,"add_uid":login_account,"up_id":up_id,"class_code":class_code};
+		var paramData = {"photo_id":photo_id,"add_uid":login_account,"up_id":up_id,"client_account":client_account};
 		var commnetTextareaObj = sendOptions.textareaObj || {};
 		var sendBoxObj = commnetTextareaObj.sendBox({
 			//加载工具条，多个选项之间使用逗号隔开，目前支持：表情：emoto，文件上传：upload(form表单提交的文件的名字为:pic)
@@ -18,7 +18,7 @@
 			//表单的提交类型，建议使用post的方式，支持(get, post)
 			type:'post',
 			//表单提交到的位置
-			url:'/Api/Album/addCommentByClass',
+			url:'/Api/Album/addCommentByPerson',
 			//数据返回格式，支持：json,html等数据格式，于success回调函数的数据格式保持一致
 			data:paramData,
 			dataType:'json',
@@ -46,9 +46,8 @@ function photo_list() {
 	this.limitInterval = null;
 	this.max_length = 140;
 	
-	this.client_account = $("#client_account").val();
 	this.login_account = $("#login_account").val();
-	this.class_code = $("#class_code").val();
+	this.client_account = $("#client_account").val();
 	this.album_id = $("#album_id").val();
 	this.albumObj = $("#album_list_json").val();
 	this.is_edit = $("#is_edit").val();
@@ -91,7 +90,7 @@ photo_list.prototype.attachEvent = function(){
 	$("#upd_album_btn", $(".list_photo_right")).click(function() {
 		var album_datas = me.albumObj || {};
 		$('#edit_album_div').trigger('openEvent',[{
-			class_code:me.class_code,
+			client_account:me.client_account,
 			album_id:me.album_id,
 			client_account:me.client_account,
 			callback:function(datas) {
@@ -163,22 +162,6 @@ photo_list.prototype.attachEvent = function(){
 };
 
 //添加评论数
-photo_list.prototype.addPhotoCommentCount=function(photo_id) {
-	photo_id = photo_id || {};
-	
-	$.ajax({
-		type:"get",
-		dataType:"json",
-		url:"/Api/Album/addPhotoCommentCount/photo_id/"+photo_id,
-		success:function(json) {
-			if(json.status < 0) {
-				return false;
-			}
-			return true;
-		}
-	});
-	
-};
 //渲染页面
 photo_list.prototype.reflushCounter=function() {
 	var me = this;
@@ -220,7 +203,7 @@ photo_list.prototype.delegateEvent=function() {
 				textareaObj:$("#comment_area"),
 				photo_id:photo_data.photo_id || {},
 				login_account:me.login_account || {},
-				class_code:me.class_code || {},
+				client_account:me.client_account || {},
 				up_id:up_id,
 				callback:function(jsonData){
 					var dialogObj = art.dialog.list['edit_comment_div_dialog'];
@@ -235,7 +218,6 @@ photo_list.prototype.delegateEvent=function() {
 					$pl_count = parseInt($(".pl_count", div_obj).text());
 					$pl_count = $pl_count+1;
 					$(".pl_count", div_obj).text($pl_count);
-					me.addPhotoCommentCount(photo_data.photo_id);
 				}
 		};
 		if(click_nums == 1) {
@@ -266,7 +248,7 @@ photo_list.prototype.loadMorePhoto=function(options) {
 	var is_success = true;
 	$.ajax({
 		type:"get",
-		url:"/Api/Album/getClassPhotoListByAlbumId/class_code/" + me.class_code + '/album_id/'+ me.album_id + '/client_account/' + me.client_account + serilize_params,
+		url:"/Api/Album/getPersonPhotoListByAlbumId/client_account/" + me.client_account + '/album_id/'+ me.album_id + '/client_account/' + me.client_account + serilize_params,
 		dataType:"json",
 		async:false,
 		success:function(json) {
@@ -290,7 +272,7 @@ photo_list.prototype.fillPhotoList=function(photo_list) {
 	var insertPosDivObj = $('.insert_pos_div', parentObj);
 	for(var i in photo_list) {
 		var photo_datas = photo_list[i] || {};
-		photo_datas = $.extend(photo_datas,{'class_code':me.class_code});
+		photo_datas = $.extend(photo_datas,{'client_account':me.client_account});
 		if(!photo_datas.small_img) {
 			photo_datas.small_img = img_server + "sns/images/Album/class_list_photo_n/pic01.jpg";
 		}
@@ -308,7 +290,7 @@ photo_list.prototype._renderItem=function(data) {
 	var insertPosDivObj = $('.insert_pos_div', parentObj);
 
 	var photo_datas = data || {};
-	photo_datas = $.extend(photo_datas,{'class_code':me.class_code});
+	photo_datas = $.extend(photo_datas,{'client_account':me.client_account});
 	if(!photo_datas.small_img) {
 		photo_datas.small_img = img_server + "sns/images/Album/class_list_photo_n/pic01.jpg";
 	}

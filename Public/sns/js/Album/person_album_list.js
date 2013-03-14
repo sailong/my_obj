@@ -1,6 +1,5 @@
 function albumlist() {
 	this.client_account = $("#client_account").val();
-	this.class_code = $("#class_code").val();
 	this.is_edit = $("#is_edit").val();
 	this.no_photo_img = $("#no_photo_img").val();
 	this.attachEvent();
@@ -27,7 +26,6 @@ albumlist.prototype.attachEvent = function(){
 		var parentObj = $(this).parents("div:first");
 		//打开创建弹出层
 		$('#create_album_div').trigger('openEvent', [{
-			class_code:me.class_code,
 			client_account:me.client_account,
 			callback:function(album_list) {
 				me.fillAlbum(album_list);
@@ -78,9 +76,8 @@ albumlist.prototype.delegateEvent=function() {
 		var album_datas = ancestorOb.data('datas') || {};
 		var album_id = album_datas.album_id;
 		$('#edit_album_div').trigger('openEvent',[{
-			class_code:me.class_code,
-			album_id:album_id,
 			client_account:me.client_account,
+			album_id:album_id,
 			callback:function(datas) {
 				datas = datas || {};
 				$('.album_name_selector', ancestorOb).html(datas.album_name);
@@ -95,7 +92,7 @@ albumlist.prototype.delegateEvent=function() {
 		
 		var album_id = album_datas.album_id;
 		$('#del_album_div').trigger('openEvent',[{
-			class_code:me.class_code,
+			client_account:me.client_account,
 			album_id:album_id,
 			album_obj:album_datas,
 			callback:function() {
@@ -115,7 +112,7 @@ albumlist.prototype.deleteAlbum=function(obj) {
 	$.ajax({
 		type:"get",
 		dataType:"json",
-		url:"/Api/Album/delAlbumByClass/class_code/" + me.class_code + "/album_id/" + album_id,
+		url:"/Api/Album/delAlbumByPerson/client_account/" + me.client_account + "/album_id/" + album_id,
 		async:false,
 		success:function(json) {
 			if(json.status < 0) {
@@ -142,7 +139,7 @@ albumlist.prototype.loadMoreAlbum=function(options) {
 	var is_success = true;
 	$.ajax({
 		type:"get",
-		url:"/Api/Album/getListByClass/class_code/" + me.class_code + serilize_params,
+		url:"/Api/Album/getListByPerson/client_account/" + me.client_account + serilize_params,
 		dataType:"json",
 		async:false,
 		success:function(json) {
@@ -166,7 +163,7 @@ albumlist.prototype.fillAlbum=function(album_list) {
 	for(var i in album_list) {
 		var album_datas = album_list[i] || {};
 		
-		album_datas = $.extend(album_datas, {'class_code':me.class_code});
+		album_datas = $.extend(album_datas, {'client_account':me.client_account});
 		if(album_datas.album_img_path == '') {
 			album_datas.album_img_path = me.no_photo_img;
 		}

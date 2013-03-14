@@ -1858,7 +1858,6 @@ YAO.YAlbum.prototype.delegateEvent=function() {
 									};
 				oSelf.fillPhotoComments(comment_list);
 				$.showSuccess(json.info);
-				oSelf.addPhotoCommentCount(photo_id);
 			}
 		});
 		
@@ -1942,7 +1941,7 @@ YAO.YAlbum.prototype.delPhoto=function(obj) {
 				$.showError(json.info);
 				return false;
 			}
-			oSelf.minusPhotoInAlbum();
+			//oSelf.minusPhotoInAlbum();
 			var liObj = $("#"+photo_id,$("#samples_list")).parents("li:first");
 			liObj.remove();
 			var dialogObj = art.dialog.list['del_photo_dialog'];

@@ -20,16 +20,18 @@ class PackBlog implements IPack {
         }
         
         $mBlog = ClsFactory::Create("Model.Blog.mBlog");
-        $blog_info = $mBlog->getByBlogId($blog_id);
+        $blog_info = $mBlog->getBlogById($blog_id);
         if(empty($blog_info)) return false;
-        
+        $blog_info = $blog_info[$blog_id];
         $feed_datas = array(
             'feed_type'     => FEED_BLOG,
             'add_account'   => $blog_info['add_account'],
             'add_time'		=> $blog_info['add_time'],
             'feed_content'  => strip_tags(htmlspecialchars_decode($blog_info['summary'])),
+            'from_id'       => $blog_id,
             'img_url'		=> $this->getBlogFirstPhotoFromSummary($blog_info['summary']),
             'title'			=> $blog_info['title'],
+        	'timeline'		=> time(),
         );
         
         return $feed_datas;

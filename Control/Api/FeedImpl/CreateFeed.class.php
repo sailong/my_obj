@@ -45,7 +45,6 @@ class CreateFeed {
         
         //提取feed信息
         $feed_datas = $this->extractFeed($from_id, $feed_type);
-        
         if(empty($feed_datas)) return false;
         
         //mysql入库操作

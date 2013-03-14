@@ -53,7 +53,7 @@ class mZsetUserAll extends mFeedBase {
             }
             
         }
-        
+        array_unshift($uids, $id);
         $mFeedTimeLine = ClsFactory::Create('Model.Feed.mFeedTimeLine');
 
         $datas_from_db = $mFeedTimeLine->getFeedByUids($uids, $lastFeedId, $limit);

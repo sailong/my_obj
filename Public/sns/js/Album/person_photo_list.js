@@ -17,7 +17,7 @@
 			//表单的提交类型，建议使用post的方式，支持(get, post)
 			type:'post',
 			//表单提交到的位置
-			url:'/Api/Album/addCommentByClass',
+			url:'/Api/Album/addCommentByPerson',
 			//数据返回格式，支持：json,html等数据格式，于success回调函数的数据格式保持一致
 			data:paramData,
 			dataType:'json',
@@ -44,9 +44,8 @@ function photo_list() {
 	this.limitInterval = null;
 	this.max_length = 140;
 	
-	this.client_account = $("#client_account").val();
 	this.login_account = $("#login_account").val();
-	this.class_code = $("#class_code").val();
+	this.client_account = $("#client_account").val();
 	this.album_id = $("#album_id").val();
 	this.photo_num = $("#photo_num").val();
 	$("#photo_num").remove();
@@ -95,7 +94,6 @@ photo_list.prototype.attachEvent = function(){
 	//修改相册按钮
 	$("#upd_album_btn", $(".list_photo_right")).click(function() {
 		$('#edit_album_div').trigger('openEvent',[{
-			class_code:me.class_code,
 			album_id:me.album_id,
 			client_account:me.client_account,
 			callback:function(datas) {
@@ -117,25 +115,13 @@ photo_list.prototype.attachEvent = function(){
 	$("#del_album_btn",$(".list_photo_right")).click(function() {
 		var album_datas = {photo_num:me.photo_num};
 		$('#del_album_div').trigger('openEvent',[{
-			class_code:me.class_code,
+			client_account:me.client_account,
 			album_id:me.album_id,
 			album_obj:album_datas,
 			callback:function() {
 				me.deleteAlbum(ancestorOb);
 			}
 		}]);
-		/*art.dialog({
-			id:'photo_del_album_dialog',
-		    //background: '#600', // 背景色
-		    opacity: 0.5,	// 透明度
-			title:'删除相册',
-			content:$('#photo_del_album_div').get(0),
-			drag: false,
-			fixed: true, //固定定位 ie 支持不好回默认转成绝对定位
-			init:function() {
-				//初始值
-			}
-		}).lock();*/
 	});
 	//删除相册 确定按钮
 	$(".qd_btn",$("#photo_del_album_div")).click(function() {
@@ -177,21 +163,6 @@ photo_list.prototype.attachEvent = function(){
 };
 
 //添加评论数
-photo_list.prototype.addPhotoCommentCount=function(photo_id) {
-	photo_id = photo_id || {};
-	$.ajax({
-		type:"get",
-		dataType:"json",
-		url:"/Api/Album/addPhotoCommentCount/photo_id/"+photo_id,
-		success:function(json) {
-			if(json.status < 0) {
-				return false;
-			}
-			return true;
-		}
-	});
-	
-};
 //渲染页面
 photo_list.prototype.reflushCounter=function() {
 	var me = this;
@@ -268,7 +239,7 @@ photo_list.prototype.delegateEvent=function() {
 				textareaObj:$("#comment_area"),
 				photo_id:photo_data.photo_id || {},
 				login_account:me.login_account || {},
-				class_code:me.class_code || {},
+				client_account:me.client_account || {},
 				callback:function(jsonData){
 					var dialogObj = art.dialog.list['edit_comment_div_dialog'];
 					if(!$.isEmptyObject(dialogObj)) {
@@ -282,7 +253,6 @@ photo_list.prototype.delegateEvent=function() {
 					$pl_count = parseInt($(".pl_count", dl_obj).text());
 					$pl_count = $pl_count+1;
 					$(".pl_count", dl_obj).text($pl_count);
-					me.addPhotoCommentCount(photo_data.photo_id);
 				}
 		};
 		if(click_nums == 1) {
@@ -332,7 +302,7 @@ photo_list.prototype.updPhotoName=function(photo_id,photo_name){
 		type:"post",
 		data:{'photo_id':photo_id,'photo_name':photo_name},
 		dataType:"json",
-		url:"/Api/Album/updPhotoNameByClass",
+		url:"/Api/Album/updPhotoNameByPerson",
 		success:function(json) {
 			if(json.status < 0) {
 				isTrue = false;
@@ -362,7 +332,7 @@ photo_list.prototype.deleteAlbum=function() {
 	$.ajax({
 		type:"get",
 		dataType:"json",
-		url:"/Api/Album/delAlbumByClass/class_code/" + me.class_code + "/album_id/" + me.album_id,
+		url:"/Api/Album/delAlbumByPerson/client_account/" + me.client_account + "/album_id/" + me.album_id,
 		async:false,
 		success:function(json) {
 			if(json.status < 0) {
@@ -370,7 +340,7 @@ photo_list.prototype.deleteAlbum=function() {
 				return false;
 			}
 			$.showSuccess(json.info);
-			window.location.href = "/Sns/Album/Class/albumlist/class_code/" + me.class_code;
+			window.location.href = "/Sns/Album/Person/albumlist/client_account/" + me.client_account;
 		}
 	});
 };
@@ -389,7 +359,7 @@ photo_list.prototype.loadMorePhoto=function(options) {
 	var is_success = true;
 	$.ajax({
 		type:"get",
-		url:"/Api/Album/getClassPhotoListByAlbumId/class_code/" + me.class_code + '/album_id/'+ me.album_id + '/client_account/' + me.client_account + serilize_params,
+		url:"/Api/Album/getPersonPhotoListByAlbumId/client_account/" + me.client_account + '/album_id/'+ me.album_id + '/client_account/' + me.client_account + serilize_params,
 		dataType:"json",
 		async:false,
 		success:function(json) {
@@ -413,7 +383,7 @@ photo_list.prototype.fillPhotoList=function(photo_list) {
 	var insertPosDivObj = $('.insert_pos_div', parentObj);
 	for(var i in photo_list) {
 		var photo_datas = photo_list[i] || {};
-		photo_datas = $.extend(photo_datas,{'class_code':me.class_code,'client_account':me.client_account});
+		photo_datas = $.extend(photo_datas,{'client_account':me.client_account,'client_account':me.client_account});
 		if(!photo_datas.small_img) {
 			photo_datas.small_img = img_server + "sns/images/Album/class_list_photo_n/pic01.jpg";
 		}

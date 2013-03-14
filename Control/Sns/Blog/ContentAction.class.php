@@ -111,7 +111,7 @@ class ContentAction extends SnsController {
         
         if(!empty($comment_id)) {
             $mBlog = ClsFactory::Create("Model.Blog.mBlog");
-            $Blog = $mBlog->getByBlogId($blog_id);
+            $Blog = $mBlog->getBlogById($blog_id);
             $add_blog_uid = $Blog[$blog_id]['add_account'];
             $dataarr = array(
                 'comments' => '%comments+1%'
@@ -193,7 +193,7 @@ class ContentAction extends SnsController {
         $limit = 10;
         $offset = ($page -1) * $limit;
         $mBlog = Clsfactory::Create("Model.Blog.mBlog");
-        $Blog = $mBlog->getByBlogId($blog_id);
+        $Blog = $mBlog->getBlogById($blog_id);
         $Blog = reset($Blog);
         $add_blog_uid = $Blog['add_account'];
         $mBlogComments = ClsFactory::Create("Model.Blog.mBlogComments");

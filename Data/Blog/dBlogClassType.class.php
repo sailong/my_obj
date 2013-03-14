@@ -14,35 +14,22 @@ class dBlogClassType extends dBase {
               );
     
     //根据班级关系ID获取信息列表          
-    public function getById($ids) {
+    public function getBlogClassTypeById($ids) {
         return $this->getInfoByPk($ids);
     }
     //根据class_code获取信息列表
-    public function getListByClassCode($class_code) {
+    public function getBlogClassTypeByClassCode($class_code) {
         //三维
         return $this->getInfoByFk($class_code, 'class_code');
     }
     
     //根据type_id获取信息列表
-    public function getListByTypeId($type_ids) {
+    public function getBlogClassTypeByTypeId($type_ids) {
         if (empty($type_ids)) {
             return false;
         }
         
         return $this->getInfoByFk($type_ids, 'type_id');
-    }
-    
-    //通过班级class_code和类型id获取班级类型表信息
-    public function getBlogNumsByTypeIdAddClass($type_ids, $class_code) {
-        if(empty($type_ids) || empty($class_code)) {
-            return false;
-        }
-        $type_str = implode(',', (array)$type_ids);
-        
-        $sql = "select type_id,count(blog.blog_id) blog_nums from wmw_blog blog,wmw_blog_class_relation rel";
-        $sql .= " where rel.class_code={$class_code} and blog.type_id in({$type_str}) order by ";
-        
-        return $this->query($sql);
     }
     
     /**
@@ -61,7 +48,7 @@ class dBlogClassType extends dBase {
     }        
         
     //添加班级关系
-    public function addBlogTypesClassRelation($data, $is_return_id) {
+    public function addBlogClassType($data, $is_return_id) {
         return $this->add($data, $is_return_id);
     }
     

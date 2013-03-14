@@ -7,57 +7,23 @@ class mBlogClassType extends mBase {
     }
     
     //根据班级关系ID获取信息列表          
-    public function getById($ids) {
-        return $this->_dBlogClassType->getById($ids);
+    public function getBlogClassTypeById($ids) {
+        return $this->_dBlogClassType->getBlogClassTypeById($ids);
     }
+    
     //根据class_code获取信息列表
-    public function getListByClassCode($class_code) {
+    public function getBlogClassTypeByClassCode($class_code) {
         //三维
-        return $this->_dBlogClassType->getListByClassCode($class_code);
+        return $this->_dBlogClassType->getBlogClassTypeByClassCode($class_code);
     }
     
     //根据type_id获取信息列表
-    public function getListByTypeId($type_ids) {
+    public function getBlogClassTypeByTypeId($type_ids) {
         if (empty($type_ids)) {
             return false;
         }
         
-        return $this->_dBlogClassType->getListByTypeId($type_ids);
-    }
-    
-    /**
-     * 根据条件获取班级日志类型信息
-     * @param array $wherearr
-     * ef:
-     * 	  $wherearr = array(
-     * 			'class_code'=>"班级编号",
-     * 			...
-     *    );
-     */
-    public function getTypeInfo($wherearr, $orderby, $offset=null, $limit=null) {
-        if(empty($wherearr)) {
-            return false;
-        }
-        
-        return $this->_dBlogClassType->getInfo($wherearr, $orderby, $offset, $limit);
-    }
-    
-    /**
-     * 通过班级class_code和日志类型type_id获取日志数
-     *
-     */
-    public function getBlogNumsByTypeIdAddClass($type_ids, $class_code) {
-        if(empty($type_ids) || empty($class_code)) {
-            return false;
-        }
-        $rs = $this->_dBlogClassType->getBlogNumsByTypeIdAddClass($type_ids, $class_code);
-        $type_num_list = array();
-        foreach($rs as $key=>$val) {
-            $type_num_list[$val['type_id']] = $val['blog_nums'];
-            unset($rs[$key]);
-        }
-        
-        return $type_num_list;
+        return $this->_dBlogClassType->getBlogClassTypeByTypeId($type_ids);
     }
     
     /**
@@ -86,8 +52,8 @@ class mBlogClassType extends mBase {
     
     
     //添加班级关系
-    public function addBlogTypesClassRelation($data, $is_return_id = false) {
-        return $this->_dBlogClassType->addBlogTypesClassRelation($data, $is_return_id);
+    public function addBlogClassType($data, $is_return_id = false) {
+        return $this->_dBlogClassType->addBlogClassType($data, $is_return_id);
     }
     
     //根据关系ID修改信息

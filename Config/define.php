@@ -180,9 +180,9 @@ define('RESOURCE_FEED_STATE_USELESS' , 2);           	//资源导入附加的状
 /**
  * 动态类型（feed_type）
  */
-define('FEED_ALBUM', 1);
+define('FEED_MOOD', 1);
 define('FEED_BLOG', 2);
-define('FEED_MOOD', 5);
+define('FEED_ALBUM', 3);
 
 define('FEED_ACTION_PUBLISH', 1);                       //发布产生的动态
 define('FEED_ACTION_COMMENT', 2);                       //评论产生的动态

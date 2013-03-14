@@ -14,6 +14,7 @@ class ActiveAction extends SnsController{
         $this->assign("active_num", $active_num["value"]);
         $this->assign("active_log_list", $client_log_list);
         $this->assign("today_value", $today_value);
+        $this->assign("current_uid", $current_uid);
         $this->display("active_info");
     }
     

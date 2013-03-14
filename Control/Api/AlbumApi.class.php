@@ -443,90 +443,6 @@ class AlbumApi extends ApiController {
         }
         $this->ajaxReturn($comment_1st_list, '', 1, 'json');
     }
-	/**
-     * 添加相片评论数
-     * @param int $photo_id
-     * 
-     * @return boolean
-     */
-    public function addPhotoCommentCount() {
-        $photo_id = $this->objInput->getInt("photo_id");
-        if(empty($photo_id)) {
-            $this->ajaxReturn(null, '',-1,'json');
-        }
-        
-        $ByClass = $this->initClass();
-        $rs = $ByClass->addPhotoCommentCountByPhotoId($photo_id);
-        if(empty($rs)) {
-            $this->ajaxReturn(null, '', -1, 'json');
-        }
-        
-        $this->ajaxReturn($rs, '', 1, 'json');
-    }
-	/**
-     * 减少相片评论数
-     * @param int $photo_id
-     * 
-     * @return boolean
-     */
-    public function minusPhotoCommentCountByPhotoId() {
-        $photo_id = $this->objInput->getInt('photo_id');
-        $count = $this->objInput->getInt('count');
-        if(empty($photo_id)) {
-            $this->ajaxReturn(null, '',-1,'json');
-        }
-        
-        $ByClass = $this->initClass();
-        $rs = $ByClass->minusPhotoCommentCountByPhotoId($count,$photo_id);
-        if(empty($rs)) {
-            $this->ajaxReturn(null, '', -1, 'json');
-        }
-        
-        $this->ajaxReturn($rs, '', 1, 'json');
-    }
-	/**
-     * 相册表添加相片数
-     * @param int $photo_id
-     * 
-     * @return boolean
-     */
-    public function addPhotoCountByAlbumId() {
-        $album_id = $this->objInput->getInt('album_id');
-        $count = $this->objInput->getInt('count');
-        
-        if(empty($album_id) || empty($count)) {
-            $this->ajaxReturn(null, '',-1,'json');
-        }
-        
-        $ByClass = $this->initClass();
-        $rs = $ByClass->addPhotoCountByAlbumId($count, $album_id);
-        if(empty($rs)) {
-            $this->ajaxReturn(null, '', -1, 'json');
-        }
-        
-        $this->ajaxReturn($rs, '', 1, 'json');
-    }
-	/**
-     * 相册表减少相片数
-     * @param int $photo_id
-     * 
-     * @return boolean
-     */
-    public function minusPhotoCountByAlbumId() {
-        $album_id = $this->objInput->getInt('album_id');
-        $count = 1;//$this->objInput->getInt('count');
-        if(empty($album_id)) {
-            $this->ajaxReturn(null, '',-1,'json');
-        }
-        
-        $ByClass = $this->initClass();
-        $rs = $ByClass->minusPhotoCountByAlbumId($count,$album_id);
-        if(empty($rs)) {
-            $this->ajaxReturn(null, '', -1, 'json');
-        }
-        
-        $this->ajaxReturn($rs, '', 1, 'json');
-    }
     /**
      * 删除班级相片
      * 
@@ -621,14 +537,9 @@ class AlbumApi extends ApiController {
         $ByClass = $this->initClass();
         $rs = $ByClass->movePhoto($to_album_id,$photo_id);
         if(!empty($rs)) {
-            $from_album_photo_num = $ByClass->getClassPhotoCountByAlbumId($from_album_id);
-            $form_upd_data['photo_num']=$from_album_photo_num-1;
-            $ByClass->upd($form_upd_data,$from_album_id);
-            
-            $to_album_photo_num = $ByClass->getClassPhotoCountByAlbumId($to_album_id);
             $to_upd_data['album_auto_img'] = "$img_name";
-            $to_upd_data['photo_num']=$to_album_photo_num+1;
-            $ByClass->upd($to_upd_data,$to_album_id);
+            $ByClass->updateAlbumPhotoCountByAlbumId($from_album_id);
+            $ByClass->updateAlbumPhotoCountByAlbumId($to_album_id, $to_upd_data);
         }
         if(empty($rs)) {
             $this->ajaxReturn($rs, '移动相片失败', -1, 'json');
@@ -864,7 +775,6 @@ class AlbumApi extends ApiController {
     public function getPersonPhotoListByAlbumId() {
         $album_id   = $this->objInput->getInt('album_id');
         $client_account = $this->objInput->getInt('client_account');
-        $client_account = $this->objInput->getInt('client_account');
         $page       = $this->objInput->getInt('page');
         if($page !== false) {
             $limit = 12;
@@ -925,7 +835,6 @@ class AlbumApi extends ApiController {
      */
     public function getPersonPhotoByPhotoId() {
         $photo_id = $this->objInput->getInt('photo_id');
-        $client_account = $this->objInput->getInt('client_account');
         $client_account = $this->objInput->getInt('client_account');
         if(empty($photo_id)) {
             $this->ajaxReturn(null, '', -1, 'json');
@@ -1076,90 +985,6 @@ class AlbumApi extends ApiController {
         }
         $this->ajaxReturn($comment_1st_list, '', 1, 'json');
     }
-	/**
-     * 添加相片评论数
-     * @param int $photo_id
-     * 
-     * @return boolean
-     */
-   /* public function addPhotoCommentCount() {
-        $photo_id = $this->objInput->getInt("photo_id");
-        if(empty($photo_id)) {
-            $this->ajaxReturn(null, '',-1,'json');
-        }
-        
-        $ByPerson = $this->initPerson();
-        $rs = $ByPerson->addPhotoCommentCountByPhotoId($photo_id);
-        if(empty($rs)) {
-            $this->ajaxReturn(null, '', -1, 'json');
-        }
-        
-        $this->ajaxReturn($rs, '', 1, 'json');
-    }*/
-	/**
-     * 减少相片评论数
-     * @param int $photo_id
-     * 
-     * @return boolean
-     */
-   /* public function minusPhotoCommentCountByPhotoId() {
-        $photo_id = $this->objInput->getInt('photo_id');
-        $count = $this->objInput->getInt('count');
-        if(empty($photo_id)) {
-            $this->ajaxReturn(null, '',-1,'json');
-        }
-        
-        $ByPerson = $this->initPerson();
-        $rs = $ByPerson->minusPhotoCommentCountByPhotoId($count,$photo_id);
-        if(empty($rs)) {
-            $this->ajaxReturn(null, '', -1, 'json');
-        }
-        
-        $this->ajaxReturn($rs, '', 1, 'json');
-    }*/
-	/**
-     * 相册表添加相片数
-     * @param int $photo_id
-     * 
-     * @return boolean
-     */
-    /*public function addPhotoCountByAlbumId() {
-        $album_id = $this->objInput->getInt('album_id');
-        $count = $this->objInput->getInt('count');
-        
-        if(empty($album_id) || empty($count)) {
-            $this->ajaxReturn(null, '',-1,'json');
-        }
-        
-        $ByPerson = $this->initPerson();
-        $rs = $ByPerson->addPhotoCountByAlbumId($count, $album_id);
-        if(empty($rs)) {
-            $this->ajaxReturn(null, '', -1, 'json');
-        }
-        
-        $this->ajaxReturn($rs, '', 1, 'json');
-    }*/
-	/**
-     * 相册表减少相片数
-     * @param int $photo_id
-     * 
-     * @return boolean
-     */
-   /* public function minusPhotoCountByAlbumId() {
-        $album_id = $this->objInput->getInt('album_id');
-        $count = 1;//$this->objInput->getInt('count');
-        if(empty($album_id)) {
-            $this->ajaxReturn(null, '',-1,'json');
-        }
-        
-        $ByPerson = $this->initPerson();
-        $rs = $ByPerson->minusPhotoCountByAlbumId($count,$album_id);
-        if(empty($rs)) {
-            $this->ajaxReturn(null, '', -1, 'json');
-        }
-        
-        $this->ajaxReturn($rs, '', 1, 'json');
-    }*/
     /**
      * 删除个人相片
      * 

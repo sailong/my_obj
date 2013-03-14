@@ -1,38 +1,85 @@
 <?php
 class mBlogPersonRelation extends mBase {
-    protected $_dBlogPersonRelation = null;
+    protected $_dBlogPersonRelation =  null;
     
     public function __construct() {
         $this->_dBlogPersonRelation = ClsFactory::Create('Data.Blog.dBlogPersonRelation');
     }
-              
-    //根据个人关系ID获取信息列表          
-    public function getById($ids) {
-        return $this->_dBlogPersonRelation->getById($ids);
-    }
-    //根据client_account获取信息列表
-    public function getListByClientAccount($client_account) {
-        //三维
-        return $this->_dBlogPersonRelation->getListByClientAccount($client_account, 'client_account');
-    }
-    //添加个人关系
-    public function addRelation($data, $is_return_id) {
-        return $this->_dBlogPersonRelation->addRelation($data, $is_return_id);
+    
+	/**
+     * 通用的获取班级日志的函数
+     * @param $class_codes
+     * @param $where_appends
+     * 注明：$where_appends只能是数组，并且一个元素只能包含一个过滤条件
+     *       ef:
+     *       $where_appends = array(
+     *       	"add_time>='1000'",
+     *       	"add_time<='2000'"
+     *       );
+     * @param $offset
+     * @param $limit
+     */
+    public function getPersonBlogByUid($client_account, $where_appends, $orderby = null, $offset = 0, $limit = 10) {
+        if(empty($client_account)) {
+            return false;
+        }
+        
+        return $this->_dBlogPersonRelation->getPersonBlogByUid($client_account, $where_appends, $orderby, $offset, $limit);
     }
     
-    //根据关系ID修改关系信息
-    public function modifyById($data, $id) {
-        return $this->_dBlogPersonRelation->modifyById($data, $id);
+    public function getBlogPersonRelationInfo($wheresql, $orderby=null, $offset=null, $limit=null){
+        if(empty($wheresql)) {
+            return false;
+        }
+        
+        return $this->_dBlogPersonRelation->getInfo($wheresql, $orderby, $offset, $limit);
     }
     
-    //根据关系ID删除关系信息
-    public function delById($id) {
-        return $this->_dBlogPersonRelation->delById($id);   
+    /**
+     * 添加
+     * @param $datas
+     * @param $return_insert_id
+     */
+    public function addBlogPersonRelation($datas, $return_insert_id = false) {
+        if(empty($datas)) {
+            return false;
+        }
+        
+        return $this->_dBlogPersonRelation->addBlogPersonRelation($datas, $return_insert_id);
     }
     
-    //根据client_account批量删除关系信息
-    public function delAllByClientAccount($client_account) {
-        //二维
-        return $this->_dBlogPersonRelation->delAllByClientAccount($client_account);
-    }              
+    /**
+     * 修改
+     * @param $datas
+     * @param $id
+     */
+    public function modifyBlogPersonRelation($datas, $id) {
+        if(empty($datas) || empty($id)) {
+            return false;
+        }
+        
+        return $this->_dBlogPersonRelation->delBlogPersonRelation($datas, $id);
+    }
+
+    /**
+     * 删除
+     * @param  $id
+     */
+    public function delBlogPersonRelation($id) {
+        if(empty($id)) {
+            return false;
+        }
+        
+        return $this->_dBlogPersonRelation->delBlogPersonRelation($id);
+    }
+    
+    //根据blog_id批量删除信息
+    public function delBlogPersonRelationByBlogId($blog_id) {
+        if(empty($blog_id)) {
+            return false;
+        }
+
+        return $this->_dBlogPersonRelation->delBlogPersonRelationByBlogID($blog_id);
+    }
+
 }

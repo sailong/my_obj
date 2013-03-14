@@ -24,6 +24,24 @@ function dump(obj) {
 
 }
 
+//工具类
+var feed_tool = {
+	collectParams:function(divObj) {
+		var params = {
+			post_params:{}
+		};
+		$(':input', divObj).each(function() {
+			var inpObj = $(this);
+			var name = inpObj.attr('name');
+			var val = inpObj.val();
+			params[name] = val;
+			if(inpObj.parent().is('.post_selector')) {
+				params.post_params[name] = val;
+			}
+		});
+		return params;
+	}
+};
 
 function feed(options, elem) {
 	this.init(options, elem);
@@ -42,9 +60,9 @@ feed.defaults = {
 feed.templates = [];
 
 //全局待初始化函数列表
-feed.initFunctions = {};
-feed.register=function(name, fn) {
-	feed.initFunctions[name] = (typeof fn == 'function') ? fn : $.noop;
+feed.initFunctions = [];
+feed.register=function(fn) {
+	feed.initFunctions.push(fn || $.noop);
 };
 
 /**
@@ -64,6 +82,11 @@ feed.globalInit=function() {
 };
 
 feed.prototype = {
+	feed_type_map:{
+		1:'mood',
+		2:'blog',
+		3:'photo'
+	},
 	//父级容器对象
 	$elem : {},
 	//表示是否已经初始化
@@ -90,8 +113,19 @@ feed.prototype = {
 	 */
 	init:function(options, elem) {
 		var me = this;
-		me.$elem = $(elem);
 		//合并相关配置
+		this.mergeSettings(options);
+		//加载模板信息
+		this.loadTemplate();
+		//初始化全局配置信息,要在模板加载完成之后进行相应的事件委托
+		feed.globalInit();
+		//创建div容器对象
+		this.createContain(elem);
+	},
+	
+	//合并设置信息，优先满足用户设置信息
+	mergeSettings:function(options) {
+		var me = this;
 		me.settings = $.extend({}, options || {});
 		for(var i in feed.defaults) {
 			if(me.settings[i]) {
@@ -99,38 +133,19 @@ feed.prototype = {
 			}
 			me.settings[i] = feed.defaults[i];
 		}
-		
-		//加载模板信息
-		if($.inArray(me.settings['template'], feed.templates) < 0) {
-			$.ajax({
-				url:me.settings['template'],
-				dataType:'html',
-				async:false,
-				success:function(html) {
-					$('body').append($(html));
-				}
-			});
-			feed.templates.push(me.settings['template']);
-		}
-		
-		//初始化全局配置信息
-		feed.globalInit();
-		
-		//创建div容器对象
+		return me.settings;
+	},
+	
+	//创建相关的容器
+	createContain:function(elem) {
+		var me = this;
+		me.$elem = $(elem);
 		me.feedListDivObj = $('#feed_list_div').clone().removeAttr('id').show();
 		me.loadMoreDivObj = $('#load_more_div').clone().removeAttr('id').show();
 		//将对象追加到父级容器
 		me.$elem.append(me.feedListDivObj);
 		me.$elem.append(me.loadMoreDivObj);
-		
-		//绑定事件
-		me.attachEvent();
-	},
-	
-	//绑定对应的加载更多的按钮信息
-	attachEvent:function() {
-		var me = this;
-		//加载更多
+		//绑定元素的事件
 		$('#load_more_feed_a', me.loadMoreDivObj).click(function() {
 			if(!me.hasNextPage) {
 				return false;
@@ -144,6 +159,23 @@ feed.prototype = {
 		});
 	},
 	
+	//加载动态的模板信息
+	loadTemplate:function() {
+		var me = this;
+		//加载模板信息
+		if($.inArray(me.settings['template'], feed.templates) < 0) {
+			$.ajax({
+				url:me.settings['template'],
+				dataType:'html',
+				async:false,
+				success:function(html) {
+					$('body').append($(html));
+				}
+			});
+			feed.templates.push(me.settings['template']);
+		}
+	},
+	
 	//加载动态信息
 	loadFeed:function(page) {
 		var me = this;
@@ -154,15 +186,24 @@ feed.prototype = {
 			dataType:'json',
 			success:function(json) {
 				var feed_list = json.data || {};
-				if(!$.isEmptyObject(feed_list)) {
-					for(var i in feed_list) {
-						var feed_datas = feed_list[i] || {};
-						var divObj = feed_unit.create(feed_datas);
-						divObj.data('datas', feed_datas);
-						me.feedListDivObj.append(divObj);
-					}
-				} else {
+				if($.isEmptyObject(feed_list)) {
 					me.hasNextPage = false;
+					return false;
+				}
+				
+				alert(me.feedListDivObj.length);
+				
+				//填充动态信息
+				for(var i in feed_list) {
+					var feed_datas = feed_list[i] || {};
+					//获取对应的动态的名称信息
+					var feed_type_name = me.feed_type_map[feed_datas.feed_type] || me.feed_type_map[1];
+					var divObj = feed_unit.createByFeedType(feed_datas, feed_type_name);
+					
+					alert(divObj.length);
+					
+					divObj.data('datas', feed_datas);
+					me.feedListDivObj.append(divObj);
 				}
 			}
 		});
@@ -180,44 +221,28 @@ $.fn.loadFeed=function(settings) {
 	return this;
 };
 
-var feed_unit = {
-	//创建feed_unit对象
-	create:function(feed_datas) {
-		var divObj,
-			feed_type = feed_datas.feed_type || 1;
-		
-		//根据feed类型创建不同的对象
-		switch(feed_type) {
-			case 1:
-				divObj = $('#feed_unit_mood').clone().removeAttr('id').show();
-				break;
-			case 2:
-				divObj = $('#feed_unit_blog').clone().removeAttr('id').show();
-				break;
-			case 3:
-				divObj = $('#feed_unit_album').clone().removeAttr('id').show();
-				break;
-			default:
-				divObj = $('#feed_unit_mood').clone().removeAttr('id').show();
-				break;
-		}
-		
-		divObj.renderHtml({
-			feed:feed_datas || {}
-		});
-		return divObj;
-	},
-	
-	//事件委托
-	delegateEvent:function() {
+//评论相关的事件需要集中处理
+function comment_events() {
+	this.delegateEventForFeedUnit();
+	this.delegateEventForComment1stUnit();
+	this.delegateEventForComment2ndUnit();
+}
+
+feed.register(function() {
+	new comment_events();
+});
+
+comment_events.prototype = {
+	delegateEventForFeedUnit:function() {
 		//删除按钮
 		$('.feed_delete_selector').live('click', function() {
-			var ancestorObj = $(this).parents('.feed_unit_selector:first');
-			var datas = ancestorObj.data('datas') || {};
+			var ancestorObj = $(this).closest('.feed_unit_selector');
 			var aObj = $(this);
+			
+			var params = feed_tool.collectParams($('.feed_unit_params_selector', ancestorObj));
 			//触发删除相关的事件
 			$('#feed_delete_div').trigger('openEvent', [{
-				datas : datas,
+				datas : params,
 				follow:aObj.get(0),
 				callback:function() {
 					$(ancestorObj[0].followDiv).remove();
@@ -228,19 +253,26 @@ var feed_unit = {
 		
 		//评论按钮, 点击有切换的效果
 		$('.feed_comment_selector').live('click', function() {
-			var ancestorObj = $(this).parents('.feed_unit_selector:first');
-			var datas = ancestorObj.data('datas') || {};
 			
+			//alert('call me here create comment_div');
+			
+			var ancestorObj = $(this).closest('.feed_unit_selector');
 			var aObj = $(this);
+			
+			alert(ancestorObj[0].outerHTML);
+			alert($('.feed_unit_params_selector', ancestorObj)[0].outerHTML);
+			
+			var params = feed_tool.collectParams($('.feed_unit_params_selector', ancestorObj));
+			
+			dump(params);
+			
+			
 			var toggled_nums = aObj.data('toggled_nums') || 1;
 			if(toggled_nums == 1) {
-				$('#comment_main_div').trigger('cloneEvent', [{
-					datas:datas,
-					callback:function(divObj) {
-						divObj.insertAfter(ancestorObj);
-						ancestorObj[0].followDiv = divObj;
-					}
-				}]);
+				feed_comment.createByFeedType(params.feed_type_name, params.from_id, function(divObj) {
+					divObj.insertAfter(ancestorObj);
+					ancestorObj[0].followDiv = divObj;
+				});
 			}
 			
 			if(toggled_nums % 2 == 0) {
@@ -251,127 +283,16 @@ var feed_unit = {
 			aObj.data('toggled_nums', toggled_nums + 1);
 		});
 	}
-};
-
-feed.register('initFeedUnit', function() {
-	feed_unit.delegateEvent();
-});
-
-var feed_comment = {
-	//创建一个comment对象
-	create:function(feed_id) {
-		var divObj = $('#comment_main_div').clone().attr('id', '');
-		var parentObj = $('#first_comment_list', divObj);
-		//初始化以及评论列表
-		var comment_list = feed_comment.loadFirstLevelComment(feed_id);
-		for(var i in comment_list) {
-			var comment_datas = comment_list[i];
-			var childDivObj = comment_1st_unit.create(comment_datas);
-			childDivObj.data('datas', comment_datas);
-			parentObj.append(childDivObj);
-		}
-		//渲染页面数据信息
-		divObj.renderHtml({
-			feed:{
-				feed_id:feed_id
-			}
-		});
-		
-		//增加一级评论的初始化处理
-		$('.reply_1st_content_selector', divObj).sendBox({
-			panels:'emote,upload',
-			type:'post',
-			url:'/Sns/Feed/List/publishCommentAjax',
-			data:{
-				feed_id:feed_id,
-				up_id:0
-			},
-			dataType:'json',
-			success:function(json) {
-				if(json.status < 0) {
-					alert(json.info);
-					return false;
-				}
-				//添加对应的评论层
-				var unitDivObj = comment_1st_unit.create(json.data || {});
-				var parentObj = $('#first_comment_list', divObj);
-				var childObj = parentObj.children('.comment_1st_unit_selector:first');
-				if(childObj.length > 0) {
-					unitDivObj.insertBefore(childObj);
-				} else {
-					unitDivObj.appendTo(parentObj);
-				}
-				$('.reply_1st_content_selector', divObj).val('');
-			}
-		});
-		
-		return divObj;
-	},
 	
-	//绑定动态评论的相关事件
-	attachEventUserDefine:function() {
-		$('#comment_main_div').bind({
-			//评论层的克隆事件
-			cloneEvent:function(evt, options) {
-				options = options || {};
-				var datas = options.datas || {};
-				var divObj = feed_comment.create(datas.feed_id);
-				divObj.data('datas', datas);
-				//回调处理
-				if(typeof options.callback == 'function') {
-					options.callback(divObj);
-				}
-			}
-		});
-	},
-	
-	//加载一级评论信息
-	loadFirstLevelComment:function(feed_id) {
-		var comment_list = {};
-		$.ajax({
-			type:'get',
-			url:'/Sns/Feed/List/getFeedCommentsAjax/feed_id/' + feed_id + "/level/1",
-			dataType:'json',
-			async:false,
-			success:function(json) {
-				comment_list = json.data || {};
-			}
-		});
-		return comment_list;
-	}
-};
-
-feed.register('initFeedComment', function() {
-	feed_comment.attachEventUserDefine();
-});
-
-var comment_1st_unit = {
-	create:function(comment_datas) {
-		comment_datas = comment_datas || {};
-		
-		var divObj = $('#comment_1st_unit_div').clone().attr('id', '').show();
-		var parentObj = $('#second_comment_list', divObj);
-		var child_list = comment_datas.child_list || {};
-		for(var i in child_list) {
-			var child_comment = child_list[i];
-			var childDivObj = comment_2nd_unit.create(child_comment);
-			childDivObj.data('datas', child_comment);
-			parentObj.append(childDivObj);
-		}
-		divObj.renderHtml({
-			comment:comment_datas || {}
-		});
-		return divObj;
-	},
-	
-	delegateEvent:function() {
+	//comment相关的事件
+	,delegateEventForComment1stUnit:function() {
 		//一级评论的删除事件
 		$('.comment_1st_delete_selector').live('click', function() {
-			var ancestorObj = $(this).parents('.comment_1st_unit_selector:first');
-			var comment_id = $('#comment_id', ancestorObj).val();
+			var ancestorObj = $(this).closest('.comment_1st_unit_selector');
+			var params = feed_tool.collectParams($('.comment_1st_unit_params_selector', ancestorObj));
 			$.ajax({
 				type:'get',
-				url:'/Sns/Feed/List/deleteCommentAjax/comment_id/' + comment_id,
+				url:params.delete_comment_url,
 				dataType:'json',
 				success:function(json) {
 					if(json.status < 0) {
@@ -388,34 +309,25 @@ var comment_1st_unit = {
 			var ancestorObj = $(this).closest('.comment_1st_unit_selector');
 			var reply2ndObj = $('.reply_2nd_selector', ancestorObj);
 			
-			var feed_id = $('*[name="feed_id"]', ancestorObj).val();
-			var up_id = $('*[name="up_id"]', ancestorObj).val();
-			
+			var params = feed_tool.collectParams($('.comment_1st_unit_params_selector', ancestorObj));
 			//第一次点击的时候初始化相应的sendbox对象
 			if($.isEmptyObject(reply2ndObj[0].sendBoxObj)) {
 				reply2ndObj[0].sendBoxObj = $('.reply_2nd_content_selector', ancestorObj).sendBox({
 					panels:'emote',
 					type:'post',
-					url:'/Sns/Feed/List/publishCommentAjax',
-					data:{
-						feed_id:feed_id,
-						up_id:up_id
-					},
+					url:params.publish_comment_url || "",
+					data:params.post_params || {},
 					dataType:'json',
 					success:function(json) {
 						if(json.status < 0) {
 							alert(json.info);
 							return false;
 						}
+						
 						//创建一个二级评论的对象
-						var unit2divObj = comment_2nd_unit.create(json.data || {});
-						var parentObj = $('#second_comment_list', ancestorObj);
-						var childObj = parentObj.children('.comment_2nd_unit_selector:first');
-						if(childObj.length > 0) {
-							unit2divObj.insertBefore(childObj);
-						} else {
-							unit2divObj.appendTo(parentObj);
-						}
+						var unit2divObj = comment_2nd_unit.createByFeedType(json.data || {}, params.feed_type_name);
+						$('#second_comment_list', ancestorObj).prepend(unit2divObj);
+						
 						$('.reply_2nd_content_selector', ancestorObj).val('');
 						reply2ndObj.hide();
 					}
@@ -428,9 +340,7 @@ var comment_1st_unit = {
 				reply2ndObj.css('display', 'none');
 			}
 		});
-	},
-	
-	delegateEventForReply2ndSimple:function() {
+		
 		//绑定"我也来说一句"
 		$('.reply_2nd_simple_selector').live('click', function() {
 			//按钮所在的P元素范围
@@ -438,34 +348,26 @@ var comment_1st_unit = {
 			//处理相关的逻辑
 			var ancestorObj = $(this).closest('.reply_2nd_simple_div_selector');
 			var scopeObj = $(this).closest('.comment_1st_unit_selector');
+			
+			var params = feed_tool.collectParams($('.comment_1st_unit_params_selector', scopeObj));
 			//获取要提交的相关数据信息
-			var feed_id = $('*[name="feed_id"]', ancestorObj).val();
-			var up_id = $('*[name="up_id"]', ancestorObj).val();
 			//处理编辑框的相关事件
 			if($.isEmptyObject(pObj[0].sendBoxObj)) {
 				pObj[0].sendBoxObj = $('.reply_2nd_simple_content_selector', ancestorObj).sendBox({
 					panels:'emote',
 					type:'post',
-					url:'/Sns/Feed/List/publishCommentAjax',
-					data:{
-						feed_id:feed_id,
-						up_id:up_id
-					},
+					url:params.publish_comment_url || "",
+					data:params.post_params || {},
 					dataType:'json',
 					success:function(json) {
 						if(json.status < 0) {
 							alert(json.info);
 							return false;
 						}
+						
 						//创建一个二级评论的对象
-						var unit2divObj = comment_2nd_unit.create(json.data || {});
-						var parentObj = $('#second_comment_list', scopeObj);
-						var childObj = parentObj.children('.comment_2nd_unit_selector:first');
-						if(childObj.length > 0) {
-							unit2divObj.insertBefore(childObj);
-						} else {
-							unit2divObj.appendTo(parentObj);
-						}
+						var unit2divObj = comment_2nd_unit.createByFeedType(json.data || {}, params.feed_type_name);
+						$('#second_comment_list', scopeObj).prepend(unit2divObj);
 						pObj.show();
 						$('.simple_reply_div_selector', ancestorObj).hide();
 					}
@@ -478,30 +380,16 @@ var comment_1st_unit = {
 			$('.simple_reply_div_selector', ancestorObj).show();
 		});
 	}
-};
-
-feed.register('initCommnet1stUnit', function() {
-	comment_1st_unit.delegateEvent();
-	comment_1st_unit.delegateEventForReply2ndSimple();
-});
-
-var comment_2nd_unit = {
-	create:function(child_comment) {
-		var divObj = $('#comment_2nd_unit_div').clone().attr('id', '').show();
-		divObj.renderHtml({
-			child_comment:child_comment || {}
-		});
-		return divObj;
-	},
 	
-	delegateEvent:function() {
+	//委托二级评论对应的事件
+	,delegateEventForComment2ndUnit:function() {
 		//2级评论的删除事件
 		$('.comment_2nd_delete_selector').live('click', function() {
-			var ancestorObj = $(this).parents('.comment_2nd_unit_selector:first');
-			var comment_id = $('#comment_id', ancestorObj).val();
+			var ancestorObj = $(this).closest('.comment_2nd_unit_selector');
+			var params = feed_tool.collectParams($('.comment_2nd_unit_params_selector', ancestorObj));
 			$.ajax({
 				type:'get',
-				url:'/Sns/Feed/List/deleteCommentAjax/comment_id/' + comment_id,
+				url:params.delete_comment_url,
 				dataType:'json',
 				success:function(json) {
 					if(json.status < 0) {
@@ -513,11 +401,113 @@ var comment_2nd_unit = {
 			});
 		});
 	}
+	
 };
 
-feed.register('initComment2ndUnit', function() {
-	comment_2nd_unit.delegateEvent();
-});
+var feed_unit = {
+	//创建feed_unit对象
+	createByFeedType:function(feed_datas, feed_type_name) {
+		var div_id = "feed_unit_%s".replace('%s', feed_type_name);
+		var divObj = $('#' + div_id).clone().removeAttr('id').show();
+		//根据feed类型创建不同的对象
+		divObj.renderHtml({
+			feed:feed_datas || {}
+		});
+		return divObj;
+	}
+};
+
+var feed_comment = {
+	//根据动态类型创建评论框
+	createByFeedType:function(feed_type_name, from_id, callback) {
+		var div_id = "comment_%s_main_div".replace("%s", feed_type_name);
+		var divObj = $("#" + div_id).clone().removeAttr('id');
+		//渲染页面的元素
+		divObj.renderHtml({
+			from_id:from_id
+		});
+		
+		divObj = $(divObj);
+		var params = feed_tool.collectParams($('.comment_params_selector', divObj));
+		//加载实体的评论信息
+		var comment_list = {};
+		$.ajax({
+			type:'get',
+			url:params.get_comments_url || "",
+			dataType:'json',
+			async:false,
+			success:function(json) {
+				comment_list = json.data || {};
+			}
+		});
+		
+		for(var i in comment_list) {
+			var comment_datas = comment_list[i];
+			var childDivObj = comment_1st_unit.createByFeedType(comment_datas, feed_type_name);
+			childDivObj.data('datas', comment_datas);
+			parentObj.append(childDivObj);
+		}
+		
+		//将div对象加载到document
+		if(typeof callback == 'function') {
+			//初始一级菜单的sendbox对象
+			callback(divObj, function(divObj) {
+				$('.reply_1st_content_selector', divObj).sendBox({
+					panels:'emote,upload',
+					type:'post',
+					url:params.publish_comment_url || "",
+					data:params.post_params || {},
+					dataType:'json',
+					success:function(json) {
+						if(json.status < 0) {
+							alert(json.info);
+							return false;
+						}
+						//添加对应的评论层
+						var unitDivObj = comment_1st_unit.createByFeedType(json.data || {}, feed_type_name);
+						$('#first_comment_list', divObj).prepend(unitDivObj);
+						
+						$('.reply_1st_content_selector', divObj).val('');
+					}
+				});
+			});
+		}
+	}
+};
+
+var comment_1st_unit = {
+	createByFeedType:function(comment_datas, feed_type_name) {
+		comment_datas = comment_datas || {};
+		
+		var div_id = "comment_%s_1st_unit_div".replace("%s", feed_type_name);
+		var divObj = $('#' + div_id).clone().removeAttr('id').show();
+		
+		var parentObj = $('#second_comment_list', divObj);
+		var child_list = comment_datas.child_list || {};
+		for(var i in child_list) {
+			var child_comment = child_list[i];
+			var childDivObj = comment_2nd_unit.createByFeedType(child_comment, feed_type_name);
+			childDivObj.data('datas', child_comment);
+			parentObj.append(childDivObj);
+		}
+		divObj.renderHtml({
+			comment:comment_datas || {}
+		});
+		
+		return divObj;
+	}
+};
+
+var comment_2nd_unit = {
+	createByFeedType:function(child_comment, feed_type_name) {
+		var div_id = "comment_%s_2nd_unit_div".replace('%s', feed_type_name);
+		var divObj = $('#' + div_id).clone().removeAttr('id').show();
+		divObj.renderHtml({
+			child_comment:child_comment || {}
+		});
+		return divObj;
+	}
+};
 
 //动态的删除部分
 var feed_delete = {
@@ -581,7 +571,7 @@ var feed_delete = {
 	}
 };
 
-feed.register('initFeedDelete', function() {
+feed.register(function() {
 	feed_delete.attachEventUserDefine();
 	feed_delete.delegateEvent();
 });

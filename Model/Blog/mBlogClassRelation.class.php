@@ -6,19 +6,19 @@ class mBlogClassRelation extends mBase {
         $this->_dBlogClassRelation = ClsFactory::Create('Data.Blog.dBlogClassRelation');
     }
     
-     /**
-      * 通用的获取班级日志的函数
-      * @param $class_codes
-      * @param $where_appends
-      * 注明：$where_appends只能是数组，并且一个元素只能包含一个过滤条件
-      *       ef:
-      *       $where_appends = array(
-      *       	"add_time>='1000'",
-      *       	"add_time<='2000'"
-      *       );
-      * @param $offset
-      * @param $limit
-      */
+	/**
+     * 通用的获取班级日志的函数
+     * @param $class_codes
+     * @param $where_appends
+     * 注明：$where_appends只能是数组，并且一个元素只能包含一个过滤条件
+     *       ef:
+     *       $where_appends = array(
+     *       	"add_time>='1000'",
+     *       	"add_time<='2000'"
+     *       );
+     * @param $offset
+     * @param $limit
+     */
     public function getClassBlogByClassCode($class_codes, $where_appends, $orderby = null, $offset = 0, $limit = 10) {
         if(empty($class_codes)) {
             return false;

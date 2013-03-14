@@ -43,7 +43,7 @@ initEdit.prototype.attachEvent=function(){
 			type:"post",
 			data:params,
 			dataType:"json",
-			url:"/Api/Album/updAlbumByClass",
+			url:"/Api/Album/updAlbumByPerson",
 			async:false,
 			success:function(json) {
 				$('#edit_album_div').trigger('closeEvent');
@@ -87,8 +87,8 @@ initEdit.prototype.attachEventEditAlbum=function(){
 			/*
 			 * options : {
 			 * 	  album_id:album_id,
-			 *    //注明class_code和client_account不同时出现
-			 * 	  class_code:class_code,
+			 *    //注明client_account和client_account不同时出现
+			 * 	  client_account:client_account,
 			 *    client_account:client_account,
 			 * }
 			 */
@@ -102,9 +102,9 @@ initEdit.prototype.attachEventEditAlbum=function(){
 				drag: false,
 				fixed: true, //固定定位 ie 支持不好回默认转成绝对定位
 				init:function() {
-					me.fillClassGrantList(options.class_code);
+					me.fillPersonGrantList(options.client_account);
 					me.initFormOptions(options);
-					me.fillClassAlbumData(options.album_id, options.class_code);
+					me.fillPersonAlbumData(options.album_id, options.client_account);
 				}
 			}).lock();
 		},
@@ -117,15 +117,15 @@ initEdit.prototype.attachEventEditAlbum=function(){
 	});
 };
 
-initEdit.prototype.fillClassGrantList=function(class_code) {
+initEdit.prototype.fillPersonGrantList=function(client_account) {
 	var me = this;
-	var cache_key = "grant:" + class_code;
+	var cache_key = "grant:" + client_account;
 	var grant_list = me.grant_cache[cache_key] || {};
 	if($.isEmptyObject(grant_list)) {
 		$.ajax({
 			type:'get',
 			dataType:"json",
-			url:"/Api/Album/getClassGrantList/class_code/" + class_code,
+			url:"/Api/Album/getPersonGrantList/client_account/" + client_account,
 			async:false,
 			success:function(json) {
 				grant_list = me.grant_cache[cache_key] = json.data || {};
@@ -142,19 +142,18 @@ initEdit.prototype.fillClassGrantList=function(class_code) {
 	});
 };
 
-initEdit.prototype.fillClassAlbumData=function(album_id, class_code) {
+initEdit.prototype.fillPersonAlbumData=function(album_id, client_account) {
 	var me = this;
 	var album_data = {};
 	$.ajax({
 		url:'get',
-		url:'/Api/Album/getAlbumByClass/album_id/' + album_id + "/class_code/" + class_code,
+		url:'/Api/Album/getAlbumByPerson/album_id/' + album_id + "/client_account/" + client_account,
 		dataType:'json',
 		async:false,
 		success:function(json) {
 			album_data = json.data || {};
 		}
 	});
-	
 	return me.fillAlbum(album_data);
 };
 

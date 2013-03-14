@@ -18,7 +18,7 @@
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_flash/swfupload/js/handlers.js"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/tip_msg/showtip.js"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/template/template.js"></script>
-<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/Album/class_upload_photo.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/Album/person_upload_photo.js"></script>
 </head>
 <body>
 <!--弹出层 star-->
@@ -54,7 +54,7 @@
       </tr>
       <tr>
         <th>权限设置：</th>
-        <td><select><option>公开（所有人可见）</option><option>班级成员可见</option><option>学校成员可见</option></select></td>
+        <td><select><option>公开（所有人可见）</option><option>个人成员可见</option><option>学校成员可见</option></select></td>
       </tr>
     </table>
     </div>
@@ -67,26 +67,19 @@
 
 {insert name="sns_header"}
 <!--tip star-->
-{insert name="sns_class_header" class_code = $class_code}
-  <!--<div class="tip">
-   <div class="tip_main">
-    <p class="f13 f_green">丰台区芳群园第一小学</p><p><a href="#" class="f13 f_green">一年二班<span class="icon_01"></span></a></p><span class="icon_02"></span><p class="f13 f_green">班主任：李老师</p>
-    <div class="clear"></div>
-   </div> 
-  </div>
---><!--tip end--> 
+{insert name="sns_class_header" client_account = $client_account}
 <!--content star-->
 <div class="content">
   <!--main star-->
    <div class="main">
     <!--nav star-->
-    {insert name="sns_nav" class_code = $class_code}
+    {insert name="sns_nav" client_account = $client_account}
     <!--nav end-->
-    <h4><a href="/Sns/Album/Class/albumlist/class_code/{$class_code}"><span class="btn_left"></span><span class="btn_right">返回相册首页</span></a></h4>
+    <h4><a href="/Sns/Album/Person/albumlist/client_account/{$client_account}"><span class="btn_left"></span><span class="btn_right">返回相册首页</span></a></h4>
     <div class="clear"></div>
     <!--publish_main star-->
     <div class="publish_main">
-      <h3>班级相册>上传照片</h3>
+      <h3>个人相册>上传照片</h3>
       <div class="publish_main_tab">
       <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
@@ -128,12 +121,6 @@
             <div class="fieldset flash" id="fsUploadProgress" style="margin-top:12px;">
 				
 		    </div>
-            <!-- <img src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/images/Album/class_upload/pic01.jpg">
-            <img src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/images/Album/class_upload/pic01.jpg">
-            <img src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/images/Album/class_upload/pic01.jpg">
-            <img src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/images/Album/class_upload/pic01.jpg">
-            <img src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/images/Album/class_upload/pic01.jpg">
-            <img src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/images/Album/class_upload/pic01.jpg">-->
             </td>
           </tr>
       </table>
@@ -146,10 +133,9 @@
   <!--main end-->
   <div class="clear"></div> 
   </div>
-  {include file="Sns/Album/Subtemplate/create_album.inc.html"}
+  {include file="Sns/Album/Subtemplate/person_create_album.inc.html"}
 <!--content end-->
 <input id="client_account" type="hidden" value="{$client_account}"/>
-<input id="class_code" type="hidden" value="{$class_code}"/>
 <input id="album_id" type="hidden" value="{$album_id}"/>
 <input id="img_server" type="hidden" value="{$smarty.const.IMG_SERVER}__PUBLIC__"/>
 <input type="hidden" id="secret_key" value="{$secret_key}"/>

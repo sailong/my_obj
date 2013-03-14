@@ -53,7 +53,6 @@ class FeedApi extends ApiController {
         
         import('@.Control.Api.FeedImpl.CreateFeed');
         $createFeed = new CreateFeed();
-        
         return $createFeed->createClassFeed($class_code, $uid, $from_id, $feed_type, $action);
     }
     

@@ -6,6 +6,15 @@ class mAlbumPhotoComments extends mBase {
         $this->_dAlbumPhotoComments = ClsFactory::Create('Data.Album.dAlbumPhotoComments');
     }
     
+    
+    public function getCommentByCommentId($comment_id) {
+        if(empty($comment_id)) {
+            return false;
+        }
+        
+        return $this->_dAlbumPhotoComments->getCommentByCommentId($comment_id);
+    }
+    
     public function addAlbumPhotoComment($data, $is_return_id) {
         return $this->_dAlbumPhotoComments->addAlbumPhotoComment($data, $is_return_id);
     }
@@ -51,5 +60,16 @@ class mAlbumPhotoComments extends mBase {
     }
     public function delByPhotoId($photo_ids) {
         return $this->_dAlbumPhotoComments->delByPhotoId($photo_ids);
+    }
+    
+    //根据相片ID获取评论的数量
+    public function getCountByPhotoId($photo_id) {
+        if(empty($photo_id)) {
+            return false;
+        }
+        /*$this->_dAlbumPhotos->getCountByAlbumId($album_id);
+        echo $this->_dAlbumPhotos->getLastSql();die;*/
+        return $this->_dAlbumPhotoComments->getCountByPhotoId($photo_id);
+        
     }
 }

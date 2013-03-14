@@ -31,7 +31,7 @@ header.prototype.msg = function(){
 		$("#msg").show();
 	});
 	
-	$("#msg_dispaly,#msg").mouseout(function(){
+	$("#msg_dispaly,#msg").mouseleave(function(){
 		self.set_position_show('msg_dispaly', 'msg');
 		$("#msg").hide();
 	});
@@ -44,7 +44,7 @@ header.prototype.account_settings = function(){
 		$("#account_settings").show();
 	});
 	
-	$("#account_settings_dispaly,#account_settings").mouseout(function(){
+	$("#account_settings_dispaly,#account_settings").mouseleave(function(){
 		self.set_position_show('account_settings_dispaly', 'account_settings');
 		$("#account_settings").hide();
 	});

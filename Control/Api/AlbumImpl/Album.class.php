@@ -135,10 +135,7 @@ class Album {
         }
         //相册表中添加相片数和制定最新相册封面
         $upd_data['album_auto_img'] = "{$dataarr['file_small']}";
-        $photo_num = $this->getPhotoCountByAlbumId($dataarr['album_id']);
-        $upd_data['photo_num']  = $photo_num+1;
-        
-        $this->upd($upd_data,$dataarr['album_id']);
+        $this->updateAlbumPhotoCountByAlbumId($dataarr['album_id'],$upd_data);
         
         return $rs;
     }
@@ -205,6 +202,7 @@ class Album {
         $rs = $this->_mAlbumPhotos->delPhotosByPhotoId($photo_id);
         if($rs) {
            //删除实体
+            $this->updateAlbumPhotoCountByAlbumId($photo_list[$photo_id]['album_id']);
             $this->del_photo_entity($photo_list); 
         }
         return $rs;
@@ -272,7 +270,12 @@ class Album {
         }
         $this->initmAlbumPhotoComments();
         
-        return $this->_mAlbumPhotoComments->addAlbumPhotoComment($dataarr, $is_return_id);
+        $rs = $this->_mAlbumPhotoComments->addAlbumPhotoComment($dataarr, $is_return_id);
+        if($rs) {
+            $this->updatePhotoCommentCountByPhotoId($dataarr['photo_id']);
+        }
+        
+        return $rs;
     }
     
     /**
@@ -291,7 +294,6 @@ class Album {
         if(empty($rs)) {
             return false;
         }
-        $this->minusPhotoCommentCountByPhotoId($rs,$photo_id);
         return true;
     }
     
@@ -305,14 +307,21 @@ class Album {
         if(empty($comment_id)) {
             return false;
         }
-        $count = 0;
         $this->initmAlbumPhotoComments();
+        $comment_list = $this->_mAlbumPhotoComments->getCommentByCommentId($comment_id);
+        if(empty($comment_list)) {
+            return false;
+        }
         $comment_2nd_list = $this->_mAlbumPhotoComments->getAlbumPhotoCommentByUpId($comment_id,2);
         if(!empty($comment_2nd_list)){
-            $count = $this->_mAlbumPhotoComments->delByUpId($comment_id);
+            $this->_mAlbumPhotoComments->delByUpId($comment_id);
         }
-        $count+=$this->_mAlbumPhotoComments->delCommentByCommentId($comment_id);
-        return $count;
+        $rs = $this->_mAlbumPhotoComments->delCommentByCommentId($comment_id);
+        if($rs) {
+            $this->updatePhotoCommentCountByPhotoId($comment_list[$comment_id]['photo_id']);
+        }
+        
+        return $rs;
     }
     
     /**
@@ -359,59 +368,6 @@ class Album {
         return $comment_list;
     }
     
-    /**
-     * 添加相片评论数
-     * @param int $photo_id
-     * 
-     * @return boolean
-     */
-    public function addPhotoCommentCountByPhotoId($photo_id) {
-        if(empty($photo_id)) {
-            return false;
-        }
-        $this->initmAlbumPhotos();
-        return $this->_mAlbumPhotos->updCommentCountByPhotoId("+1", $photo_id);
-    }
-	/**
-     * 减少相片评论数
-     * @param int $photo_id
-     * 
-     * @return boolean
-     */
-    public function minusPhotoCommentCountByPhotoId($count, $photo_id) {
-        if(empty($photo_id) || empty($count)) {
-            return false;
-        }
-        $this->initmAlbumPhotos();
-        return $this->_mAlbumPhotos->updCommentCountByPhotoId("-$count", $photo_id);
-    }
-	/**
-     * 相册表添加相片数
-     * @param int $photo_id
-     * 
-     * @return boolean
-     */
-    public function addPhotoCountByAlbumId($count, $album_id) {
-        if(empty($album_id) || empty($count)) {
-            return false;
-        }
-        $this->initmAlbum();
-        
-        return $this->_mAlbum->updPhotoCountByAlbumId("+{$count}", $album_id);
-    }
-	/**
-     * 相册表减少相片数
-     * @param int $photo_id
-     * 
-     * @return boolean
-     */
-    public function minusPhotoCountByAlbumId($count, $album_id) {
-        if(empty($album_id) || empty($count)) {
-            return false;
-        }
-        $this->initmAlbum();
-        return $this->_mAlbum->updPhotoCountByAlbumId("-$count", $album_id);
-    }
     
     //获取账号信息 
     private function getClientInfoByClientAccount($client_account_arr) {
@@ -435,6 +391,43 @@ class Album {
         }
         
         return $client_list;
+    }
+    //更新相册中照片数 
+    //再添加相片，删除相片，更新相片时都会调用此方法
+    public function updateAlbumPhotoCountByAlbumId($album_id,$template = array()) {
+        if(empty($album_id)) {
+            return false;
+        }
+        //获取照片数
+        $this->initmAlbumPhotos();
+        $photo_count = $this->_mAlbumPhotos->getCountByAlbumId($album_id);
+        
+        //更新相册表
+        $this->initmAlbum();
+        $data_arr = array(
+            'photo_num'=>$photo_count
+        );
+        if(!empty($template)) {
+            $template = (array)$template;
+            $data_arr = array_merge($data_arr,$template);
+        }
+        return $this->_mAlbum->modifyAlbumByAlbumId($data_arr, $album_id);
+    }
+    //更新照片评论数
+    //再添加评论，删除评论时调用此方法
+    public function updatePhotoCommentCountByPhotoId($photo_id) {
+        if(empty($photo_id)) {
+            return false;
+        }
+        //获取相片评论数
+        $this->initmAlbumPhotoComments();
+        $comment_count = $this->_mAlbumPhotoComments->getCountByPhotoId($photo_id);
+        //更新相片评论数
+        $this->initmAlbumPhotos();
+        $data_arr = array(
+            'comments'=>$comment_count
+        );
+        return $this->_mAlbumPhotos->modifyPhotoByPhotoId($data_arr,$photo_id);
     }
     //单张相片 异步删除相片实体
     private function del_photo_entity($photo_list) {

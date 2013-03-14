@@ -18,9 +18,9 @@ function insert_sns_nav($params = array(), & $smarty){
     echo $insertObj->run($params, $smarty);
 }
 
-function insert_sns_personal_second_header($params = array(), & $smarty){
-    import("@.Control.Sns.Insert.InsertSns.InsertSnsNav");
-    $insertObj = new InsertSnsNav();
+function insert_sns_person_second_header($params = array(), & $smarty){
+    import("@.Control.Sns.Insert.InsertSns.InsertSnsPersonSecondHeader");
+    $insertObj = new InsertSnsPersonSecondHeader();
     echo $insertObj->run($params, $smarty);
 }
 

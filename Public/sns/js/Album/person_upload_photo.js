@@ -21,13 +21,12 @@ function selectUploadUserDefine() {
 
 function class_photo_upload() {
 	this.client_account = $("#client_account").val();
-	this.class_code = $("#class_code").val();
 	this.album_id = $("#album_id").val();
 	this.img_server = $('#img_server').val() || '/Public';
 	this.album_list_cache = {};
 	this.initUpload();
 	this.attachEvent();
-	this.fillClassAlbumList();
+	this.fillPersonAlbumList();
 };
 
 //所选文件的个数
@@ -44,9 +43,8 @@ function filesUploadComplete() {
 	$('.aui_close',$(".aui_titleBar")).hide();
 	var album_id = $("#xcid").val();
 	var client_account = $("#client_account").val();
-	var class_code = $("#class_code").val();
 	$("#upload_photo_count").html(upload_nums);
-	$("#gotoAlbum").attr('href',"/Sns/Album/Classphoto/photolist/album_id/"+album_id+"/class_code/"+class_code+"/client_account/"+client_account);
+	$("#gotoAlbum").attr('href',"/Sns/Album/Personphoto/photolist/album_id/"+album_id+"/client_account/"+client_account);
 }
 class_photo_upload.prototype.attachEvent=function() {
 	var me = this;
@@ -60,7 +58,7 @@ class_photo_upload.prototype.attachEvent=function() {
 		if(!$.isEmptyObject(dialogObj)) {
 			dialogObj.close();
 		}
-		window.location.href='/Sns/Album/Class/uplaodPhoto/class_code/'+me.class_code+'/album_id/'+me.album_id;
+		window.location.href='/Sns/Album/Person/uplaodPhoto/client_account/'+me.client_account+'/album_id/'+me.album_id;
 	});
 	//绑定开始上传的事件
 	$("#start_upload").click(function() {
@@ -90,7 +88,7 @@ class_photo_upload.prototype.initUpload=function() {
 	var me = this;
 	var settings = {
 		flash_url : me.img_server + "/tool_flash/swfupload/swfupload.swf",
-		upload_url: "/Sns/Album/Classphotoupload/index",
+		upload_url: "/Sns/Album/Personphotoupload/index",
 		post_params:{
 			
 		},
@@ -128,15 +126,15 @@ class_photo_upload.prototype.initUpload=function() {
 	me.swfu = new SWFUpload(settings);
 };
 
-class_photo_upload.prototype.fillClassAlbumList=function() {
+class_photo_upload.prototype.fillPersonAlbumList=function() {
 	var me = this;
-	var cache_key = "album_list:" + me.class_code;
+	var cache_key = "album_list:" + me.client_account;
 	var album_list = me.album_list_cache[cache_key] || {};
 	if($.isEmptyObject(album_list)) {
 		$.ajax({
 			type:'get',
 			dataType:"json",
-			url:"/Api/Album/getOnlyAlbumListByClassCode/class_code/" + me.class_code,
+			url:"/Api/Album/getOnlyAlbumListByClientAccount/client_account/" + me.client_account,
 			async:false,
 			success:function(json) {
 				if(json.status<0) {
@@ -178,7 +176,6 @@ class_photo_upload.prototype.createAlbum = function () {
 	var me = this;
 	//打开创建弹出层
 	$('#create_album_div').trigger('openEvent', [{
-		class_code:me.class_code,
 		client_account:me.client_account,
 		callback:function(album_list) {
 			var xcselect_obj = $("#xcid");
