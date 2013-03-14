@@ -45,11 +45,11 @@ class mZsetUserAll extends mFeedBase {
             $r_count = count($r);
             
             if ($r_count > 500) {
-              $uids = array_slice($r, 0, 500);
+                $uids = array_slice($r, 0, 500);
             } else {
-              $r_diff = array_diff($all_friends, $r);
-              $r_adds = array_merge($r, (array)$r_diff);
-              $uids = array_slice($r_adds, 0, 500);
+                $r_diff = array_diff($all_friends, $r);
+                $r_adds = array_merge($r, (array)$r_diff);
+                $uids = array_slice($r_adds, 0, 500);
             }
             
         }
@@ -62,10 +62,9 @@ class mZsetUserAll extends mFeedBase {
         foreach ($datas_from_db as $key => $val) {
             $result[] = array(
                 'value' => $val['feed_id'],
-                'score' => $val['feed_id']
+                'score' => $val['feed_id'],
             );
         }
-        
         return $result;
     }
 }

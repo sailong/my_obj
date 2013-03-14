@@ -10,6 +10,7 @@ class dFeed extends dBase{
     	'add_account',
         'img_url',
     	'timeline',
+        'action',
     );
     protected $_pk = 'feed_id';
     protected $_index_list = array(
@@ -18,7 +19,14 @@ class dFeed extends dBase{
     );
     
     public function getFeedById($feed_ids) {
-        return $this->getInfoByPk($feed_ids);
+        if(empty($feed_ids)) {
+            return false;
+        }
+        
+        //按照给定的feed_id的值的顺序排序,使用了mysql的find_in_set函数作为排序条件
+        $orderby = "find_in_set({$this->_pk}, '" . implode(',', (array)$feed_ids) . "')";
+        
+        return $this->getInfoByPk($feed_ids, $orderby);
     }
 
     public function addFeed($datas, $is_return_id) {

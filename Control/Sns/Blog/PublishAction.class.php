@@ -171,6 +171,9 @@ class PublishAction extends SnsController {
              $this->ajaxReturn(null, '数据填写不完整!', -1, 'json');
         }
         
+        // 处理日志内容 主要是把图片从临时文件夹移动到真实路径
+        $content = $BlogObj->processBlogImage($content);  
+        
         // 提取日志摘要
         $summary = $BlogObj->getSummary($content, $this->summary_len);
         

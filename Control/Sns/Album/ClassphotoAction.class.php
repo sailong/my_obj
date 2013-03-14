@@ -47,22 +47,15 @@ class ClassphotoAction extends SnsController {
         if(empty($photo_count)) {
             $photo_count = 0;
         }
-        import("@.Common_wmw.Pathmanagement_sns");
         foreach($album_list as $album_id_key=>$album_info) {
             $album_info['count'] = $photo_count;
             $album_info['add_date'] = date('Y-m-d', $album_info['add_time']);
             $album_info['upd_date'] = date('Y-m-d', $album_info['upd_time']);
-            if(!empty($album_info['album_img'])) {
-                $img_path = Pathmanagement_sns::getAlbum($album_info['add_account']).'/';
-                $album_info['album_img_path'] = $img_path.$album_info['album_img'];
-            }
             $album_list[$album_id_key] = $album_info;
         }
         $album_list = reset($album_list);
         
         $this->assign('album_list', $album_list);
-        $this->assign('album_list_json', json_encode($album_list));
-     
         $this->assign('is_edit', $is_edit);
         $this->assign('class_code', $class_code);
         $this->assign('album_id', $album_id);
@@ -173,7 +166,7 @@ class ClassphotoAction extends SnsController {
         $this->assign('client_account', $client_account);
         $this->assign('login_account', $login_account);
         $this->assign('client_name', $this->user['client_name']);
-        $this->assign('head_img', "/attachment/head_pic/11070004/thumbnail_1362544825_11070004.jpg");
+        $this->assign('head_img', $head_img_url);
         
         $this->display('class_photo_show');
     }

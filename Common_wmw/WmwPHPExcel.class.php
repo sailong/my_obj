@@ -69,4 +69,3 @@ class WmwPHPExcel implements PHPexcelInterface {
         return $this->objPHPExcel->saveToExcelFile($datas, $filename);
     }
 }
-?>

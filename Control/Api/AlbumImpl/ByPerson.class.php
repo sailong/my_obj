@@ -1,43 +1,47 @@
 <?php
 import('@.Control.Api.AlbumImpl.Album');
 /**
+ * 
  * @author sailong
- *功能：个人相册Api
- *说明：与相册有关的增删改查操作
+ *功能：个人相册API
+ *说明：关于个人相册，相片的增删改查
  */
-
 class ByPerson extends Album {
     /**
-     * 个人添加相册函数
-     * @param $datas
-     * @return Array
+     * 创建个人相册
+     * @param Array $datas
+     * 
+     * @return int 相册ID
      */
-    public function create($datas) {
+    public function create($datas, $client_account) {
         //判断是否为空
         if(empty($datas)) {
             return false;
         }
-        //检查班级是否存在
-        $this->uid_is_exist($datas['uid']);
+        
+        //检查个人是否存在
+        $this->client_is_exist($client_account);
+        
         //添加相册信息
-        $album_id = $this->add($datas, true);
+        $album_id = $this->add($datas);
         if(empty($album_id)) {
             return false;
         }
         $datas['album_id'] = $album_id;
         //添加相册关系
-        $rel_id = $this->add_rel($datas);
+        $rel_id = $this->add_rel($datas, $client_account);
         if(empty($rel_id)) {
             //删除相册信息
             $this->delete($album_id);
             return false;
         }
+        
         //添加相册权限
-        $grant_id = $this->add_grant($datas);
+        $grant_id = $this->add_grant($datas, $client_account);
         if(empty($grant_id)) {
             //删除相册信息
             $this->delete($album_id);
-            //删除相册关系
+            //删除个人相册关系
             $this->del_rel($rel_id);
             return false;
         }
@@ -46,196 +50,215 @@ class ByPerson extends Album {
     }
     
     
+    
     /**
-     * 通过个人uid获取相册列表信息
+     * 根据个人client_account只获取相册表信息
      * 
-     * @param int $uid 用户账号
-     * @param int $offset 
-     * @param int $limit
+     * @param int $client_account
      * 
-     * return Array
+     * @return array album_list
      */
-    public function getAlbumByUid($uid, $offset = null, $limit = null) {
-        if(empty($uid)) {
+    public function getOnlyAlbumListByClientAccount($client_account) {
+        if(empty($client_account)) {
             return false;
         }
-        //班级是否存在
-        $this->uid_is_exist($uid);
-        
-        $album_ids = $this->get_album_ids_by_rel($uid, $offset, $limit);
-        
-        //该班级是否存在相册
+        //个人是否存在
+        $this->client_is_exist($client_account);
+        //从关系表中得到相册信息
+        $album_ids = $this->get_album_ids_by_rel($client_account);
+       
+        //该个人是否存在相册
         if(empty($album_ids)) {
             return false;
         }
+        //通过相册album_id获取相册信息
+        $album_list = $this->get($album_ids);
         
+        return !empty($album_list) ? $album_list : false;
+    }
+    
+    
+    /**
+     * 通过个人client_account获取相册列表信息
+     * @param $client_account
+     * @param $offset
+     * @param $limit
+     * 
+     * @return Array
+     */
+    public function getListByPerson($client_account, $offset = null, $limit = null) {
+        if(empty($client_account)) {
+            return false;
+        }
+        //个人是否存在
+        $this->client_is_exist($client_account);
+        //从关系表中得到相册信息
+        $album_ids = $this->get_album_ids_by_rel($client_account, $offset, $limit);
+        //该个人是否存在相册
+        if(empty($album_ids)) {
+            return false;
+        }
         //通过相册album_id获取相册信息
         $album_list = $this->get($album_ids);
         //是否有相关相册的信息
         if(empty($album_list)) {
             return false;
         }
+        
         $album_ids = array_keys($album_list);
-        //获取相处权限
+        //获取相册权限
         $grant_list = $this->get_grant_by_album_id($album_ids);
+        //合并权限和相册信息
+        $album_list = $this->merge_album_rel_data($album_list, $grant_list);
+        $album_list = $this->parse($album_list);
         
-        $album_list = $this->merge_album_rel_data($album_list,$grant_list);
-        
-        $album_list = $this->parse($album_list, $uid);
-        
-        return $album_list;
+        return !empty($album_list) ? $album_list : false;
         
     }
+    /**
+     * 输出格式
+     * @param $album_list
+     * 
+     * @return Array
+     */
+    private function parse($album_list) {
+          import('Model.mUser');
+          $mUser = new mUser();
+          
+          foreach($album_list as $album_id=>$val) {
+              $user_info = $mUser-> getUserBaseByUid($val['add_account']);
+              $user_info = reset($user_info);
+              $album_list[$album_id]['client_name'] =$user_info['client_name'];
+          }
+          
+          return $album_list;
+    }
+   
     
     /**
-     * 通过个人uid和相册album_id获取相册信息
+     * 通过个人client_account和相册album_id获取相册信息
+     * @param $album_id
+     * @param $client_account
      * 
-     * @param $album_id 相册ID
-     * @param $uid      用户账号
-     * 
-     * return Array
+     * @return Array
      */
-    public function getAlbumByUidAlbumId($album_id, $uid) {
-        if(empty($uid) || empty($album_id)) {
+    public function getAlbumByPersonAlbumId($album_id, $client_account) {
+        if(empty($client_account) || empty($album_id)) {
             return false;
         }
-        //班级是否存在
-        $this->uid_is_exist($uid);
+        //个人是否存在
+        $this->client_is_exist($client_account);
         //通过相册album_id获取相册信息
         $album_list = $this->get($album_id);
-        
         //是否有相关相册的信息
         if(empty($album_list)) {
             return false;
         }
-        $mAlbumPersonRelation = ClsFactory::Create('Model.Album.mAlbumPersonRelation');
-        $rel = $mAlbumPersonRelation->getAlbumPersonRelByUidAlbumId($album_id, $uid);
-        //该班级是否存在相册
+        //检测相册关系是否存在
+        $rel = $this->get_rel_by_album_id($album_id, $client_account);
+       
+        //该个人是否存在相册
         if(empty($rel)) {
             return false;
         }
-        
-        $album_ids = array_keys($album_list);
         //获取相处权限
-        $grant_list = $this->get_grant_by_album_id($album_ids);
+        $grant_list = $this->get_grant_by_album_id($album_id);
         
         $album_list = $this->merge_album_rel_data($album_list,$grant_list);
+        $album_list = $this->parse($album_list);
         
-        return $album_list;
+        return !empty($album_list) ? $album_list : false;
         
-    }
-    /**
-     * 修改相册信息显示函数
-     * @param $album_id
-     * @param $uid
-     * 
-     * @return Array
-     */
-    public function showUpdAlbum($album_id, $uid) {
-        $data_arr['album_arr'] = $this->getAlbumByUidAlbumId($album_id, $uid);
-        $data_arr['grant_arr'] = $this->grant_arr();
-        
-        return $data_arr;
     }
     
     /**
-     * 根据uid和album_id删除相册信息
+     * 通过相册album_id和个人client_account获取相册关系信息
      * @param $album_id
-     * @param $uid
+     * @param $client_account
      * 
-     * return Bool
+     * @return Array
      */
-    public function delAlbummByPerson($album_id, $uid) {
-        if(empty($album_id) || empty($uid)) {
+    public function get_rel_by_album_id($album_id, $client_account) {
+        if(empty($album_id) && empty($client_account)) {
+            return false;
+        }
+        $mAlbum = ClsFactory::Create('Model.Album.mAlbumPersonRelation');
+        $rel = $mAlbum->getAlbumPersonRelByPersonAlbumId($album_id, $client_account);
+        
+        return !empty($rel) ? $rel : false;
+    }
+    
+    /**
+     * 删除个人相册信息
+     * @param $album_id
+     * @param $client_account
+     * 
+     * @return bool
+     */
+    public function delAlbumByPerson($album_id, $client_account) {
+        if(empty($album_id) || empty($client_account)) {
             return false;
         }
         
-        //删除班级相册关系
-        $mAlbumClassRelation = ClsFactory::Create('Model.Album.mAlbumPersonRelation');
-        $rs = $mAlbumClassRelation->delByAlbumId($album_id);
-//        if(empty($rs)) {
-//            echo "删除班级相册关系";
-//        }
+        //删除个人相册关系
+        $mAlbumPersonRelation = ClsFactory::Create('Model.Album.mAlbumPersonRelation');
+        $rs = $mAlbumPersonRelation->delByAlbumId($album_id);
+        if(empty($rs)) {
+            echo "删除个人相册关系失败";
+            return false;
+        }
         //删除相册权限
-        $mAlbumClassGrants = ClsFactory::Create('Model.Album.mAlbumPersonGrants');
-        $rs = $mAlbumClassGrants->delByAlbumId($album_id);
-//        if(empty($rs)) {
-//            echo "删除相册权限失败";
-//        }
+        $mAlbumPersonGrants = ClsFactory::Create('Model.Album.mAlbumPersonGrants');
+        $rs = $mAlbumPersonGrants->delByAlbumId($album_id);
+        if(empty($rs)) {
+           echo "删除相册权限失败";
+           return false;
+        }
         
         $mAlbumPhotos = ClsFactory::Create('Model.Album.mAlbumPhotos');
         //删除相册中照片的评论信息
         $photo_list = $mAlbumPhotos->getPhotosByAlbumId($album_id);
-        $photo_ids = array_keys($photo_list[$album_id]);
-        $mAlbumPhotoComments = ClsFactory::Create('Model.Album.mAlbumPhotoComments');
-        $rs = $mAlbumPhotoComments->delByPhotoId($photo_ids);
-//        if(empty($rs)) {
-//            echo "删除相册评论失败";
-//        }
+        if(!empty($photo_list)) {
+            $photo_ids = array_keys($photo_list[$album_id]);
+            $mAlbumPhotoComments = ClsFactory::Create('Model.Album.mAlbumPhotoComments');
+            $comments_list = $mAlbumPhotoComments->getAlbumPhotoCommentByPhotoId($photo_ids);
+            
+            if(!empty($comments_list)) {
+                $rs = $mAlbumPhotoComments->delByPhotoId($photo_ids);
+                if(empty($rs)) {
+                    echo "删除相册评论失败";
+                    return false;
+                }
+            }
+        }
+        
         //删除照片信息
-        $rs = $mAlbumPhotos->delByAlbumId($album_id);
-//        if(empty($rs)) {
-//            echo "删除相册照片信息失败";
-//        }
+        $photo_lists = $mAlbumPhotos->getPhotosByAlbumId($album_id);
+        if(!empty($photo_lists)) {
+            $rs = $mAlbumPhotos->delByAlbumId($album_id);
+            if(empty($rs)) {
+                echo "删除相册照片信息失败";
+                return false;
+            }
+        }
+        
         //删除相册信息
         $rs = $this->delete($album_id);
-//        if(empty($rs)) {
-//            echo "删除相册信息失败";
-//        }
+        if(empty($rs)) {
+            echo "删除相册信息失败";
+            return false;
+        }
         //删除照片实体
+        
         return true;
     }
     
     /**
-     * 删除照片信息
-     * @param $photo_id
-     * @return bool
-     */
-    public function delPhotoByPhotoId($photo_id) {
-        if(empty($photo_id)) {
-            return false;
-        }
-        $mAlbumPhotoComments = ClsFactory::Create('Model.Album.mAlbumPhotoComments');
-        $mAlbumPhotoComments->delByPhotoId($photo_id);
-        $mAlbumPhotos = ClsFactory::Create('Model.Album.mAlbumPhotos');
-        return $mAlbumPhotos->delPhotosByPhotoId($photo_id);
-    }
-    
-	/**
-     * 通过相册id获取班级相册权限
-     * @param $album_id
-     * return array  一维数组
-     */
-    private function getGrantByAlbumId($album_id) {
-        if(empty($album_id)) {
-            return false;
-        }
-        $mAlbumPersonGrants = ClsFactory::Create('Model.Album.mAlbumPersonGrants');
-        $rs = $mAlbumPersonGrants->getAlbumPersonGrantByAlbumId($album_id);
-        if(empty($rs)) {
-            return false;
-        }
-        $rs = reset($rs[$album_id]);
-        
-        return $rs;
-    }
-    /**
-     * 通过评论comment_id删除评论信息
-     * @param Int $comment_id
-     * 
-     * @return bool
-     */
-    public function delCommentById($comment_id) {
-        if(empty($comment_id)) {
-            return false;
-        }
-        $mAlbumPhotoComments = ClsFactory::Create('Data.Album.mAlbumPhotoComments');
-        return $mAlbumPhotoComments->delCommentByCommentId($comment_id);
-    }
-    /**
      * 设置相册封面
      * @param String $album_img 图片名称
-     * @param Int $album_id     相册Id
+     * @param Int $album_id
+     * 
+     * @return bool
      */
     public function setAlbumImg($album_img, $album_id) {
         $data = array(
@@ -243,6 +266,90 @@ class ByPerson extends Album {
             'upd_time'=>time()
         );
         return $this->upd($data,$album_id);
+    }
+    
+    /**
+     * 添加照片信息
+     * @param array $dataarr
+     * 
+     * @return boolean
+     */
+    
+    public function addPersonPhoto($dataarr,$is_return_id=false) {
+        if(empty($dataarr)) {
+            return false;
+        }
+        
+        return $this->addPhoto($dataarr,$is_return_id);
+    }
+    
+    /**
+     * 根据相册ID获取相片列表
+     * @param int $album_id
+     * 
+     * @return array $photo_list
+     */
+    public function getPersonPhotoListByAlbumId($album_id, $offset=null, $limit=null) {
+        if(empty($album_id)) {
+            return false;
+        }
+        
+        return $this->getPhotoListByAlbumId($album_id, $offset, $limit);
+    }
+    
+    /**
+     * 根据相册ID获取相片列表
+     * @param int $album_id
+     * 
+     * @return array $photo_list
+     */
+    public function getPersonPhotoByPhotoId($photo_ids) {
+        if(empty($photo_ids)) {
+            return false;
+        }
+        
+        return $this->getPhotoByPhotoId($photo_ids);
+    }
+    
+    /**
+     * 根据相册id获取相册中的相册数量
+     * @param int $album_id
+     * 
+     * @return int $count;
+     */
+    public function getPersonPhotoCountByAlbumId($album_id) {
+        if(empty($album_id)) {
+            return false;
+        }
+        
+        return $this->getPhotoCountByAlbumId($album_id);
+    }
+    /**
+     * 修改相片信息
+     * @param array photo_info
+     * @param int   photo_id
+     * 
+     * @return boolean
+     */
+    public function updPersonPhotoByPhotoId($datas,$photo_id) {
+        if(empty($datas) || empty($photo_id)) {
+            return false;
+        }
+        return $this->updPhotoByPhotoId($datas,$photo_id);
+    }
+    
+    /**getPersonPhotoCountByAlbumId
+     * 删除照片信息
+     * @param int $photo_id
+     * 
+     * @return bool
+     */
+    public function deletePhotoByPhotoId($photo_id) {
+        if(empty($photo_id)) {
+            return false;
+        }
+        
+        return $this->delPhotoByPhotoId($photo_id);
     }
     
     /**
@@ -264,14 +371,17 @@ class ByPerson extends Album {
         
         return $rs;
     }
+    
     /**
      * 修改相册信息
-     * @param Array $data
-     * @param Int $album_id
-     * @param Int $uid
-     * @return bool true;
+     * @param $data
+     * @param $album_id
+     * @param $client_account
+     * 
+     * @return bool
+     * 
      */
-    public function updAlbum($data, $album_id, $uid) {
+    public function updAlbum($data, $album_id, $client_account) {
         if(empty($data) || empty($album_id)) {
             return false;
         }
@@ -280,161 +390,67 @@ class ByPerson extends Album {
         if(empty($album_list)) {
             return false;
         }
-      
-        $mAlbumPersonRelation = ClsFactory::Create('Model.Album.mAlbumPersonRelation');
-        $rel = $mAlbumPersonRelation->getAlbumPersonRelByUidAlbumId($album_id, $uid);
-       
-        //该班级是否存在相册
+        $mAlbum = ClsFactory::Create('Model.Album.mAlbumPersonRelation');
+        $rel = $mAlbum->getAlbumPersonRelByPersonAlbumId($album_id, $client_account);
+        //该个人是否存在相册
         if(empty($rel)) {
             return false;
         }
-        unset($rel);
-        
         $data = $this->remove_empty($data);
-        
         if(empty($data)) {
             return false;
         }
+        $album_rs = $this->upd($data, $album_id);
         
         //修改相册权限
-        if($data['grant'] !== '' && isset($data['grant'])) {
-            $grant_list = $this->get_grant_by_album_id($album_id);
-            
-            if(empty($grant_list)) {
-                return false;
-            }
-           
-            $grant_id = key($grant_list[$album_id]);
-            if(empty($grant_id)) {
-                return false;
-            }
-            $grant_list = $grant_list[$grant_id];
-            $grant_list['grant'] =  $data['grant'];
-            $mAlbumPersonGrants = ClsFactory::Create('Model.Album.mAlbumPersonGrants');
-            $rs = $mAlbumPersonGrants->modifyAlbumPersonGrantById($grant_list, $grant_id);
-            unset($data['grant']);
-        }
-        $this->upd($data, $album_id);
-        
-        return true;
-    }
-    /**
-     * 数据输出格式
-     * @param Array $album_list
-     * @param Int $uid
-     * 
-     * @return Array
-     */
-    private function parse($album_list, $uid) {
-          import('Model.mUser');
-          $mUser = new mUser();
-          $user_info = $mUser-> getUserBaseByUid($uid);
-          $user_info = reset($user_info);
-          
-          foreach($album_list as $album_id_key=>$val) {
-              $album_list[$album_id_key]['client_name'] =$user_info['client_name'];
-          }
-        
-          return $album_list;
-    }
-    /**
-     * 账号是否存在
-     * @param Int $uid
-     * 
-     * @return bool
-     */
-    private function uid_is_exist($uid) {
-        if(empty($uid)) {
+        $grant_list = $this->get_grant_by_album_id($album_id);
+        if(empty($grant_list)) {
             return false;
         }
-        $mUser = ClsFactory::Create('Model.mUser');
-        $user_info = $mUser->getClientAccountById($uid);
-        if(empty($user_info)) {
-            return false;
-        }
-        
-        return true;
-    }
-    
-    /**
-     * 根据关系rel_id删除相册关系
-     * @param Int $rel_id
-     */
-    private function del_rel($rel_id) {
-        if(empty($rel_id)) {
-            return false;
-        }
-        $mAlbumPersonRelation = ClsFactory::Create('Model.Album.mAlbumPersonRelation');
-        return $mAlbumPersonRelation->delAlbumPersonRelById($rel_id);
-    }
-    /**
-     * 根据权限grant_id删除相册权限
-     * @param Int $grant_id
-     * 
-     * @return bool
-     */
-    private function del_grant($grant_id) {
+        $grant_list = reset($grant_list);
+        $grant_id = key((array)$grant_list);
         if(empty($grant_id)) {
             return false;
         }
+        $grant_list['grant'] = $data['grant'];
         $mAlbumPersonGrants = ClsFactory::Create('Model.Album.mAlbumPersonGrants');
-        return $mAlbumPersonGrants->delAlbumPersonGrantById($grant_id);
+        $grant_rs = $mAlbumPersonGrants->modifyAlbumPersonGrantById($grant_list, $grant_list['id']);
+       
+        if((!empty($grant_rs) || !empty($album_rs)) || (!empty($grant_rs) && !empty($album_rs))) {
+            return true;
+        }
+        
+        return false;
     }
-    
     /**
-     * 从关系得到相册列表
-     * @param $uid
-     * @param $offset
-     * @param $limit
-     * 
-     * @return Album
+     * 获取相册评论
      */
-    private function get_album_ids_by_rel($uid, $offset = null, $limit = null) {
-        if(empty($uid)) {
+    public function getPersonPhotoCommentByUpId($up_id,$offset=null,$limit=null) {
+        if(empty($up_id)) {
             return false;
         }
+        $level = 1;
+        $comment_list = $this->getCommentListByUpId($up_id,$level,$offset,$limit);
         
-        $mAlbumPersonRelation = ClsFactory::Create('Model.Album.mAlbumPersonRelation');
-        $rel_list = $mAlbumPersonRelation->getAlbumPersonRelByUid($uid, $offset, $limit);
-        
-        $rel_list = reset($rel_list);
-        $album_ids_list = array();
-        if(empty($rel_list)) {
+        return $comment_list;
+    }
+    /**
+     * 获取二级评论
+     */
+    public function getPersonPhotoSecCommentByUpId($up_id,$offset=null,$limit=null) {
+        if(empty($up_id)) {
             return false;
         }
-        foreach($rel_list as $key=>$val) {
-            $album_ids_list[$val['album_id']] = $val['album_id'];
-        }
-        unset($rel_list);
+        $level = 2;
+        $comment_list = $this->getCommentListByUpId($up_id,$level,$offset,$limit);
         
-        return $album_ids_list;
+        return $comment_list;
     }
-    
-    
-    /**
-     * 相册权限常量
-     * @param Int $grant_id
-     * 
-     * @return String || Array
-     */
-    public function grant_arr($grant_id) {
-        $grant_arr = array(
-            0=>"公开",
-            1=>"好友",
-            2=>"仅主人"
-        );
-        if($grant_id != '') {
-            return $grant_arr[$grant_id];
-        }
-        
-        return $grant_arr;
-    }
-    
     /**
      * 通过相册album_id获取相册权限
-     * @param Int||array $album_ids
+     * @param int $album_ids
      * 
-     * @return Array
+     * @return bool
      */
     private function get_grant_by_album_id($album_ids) {
         if(empty($album_ids)) {
@@ -447,32 +463,152 @@ class ByPerson extends Album {
         if(empty($grant_list)) {
             return false;
         }
-        //三维
-        foreach($grant_list as $album_id=>$grant_val) {
-            list($grant_id,$grant_info) = each($grant_val);
+        //二维
+        $new_grant_list = array();
+        foreach($grant_list as $album_id=>$grant_list) {
+            list($grant_id,$grant_info) = each($grant_list);
             $grant_info['grant_name'] = $this->grant_arr($grant_info['grant']);
-            $grant_list[$album_id][$grant_id]=$grant_info;
+            $new_grant_list[$grant_id]=$grant_info;
+            unset($grant_list[$album_id]);
         }
-       
-        return !empty($grant_list) ? $grant_list : false;
+        
+        return !empty($new_grant_list) ? $new_grant_list : false;
     }
     
     /**
-     * 初始化班级相册权限
-     * @param Array $datas
-     * @return int 添加id或者false
+     * 相册权限常量                                  提取到公共配置文件中*******************************************
+     * @param int $grant_id
+     * 
+     * @return Array || String
      */
-    private function add_grant($datas) {
-        if(empty($datas) || !is_array($datas)) {
+    public function grant_arr($grant_id) {
+        $grant_arr = array(
+            0=>"公开（所有人可见）",
+            1=>"本班",
+            2=>"本学校"
+        );
+        if(empty($grant_id) && $grant_id==null) {
+            return $grant_arr;
+        }
+        
+        return $grant_arr[$grant_id];
+    }
+    
+    
+    /**
+     * 个人是否存在
+     * @param int $client_account
+     * 
+     * @return bool
+     */
+    private function client_is_exist($client_account) {
+        if(empty($client_account)) {
+            return false;
+        }
+        $mUser = ClsFactory::Create('Model.mUser');
+        $client_info = $mUser->getClientAccountById($client_account);
+        if(empty($client_info)) {
             return false;
         }
         
-        $datas = $this->format_grant_data($datas);
+        return true;
+    }
+    
+    /**
+     * 初始化个人相册关系
+     * @param $datas
+     * 
+     * @return int 相册关系ID
+     */
+    private function add_rel($datas, $client_account) {
+        if(empty($datas) || !is_array($datas) || empty($client_account)) {
+            return false;
+        }
+        
+        $datas = $this->format_rel_data($datas, $client_account);
+        
+        $mAlbumPersonRelation = ClsFactory::Create('Model.Album.mAlbumPersonRelation');
+        return $mAlbumPersonRelation->addAlbumPersonRel($datas, true);
+    }
+    
+    /**
+     * 从关系得到相册album_id
+     * @param $client_account
+     * @param $offset
+     * @param $limit
+     * 
+     * @return Array
+     */
+    private function get_album_ids_by_rel($client_account, $offset = null, $limit = null) {
+        if(empty($client_account)) {
+            return false;
+        }
+        
+        $mAlbumPersonRelation = ClsFactory::Create('Model.Album.mAlbumPersonRelation');
+        $rel_list = $mAlbumPersonRelation->getAlbumPersonRelByUid($client_account, $offset, $limit);
+        $rel_list = reset($rel_list);
+        $album_ids_list = array();
+        if(empty($rel_list)) {
+            return false;
+        }
+        foreach($rel_list as $key=>$val) {
+            $album_ids_list[$val['album_id']] = $val['album_id'];
+        }
+        unset($rel_list);
+        
+        return $album_ids_list;
+    }
+    /**
+     * 格式化相册关系信息
+     * @param Array $data
+     * 
+     * @return Array
+     */
+    private function format_rel_data($data, $client_account) {
+        if(empty($data) || empty($client_account)) {
+            return false;
+        }
+        
+        $rel_data = array(
+            'client_account' => $client_account,
+            'album_id'   => $data['album_id'],
+        );
+        
+        return !empty($rel_data) ? $rel_data : false;
+    }
+    
+    /**
+     * 删除个人相册关系
+     * @param $rel_id
+     * 
+     * @return bool
+     */
+    private function del_rel($rel_id) {
+        if(empty($rel_id)) {
+            return false;
+        }
+        
+        $mAlbumPersonRelation = ClsFactory::Create('Model.Album.mAlbumPersonRelation');
+        return $mAlbumPersonRelation->delAlbumPersonRelById($rel_id);
+    }
+    
+    /**
+     * 初始化个人相册权限
+     * @param Array $datas
+     * 
+     * @return bool || int 权限ID
+     */
+    private function add_grant($datas, $client_account) {
+        if(empty($datas) || !is_array($datas) || empty($client_account)) {
+            return false;
+        }
+        
+        $datas = $this->format_grant_data($datas, $client_account);
         
         $mAlbumPersonGrants = ClsFactory::Create('Model.Album.mAlbumPersonGrants');
-        $grant_id = $mAlbumPersonGrants->addAlbumPersonGrant($datas, true);
+        $album_Person_grant_id = $mAlbumPersonGrants->addAlbumPersonGrant($datas, true);
         
-        return !empty($grant_id) ? $grant_id : false;
+        return !empty($album_Person_grant_id) ? $album_Person_grant_id : false;
     }
     
     /**
@@ -481,57 +617,33 @@ class ByPerson extends Album {
      * 
      * @return Array
      */
-    private function format_grant_data($data) {
-        if(empty($data)) {
+    private function format_grant_data($data, $client_account) {
+        if(empty($data) || empty($client_account)) {
             return false;
         }
         
         //相册权限初始化
         $grant_data = array(
-            'client_account' => $data['uid'],
-            'album_id'       => $data['album_id'],
-            'grant'          => $data['grant']
+            'client_account' => $client_account,
+            'album_id'   => $data['album_id'],
+            'grant'      => $data['grant']
         );
         
         return $grant_data;
     }
     
     /**
-     * 初始化班级相册关系
-     * @param Array $datas
+     * 删除相册权限
+     * @param int $grant_id
      * 
-     * @return int 添加ID或false                                                                                                                                       
+     * @return bool
      */
-    private function add_rel($datas) {
-        if(empty($datas) || !is_array($datas)) {
+    private function del_grant($grant_id) {
+        if(empty($grant_id)) {
             return false;
         }
-        
-        $datas = $this->format_rel_data($datas);
-        
-        $mAlbumPersonRelation = ClsFactory::Create('Model.Album.mAlbumPersonRelation');
-        $album_perspon_grant_id = $mAlbumPersonRelation->addAlbumPersonRel($datas, true);
-        
-        return !empty($album_perspon_grant_id) ? $album_perspon_grant_id : false;
-    }
-    
-    /**
-     * 格式化相册关系信息
-     * @param array $data
-     * 
-     * @return Array
-     */
-    private function format_rel_data($data) {
-        if(empty($data)) {
-            return false;
-        }
-        
-        $rel_data = array(
-            'client_account' => $data['uid'],
-            'album_id'   => $data['album_id'],
-        );
-        
-        return !empty($rel_data) ? $rel_data : false;
+        $mAlbumPersonGrants = ClsFactory::Create('Model.Album.mAlbumPersonGrants');
+        return $mAlbumPersonGrants->delAlbumPersonGrantById($grant_id);
     }
     
     /**
@@ -542,55 +654,36 @@ class ByPerson extends Album {
      * @return Array
      */
     private function merge_album_rel_data($album_list, $grant_list) {
-      
         if(empty($album_list) || empty($grant_list)) {
             return false;
         }
+        $new_grant_list = array();
+        foreach($grant_list as $grant_key=>$grant_val) {
+            $new_grant_list[$grant_val['album_id']]['grant_name'] = $grant_val['grant_name'];
+            $new_grant_list[$grant_val['album_id']]['grant'] = $grant_val['grant'];
+            unset($grant_key);
+        }
         //数据处理，将相册权限信息和相册信息合并
         foreach($album_list as $album_id=>$val) {
-            $grant_info = reset($grant_list[$album_id]);
-            $grant_info['grant'] = !empty($grant_info['grant']) ? $grant_info['grant'] : 0;
-            $album_list[$album_id] = array_merge($val,$grant_info);
+            $new_grant_list[$album_id]['grant'] = !empty($new_grant_list[$album_id]['grant']) ? $new_grant_list[$album_id]['grant'] : 0;
+            $album_list[$album_id] = array_merge($album_list[$album_id],$new_grant_list[$album_id]);
         }
         unset($grant_list);
         
         return !empty($album_list) ? $album_list : false;
     }
-   /**
-    * 添加评论
-    * @param Array $data
-    * 
-    * @return 评论 ID
-    */
-    public function addcommentPhoto($data) {
-        if(empty($data)) {
-            return false;
-        }
-        $new_data = array(
-            'up_id'=>0,
-            'photo_id'=>$data['photo_id'],
-            'content'=>$data['content'],
-            'client_account'=>$data['client_account'],
-            'add_time'=>time(),
-            'level'=>1
-        );
-        $mAlbumPhotoComments = ClsFactory::Create('Model.Album.mAlbumPhotoComments');
-        return $mAlbumPhotoComments->addAlbumPhotoComment($new_data,true);
-    }
-    
     /**
-     * //去空
-     * @param $data
+     * 去空
+     * @param Array $data
      * 
-     * @return Array
-     * 
+     * @return bool || Array
      */
     private function remove_empty($data) {
         if(empty($data)) {
             return false;
         }
         foreach($data as $key=>$val) {
-            if(empty($val)&&$val==='') {
+            if(empty($val)) {
                 unset($data[$key]);
             }
         }

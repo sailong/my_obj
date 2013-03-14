@@ -14,7 +14,7 @@ class mZsetUserMy extends mFeedBase {
      * 2. 我评论的动态.
      * @param $id
      */
-    private function loader($id, $lastFeedId = 0, $limit = 10) {
+    protected function loader($id, $lastFeedId = 0, $limit = 10) {
         if(empty($id)) {
             return false;
         }

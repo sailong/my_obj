@@ -19,7 +19,7 @@ class Smssendapi extends ApiController {
                );
     
     //短信内容字符个数最大为70
-    protected $content_num_max = 70;
+    protected $content_num_max = 65;
     /**
      * 群发手机号数量最大由79改为30 2012-2-15 
      * 由30改为10 江苏电信最大支持10个手机号群发 2012-3-30
@@ -224,7 +224,8 @@ class Smssendapi extends ApiController {
             $split_count = ceil($content_len / $this->content_num_max);//将超出限定长度的内容分成多条发送 ，ceil舍余进一
             for($i = 0; $i < $split_count; $i++) {
                 $start = $i * $this->content_num_max;
-                $this->content_list[] = mb_substr($this->content , $start , $this->content_num_max , 'utf-8');
+                $j = $i+1;
+                $this->content_list[] = "($j/$split_count)".mb_substr($this->content , $start , $this->content_num_max , 'utf-8');
             }
         } else {
             $this->content_list[] = $this->content;

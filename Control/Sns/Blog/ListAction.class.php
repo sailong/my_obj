@@ -4,8 +4,8 @@
  * @author zlei 2013-1-5
  */
 class ListAction extends SnsController {
-    private $blog_perpage = 2;
-    private $draft_perpage = 2;
+    private $blog_perpage = 10;
+    private $draft_perpage = 4;
     public function __construct() {
         parent::__construct();
     }

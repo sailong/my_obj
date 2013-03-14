@@ -44,7 +44,7 @@ abstract class mFeedBase {
             //一种是key不存在，                         从数据库读取，并插入redis_key中
             //一种是未达到redis最大值，写入数据库.
 
-            if (!$is_exist || !is_maxsize) {                
+            if (!$is_exist || !$is_maxsize) {  
                $this->setFeeds($id, $datas_from_db);
             }
 
@@ -52,7 +52,7 @@ abstract class mFeedBase {
         } 
         
         if (!empty($datas_from_redis)) {
-        
+
             // 如果不为空，也分两种情况
             $size = count($datas_from_redis);
             //一种是获取的数据达到limit个数，直接返回
@@ -62,16 +62,17 @@ abstract class mFeedBase {
             if ($size < $limit) {
 
                   $lastFeedId = end($datas_from_redis);
+                  
                   $limit = $limit - $size;
-                  
+
                   $datas_from_db = $this->loader($id, $lastFeedId, $limit);
-                  
+
                   if (!empty($datas_from_db)) {
                       foreach ($datas_from_db as $item) {
                           $datas_from_redis[]= $item;
                       }
                   }          
-                  
+                
                   return $datas_from_redis;
             }
         }

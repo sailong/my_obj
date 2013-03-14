@@ -14,7 +14,7 @@
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/artDialog4.1.6/plugins/iframeTools.source.js"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/sendbox/sendbox.js"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/template/template.js"></script>
-<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/Album/photo_list.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/Album/class_photo_list.js"></script>
 </head>
 <body>
 {insert name="sns_header"}
@@ -33,7 +33,7 @@
    <dl>
      <dt>
      	<a href="#">
-     	<img id="album_img" src="{if $album_list.album_img}{$album_list.album_img_path}{else}{$smarty.const.IMG_SERVER}__PUBLIC__/sns/images/Album/class_list_photo_n/img01.jpg{/if}" title="相册封面">
+     	<img id="album_img" src="{$album_list.album_img_path}" title="相册封面">
      	</a>
      </dt>
    </dl>

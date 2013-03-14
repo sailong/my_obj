@@ -385,11 +385,14 @@ class ListAction extends SnsController {
     /**
      * 获取动态的统计信息
      * @param $feed_list
+     * todolis
      */
     private function appendFeedStat($feed_list) {
         if(empty($feed_list)) {
             return false;
         }
+        
+        return $feed_list;
         
         //统计动态的评论数
         $where_appends = array(
@@ -419,7 +422,7 @@ class ListAction extends SnsController {
     public function getUserAllFeedAjax() {
         import('@.Control.Api.FeedApi');
         $FeedApi = new FeedApi();
-        $feed_list = $FeedApi->user_all(11070004, 0, FEED_NUMS);
+        $feed_list = $FeedApi->getUserAllFeed(11070004, 0, FEED_NUMS);
         
         $feed_list = $this->appendFeedUserInfo($feed_list);
         $feed_list = $this->appendFeedStat($feed_list);

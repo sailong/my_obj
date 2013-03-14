@@ -14,7 +14,7 @@
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/artDialog4.1.6/plugins/iframeTools.source.js"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/sendbox/sendbox.js"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/template/template.js"></script>
-<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/Album/photo_comments.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/Album/class_photo_comments.js"></script>
 
 </head>
 <body>
@@ -90,48 +90,10 @@
    <div class="clear"></div>
  </div>
  <!--浏览最后一张照片 end-->
- <!-- 一级评论克隆 
- {literal}
-list_comment_people star
-<div class="list_comment_people clone_comment_selector" style="display:none;">
-  <dl>
-    <dt><img src="{client_head_img}"></dt>
-  </dl>
-  <div class="list_comment_main">
-    <p>
-     <a href="#" class="mr10">{client_name}：</a>{content}<br />
-     <span>评论时间：{add_date}</span><a href="#" class="ml10">回复</a>
-    </p>
-    list_people star
-    <div class="clear seccomments"></div>
-    list_people end
-  </div>
-  <div class="clear"></div> 
-</div>
-list_comment_people end
-
- 一级评论克隆end 
- 二级评论克隆start 
-list_people star
-<div class="list_people clone_seccomment_selector" style="display:none;">
-  <dl>
-    <dt><img src="{client_head_img}"></dt>
-  </dl>
-  <div class="people_comment">
-   <p>
-     <a href="#" class="mr10">{client_name}：</a>{content}<br />
-     <span>回复时间：{add_date}</span> <a href="#" class="ml10">回复</a>
-   </p>
- </div>
- <div class="clear"></div> 
-</div>
-list_people end
- 二级评论克隆end 
-{/literal}
---><!--弹出层 end-->
+<!--弹出层 end-->
  
 <!--tip star-->
-{*insert name="sns_header"*}
+{insert name="sns_header"}
 <!--tip star-->
 {insert name="sns_class_header" class_code = $class_code}
 <!--tip end--> 
@@ -238,7 +200,7 @@ list_people end
 <input id="head_img" type="hidden" value="{$head_img}"/>
 <input id="img_server" class="del_ids" type="hidden" value="{$smarty.const.IMG_SERVER}__PUBLIC__"/>
 
-<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/Album/show_photo.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/Album/class_show_photo.js"></script>
 <script language="javascript" type="text/javascript">
 var Album = new YAO.YAlbum();
 </script>

@@ -75,4 +75,3 @@ $result = Gearman::send('default_usr_login', '11070004', PRIORITY_NORMAL, false)
 //print_r($active_friends);
 
 
-?>

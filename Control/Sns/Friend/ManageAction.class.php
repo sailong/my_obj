@@ -596,23 +596,19 @@ class ManageAction extends SnsController{
     /**
      * 最近访客
      */
-    public function LastVistior() {
-        $vuid = $this->objInput->getInt('vuid');
-        $uid = $this->user['client_account'];
-        
-        $dataarr = array(
-            'uid' => $uid,
-            'vuid'=> $vuid,
-            'timeline' => time()
-        );
-        
-        $mPersonVistior = ClsFactory::Create('Model.PersonVistior.mPersonVistior');
-        $resault = $mPersonVistior->addPersonVistior($dataarr);
-        
-        return !empty($resault) ? $resault : false;
-    }
     
     public function person_vistior() {
+        $client_account = $this->user['client_account'];
+       
+        import('@.Control.Api.VistiorApi');
+        $Vistior = new VistiorApi();
+        
+        $total_count = $Vistior->total_count($client_account);
+        $total_count_day = $Vistior->total_count_day($client_account);
+        
+        $this->assign('total_count_day',$total_count_day);
+        $this->assign('total_count',$total_count);
+        
         $this->display('nearest_visitor');
     }
     
@@ -620,29 +616,103 @@ class ManageAction extends SnsController{
      * 最近访客列表
      */
     public function person_vistior_list_ajax() {
+        $page = $this->objInput->getInt('page');
+        $page = max($page,1);
+        $limit = 10;
+        $offset = ($page - 1) * $limit;
+        
         $client_account = $this->user['client_account'];
-        $date = strtotime(date('Y-m-d'));
-        $dateline = time();  
         
          $wheresql = array(
             'uid = ' . $client_account,
-            'timeline <= ' . $dateline, 
+            'timeline <= ' . time(), 
         );
         
         $mPersonVistior = ClsFactory::Create('Model.PersonVistior.mPersonVistior');
-        $vistior_list = $mPersonVistior->getPersonVistiorByDate($wheresql);
+        $vistior_list = $mPersonVistior->getPersonVistiorInfo($wheresql,'id desc',$offset,$limit);
         
         $vistior_account_arr = array_keys($vistior_list);
         
-        //获取当前登录人的好友信息
-        $client_account_relation_info = $this->getAccountRelationByClientAccount($client_account);
-        dump($client_account_relation_info);die;
+        //最近访客的信息
+        $mUser = ClsFactory::Create('Model.mUser');
+        $client_account_list = $mUser->getUserBaseByUid($vistior_account_arr);
         
-        if(empty($vistior_list)) {
-            $this->ajaxReturn($vistior_list,'获取访客列表成功',1,'json');
+        //获取当前登录人的好友信息
+        $client_account_relation_list = $this->getAccountRelationByClientAccount($client_account);
+        //获取当前登录人的好友帐号
+        $client_friends_account_arr = array();
+        foreach($client_account_relation_list[$client_account] as $relation_id => $account_relation) {
+            $client_friends_account_arr[$account_relation['friend_account']] = $account_relation['friend_account'];        
+        }
+        
+        
+        $new_friend_friend_arr = array();
+      //判断好友的好友是否是登录人的好友
+        $new_falg_arr = array();//标识是否是好友数组
+        foreach ($client_account_list as $account=>$vistior_val) {
+            if(in_array($account,$client_friends_account_arr)) {
+                $client_account_list[$account]['is_friend'] = 1;//已是好友的标识
+            } else {
+                $new_friend_friend_arr[$account] = $account;
+            }
+        }
+        
+         //判断是否已给好友发送请求
+        $mMsgRequire = ClsFactory::Create('Model.Message.mMsgRequire');
+        $MyFriendRequireInfo = $mMsgRequire->getMsgRequireByAddAccount($client_account,$new_friend_friend_arr);
+        
+        $to_account_arr = array();
+        foreach($MyFriendRequireInfo as $req_id=>$require) {
+            $to_account_arr[$require['to_account']] = $require['to_account'];
+        }
+        
+        $new_client_account_list_sort = array();
+        foreach ($client_account_list as $account=>$vistior_val) {
+            
+            if(isset($vistior_val['is_friend']) && $vistior_val['is_friend'] == 1) {
+                continue;
+            }
+            if(!empty($to_account_arr[$account])) {
+                $client_account_list[$account]['is_friend'] = 2;//已发送好友请求标识
+            } else {
+                $client_account_list[$account]['is_friend'] = 3;//未发送好友请求标识
+            }
+            
+            $new_client_account_list_sort[] = $vistior_list[$account]['timeline'];
+            $client_account_list[$account]['timeline'] = date('Y-m-d H:i:s',$vistior_list[$account]['timeline']);
+            $client_account_list[$account]['id'] = $vistior_list[$account]['id'];
+        }
+        
+        //按照时间排序
+        array_multisort($new_client_account_list_sort, SORT_DESC,$client_account_list);
+        if($client_account_list) {
+            $this->ajaxReturn($client_account_list,'获取访客列表成功',1,'json');
         }
         
         $this->ajaxReturn(null,'获取访客列表失败',-1,'json');
+    }
+    
+    //删除最近访客信息
+    public function del_vistior() {
+        $id = $this->objInput->getInt('id');
+        if(empty($id)) {
+            $this->ajaxReturn(null,'参数错误',-1,'json');
+        }
+        
+        $uid = $this->user['client_account'];
+        //获取当前登录人的所有访客id检测$id是否正确
+        $mPersonVistior = ClsFactory::Create('Model.PersonVistior.mPersonVistior');
+        $PersonVistiorInfo = $mPersonVistior->getPersonVistiorByUid($uid);
+        
+        $ids = array_keys(array_shift($PersonVistiorInfo));
+        if(in_array($id,$ids)) {
+            $resault = $mPersonVistior->delPersonVistior($id);
+        }
+        if($resault) {
+             $this->ajaxReturn($resault,'删除最近访客成功！',1,'json');
+        }
+        
+        $this->ajaxReturn(null,'删除最近访客失败',-1,'json');
     }
     
     

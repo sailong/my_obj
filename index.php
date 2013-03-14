@@ -40,5 +40,4 @@ if(!empty($redirect_url)) {
 }
 
 //实例化一个网站应用实例 
-App::run(); 
-?>
+App::run();

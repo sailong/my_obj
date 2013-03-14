@@ -8,7 +8,6 @@
 <link rel="stylesheet" href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/ClassAdmin/student_admin_list.css" type="text/css" charset="utf-8">
 
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/wmw_js/jquery-1.5.2.js"></script>
-<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/wmw_js/downfile.js"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/artDialog4.1.6/artDialog.source.js?skin=idialog"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/artDialog4.1.6/plugins/iframeTools.source.js"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/ClassAdmin/student_list.js"></script>
@@ -50,6 +49,7 @@
             <th>家长账号（2）</th>
             <th>操作</th>
           </tr>
+          {if !empty($student_list)}
           {foreach from=$student_list item=student name=student_list_loop}
           <tr>
             <td class="border_left">{$smarty.foreach.student_list_loop.iteration}</td>
@@ -64,9 +64,17 @@
             </td>
           </tr>
           {/foreach}
+          {else}
+          	<tr>
+          		<td class="border_left" colspan="7">暂时没有学生信息</td>
+          	</tr>
+          {/if}
         </table>
         <p class="stu_list_bottom">
-        	<a id="down_excel_a" href="javascript:;" class="f14" title=""><span class="btn_left"></span><span class="btn_right">输出excel</span></a>
+        	<a id="down_excel_a" href="/Sns/ClassAdmin/StudentList/exportStudentsExcel/class_code/{$class_code}" class="f14" title="">
+	        	<span class="btn_left"></span>
+	        	<span class="btn_right">输出excel</span>
+        	</a>
         </p>
         </div>
        <div class="clear"></div>

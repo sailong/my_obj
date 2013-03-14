@@ -25,4 +25,3 @@ if ($gmclient->returnCode() != GEARMAN_SUCCESS)
   exit;
 }
 exit;
-?>

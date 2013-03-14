@@ -19,30 +19,12 @@ class dAlbumClassRelation extends dBase {
     public function addAlbumClassRel($data, $is_return_id) {
         return $this->add($data, $is_return_id);
     }
-    //todo list
-    public function addClassRel($data, $is_return_id) {
-        return $this->add($data, $is_return_id);
-    }
-    
-    
-    
     
     public function modifyAlbumClassRelById($data, $id) {
         return $this->modify($data, $id);
     }
-    //todo list
-    public function modifyClassRelById($data, $id) {
-        return $this->modify($data, $id);
-    }
-    
-    
-    
     
     public function delAlbumClassRelById($id) {
-        return $this->delete($id);
-    }
-    //todo list
-    public function delClassRelById($id) {
         return $this->delete($id);
     }
     

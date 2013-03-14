@@ -24,7 +24,7 @@ class mZsetClassAll extends mFeedBase {
      * @param $lastFeedId        最后查询结果的feed_id
      * @param $limit   
      */
-    private function loader($id, $lastFeedId = 0, $limit = 10) {
+    protected function loader($id, $lastFeedId = 0, $limit = 10) {
         if(empty($id)) {
             return false;
         }

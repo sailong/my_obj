@@ -14,30 +14,15 @@
 </head>
 <body>
 <!--tip star-->
-  <div class="tip">
-   <div class="tip_main">
-    <p class="f13 f_green">丰台区芳群园第一小学</p><p><a href="#" class="f13 f_green">一年二班<span class="icon_01"></span></a></p><span class="icon_02"></span><p class="f13 f_green">班主任：李老师</p>
-    <div class="clear"></div>
-   </div> 
-  </div>
+{insert name="sns_header"}
 <!--tip end--> 
+{insert name="sns_class_header" class_code = $class_code}
 <!--content star-->
 <div class="content">
   <!--main star-->
    <div class="main">
-     <!--nav star-->
-    <div class="nav">
-      <ul>
-        <li><a href="#" class="nav_a1_hover"></a></li>
-        <li><a href="#" class="nav_a2"></a></li>
-        <li><a href="#" class="nav_a3"></a></li>
-        <li><a href="#" class="nav_a4"></a></li>
-        <li><a href="#" class="nav_a5"></a></li>
-        <li><a href="#" class="nav_a6"></a></li>
-        <li><a href="#" class="nav_a7"></a></li>
-        <li><a href="#" class="nav_a8"></a></li>
-      </ul>
-    </div>
+    <!--nav star-->
+   	{insert name="sns_nav" class_code = $class_code}
     <!--nav end-->
     <h4>
       <a href="/Sns/ClassAdmin/StudentList/index/class_code/{$class_code}" class="f14" title="">
@@ -57,21 +42,6 @@
          	<textarea id="student_names">
          	
          	</textarea>
-         	
-           <ul>
-            <li><a href="#">王佳丽</a></li>
-            <li><a href="#">七力格日萨日娜</a></li>
-            <li><a href="#">王佳丽</a></li>
-            <li><a href="#">王佳丽</a></li>
-            <li><a href="#">王佳丽</a></li>
-            <li><a href="#">王佳丽</a></li>
-            <li><a href="#">王佳丽</a></li>
-            <li><a href="#">王佳丽</a></li>
-            <li><a href="#">王佳丽</a></li>
-            <li><a href="#">王佳丽</a></li>
-            <li><a href="#">王佳丽</a></li>
-           </ul>
-           
            <div class="clear"></div>
          </div>
        </div>
@@ -110,13 +80,13 @@
   <!--content end-->
   
  <!--提示稍后信息 star-->
- <div id="waiting_div" class="msg_hold_on">
+ <div id="waiting_div" class="msg_hold_on" style="display:none;">
    <p>正在生成账号，请稍后...</p>
  </div>
  <!--提示稍后信息 end-->
  
  <!--提示信息弹出层 star-->
-  <div id="prompt_div" class="tcc_msg">
+  <div id="prompt_div" class="tcc_msg" style="display:none;">
     <p class="tcc_msg_top"></p>
     <div class="tcc_msg_center">
      <div class="msg_center_main">

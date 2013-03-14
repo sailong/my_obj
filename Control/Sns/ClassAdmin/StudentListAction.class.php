@@ -27,9 +27,8 @@ class StudentListAction extends SnsController {
     
     /**
      * 导出班级成员的excel文件
-     * todolist:研究PHPExcel不通过临时文件生成
      */
-    public function importStudentsExcel() {
+    public function exportStudentsExcel() {
         $class_code = $this->objInput->getInt('class_code');
         
         $class_code = $this->checkoutClassCode($class_code);

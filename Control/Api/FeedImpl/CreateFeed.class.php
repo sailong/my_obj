@@ -8,17 +8,17 @@ class CreateFeed {
      * @param $feed_type     枚举值   1:说说  2：日志  3：相册
      */   
     
-    public function createPersonFeed($uid, $from_id, $feed_type) {
-        if(empty($uid) || empty($from_id) || empty($feed_type)) {
+    public function createPersonFeed($uid, $from_id, $feed_type, $action) {
+        if(empty($uid) || empty($from_id) || empty($feed_type) || empty($action)) {
             return false;
         }
         
         //提取feed信息
         $feed_datas = $this->extractFeed($from_id, $feed_type);
-        
         if(empty($feed_datas)) return false;
         
         //mysql入库操作
+        $feed_datas['action'] = $action;
         $feed_id = $this->saveFeed($feed_datas);
         
         if(empty($feed_id)) return false;
@@ -38,8 +38,8 @@ class CreateFeed {
      * @param $feed_type     int    枚举值   1:说说  2：日志  3：相册
 
      */
-    public function createClassFeed($class_code, $uid, $from_id, $feed_type) {
-        if(empty($class_code) || empty($uid) || empty($from_id) || empty($feed_type)) {
+    public function createClassFeed($class_code, $uid, $from_id, $feed_type, $action) {
+        if(empty($class_code) || empty($uid) || empty($from_id) || empty($feed_type) || empty($action)) {
             return false;
         }
         
@@ -49,6 +49,7 @@ class CreateFeed {
         if(empty($feed_datas)) return false;
         
         //mysql入库操作
+        $feed_datas['action'] = $action;
         $feed_id = $this->saveFeed($feed_datas);
         
         if(empty($feed_id)) return false;
@@ -86,7 +87,6 @@ class CreateFeed {
         
         $mFeed = ClsFactory::Create('Model.Feed.mFeed');
         $feed_id = $mFeed->addFeed($feed_datas, true);
-        
         return !empty($feed_id) ? $feed_id : false;
     }
     

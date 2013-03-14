@@ -15,30 +15,15 @@
 </head>
 <body>
 <!--tip star-->
-  <div class="tip">
-   <div class="tip_main">
-    <p class="f13 f_green">丰台区芳群园第一小学</p><p><a href="#" class="f13 f_green">一年二班<span class="icon_01"></span></a></p><span class="icon_02"></span><p class="f13 f_green">班主任：李老师</p>
-    <div class="clear"></div>
-   </div> 
-  </div>
+ {insert name="sns_header"}
 <!--tip end--> 
+ {insert name="sns_class_header" class_code = $class_code}
 <!--content star-->
 <div class="content">
   <!--main star-->
    <div id="main_div" class="main">
-     <!--nav star-->
-    <div class="nav">
-      <ul>
-        <li><a href="#" class="nav_a1_hover"></a></li>
-        <li><a href="#" class="nav_a2"></a></li>
-        <li><a href="#" class="nav_a3"></a></li>
-        <li><a href="#" class="nav_a4"></a></li>
-        <li><a href="#" class="nav_a5"></a></li>
-        <li><a href="#" class="nav_a6"></a></li>
-        <li><a href="#" class="nav_a7"></a></li>
-        <li><a href="#" class="nav_a8"></a></li>
-      </ul>
-    </div>
+    <!--nav star-->
+  	{insert name="sns_nav" class_code = $class_code}
     <!--nav end-->
     <h4>
 	  <a href="/Sns/ClassAdmin/StudentList/index/class_code/{$class_code}" class="f14" title="">
@@ -58,23 +43,6 @@
          	<textarea id="student_accounts">
          	
          	</textarea>
-         
-           <ul>
-            <li><a href="#">22556655</a></li>
-            <li><a href="#">22222222</a></li>
-            <li><a href="#">56565656</a></li>
-            <li><a href="#">66668888</a></li>
-            <li><a href="#">33336666</a></li>
-            <li><a href="#">32659856</a></li>
-            <li><a href="#">56236598</a></li>
-            <li><a href="#">33336666</a></li>
-            <li><a href="#">32659856</a></li>
-            <li><a href="#">56236598</a></li>
-            <li><a href="#">33336666</a></li>
-            <li><a href="#">32659856</a></li>
-            <li><a href="#">56236598</a></li>
-           </ul>
-           
            <div class="clear"></div>
          </div>
        </div>

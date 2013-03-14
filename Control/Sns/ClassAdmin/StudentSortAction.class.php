@@ -98,6 +98,6 @@ class StudentSortAction extends SnsController {
             $mClientClass->modifyClientClass($client_class_datas, $client_class['client_class_id']);
         }
         
-        $this->showSuccess('学生排序设置成功!', '/Sns/ClassAdmin/StudentSort/index/class_code/' . $class_code);
+        $this->showSuccess('学生排序设置成功!', '/Sns/ClassAdmin/StudentList/index/class_code/' . $class_code);
     }
 }

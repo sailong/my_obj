@@ -26,4 +26,3 @@ return array(
     WEB_ROOT_DIR.'/Config/alias.php',  // 加载项目别名    
 );
 
-?>

@@ -20,4 +20,3 @@ define('IS_AJAX_REQUESTED', isset($_SERVER['HTTP_X_REQUESTED_WITH']) && 'xmlhttp
 	
 
 require('WCF.php');
-?>

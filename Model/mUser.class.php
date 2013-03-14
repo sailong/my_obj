@@ -495,11 +495,12 @@ class mUser extends mBase {
         
         /**
          * 老师学习资源不做权限限制
-         *  2012-9-25 增加默认无运营策略的学校用户学习资源权限全开放
+         *  2012-09-25 增加默认无运营策略的学校用户学习资源权限全开放
          *  2012-11-15 增加辽宁运营策略的学校用户学习资源权限全开放
          *  2012-11-16 增加广东运营策略的学校用户学习资源权限全开放
+         *  2013-01-18 关闭广东运营策略的学校用户学习资源权限全开放
         */
-        if ($client_type == CLIENT_TYPE_TEACHER || $operation_strategy == OPERATION_STRATEGY_DEFAULT || $operation_strategy == OPERATION_STRATEGY_GD || $operation_strategy == OPERATION_STRATEGY_LN) {
+        if ($client_type == CLIENT_TYPE_TEACHER || $operation_strategy == OPERATION_STRATEGY_DEFAULT || $operation_strategy == OPERATION_STRATEGY_LN) {
             return 3;
         }
         

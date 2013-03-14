@@ -8,39 +8,21 @@
 <link rel="stylesheet" href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/ClassAdmin/student_sort.css" type="text/css" charset="utf-8">
 
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/wmw_js/jquery-1.5.2.js"></script>
-<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/wmw_js/downfile.js"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/artDialog4.1.6/artDialog.source.js?skin=idialog"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/artDialog4.1.6/plugins/iframeTools.source.js"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/ClassAdmin/student_sort.js"></script>
 
 </head>
 <body>
-
+{insert name="sns_header"}
 <!--tip star-->
-  <div class="tip">
-   <div class="tip_main">
-    <p class="f13 f_green">丰台区芳群园第一小学</p><p><a href="#" class="f13 f_green">一年二班<span class="icon_01"></span></a></p><span class="icon_02"></span><p class="f13 f_green">班主任：李老师</p>
-    <div class="clear"></div>
-   </div> 
-  </div>
+ {insert name="sns_class_header" class_code = $class_code}
 <!--tip end--> 
-<!--content star-->
 <div class="content">
   <!--main star-->
    <div class="main">
      <!--nav star-->
-    <div class="nav">
-      <ul>
-        <li><a href="#" class="nav_a1_hover"></a></li>
-        <li><a href="#" class="nav_a2"></a></li>
-        <li><a href="#" class="nav_a3"></a></li>
-        <li><a href="#" class="nav_a4"></a></li>
-        <li><a href="#" class="nav_a5"></a></li>
-        <li><a href="#" class="nav_a6"></a></li>
-        <li><a href="#" class="nav_a7"></a></li>
-        <li><a href="#" class="nav_a8"></a></li>
-      </ul>
-    </div>
+    {insert name="sns_nav" class_code = $class_code}
     <!--nav end-->
     <h4>
 	  <a href="/Sns/ClassAdmin/StudentList/index/class_code/{$class_code}" class="f14" title="">
@@ -75,7 +57,10 @@
 	        </table>
 	       </div>
 	       <p class="stu_sort_btn">
-	       	<a id="sure_btn_a" href="javascript:;" class="f14" title=""><span class="btn_left"></span><span class="btn_right">确定</span></a>
+	       	<a id="sure_btn_a" href="javascript:;" class="f14" title="">
+		       	<span class="btn_left"></span>
+		       	<span class="btn_right">确定</span>
+	       	</a>
 	       </p>
 	       <div class="clear"></div>
 	     </div>

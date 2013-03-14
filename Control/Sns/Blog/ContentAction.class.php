@@ -46,7 +46,8 @@ class ContentAction extends SnsController {
         $mBlogClassRelation = ClsFactory::Create("Model.Blog.mBlogClassRelation");
         $wherearr = array(
             'blog_id>'.$class_blog_id,
-            'class_code='.$class_code
+            'class_code='.$class_code,
+            'is_published=1'
         );
         
         $BlogClassRelation = $mBlogClassRelation->getBlogClassRelationInfo($wherearr, "blog_id asc", 0, 1);
@@ -63,7 +64,8 @@ class ContentAction extends SnsController {
         $mBlogClassRelation = ClsFactory::Create("Model.Blog.mBlogClassRelation");
         $wherearr = array(
             'blog_id<'.$class_blog_id,
-            'class_code='.$class_code
+            'class_code='.$class_code,
+            'is_published=1'
         );
         
         $BlogClassRelation = $mBlogClassRelation->getBlogClassRelationInfo($wherearr, "blog_id desc", 0, 1);

@@ -73,23 +73,24 @@ class Album {
         $album_list = $this->_mAlbum->getAlbumByAlbumId($album_id);
         import("@.Common_wmw.Pathmanagement_sns");
         foreach($album_list as $album_id=>$album_val) {
-            $img_path = Pathmanagement_sns::getAlbum($album_val['add_account']).'/';
-            $img_file_url = '/Public/wmw_images/auto_photo_img/wzp.jpg';
-            if(!empty($album_val['album_img'])) {
+            $img_path = Pathmanagement_sns::getAlbum($album_val['add_account']);
+            $img_file_url = '/Public/wmw_images/auto_photo_img/wfm.jpg';
+            if(empty($album_val['photo_num'])) {
+                //无封面
+                $img_file_url = '/Public/wmw_images/auto_photo_img/wzp.jpg';
+            }elseif(!empty($album_val['album_img'])) {
                 //有封面
                 $album_img = $img_path.$album_val['album_img'];
-                if(file_exists(WEB_ROOT_DIR.$img_file_url)) {
+                if(file_exists(WEB_ROOT_DIR.$album_img)) {
                     $img_file_url = $album_img;
                 }
             }elseif(!empty($album_val['album_auto_img'])) {
                 //随机封面
                 $album_auto_img = $img_path.$album_val['album_auto_img'];
-                if(file_exists(WEB_ROOT_DIR.$img_file_url)) {
+                
+                if(file_exists(WEB_ROOT_DIR.$album_auto_img)) {
                     $img_file_url = $album_auto_img;
                 }
-            }elseif(!empty($album_val['photo_num'])) {
-                //无封面
-                $img_file_url = '/Public/wmw_images/auto_photo_img/wfm.jpg';
             }
              
             $album_val['album_img_path'] = $img_file_url;
@@ -187,16 +188,25 @@ class Album {
         if(empty($photo_id)) {
             return false;
         }
+        //检测是否存在信息
+        $photo_list = $this->getPhotoByPhotoId($photo_id);
+        if(empty($photo_list)) {
+            return false;
+        }
         //检测是否有评论，有则删
         $this->initmAlbumPhotoComments();
         $comment_list = $this->_mAlbumPhotoComments->getAlbumPhotoCommentByPhotoId($photo_id);
         if(!empty($comment_list)) {
             $this->_mAlbumPhotoComments->delByPhotoId($photo_id);
         }
+        
         //删除相片记录
         $this->initmAlbumPhotos();
         $rs = $this->_mAlbumPhotos->delPhotosByPhotoId($photo_id);
-        
+        if($rs) {
+           //删除实体
+            $this->del_photo_entity($photo_list); 
+        }
         return $rs;
     }
     
@@ -426,6 +436,31 @@ class Album {
         
         return $client_list;
     }
+    //单张相片 异步删除相片实体
+    private function del_photo_entity($photo_list) {
+        if(empty($photo_list)) {
+            return false;
+        }
+        
+        import('@.Common_wmw.Pathmanagement_sns');
+        $photo_path_list = array();
+        foreach($photo_list as $photo_id=>$photo_val) {
+            if(empty($photo_val['file_big'])){
+                continue;
+            }
+            //字符串切割成数组
+            $file_big_list = explode('.',$photo_val['file_big']);
+            $photo_path_list[] = Pathmanagement_sns::uploadAlbum($photo_val['upd_account']).'/'.$photo_val['file_big'];
+            $photo_path_list[] = Pathmanagement_sns::uploadAlbum($photo_val['upd_account']).'/'.$file_big_list[0] . '_s.' . $file_big_list[1];
+            $photo_path_list[] = Pathmanagement_sns::uploadAlbum($photo_val['upd_account']).'/'.$file_big_list[0] . '_m.' . $file_big_list[1];
+        }
+       
+        include_once(dirname(dirname(dirname(__FILE__))) . '/Daemon.inc.php');
+        $photo_path_list = serialize($photo_path_list);
+       
+        Gearman::send('del_photo_entity', $photo_path_list, PRIORITY_LOW);
+    }
+    
     //初始化相片信息
     private function format_photo_data($dataarr) {
         if(empty($dataarr)) {

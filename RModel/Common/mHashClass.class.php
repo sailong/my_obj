@@ -79,7 +79,7 @@ class mHashClass {
      * $param $fvalue  hash  field value
      */
     public function delClassByField($id, $fields) {
-        if(empty($id) || empty($fileds)) {
+        if(empty($id) || empty($fields)) {
             return false;
         }
         

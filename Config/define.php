@@ -184,5 +184,6 @@ define('FEED_ALBUM', 1);
 define('FEED_BLOG', 2);
 define('FEED_MOOD', 5);
 
-define('FEED_CONTEXT_PERSON', 1);
-define('FEED_CONTEXT_CLASS', 2);
+define('FEED_ACTION_PUBLISH', 1);                       //发布产生的动态
+define('FEED_ACTION_COMMENT', 2);                       //评论产生的动态
+

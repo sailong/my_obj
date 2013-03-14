@@ -8,25 +8,6 @@ class ClassMoodAction extends SnsController {
         $class_code = $this->objInput->getInt('class_code');
         $mood_id    = $this->objInput->getStr('mood_id');
         
-
-        $img = "<img src = 'www.baidu.com' alt='this is a picture'></img>";
-        
-        $img = "<span id='my_span_id'></span><img src=  'www.baidu.alt.com' alt=\"测 试\" test='here = is haha' id=img_id/><div></div><img src=  'www.baidu.alt.com' alt=\"测 试\" test='here = is haha' id=img_id/>";
-        
-        import('@.Common_wmw.HtmlParser');
-        
-        $HtmlParser = new HtmlParser($img);
-        
-        $obj = HtmlParser::createTagParser('img', $img);
-        $img_src = $obj->attr('weight', '60px')->toString();
-        
-        $img_tag = $HtmlParser->getElementsByTagName('img');
-        
-        dump($img_tag);
-        
-        exit;
-        
-        
         $class_code = $this->checkoutClassCode($class_code);
         //todolist 调整到个人空间
         if(empty($class_code)) {

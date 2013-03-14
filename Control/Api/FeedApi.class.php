@@ -25,8 +25,9 @@ class FeedApi extends ApiController {
      * @param $uid       	  帐号
      * @param $from_id       产生动态的实体id
      * @param $feed_type     int    枚举值   1:说说  2：日志  3：相册
+     * @param $action        int    枚举值   1: 发布， 2:评论
      */
-    public function user_create($uid, $from_id, $feed_type) {
+    public function user_create($uid, $from_id, $feed_type, $action = FEED_ACTION_PUBLISH) {
         if(empty($uid) || empty($from_id) || empty($feed_type)) {
             return false;
         }
@@ -34,7 +35,7 @@ class FeedApi extends ApiController {
         import('@.Control.Api.FeedImpl.CreateFeed');
         $createFeed = new CreateFeed();
         
-        return $createFeed->createPersonFeed($uid, $from_id, $feed_type);
+        return $createFeed->createPersonFeed($uid, $from_id, $feed_type, $action);
     }
     
     /**
@@ -43,9 +44,9 @@ class FeedApi extends ApiController {
      * @param $uid       	  帐号
      * @param $from_id       产生动态的实体id
      * @param $feed_type     int    枚举值   1:说说  2：日志  3：相册
-
+     * @param $action        int    枚举值   1: 发布， 2:评论
      */
-    public function class_create($class_code, $uid, $from_id, $feed_type) {
+    public function class_create($class_code, $uid, $from_id, $feed_type, $action = FEED_ACTION_PUBLISH) {
         if(empty($class_code) || empty($uid) || empty($from_id) || empty($feed_type)) {
             return false;
         }
@@ -53,144 +54,122 @@ class FeedApi extends ApiController {
         import('@.Control.Api.FeedImpl.CreateFeed');
         $createFeed = new CreateFeed();
         
-        return $createFeed->createClassFeed($class_code, $uid, $from_id, $feed_type);
+        return $createFeed->createClassFeed($class_code, $uid, $from_id, $feed_type, $action);
     }
     
-
     /**
      * 得到班级全部动态
      * @param int $class_code  班级id
-     * @param int $timeline    修改时间
      * @param int $lastId      最后查询feed_id
      * @param int $limit       查询数量
      * 
      * @return
      * 
      */
-    public function getClassAllFeed($class_code, $timeline = 0, $lastId = 0, $limit = 10){
+    public function getClassAllFeed($class_code, $lastId = 0, $limit = 10){
         if(empty($class_code)) {
             return false;
         }
         
-        $m = ClsFactory::Create("RModel.mFeedVm");
+        $mFeedVm = ClsFactory::Create("RModel.mFeedVm");
         
-        $result = $m->getClassAllFeed($class_code, $timeline, $lastId, $limit);
-        
-        return !empty($result) ? $result : false;
+        return $mFeedVm->getClassAllFeed($class_code, $lastId, $limit);
     }
     
     /**
      * 得到班级相册动态
      * @param int $class_code  班级id
-     * @param int $timeline    修改时间
      * @param int $lastId      最后查询feed_id
      * @param int $limit       查询数量
      */
-    public function getClassAlbumFeed($class_code, $timeline = 0, $lastId = 0, $limit = 10) {
+    public function getClassAlbumFeed($class_code, $lastId = 0, $limit = 10) {
         
         if(empty($class_code)) {
             return false;
         }
         
-        $m = ClsFactory::Create("RModel.mFeedVm");
+        $mFeedVm = ClsFactory::Create("RModel.mFeedVm");
         
-        $result = $m->getClassAlbumFeed($class_code, $timeline, $lastId, $limit);
-        
-        return !empty($result) ? $result : false;
+        return $mFeedVm->getClassAlbumFeed($class_code, $lastId, $limit);
     }
     
     /**
      * 得到所有动态
      * @param int $uid 		       我们网帐号
-     * @param int $timeline    修改时间
      * @param int $lastId      最后查询feed_id
      * @param int $limit       查询数量
      */
-    public function getUserAllFeed($uid, $timeline = 0, $lastId = 0, $limit = 10) {
+    public function getUserAllFeed($uid, $lastId = 0, $limit = 10) {
         if(empty($uid)) {
             return false;
         }
         
-        $m = ClsFactory::Create("RModel.mFeedVm");
-        $result = $m->getUserAllFeed($uid, $timeline, $lastId, $limit);
-        
-        return !empty($result) ? $result : false;
+        $mFeedVm = ClsFactory::Create("RModel.mFeedVm");
+        return $mFeedVm->getUserAllFeed($uid, $lastId, $limit);
     }
     
     /**
      * 得到孩子动态
      * @param int $uid 		       我们网帐号
-     * @param int $timeline    修改时间
      * @param int $lastId      最后查询feed_id
      * @param int $limit       查询数量
      */
-    public function getUserChildrenFeed($uid, $timeline = 0, $lastId = 0, $limit = 10) {
+    public function getUserChildrenFeed($uid, $lastId = 0, $limit = 10) {
         if(empty($uid)) {
             return false;
         }
         
-        $m = ClsFactory::Create("RModel.mFeedVm");
+        $mFeedVm = ClsFactory::Create("RModel.mFeedVm");
         
-        $result = $m->getUserChildrenFeed($uid, $timeline, $lastId, $limit);
-        
-        return !empty($result) ? $result : false;
+        return $mFeedVm->getUserChildrenFeed($uid, $lastId, $limit);
     }
 
     /**
      * 得到全部相册动态
      * @param int $uid 		       我们网账号
-     * @param int $timeline    修改时间
      * @param int $lastId      最后查询feed_id
      * @param int $limit       查询数量
      */
-    public function getAblumAllFeed($uid, $timeline = 0, $lastId = 0, $limit = 10) {
+    public function getAblumAllFeed($uid, $lastId = 0, $limit = 10) {
         if(empty($uid)) {
             return false;
         }
         
-        $m = ClsFactory::Create("RModel.mFeedVm");
+        $mFeedVm = ClsFactory::Create("RModel.mFeedVm");
         
-        $result = $m->getAblumAllFeed($uid, $timeline, $lastId, $limit);
-        
-        return !empty($result) ? $result : false;
+        return $mFeedVm->getAblumAllFeed($uid, $lastId, $limit);
     }
     
     /**
      * 得到与我相关动态
      * @param int $uid 			我们网账号
-     * @param int $timeline    修改时间
      * @param int $lastId      最后查询feed_id
      * @param int $limit       查询数量
      */
-    public function getUserMyFeed($uid, $timeline = 0, $lastId = 0, $limit = 10) {
+    public function getUserMyFeed($uid, $lastId = 0, $limit = 10) {
         if(empty($uid)) {
             return false;
         }
         
-        $m = ClsFactory::Create("RModel.mFeedVm");
+        $mFeedVm = ClsFactory::Create("RModel.mFeedVm");
         
-        $result = $m->getUserMyFeed($uid, $timeline, $lastId, $limit);
-        
-        return !empty($result) ? $result : false;
+        return $mFeedVm->getUserMyFeed($uid, $lastId, $limit);
     }
     
     /**
      * 得到朋友动态
      * @param int $uid 		       我们网账号
-     * @param int $timeline    修改时间
      * @param int $lastId      最后查询feed_id
      * @param int $limit       查询数量
      */
-    public function getUserFriendFeed($uid, $timeline = 0, $lastId = 0, $limit = 10) {
+    public function getUserFriendFeed($uid, $lastId = 0, $limit = 10) {
         if(empty($uid)) {
             return false;
         }
         
-        $m = ClsFactory::Create("RModel.mFeedVm");
+        $mFeedVm = ClsFactory::Create("RModel.mFeedVm");
         
-        $result = $m->getUserFriendFeed($uid, $timeline, $lastId, $limit);
-        
-        return !empty($result) ? $result : false;
+        return $mFeedVm->getUserFriendFeed($uid, $lastId, $limit);
     }    
     
 }

@@ -25,8 +25,8 @@ class dAlbumPersonRelation extends dBase {
         return $this->delete($id);
     }
     
-    public function getAlbumPersonRelByUid($uid, $offset = 0, $limit = 10) {
-        $orderby = ' id desc';
+    public function getAlbumPersonRelByUid($uid, $offset = null, $limit = null) {
+        $orderby = $this->_pk.' asc';
         return $this->getInfoByFk($uid, 'client_account', $orderby, $offset, $limit);
     }
     

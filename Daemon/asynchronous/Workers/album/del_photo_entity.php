@@ -8,15 +8,24 @@ class del_photo_entity extends BackGroundController {
     public function run($job, &$log) {
 
         $workload = $job->workload();
-        $photo_path = $workload;  // as client_account
+        $photo_path_list = unserialize($workload); 
+
+        if(empty($photo_path_list)) {
+            return false;
+        }
         //1. 做路径验证的校验
-        //2. 删除
-        echo $photo_path;
-        
-        $log[] = "Success";
+        foreach($photo_path_list as $key=>$val) {
+            if(!file_exists($val)){
+                continue;
+            }
+            if(unlink($val)) {
+                $log[] = $val." delete Success";
+            }else{
+                $log[] = $val." delete False";
+            }
+        }
         
         return "del_photo_entity Success";
-
     }
 
 }
