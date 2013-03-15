@@ -29,12 +29,10 @@ abstract class mFeedBase {
 
         if (empty($lastFeedId)) $lastFeedId = 0;
         if (empty($limit)) $limit = 10;
-//        print_r(" mFeedBase getFeedById  \n");
-        
+
         $datas_from_redis = $this->_rdata->zGetRange($id, $lastFeedId, $limit);
         
         if (empty($datas_from_redis)) {
-//            print_r(" redis is null ,data from mysql \n");
             // 如果为空有两种情况:
             $datas_from_db = $this->loader($id, $lastFeedId, $limit);
             if (empty($datas_from_db)) return false;
@@ -46,14 +44,13 @@ abstract class mFeedBase {
             //一种是未达到redis最大值，写入数据库.
 
             if (!$is_exist || !$is_maxsize) {  
-//               $this->setFeeds($id, $datas_from_db);
+               $this->setFeeds($id, $datas_from_db);
             }
             
             return $this->returnReidsFormat($datas_from_db);
         } 
         
         if (!empty($datas_from_redis)) {
-
             // 如果不为空，也分两种情况
             $size = count($datas_from_redis);
             //一种是获取的数据达到limit个数，直接返回
@@ -61,7 +58,6 @@ abstract class mFeedBase {
             
             //一种是获取的数据未达到limit个数，需要从数据库中获取补全.
             if ($size < $limit) {
-
                   $lastFeedId = end($datas_from_redis);
 
                   $limit = $limit - $size;
@@ -70,7 +66,7 @@ abstract class mFeedBase {
                   if (!empty($datas_from_db)) {
                       $is_maxsize = $this->_rdata->isMaxSize($id);
                       if (!$is_maxsize) {
-//                          $this->setFeeds($id, $datas_from_db);
+                          $this->setFeeds($id, $datas_from_db);
                       }
                       
                       $datas = $this->returnReidsFormat($datas_from_db);

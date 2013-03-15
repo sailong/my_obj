@@ -82,8 +82,10 @@ class testPersonMood {
 
 $uid = '11070004';
 // 创建一个说说实体
-//for($i = 0 ; $i < 110; $i++) {
+//$i = 1;
+//while($i <= 105) {
 //    $feed_id = testPersonMood::createPersonFeed($uid);
+//    $i++;
 //}
 //exit;
 //读取动态
@@ -92,12 +94,13 @@ $last_id = 0;
 $page = 1;
 $limit = 10;
 
+
 $result =  testPersonMood::debugPersonFeed($uid, $last_id);
 print_r(" page = 1   count = " . count($result) . " \n");
 print_r($result);
 while (true) {
     
-    if (!empty($result) && count($result) == 10 && $page <=23 ) {
+    if (!empty($result) && count($result) == 10 ) {
         $last_datas = end($result);
         $last_id = $last_datas['feed_id'];
         print_r(" last_id = $last_id \n");
