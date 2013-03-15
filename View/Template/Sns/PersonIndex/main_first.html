@@ -12,6 +12,9 @@
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/tip_msg/showtip.js"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/sendbox/sendbox.js"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/template/template.js"></script>
+
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/PersonIndex/vistior.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/PersonIndex/friend.js"></script>
 </head>
 <body>
 {insert name="sns_header"}
@@ -347,58 +350,39 @@
        <div class="first_main_right">
          <!--my_friend star-->
          <div class="my_friend">
-           <h3><span>我的好友(120)</span><a href="#">更多&gt;&gt;</a></h3>
-           <p>
-             <a href="#"><img src="__PUBLIC__/sns/images/PersonIndex/main_first/f_pic01.jpg"></a><a href="#"><img src="__PUBLIC__/sns/images/PersonIndex/main_first/f_pic02.jpg"></a><a href="#"><img src="__PUBLIC__/sns/images/PersonIndex/main_first/f_pic03.jpg"></a><a href="#"><img src="__PUBLIC__/sns/images/PersonIndex/main_first/f_pic04.jpg"></a><a href="#"><img src="__PUBLIC__/sns/images/PersonIndex/main_first/f_pic02.jpg"></a><a href="#"><img src="__PUBLIC__/sns/images/PersonIndex/main_first/f_pic03.jpg"></a><a href="#"><img src="__PUBLIC__/sns/images/PersonIndex/main_first/f_pic01.jpg"></a>
+           <h3>{if $client_account == $vuid}<span>我的好友({$friend_total_count})</span><a href="javascript:;">更多&gt;&gt;</a>{else}<span>Ta的好友(120)</span>{/if}</h3>
+           
+           <p id="friend_list_div">
+             {literal}
+             	<a href="javascript:;" title="{user_friend.client_name}" class="clone" style="display:none;"><img src="{user_friend.client_headimg_url}" class="photo_width40"></a>
+             {/literal}
            </p>
+           
          </div>
          <!--my_friend end-->
          <!--visitor star-->
          <div class="visitor">
-           <h3><span>最近访客</span><a href="#">更多&gt;&gt;</a></h3>
+           <h3><span>最近访客</span>{if $client_account == $vuid}<a href="/Sns/Friend/Manage/person_vistior" target="__blank;">更多&gt;&gt;</a>{/if}</h3>
            <!--visitor_main star-->
-           <div class="visitor_main">
+           <div class="visitor_main" id="vistior_list_div">
+           <input type="hidden" value="{$vuid}" id="vuid"/>
              <!--visitor_main_tab star-->
-             <div class="visitor_main_tab">
+             {literal}
+             <div class="visitor_main_tab clone" style="display:none;">
                <table width="100%" border="0" cellspacing="0" cellpadding="0">
                   <tr>
-                    <td><a href="#"><img src="__PUBLIC__/sns/images/PersonIndex/main_first/f_pic01.jpg"></a></td>
+                    <td><a href="javascript:;"><img src="{user.client_headimg_url}" class="photo_width40"></a></td>
                     <td>
-                      <p>张晓</p>
-                      <p>2012.12.20&nbsp;14:26</p>
+                      <p>{user.client_name}</p>
+                      <p>{user.timeline}</p>
                     </td>
                   </tr>
                 </table>
-                <div class="tcc_close">
-                  <a href="#" class="red_close"></a>
+                <div class="tcc_close" style="display:none;" id="show_del_btn">
+                  <a href="javascript:;" class="red_close" id="del_btn"></a>
                 </div>
              </div>
-             <!--visitor_main_tab end-->
-             <!--visitor_main_tab star-->
-             <div class="visitor_main_tab">
-               <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                  <tr>
-                    <td><a href="#"><img src="__PUBLIC__/sns/images/PersonIndex/main_first/f_pic02.jpg"></a></td>
-                    <td>
-                      <p>张晓</p>
-                      <p>2012.12.20&nbsp;14:26</p>
-                    </td>
-                  </tr>
-                </table>
-             </div>
-             <!--visitor_main_tab end-->
-             <!--visitor_main_tab star-->
-             <div class="visitor_main_tab">
-               <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                  <tr>
-                    <td><a href="#"><img src="__PUBLIC__/sns/images/PersonIndex/main_first/f_pic03.jpg"></a></td>
-                    <td>
-                      <p>张晓</p>
-                      <p>2012.12.20&nbsp;14:26</p>
-                    </td>
-                  </tr>
-                </table>
-             </div>
+             {/literal}
              <!--visitor_main_tab end-->
            </div>
            <p class="visitor_p">今日访客：<a href="#" class="f_main_green">{$total_count_day}</a><span></span>总访客：<a href="#" class="f_main_green">{$total_count}</a></p>

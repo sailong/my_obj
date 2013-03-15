@@ -667,9 +667,9 @@ class ManageAction extends SnsController{
         }
         
         $new_client_account_list_sort = array();
-        foreach ($client_account_list as $account=>$vistior_val) {
+        foreach ($client_account_list as $account=>$account_val) {
             
-            if(isset($vistior_val['is_friend']) && $vistior_val['is_friend'] == 1) {
+            if(isset($account_val['is_friend']) && $account_val['is_friend'] == 1) {
                 continue;
             }
             if(!empty($to_account_arr[$account])) {
