@@ -6,7 +6,7 @@ class CommentsAction extends SnsController {
      * 获取说说的评论信息
      */
     public function getMoodCommentsForFeedAjax() {
-        $mood_id        = $this->objInput->getInt('mood_id');
+        $mood_id = $this->objInput->getInt('mood_id');
         
         import('@.Control.Api.MoodApi');
         $MoodApi = new MoodApi();
@@ -61,7 +61,7 @@ class CommentsAction extends SnsController {
         $ret_datas = array(
             'has_next_page' => $has_next_page,
             'max_comment_id' => $max_comment_id,
-            'comment_list' => $comment_list  
+            'comment_list' => $comment_list
         );
         
         $this->ajaxReturn($ret_datas, '获取成功!', 1, 'json');

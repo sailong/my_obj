@@ -17,11 +17,30 @@ class testClassBlog {
             'summary'      => "不他妈的发工资不他妈的发工资不他妈的发工资",
             'comments'     => 0,
             'grant'        => 0
+            
         );
         
         import('@.Control.Sns.Blog.Ext.ClassBlog');
         $BlogObj = new ClassBlog($class_code);
         $blog_id = $BlogObj->publishBlog($blog_datas, true);
+
+        return $blog_id;
+    }
+    
+    public static function createClassBlogComment($uid, $class_code, $blog_id) {
+        
+        import("@.Control.Api.FeedApi");
+        $feed = new FeedApi();
+
+        $comment_feed_id = $feed->class_create($class_code,$uid,$blog_id,FEED_BLOG, FEED_ACTION_COMMENT);
+        print_r("comment_feed_id = $comment_feed_id \n");
+        
+        return $comment_feed_id;
+    }  
+
+    
+    public static function createClassBlogFeed($uid, $class_code, $blog_id) {
+
         /**
          * 创建日志动态
          */
@@ -29,13 +48,11 @@ class testClassBlog {
         import("@.Control.Api.FeedApi");
         $feed = new FeedApi();
         $feed_id = $feed->class_create($class_code,$uid,$blog_id,FEED_BLOG, FEED_ACTION_PUBLISH);
-        $comment_feed_id = $feed->class_create($class_code,$uid,$blog_id,FEED_BLOG, FEED_ACTION_COMMENT);
         print_r("blog_id = $blog_id \n");
         print_r("feed_id = $feed_id \n");
-        print_r("comment_feed_id = $comment_feed_id \n");
         
         return $feed_id;
-    }
+    }    
     
     public static function debugClassBlog($class_code, $last_id) {
         if(empty($class_code)) {
@@ -50,6 +67,22 @@ class testClassBlog {
 
         return $datas;
     }
+    
+    public static function debugClassBlogDispatch($uid, $class_code, $feed_id = 0, $feed_type = 0, $action = 1) {
+        
+        if(empty($class_code)) {
+            return false;
+        }        
+
+        $params = array('class_code'    => $class_code,
+                        'uid'		    =>  $uid,
+                        'feed_id'   => $feed_id,
+                        'feed_type'	=> $feed_type,
+                        'action'	=> $action
+                        );  
+        $params = serialize($params);
+        Gearman::send('feed_class_dispatch', $params, PRIORITY_NORMAL, false);
+    }
 }
 
 
@@ -58,9 +91,15 @@ $class_code = 23527;
 
 // 创建一个班级相册实体
 
-for($i = 0 ; $i < 110; $i++) {
-    $feed_id = testClassBlog::createClassBlog($client_account, $class_code);
+for($i = 0 ; $i < 1; $i++) {
+    $blog_id = testClassBlog::createClassBlog($client_account, $class_code);
+    //创建动态
+    $feed_id = testClassBlog::createClassBlogFeed($client_account, $class_code, $blog_id);
+    //评论
+//    $feed_comment_id = testClassBlog::createClassBlogComment($client_account, $class_code, $blog_id);
 }
+
+
 
 
 $last_id = 0;
@@ -90,5 +129,10 @@ while (true) {
         
     }
 }
+
+
+//转发测试
+
+testClassBlog::debugClassBlogDispatch($client_account, $class_code, $feed_id, FEED_BLOG, FEED_ACTION_PUBLISH);
 
 

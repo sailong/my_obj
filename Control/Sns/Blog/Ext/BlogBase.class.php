@@ -41,28 +41,16 @@ abstract class BlogBase {
     
     /**
      * 提取日志的对应关系
+     * 注：数据结构调整原来权限表合并到关系表
      * @param $blog_datas
      */
     abstract protected function extractBlogRelation($blog_datas);
-    
     /**
-     * 提前日志的权限
+     * 判断是否需要修改日志的对应关系 和权限
      * @param $blog_datas
      */
-    abstract protected function extractBlogGrant($blog_datas);
+    abstract protected function needModifyBlogRelation($blog_datas);
     
-    /**
-     * 判断是否需要修改权限表
-     * @param $blog_datas
-     */
-    protected function needModifyBlogGrants($blog_datas) {
-        if(empty($blog_datas)) {
-            return false;
-        }
-        
-        return isset($blog_datas['grant']) ? true : false;
-    }
- 	
     /**
      * 判断是否需要修改日志内容
      * @param $blog_datas
@@ -88,6 +76,7 @@ abstract class BlogBase {
              'upd_time',
              'contentbg',
              'summary',
+         	 'first_img',
              'comments',
          );
          
@@ -131,11 +120,13 @@ abstract class BlogBase {
        
         import("@.Common_wmw.WmwImage");
         $scaleObj = new WmwImage();
+        
         if(!empty($img_list)) {
             foreach($img_list as $img) {
                 $ImgParser = HtmlParser::createTagParser('img', $img);
                 $tmp_src = $ImgParser->attr('src');
-                if ((stripos($tmp_src, 'http://') === false) && (stripos($tmp_src, $tmp_path) !== false)) {
+                $is_remote_file = $this->isRemoteFile($tmp_src); //是否是远程文件
+                if (($is_remote_file == false) && (stripos($tmp_src, $tmp_path) !== false)) {
                     $new_src = str_replace($tmp_path, $new_path, $tmp_src);
                     $old_url = WEB_ROOT_DIR . $tmp_src;
                     $new_url = WEB_ROOT_DIR . $new_src;
@@ -181,23 +172,45 @@ abstract class BlogBase {
     /**
      * 截取日志摘要
      * @param String $content
+     * @param $str_length 截取长度
      */
-    public function getSummary($content, $str_length = 108) {
+    public function getSummary($content, $str_length = 200) {
         if(empty($content)) {
             return false;
         }
         import('@.Common_wmw.WmwString');
         // html 实体转换成一般的html 代码
         $content = WmwString::unhtmlspecialchars($content);
-        //提取第一张图片
-        preg_match("/<img([^>]+?)\/>/im", $content, $matches);
-        
+                
         //去除html标签 包括 img 标签
         $content = WmwString::delhtml($content);
 
         //截取内容
         $content = WmwString::mbstrcut(trim($content), 0, $str_length, 1, $suffix=true);
 
-        return $matches[0] . $content;
+        return $content;
+    }
+    
+    /**
+     * 截取日志第一张图片用于列表页面展示
+     * @param String $content
+     */
+    public function getFirstImg($content) {
+        import('@.Common_wmw.HtmlParser');
+        $HtmlParser = new HtmlParser($content);
+        $img = $HtmlParser->getElementByTagName('img');
+        
+        return !empty($img) ? $img : '' ;
+    }
+    
+	/**
+     * 判断是否是远程文件
+     */
+    private function isRemoteFile($pFileName) {
+        if(empty($pFileName)) {
+            return false;
+        }
+        
+        return preg_match("/^http(s)?:\/\/(.+)$/", trim($pFileName)) ? true : false;
     }
 }

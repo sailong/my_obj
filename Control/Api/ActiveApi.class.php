@@ -79,7 +79,7 @@ class ActiveApi extends ApiController {
                 $today_val += $active_log["value"];
             }
         }
-        
+
         foreach($current_person_active as $module => $action){
             
             if(empty($new_ActiveLog_list[$module.$action])){
@@ -90,8 +90,8 @@ class ActiveApi extends ApiController {
             $new_ActiveLog_list[$module.$action]["day_limit"] = $module_list[$module][$action]["day_limit"];
             $new_ActiveLog_list[$module.$action]["add_value"] = $module_list[$module][$action]["value"];
         }
-        
-        return !empty($new_ActiveLog_list) ? array($new_ActiveLog_list, $today_val) : false;
+ 
+        return !empty($new_ActiveLog_list) ? array($new_ActiveLog_list, $today_val) : array(array(), 0);
     }
 
     public function getactivemember() {

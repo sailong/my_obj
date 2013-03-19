@@ -46,3 +46,31 @@
   <div class="clear"></div>
 </div>
 <!--personal_active end-->
+
+{literal}
+ <div id="mood_comment_params" class="comment_params_selector" style="display:none;">
+ 	<input type="hidden" name="publish_comment_url" value="/Sns/Mood/Comments/publishMoodCommentsAjax"/>
+ 	<input type="hidden" name="get_comments_url" value="/Sns/Mood/Comments/getMoodCommentsForFeedAjax/mood_id/{from_id}/page/1"/>
+ 	<div class="post_selector">
+ 		<input type="hidden" name="mood_id" value="{from_id}"/>
+ 		<input type="hidden" name="up_id" value="0"/>
+ 	</div>
+ </div>
+ 
+ <div id="mood_comments_1st_params" class="comment_1st_unit_params_selector" style="display:none;">
+    <input type="hidden" name="publish_comment_url" value="/Sns/Mood/Comments/publishMoodCommentsAjax"/>
+    <input type="hidden" name="delete_comment_url" value="/Sns/Mood/Comments/deleteMoodCommentsAjax/comment_id/{comment.comment_id}"/>
+    <input type="hidden" name="child_items_name" value="child_items"/>
+    <div class="post_selector">
+	  <input type="hidden" name="mood_id" value="{comment.mood_id}"/>
+	  <input type="hidden" name="up_id" value="{comment.comment_id}"/>
+    </div>
+ </div>
+ 
+ <div id="mood_comment_2nd_params" class="comment_2nd_unit_params_selector">
+  	<input type="hidden" name="delete_comment_url" value="/Sns/Mood/Comments/deleteMoodCommentsAjax/comment_id/{child_comment.comment_id}"/>
+ </div>
+ 
+ <input type="hidden" name="register_model" value="mood"/>
+ 
+{/literal}

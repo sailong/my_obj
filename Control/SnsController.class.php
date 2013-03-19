@@ -28,7 +28,7 @@ class SnsController extends FrontController {
     protected function checkoutClassCode($class_code) {
         
         $class_code_list = $this->user['class_info'];
-        
+
         if(empty($class_code_list)) {
            return false; 
         }
@@ -41,8 +41,22 @@ class SnsController extends FrontController {
                 }
             }
         }
+
+        return in_array($class_code, $class_code_list) ? $class_code : key($class_code_list);
+    }
+    
+    /**
+     * 验证用户是否存在
+     */
+    protected function checkoutAccount($client_account) {
+        if(empty($client_account)) {
+            return false;
+        }
         
-        return isset($class_code_list[$class_code]) ? $class_code : key($class_code_list);
+        $mUser = ClsFactory::Create('RModel.mUserVm');
+        $user_list = $mUser->getClientAccountById($client_account);
+        
+        return !empty($user_list) ? true : false;
     }
     
 	/**

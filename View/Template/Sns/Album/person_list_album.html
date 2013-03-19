@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 <title>个人相册</title>
 <link rel="stylesheet" href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/Common/sns_common.css" type="text/css" charset="utf-8">
-<link rel="stylesheet" href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/Album/class_list_album.css" type="text/css" charset="utf-8">
+<link rel="stylesheet" href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/Album/person_list_album.css" type="text/css" charset="utf-8">
 
 
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/jquery-1.5.2.min.js"></script>
@@ -16,17 +16,16 @@
 
 </head>
 <body>
-{insert name="sns_header"}
-<!--tip star-->
-{insert name="sns_class_header" client_account = $client_account}
-<!--tip end--> 
+<!-- 头部start -->
+{insert name="sns_header" uid = $client_account}
+<!-- 头部end -->
+
+<!--per_tip star-->
+{insert name="sns_person_second_header" uid = $client_account}
 <!--content star-->
 <div class="content">
   <!--main star-->
    <div class="main">
-     <!--nav star-->
-     {insert name="sns_nav" client_account = $client_account}
-     <!--nav end-->
     <h4></h4>
     <!--publish_main star-->
     <div class="publish_main">

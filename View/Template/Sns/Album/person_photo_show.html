@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <title>查看单张照片</title>
 <link rel="stylesheet" href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/Common/sns_common.css" type="text/css" charset="utf-8">
-<link rel="stylesheet" href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/Album/class_photo_show.css" type="text/css" charset="utf-8">
+<link rel="stylesheet" href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/Album/person_photo_show.css" type="text/css" charset="utf-8">
 
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/jquery-1.5.2.min.js"></script>
 
@@ -92,22 +92,18 @@
  <!--浏览最后一张照片 end-->
 <!--弹出层 end-->
  
-<!--tip star-->
-{insert name="sns_header"}
-<!--tip star-->
-{insert name="sns_class_header" client_account = $client_account}
-<!--tip end--> 
+<!-- 头部start -->
+{insert name="sns_header" uid = $client_account}
+<!-- 头部end -->
+
+<!--per_tip star-->
+{insert name="sns_person_second_header" uid = $client_account}
 <!--content star-->
 <div class="content">
   <!--main star-->
    <div class="main main_photo_show">
-   <!--nav star-->
-    {insert name="sns_nav" client_account = $client_account}
-    <!--nav end-->
     <h4>
 	    <a href="/Sns/Album/Personphoto/photolist/album_id/{$album_id}/client_account/{$client_account}" class="f14" title=""><span class="btn_left"></span><span class="btn_right">返回相册</span></a>
-	    
-    	
     </h4>
     <div class="clear"></div>
     <!--publish_main star-->

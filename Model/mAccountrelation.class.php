@@ -155,6 +155,22 @@ class mAccountrelation extends mBase{
     }
     
     /**
+     * 判断用户关系
+     * 
+     */
+    public function getAccountTrelationByUidAndFriendAccount($client_account, $friend_account) {
+        if (empty($client_account) || empty($friend_account)) {
+            return false;
+        }
+        $where = array(
+            "client_account='$client_account'",
+            "friend_account='$friend_account'"
+        ); 
+        $realation_arr = $this->_dAccountrelation->getInfo($where, 'relation_id desc', 0, 1);
+        
+        return !empty($realation_arr) ? true : false;
+    } 
+    /**
      * 添加信息
      * @param $dataarr
      * @param $is_return_id

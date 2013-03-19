@@ -19,10 +19,7 @@ create_album.prototype.attachEvent=function(){
 			$(this).val('');
 		}
 	}).blur(function() {
-		var album_name = $.trim($(this).val());
-		if(!album_name) {
-			$(this).val(me.default_album_name);
-		}
+		me.validatorAlbumInfo();
 	});
 	
 	//绑定form的提交事件
@@ -34,7 +31,7 @@ create_album.prototype.attachEvent=function(){
 			dataType:'json',
 			beforeSubmit:function() {
 				//表单的验证函数
-				return me.validatorForm();
+				return me.validatorAlbumInfo();
 			},
 			success:function(json) {
 				$('#create_album_div').trigger('closeEvent');
@@ -89,6 +86,14 @@ create_album.prototype.attachEvent=function(){
 	
 };
 
+create_album.prototype.validatorAlbumInfo=function() {
+	var self = this;
+	if(!$('#album_name').val()) {
+		$.showError('请填写相册名称!');
+		return false;
+	}
+	return true;
+};
 create_album.prototype.reflushCounter=function() {
 	var me = this;
 	var context = $('#create_album_div');

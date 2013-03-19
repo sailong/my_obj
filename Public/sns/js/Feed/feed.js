@@ -156,7 +156,8 @@ feed.prototype = {
 				for(var i in feed_list) {
 					var feed_datas = feed_list[i] || {};
 					
-					var divObj = $.createFeedUnit(feed_datas);
+					//todolist
+					var divObj = $.createFeedUnit(feed_datas, 'mood');
 					
 					divObj.data('datas', feed_datas);
 					me.feedListDivObj.append(divObj);

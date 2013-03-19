@@ -6,7 +6,6 @@ class mAlbumPhotoComments extends mBase {
         $this->_dAlbumPhotoComments = ClsFactory::Create('Data.Album.dAlbumPhotoComments');
     }
     
-    
     public function getCommentByCommentId($comment_id) {
         if(empty($comment_id)) {
             return false;

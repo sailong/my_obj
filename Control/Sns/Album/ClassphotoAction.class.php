@@ -43,12 +43,9 @@ class ClassphotoAction extends SnsController {
         $ByClass = new ByClass();
         
         $album_list = $ByClass->getAlbumByClassAlbumId($album_id, $class_code);
-        $photo_count = $ByClass->getClassPhotoCountByAlbumId($album_id);
-        if(empty($photo_count)) {
-            $photo_count = 0;
-        }
+        
         foreach($album_list as $album_id_key=>$album_info) {
-            $album_info['count'] = $photo_count;
+            $album_info['count'] = $album_info['photo_num'];
             $album_info['add_date'] = date('Y-m-d', $album_info['add_time']);
             $album_info['upd_date'] = date('Y-m-d', $album_info['upd_time']);
             $album_list[$album_id_key] = $album_info;

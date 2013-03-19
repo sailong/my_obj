@@ -209,9 +209,10 @@
     <div class="banner">
        <div class="head_pic">
          <dl>
-           <dt><a href="#"><img src="__PUBLIC__/sns/images/PersonIndex/main_first/per_head_pic.jpg"></a></dt>
-           <dd>皮卡丘</dd>
-           <dd class="align_left"><span class="f_main_green">活跃值：100</span><a href="#" class="value_bj ml10">55</a></dd>
+           <dt><a href="javascript:;"><img src="{$user_list.$client_account.client_headimg_url}" ></a></dt>
+           <dd>{$user_list.$client_account.client_name}</dd>
+           
+           {if $client_account == $vuid}<dd class="align_left"><span class="f_main_green">活跃值：{$user_list.$client_account.active_count}</span><a href="/Sns/PersonIndex/Active/showActiveInfo" target ="_blank"class="value_bj ml10">{$user_list.$client_account.active_count_day}</a></dd>{/if}
          </dl>
        </div>
        <div class="head_btn">
@@ -352,7 +353,7 @@
        <div class="first_main_right">
          <!--my_friend star-->
          <div class="my_friend">
-           <h3>{if $client_account == $vuid}<span>我的好友({$friend_total_count})</span><a href="/Sns/Friend/Manage/index" target="__blank;">更多&gt;&gt;</a>{else}<span>Ta的好友({$friend_total_count})</span>{/if}</h3>
+           <h3>{if $client_account == $vuid}<span>我的好友({$user_list.$client_account.friend_total_count})</span><a href="/Sns/Friend/Manage/index" target="__blank;">更多&gt;&gt;</a>{else}<span>Ta的好友({$user_list.$client_account.friend_total_count})</span>{/if}</h3>
            
            <p id="friend_list_div">
              {literal}
@@ -387,7 +388,7 @@
              {/literal}
              <!--visitor_main_tab end-->
            </div>
-           <p class="visitor_p">今日访客：<a href="#" class="f_main_green">{$total_count_day}</a><span></span>总访客：<a href="#" class="f_main_green">{$total_count}</a></p>
+           <p class="visitor_p">今日访客：<a href="javascript:;" class="f_main_green">{$user_list.$client_account.total_count_day}</a><span></span>总访客：<a href="javascript:;" class="f_main_green">{$user_list.$client_account.total_count}</a></p>
            <!--visitor_main end-->
          </div>
          <!--visitor end-->

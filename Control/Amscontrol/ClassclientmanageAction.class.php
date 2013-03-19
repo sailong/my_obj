@@ -364,7 +364,7 @@ class ClassclientmanageAction extends AmsController{
 	     $class_student = $mSetClassStudent->getClassStudentById($cid, true);
 	     $class_family = $mSetClassFamily->getClassFamilyById($cid, true);
          
-         $this->redirect('/ClassClientManage/showclassClient/uid/'.$uid.'/classCode/'.$cid.'/gradeid/'.$gradeid.'/schoolid/'.$schoolid."/stop_flag/0");
+         $this->redirect('/Classclientmanage/showClassClient/uid/'.$uid.'/classCode/'.$cid.'/gradeid/'.$gradeid.'/schoolid/'.$schoolid."/stop_flag/0");
      }
      //得到不同的账号
      private function getAccount($accountArr) {

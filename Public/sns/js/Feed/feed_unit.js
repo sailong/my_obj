@@ -12,33 +12,46 @@
  * 2. 严格的事件委托机制；
  * 3. 基于配置可扩展的编程思路；
  */
+
+function dump(obj) {
+	
+	for(var i in obj) {
+		alert(i + "=>" + obj[i]);
+	}
+	
+}
+
 (function($) {
-	$.createFeedUnit=function(feed_datas) {
-		var feed_type_map = {
-			1 : {
-				feed_unit_tpl:'feed_unit_mood',
-				comment_tpl:'comment_mood_main_div',
-				unit_1st_tpl:'comment_mood_1st_unit_div',
-				unit_2nd_tpl:'comment_mood_2nd_unit_div'
-			},
-			2 : {
-				feed_unit_tpl:'',
-				comment_tpl:'',
-				unit_1st_tpl:'',
-				unit_2nd_tpl:''
+	$.createFeedUnit=function(feed_datas, feed_type_name) {
 		
-			},
-			3 : {
-				feed_unit_tpl:'',
-				comment_tpl:'',
-				unit_1st_tpl:'',
-				unit_2nd_tpl:''
-			}
+		//获取系统自动注册的模块信息
+		var modules = [];
+		$(':input[name="register_model"]').each(function() {
+			modules.push(this.value);
+		});
+		feed_type_name = $.inArray(feed_type_name, modules) >= 0 ? feed_type_name : modules[0];
+		
+		var templates = {
+			feed_unit_tpl:'feed_unit_%s',
+			comment_tpl:'comment_main_div',
+			unit_1st_tpl:'comment_1st_unit_div',
+			unit_2nd_tpl:'comment_2nd_unit_div',
+			
+			comment_params:'%s_comment_params',
+			unit_1st_params:'%s_comments_1st_params',
+			unit_2nd_params:'%s_comment_2nd_params'
 		};
 		
-		//todolist
-		var feed_type = feed_datas.feed_type = 1;
-		var options = feed_type_map[feed_type];
+		//获取对应的参数设置
+		function getOptions(feed_type_name) {
+			var options = {};
+			for(var name in templates) {
+				options[name] = templates[name].replace('%s', feed_type_name);
+			}
+			return options;
+		}
+		
+		var options = getOptions(feed_type_name);
 		var FeedUnit = new feed_unit(options);
 		
 		return FeedUnit.createFeedUnit(feed_datas);
@@ -82,10 +95,14 @@ feed_unit.collectParams = function(divObj) {
 
 feed_unit.prototype = {
 	options:{
-		feed_unit_tpl:'',
-		comment_tpl:'',
-		unit_1st_tpl:'',
-		unit_2nd_tpl:''
+		feed_unit_tpl:'feed_unit_%s',
+		comment_tpl:'comment_%s_main_div',
+		unit_1st_tpl:'comment_1st_unit_div',
+		unit_2nd_tpl:'comment_2nd_unit_div',
+		
+		comment_params:'%s_comment_params',
+		unit_1st_params:'%s_comments_1st_params',
+		unit_2nd_params:'%s_comment_2nd_params'
 	}
 
 	//创建动态对象
@@ -122,6 +139,10 @@ feed_unit.prototype = {
 		var me = this;
 		
 		var divObj = $("#" + me.options.comment_tpl).clone().removeAttr('id');
+		//追加对应的参数设置
+		var paramsDiv = $('#' + me.options.comment_params).clone().removeAttr('id');
+		divObj.append(paramsDiv);
+		
 		//渲染页面的元素
 		divObj.renderHtml({
 			from_id:from_id
@@ -157,7 +178,7 @@ feed_unit.prototype = {
 		
 		//初始一级菜单的sendbox对象
 		$('.reply_1st_content_selector', divObj).sendBox({
-			panels:'emote,upload',
+			panels:'emote',
 			type:'post',
 			url:params.publish_comment_url || "",
 			data:params.post_params || {},
@@ -182,6 +203,8 @@ feed_unit.prototype = {
 		comment_datas = comment_datas || {};
 		
 		var divObj = $('#' + me.options.unit_1st_tpl).clone().removeAttr('id').show();
+		var paramsDiv = $('#' + me.options.unit_1st_params).clone().removeAttr('id');
+		divObj.append(paramsDiv);
 		//对象的渲染操作
 		divObj.renderHtml({
 			comment:comment_datas || {}
@@ -208,6 +231,9 @@ feed_unit.prototype = {
 		var me = this;
 		
 		var divObj = $('#' + me.options.unit_2nd_tpl).clone().removeAttr('id').show();
+		var paramsDiv = $('#' + me.options.unit_2nd_params).clone().removeAttr('id');
+		divObj.append(paramsDiv);
+		
 		divObj.renderHtml({
 			child_comment:child_comment || {}
 		});

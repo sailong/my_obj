@@ -39,6 +39,7 @@ class dAlbumPhotoComments extends dBase {
         $orderby = ' comment_id desc';
         $wherearr[] = "photo_id={$photo_id}";
         $wherearr[] = "level={$level}";
+        
         return $this->getInfo($wherearr, $orderby, $offset, $limit);
     }
     
@@ -49,6 +50,7 @@ class dAlbumPhotoComments extends dBase {
         $orderby = ' comment_id desc';
         $wherearr[] = "up_id in ('".implode("','",(array)$up_id)."')";
         $wherearr[] = "level={$level}";
+        
         return $this->getInfo($wherearr, $orderby, $offset, $limit);
     }
     

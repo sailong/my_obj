@@ -3,49 +3,25 @@ include_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/Daemon.inc.php');
 class feed_person_dispatch extends BackGroundController {
 
     //注意大小写
+    
+    protected $_common_tasks = array(
+        'feed_user_all',
+        'feed_user_my',
+        'feed_user_friends',
+        'feed_user_children',
+    );
     protected $_tasks = array(
         FEED_MOOD => array(
-            FEED_ACTION_PUBLISH => array(
-                'feed_user_all',
-                'feed_user_my',
-                'feed_user_friends',
-                'feed_user_children',
-            ),
-            FEED_ACTION_COMMENT => array(
-                'feed_user_all',
-                'feed_user_my',
-                'feed_user_friends',
-                'feed_user_children',
-            ),
+            FEED_ACTION_PUBLISH => array(),
+            FEED_ACTION_COMMENT => array(),
         ),
         FEED_BLOG => array(
-            FEED_ACTION_PUBLISH => array(
-                'feed_user_all',
-                'feed_user_my',
-                'feed_user_friends',
-                'feed_user_children',
-            ),
-            FEED_ACTION_COMMENT => array(
-                'feed_user_all',
-                'feed_user_my',
-                'feed_user_friends',
-                'feed_user_children',
-            ),
+            FEED_ACTION_PUBLISH => array(),
+            FEED_ACTION_COMMENT => array(),
         ),
         FEED_ALBUM => array(
-            FEED_ACTION_PUBLISH => array(
-                'feed_user_all',
-                'feed_user_my',
-                'feed_user_friends',
-                'feed_user_children',
-                'feed_user_album',
-            ),
-            FEED_ACTION_COMMENT => array(
-                'feed_user_all',
-                'feed_user_my',
-                'feed_user_friends',
-                'feed_user_children',
-            ),
+            FEED_ACTION_PUBLISH => array('feed_user_album'),
+            FEED_ACTION_COMMENT => array(),
         ),
     );
     
@@ -75,8 +51,9 @@ class feed_person_dispatch extends BackGroundController {
             return false;  
         }
         
+        $this->_tasks = array_merge((array)$this->_common_task, (array)$this->_tasks[$feed_type][$action]);
         
-        foreach($this->_tasks[$feed_type][$action] as $_taskName) {
+        foreach($this->_tasks as $_taskName) {
             $task = $this->getTaskClass($_taskName);
             if (!empty($task)) {
                 $result = $task->run($id, $feed_id);

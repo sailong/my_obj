@@ -29,6 +29,7 @@ Friend.prototype.init=function() {
 		async:false,
 		success:function(json) {
 			if(json.status < 0) {
+				$("#friend_group_list_ul").html('暂无好友');
 				return false;
 			}
 			

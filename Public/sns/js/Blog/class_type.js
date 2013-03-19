@@ -438,7 +438,7 @@ add_type.prototype = {
 				return false;
 			}
 			if($.strLength(name) > 12) {
-				alert('对不起,分类名称长度不能超过12个字母/6个汉');
+				alert('对不起,分类名称长度不能超过12个字母/6个汉字');
 				return false;
 			}
 			

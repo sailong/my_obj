@@ -12,7 +12,7 @@ class feed_user_children {
      * @param array $uid
      * @param int $feed_id
      */
-    public function run($uid, $feed_id){
+    public function run($uid, $class_code = null, $feed_id){
         if(empty($uid) || empty($feed_id)) {
             if(C('LOG_RECORD')) Log::write('task UserLastLoginTime run error:',  "uid OR feed_id is null", Log::ERR);
             return false;

@@ -1,0 +1,75 @@
+<!--personal_active star-->
+<div id="feed_unit_photo" class="personal_active feed_unit_selector" style="display:none;">
+  {literal}
+  <div class="per_active_l">
+   <dl>
+    <dt>
+    	<img src="{feed.client_headimg_url}">
+    </dt>
+   </dl>
+  </div>
+  <!--per_active_r star-->
+  <div class="per_active_r">
+    <p class="per_right_top">
+    	<span class="fc_288c00">{feed.client_name}</span>
+    </p>
+    <div class="per_right_center">
+      <h6>{feed.title}</h6>
+      {if feed.img_url}
+      <dl>
+        <dt>
+        	<img height="181" src="{feed.img_url}">
+        </dt>
+      </dl>
+      {/if}
+      <p>
+         {feed.feed_content}
+         {if feed.src_url}
+         <a class="fc_288c00 ml10" href="{feed.src_url}">(阅读全文)</a>
+         {/if}
+      </p>
+      <div class="per_release_time">
+       <p class="per_p_width">发布时间：{feed.add_time_format}</p>
+       <p>
+	       <a class="fc_288c00 feed_delete_selector" href="javascript:;">删除</a>
+	       {if false}
+	       <a class="fc_288c00 feed_share_selector" href="javascript:;">分享(12)</a>
+	       {/if}
+	       <a class="fc_288c00 feed_comment_selector" href="javascript:;">评论{if feed.comment_nums > 0}({feed.comment_nums}){/if}</a>
+       </p>
+      </div>
+    </div>
+    <p class="per_right_bottom"></p>
+  </div>
+  {/literal}
+  <!--per_active_r end-->
+  <div class="clear"></div>
+</div>
+<!--personal_active end-->
+
+{literal}
+ <div id="photo_comment_params" class="comment_params_selector" style="display:none;">
+ 	<input type="hidden" name="publish_comment_url" value="/Sns/Album/PhotoComments/publishPhotoCommentsAjax"/>
+ 	<input type="hidden" name="get_comments_url" value="/Sns/Album/PhotoComments/getPhotoCommentsForFeedAjax/photo_id/{from_id}/page/1"/>
+ 	<div class="post_selector">
+ 		<input type="hidden" name="photo_id" value="{from_id}"/>
+ 		<input type="hidden" name="up_id" value="0"/>
+ 	</div>
+ </div>
+ 
+ <div id="photo_comments_1st_params" class="comment_1st_unit_params_selector" style="display:none;">
+    <input type="hidden" name="publish_comment_url" value="/Sns/Album/PhotoComments/publishPhotoCommentsAjax"/>
+    <input type="hidden" name="delete_comment_url" value="/Sns/Album/PhotoComments/deletePhotoCommentsAjax/comment_id/{comment.comment_id}"/>
+    <input type="hidden" name="child_items_name" value="child_items"/>
+    <div class="post_selector">
+	  <input type="hidden" name="photo_id" value="{comment.photo_id}"/>
+	  <input type="hidden" name="up_id" value="{comment.comment_id}"/>
+    </div>
+ </div>
+ 
+ <div id="photo_comment_2nd_params" class="comment_2nd_unit_params_selector">
+  	<input type="hidden" name="delete_comment_url" value="/Sns/Album/PhotoComments/deletePhotoCommentsAjax/comment_id/{child_comment.comment_id}"/>
+ </div>
+ 
+ <input type="hidden" name="register_model" value="photo"/>
+{/literal}

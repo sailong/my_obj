@@ -51,18 +51,16 @@ a[title]{text-decoration:none;}
 	.nav_a3{background:url(../../images/Common/sns_images/nav_a3.gif) center 14px no-repeat;}
 	.nav_a4{background:url(../../images/Common/sns_images/nav_a4.gif) center 14px no-repeat;}
 	.nav_a5{background:url(../../images/Common/sns_images/nav_a5.gif) center 14px no-repeat;}
-	.nav_a6{background:url(../../images/Common/sns_images/nav_a6.gif) center 14px no-repeat;}
-	.nav_a7{background:url(../../images/Common/sns_images/nav_a7.gif) center 14px no-repeat;}
-	.nav_a8{background:url(../../images/Common/sns_images/nav_a8.gif) center 14px no-repeat;}
+	.nav_a6{background:url(../../images/Common/sns_images/nav_a7.gif) center 14px no-repeat;}
+	.nav_a7{background:url(../../images/Common/sns_images/nav_a8.gif) center 14px no-repeat;}
 	
 	.nav_a1_hover{background:url(../../images/Common/sns_images/nav_a1_hover.jpg) 0 0 no-repeat;}
 	.nav_a2_hover{background:url(../../images/Common/sns_images/nav_a2_hover.jpg) 0 0 no-repeat;}
 	.nav_a3_hover{background:url(../../images/Common/sns_images/nav_a3_hover.jpg) 0 0 no-repeat;}
 	.nav_a4_hover{background:url(../../images/Common/sns_images/nav_a4_hover.jpg) 0 0 no-repeat;}
 	.nav_a5_hover{background:url(../../images/Common/sns_images/nav_a5_hover.jpg) 0 0 no-repeat;}
-	.nav_a6_hover{background:url(../../images/Common/sns_images/nav_a6_hover.jpg) 0 0 no-repeat;}
-	.nav_a7_hover{background:url(../../images/Common/sns_images/nav_a7_hover.jpg) 0 0 no-repeat;}
-	.nav_a8_hover{background:url(../../images/Common/sns_images/nav_a8_hover.jpg) 0 0 no-repeat;}
+	.nav_a6_hover{background:url(../../images/Common/sns_images/nav_a7_hover.jpg) 0 0 no-repeat;}
+	.nav_a7_hover{background:url(../../images/Common/sns_images/nav_a8_hover.jpg) 0 0 no-repeat;}
 
 /*绿色按钮*/	
 .btn_left{background:url(../../images/Common/sns_images/grenn_btn_left.gif) 0 0 no-repeat; width:20px; height:27px; display:block; float:left;}

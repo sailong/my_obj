@@ -419,7 +419,7 @@ class AlbumApi extends ApiController {
     public function getPhotoCommentListByClass() {
         $up_id = $this->objInput->getInt('up_id');
         $page = $this->objInput->getInt('page');
-        $limit = 2;
+        $limit = 10;
         $offset = null;
         $page = max(1,$page);
         $offset = ($page-1)*$limit;
@@ -1112,4 +1112,80 @@ class AlbumApi extends ApiController {
         $this->ajaxReturn($rs, '', 1, 'json');
     }
     //个人相册接口end
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /***************************************************************************
+     * 相片评论部分的api函数的实现
+     ***************************************************************************/
+    /**
+     * 通过主键获取评论的相关信息
+     * @param $comment_ids
+     */
+    public function getPhotoCommentsById($comment_ids) {
+        if(empty($comment_ids)) {
+            return false;
+        }
+        
+        import('@.Control.Api.AlbumImpl.PhotoComments');
+        $PhotoComments = new PhotoComments();
+        
+        return $PhotoComments->getPhotoCommentsById($comment_ids);        
+    }
+    
+    /**
+     * 通过日志id获取日志的评论信息
+     * @param $blog_id
+     * @param $where_appends
+     * @param $offset
+     * @param $limit
+     */
+    public function getPhotoCommentsByPhotoId($photo_id, $offset = 0, $limit = 10) {
+        if(empty($photo_id)) {
+            return false;
+        }
+        
+        import('@.Control.Api.AlbumImpl.PhotoComments');
+        $PhotoComments = new PhotoComments();
+        
+        return $PhotoComments->getPhotoCommentsByPhotoId($photo_id, $offset, $limit);
+    }
+    
+    /**
+     * 添加日志的评论信息
+     * @param $comment_datas
+     */
+    public function addPhotoComments($comment_datas) {
+        if(empty($comment_datas) || !is_array($comment_datas)) {
+            return false;
+        }
+        
+        import('@.Control.Api.AlbumImpl.PhotoComments');
+        $PhotoComments = new PhotoComments();
+        
+        return $PhotoComments->addPhotoComments($comment_datas);
+    }
+    
+    /**
+     * 删除日志的评论信息
+     * @param $comment_id
+     */
+    public function delPhotoComments($comment_id) {
+        if(empty($comment_id)) {
+            return false;
+        }
+        
+        import('@.Control.Api.AlbumImpl.PhotoComments');
+        $PhotoComments = new PhotoComments();
+        
+        return $PhotoComments->delPhotoComments($comment_id);
+    }
 }

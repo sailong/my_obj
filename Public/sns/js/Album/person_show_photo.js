@@ -1328,8 +1328,8 @@ YAO.YAlbum.prototype.BTN_NEXT_CLASS = 'next';
 YAO.YAlbum.prototype.BTN_PREVIOUS_ID = 'carousel_previous_photo';
 YAO.YAlbum.prototype.BTN_PREVIOUS_CLASS = 'previous';
 YAO.YAlbum.prototype.BTN_DISABLED_CLASS = 'dis';
-YAO.YAlbum.prototype.IMG_BTN_PREVIOUS = 'url(/Public/sns/images/Album/class_photo_show/last-photo.gif)';
-YAO.YAlbum.prototype.IMG_BTN_NEXT = 'url(/Public/sns/images/Album/class_photo_show/next-photo.gif)';
+YAO.YAlbum.prototype.IMG_BTN_PREVIOUS = 'url(/Public/sns/images/Album/class_photo_show/icon_left.gif)';
+YAO.YAlbum.prototype.IMG_BTN_NEXT = 'url(/Public/sns/images/Album/class_photo_show/icon_right.gif)';
 YAO.YAlbum.prototype.SHARDOW_ID = 'carousel_photo_shardow';
 YAO.YAlbum.prototype.LOAD_IMG_PATH = '/Public/sns/images/Album/class_photo_show/loading.gif';
 YAO.YAlbum.prototype.LOAD_IMG_ID = 'carousel_photo_loading';
@@ -1725,7 +1725,9 @@ YAO.YAlbum.prototype.delegateEvent=function() {
 	
 	//删除相片 确定
 	$(".tcc_msg").delegate('.qd_btn','click',function() {
+		
 		var obj = $(this).parents("div:first");
+		
 		oSelf.delPhoto(obj);
 	});
 	//删除相片 取消
@@ -1940,7 +1942,6 @@ YAO.YAlbum.prototype.delPhoto=function(obj) {
 				$.showError(json.info);
 				return false;
 			}
-			oSelf.minusPhotoInAlbum();
 			var liObj = $("#"+photo_id,$("#samples_list")).parents("li:first");
 			liObj.remove();
 			var dialogObj = art.dialog.list['del_photo_dialog'];
@@ -1964,19 +1965,7 @@ YAO.YAlbum.prototype.delPhoto=function(obj) {
 		}
 	});
 };
-//减少相册中相片数
-YAO.YAlbum.prototype.minusPhotoInAlbum=function() {
-	var oSelf = this;
-	$.ajax({
-		type:"get",
-		dataType:"json",
-		url:"/Api/Album/minusPhotoCountByAlbumId/album_id/" + oSelf.album_id,
-		async:false,
-		success:function(json) {
-			return true;
-		}
-	});
-};
+
 //照片移动
 YAO.YAlbum.prototype.getAlbumList=function() {
 	var oSelf = this;

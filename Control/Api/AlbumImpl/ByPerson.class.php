@@ -36,15 +36,7 @@ class ByPerson extends Album {
             return false;
         }
         
-        //添加相册权限
-        $grant_id = $this->add_grant($datas, $client_account);
-        if(empty($grant_id)) {
-            //删除相册信息
-            $this->delete($album_id);
-            //删除个人相册关系
-            $this->del_rel($rel_id);
-            return false;
-        }
+        
         
         return $album_id;
     }
@@ -65,7 +57,14 @@ class ByPerson extends Album {
         //个人是否存在
         $this->client_is_exist($client_account);
         //从关系表中得到相册信息
-        $album_ids = $this->get_album_ids_by_rel($client_account);
+        $rel_list = $this->get_album_ids_by_rel($client_account);
+       
+        $rel_list = $rel_list[$client_account];
+        
+        $album_ids = array();
+        foreach($rel_list as $key=>$val) {
+            $album_ids[$val['album_id']] = $val['album_id'];
+        }
        
         //该个人是否存在相册
         if(empty($album_ids)) {
@@ -93,7 +92,14 @@ class ByPerson extends Album {
         //个人是否存在
         $this->client_is_exist($client_account);
         //从关系表中得到相册信息
-        $album_ids = $this->get_album_ids_by_rel($client_account, $offset, $limit);
+         $rel_list = $this->get_album_ids_by_rel($client_account, $offset, $limit);
+       
+        $rel_list = $rel_list[$client_account];
+        
+        $album_ids = array();
+        foreach($rel_list as $key=>$val) {
+            $album_ids[$val['album_id']] = $val['album_id'];
+        }
         //该个人是否存在相册
         if(empty($album_ids)) {
             return false;
@@ -105,11 +111,9 @@ class ByPerson extends Album {
             return false;
         }
         
-        $album_ids = array_keys($album_list);
-        //获取相册权限
-        $grant_list = $this->get_grant_by_album_id($album_ids);
+  
         //合并权限和相册信息
-        $album_list = $this->merge_album_rel_data($album_list, $grant_list);
+        $album_list = $this->merge_album_rel_data($album_list, $rel_list);
         $album_list = $this->parse($album_list);
         
         return !empty($album_list) ? $album_list : false;
@@ -163,11 +167,7 @@ class ByPerson extends Album {
         if(empty($rel)) {
             return false;
         }
-        
-        //获取相处权限
-        $grant_list = $this->get_grant_by_album_id($album_id);
-        
-        $album_list = $this->merge_album_rel_data($album_list,$grant_list);
+        $album_list = $this->merge_album_rel_data($album_list,$rel);
         $album_list = $this->parse($album_list);
         
         return !empty($album_list) ? $album_list : false;
@@ -405,19 +405,8 @@ class ByPerson extends Album {
         }
         $album_rs = $this->upd($data, $album_id);
         
-        //修改相册权限
-        $grant_list = $this->get_grant_by_album_id($album_id);
-        if(empty($grant_list)) {
-            return false;
-        }
-        $grant_list = reset($grant_list);
-        $grant_id = key((array)$grant_list);
-        if(empty($grant_id)) {
-            return false;
-        }
-        $grant_list['grant'] = $data['grant'];
-        $mAlbumPersonGrants = ClsFactory::Create('Model.Album.mAlbumPersonGrants');
-        $grant_rs = $mAlbumPersonGrants->modifyAlbumPersonGrantById($grant_list, $grant_list['id']);
+        
+        $grant_rs = $mAlbum->modifyAlbumPersonRelById(array('grant'=>$data['grant']), key($rel));
        
         if((!empty($grant_rs) || !empty($album_rs)) || (!empty($grant_rs) && !empty($album_rs))) {
             return true;
@@ -449,35 +438,6 @@ class ByPerson extends Album {
         
         return $comment_list;
     }
-    /**
-     * 通过相册album_id获取相册权限
-     * @param int $album_ids
-     * 
-     * @return bool
-     */
-    private function get_grant_by_album_id($album_ids) {
-        if(empty($album_ids)) {
-            return false;
-        }
-        //获取相关相册的权限信息
-        $mAlbumPersonGrants = ClsFactory::Create('Model.Album.mAlbumPersonGrants');
-        //三维
-        $grant_list = $mAlbumPersonGrants->getAlbumPersonGrantByAlbumId($album_ids);
-        if(empty($grant_list)) {
-            return false;
-        }
-        //二维
-        $new_grant_list = array();
-        foreach($grant_list as $album_id=>$grant_list) {
-            list($grant_id,$grant_info) = each($grant_list);
-            $grant_info['grant_name'] = $this->grant_arr($grant_info['grant']);
-            $new_grant_list[$grant_id]=$grant_info;
-            unset($grant_list[$album_id]);
-        }
-        
-        return !empty($new_grant_list) ? $new_grant_list : false;
-    }
-    
     /**
      * 相册权限常量                                  提取到公共配置文件中*******************************************
      * @param int $grant_id
@@ -549,17 +509,11 @@ class ByPerson extends Album {
         
         $mAlbumPersonRelation = ClsFactory::Create('Model.Album.mAlbumPersonRelation');
         $rel_list = $mAlbumPersonRelation->getAlbumPersonRelByUid($client_account, $offset, $limit);
-        $rel_list = reset($rel_list);
-        $album_ids_list = array();
         if(empty($rel_list)) {
             return false;
         }
-        foreach($rel_list as $key=>$val) {
-            $album_ids_list[$val['album_id']] = $val['album_id'];
-        }
-        unset($rel_list);
         
-        return $album_ids_list;
+        return $rel_list;
     }
     /**
      * 格式化相册关系信息
@@ -575,6 +529,7 @@ class ByPerson extends Album {
         $rel_data = array(
             'client_account' => $client_account,
             'album_id'   => $data['album_id'],
+        	'grant'   => $data['grant']
         );
         
         return !empty($rel_data) ? $rel_data : false;
@@ -595,83 +550,34 @@ class ByPerson extends Album {
         return $mAlbumPersonRelation->delAlbumPersonRelById($rel_id);
     }
     
-    /**
-     * 初始化个人相册权限
-     * @param Array $datas
-     * 
-     * @return bool || int 权限ID
-     */
-    private function add_grant($datas, $client_account) {
-        if(empty($datas) || !is_array($datas) || empty($client_account)) {
-            return false;
-        }
-        
-        $datas = $this->format_grant_data($datas, $client_account);
-        
-        $mAlbumPersonGrants = ClsFactory::Create('Model.Album.mAlbumPersonGrants');
-        $album_Person_grant_id = $mAlbumPersonGrants->addAlbumPersonGrant($datas, true);
-        
-        return !empty($album_Person_grant_id) ? $album_Person_grant_id : false;
-    }
-    
-    /**
-     * 格式化相册权限信息
-     * @param $data
-     * 
-     * @return Array
-     */
-    private function format_grant_data($data, $client_account) {
-        if(empty($data) || empty($client_account)) {
-            return false;
-        }
-        
-        //相册权限初始化
-        $grant_data = array(
-            'client_account' => $client_account,
-            'album_id'   => $data['album_id'],
-            'grant'      => $data['grant']
-        );
-        
-        return $grant_data;
-    }
-    
-    /**
-     * 删除相册权限
-     * @param int $grant_id
-     * 
-     * @return bool
-     */
-    private function del_grant($grant_id) {
-        if(empty($grant_id)) {
-            return false;
-        }
-        $mAlbumPersonGrants = ClsFactory::Create('Model.Album.mAlbumPersonGrants');
-        return $mAlbumPersonGrants->delAlbumPersonGrantById($grant_id);
-    }
     
     /**
      * 合并相册和相册权限信息
      * @param $album_list
-     * @param $grant_list
+     * @param $rel_list
      * 
      * @return Array
      */
-    private function merge_album_rel_data($album_list, $grant_list) {
-        if(empty($album_list) || empty($grant_list)) {
+    private function merge_album_rel_data($album_list, $rel_list) {
+        if(empty($album_list) || empty($rel_list)) {
             return false;
         }
-        $new_grant_list = array();
-        foreach($grant_list as $grant_key=>$grant_val) {
-            $new_grant_list[$grant_val['album_id']]['grant_name'] = $grant_val['grant_name'];
-            $new_grant_list[$grant_val['album_id']]['grant'] = $grant_val['grant'];
-            unset($grant_key);
+        
+        $new_rel_list = array();
+        //合并权限和相册信息
+        foreach($rel_list as $rel_id=>$rel_val) {
+            $rel_val['grant_name'] = $this->grant_arr($rel_val['grant']);
+            $new_rel_list[$rel_val['album_id']]['grant_name'] = $rel_val['grant_name'];
+            $new_rel_list[$rel_val['album_id']]['grant'] = $rel_val['grant'];
+            unset($rel_list[$rel_id]);
         }
+        
         //数据处理，将相册权限信息和相册信息合并
         foreach($album_list as $album_id=>$val) {
-            $new_grant_list[$album_id]['grant'] = !empty($new_grant_list[$album_id]['grant']) ? $new_grant_list[$album_id]['grant'] : 0;
-            $album_list[$album_id] = array_merge($album_list[$album_id],$new_grant_list[$album_id]);
+            $new_rel_list[$album_id]['grant'] = !empty($new_rel_list[$album_id]['grant']) ? $new_rel_list[$album_id]['grant'] : 0;
+            $album_list[$album_id] = array_merge($album_list[$album_id],$new_rel_list[$album_id]);
         }
-        unset($grant_list);
+        unset($new_rel_list);
         
         return !empty($album_list) ? $album_list : false;
     }

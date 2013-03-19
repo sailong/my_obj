@@ -83,7 +83,7 @@ class TypeAction extends SnsController {
         }
         import("@.Common_wmw.WmwString");
         if(WmwString::mbstrlen($name, 2) > 12) {
-            $this->ajaxReturn(null, '分类名称长度不能超过12个字母/6个汉', -1, 'JSON'); 
+            $this->ajaxReturn(null, '分类名称长度不能超过12个字母/6个汉字', -1, 'JSON'); 
         }
         
         $blogObj = $this->_initBlogObj($class_code);
@@ -160,7 +160,7 @@ class TypeAction extends SnsController {
         }
         import("@.Common_wmw.WmwString");
         if(WmwString::mbstrlen($name, 2) > 12) {
-            $this->ajaxReturn(null, '分类名称长度不能超过12个字母/6个汉', -1, 'JSON'); 
+            $this->ajaxReturn(null, '分类名称长度不能超过12个字母/6个汉字', -1, 'JSON'); 
         }
         
         //验证权限

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 <title>个人相册-普通照片</title>
 <link rel="stylesheet" href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/Common/sns_common.css" type="text/css" charset="utf-8">
-<link rel="stylesheet" href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/Album/class_list_photo_n.css" type="text/css" charset="utf-8">
+<link rel="stylesheet" href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/Album/person_list_photo_n.css" type="text/css" charset="utf-8">
 
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/jquery-1.5.2.min.js"></script>
 
@@ -17,16 +17,12 @@
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/Album/person_photo_list.js"></script>
 </head>
 <body>
-{insert name="sns_header"}
-<!--tip star-->
-{insert name="sns_class_header" uid = $login_account}
-  <!--<div class="tip">
-   <div class="tip_main">
-    <p class="f13 f_green">丰台区芳群园第一小学</p><p><a href="#" class="f13 f_green">一年二班<span class="icon_01"></span></a></p><span class="icon_02"></span><p class="f13 f_green">班主任：李老师</p>
-    <div class="clear"></div>
-   </div> 
-  </div>
---><!--tip end--> 
+<!-- 头部start -->
+{insert name="sns_header" uid = $client_account}
+<!-- 头部end -->
+
+<!--per_tip star-->
+{insert name="sns_person_second_header" uid = $client_account}
 <!-- 相册详情弹层 star -->
 <div class="list_photo_right" id="xcxq_div" style="display:none;">
    <p>相册名称：<font class="album_name">{$album_list.album_name}</font></p>
@@ -53,9 +49,6 @@
 <div class="content">
   <!--main star-->
    <div class="main">
-     <!--nav star-->
-    {insert name="sns_nav" uid = $login_account}
-    <!--nav end-->
     <h4><a href="/Sns/Album/Person/albumlist/client_account/{$client_account}" class="f14" title=""><span class="btn_left"></span><span class="btn_right">返回相册首页</span></a></h4>
     <div class="clear"></div>
     <!--publish_main star-->

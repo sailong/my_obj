@@ -11,6 +11,7 @@ class mAlbumClassRelation extends mBase {
     }
     
     public function modifyAlbumClassRelById($data, $id) {
+        
         return $this->_dAlbumClassRelation->modifyAlbumClassRelById($data, $id);
     }
     

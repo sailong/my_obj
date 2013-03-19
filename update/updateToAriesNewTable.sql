@@ -14,61 +14,36 @@ CREATE TABLE IF NOT EXISTS `wmw_album` (
   `album_auto_img` varchar(50) NOT NULL COMMENT '系统相册封面',
   `photo_num` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '相片数',
   PRIMARY KEY (`album_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='相册信息表' AUTO_INCREMENT=16 ;
-
--- ----------------------------
--- Table structure for `wmw_album_class_grants`
--- ----------------------------
-DROP TABLE IF EXISTS `wmw_album_class_grants`;
-CREATE TABLE `wmw_album_class_grants` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `class_code` bigint(20) unsigned NOT NULL COMMENT '班级code',
-  `album_id` int(10) unsigned NOT NULL COMMENT '相册id',
-  `grant` tinyint(1) unsigned NOT NULL COMMENT '相册查看权限，0:公开 1:本班 2:管理员 3:本学校',
-  PRIMARY KEY (`id`),
-  KEY `class_code` (`class_code`),
-  KEY `album_id` (`album_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='班级相册权限表';
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='相册信息表' AUTO_INCREMENT=1 ;
 
 -- ----------------------------
 -- Table structure for `wmw_album_class_relation`
 -- ----------------------------
 DROP TABLE IF EXISTS `wmw_album_class_relation`;
-CREATE TABLE `wmw_album_class_relation` (
+
+CREATE TABLE IF NOT EXISTS `wmw_album_class_relation` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `class_code` int(20) unsigned NOT NULL COMMENT '班级编号',
   `album_id` int(11) unsigned NOT NULL COMMENT '相册id',
+  `grant` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '相册查看权限，0:公开 1:本班 2:管理员 3:本学校',
   PRIMARY KEY (`id`),
   KEY `class_code` (`class_code`),
   KEY `album_id` (`album_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='班级与相册关系表';
-
--- ----------------------------
--- Table structure for `wmw_album_person_grants`
--- ----------------------------
-DROP TABLE IF EXISTS `wmw_album_person_grants`;
-CREATE TABLE `wmw_album_person_grants` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `client_account` bigint(20) unsigned NOT NULL COMMENT '用户账号',
-  `album_id` int(10) unsigned NOT NULL COMMENT '相册id',
-  `grant` tinyint(3) unsigned NOT NULL COMMENT '相册查看权限，0:公开 1:好友 2:仅主人',
-  PRIMARY KEY (`id`),
-  KEY `client_account` (`client_account`),
-  KEY `album_id` (`album_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='个人相册权限表';
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='班级与相册关系表' AUTO_INCREMENT=1 ;
 
 -- ----------------------------
 -- Table structure for `wmw_album_person_relation`
 -- ----------------------------
 DROP TABLE IF EXISTS `wmw_album_person_relation`;
-CREATE TABLE `wmw_album_person_relation` (
+CREATE TABLE IF NOT EXISTS `wmw_album_person_relation` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `client_account` bigint(20) unsigned NOT NULL COMMENT '用户账号',
   `album_id` int(11) unsigned NOT NULL COMMENT '相册id',
+  `grant` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '相册查看权限，0:公开 1:好友 2:仅主人',
   PRIMARY KEY (`id`),
   KEY `client_account` (`client_account`),
   KEY `album_id` (`album_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=ucs2 COMMENT='个人与相册关系表';
+) ENGINE=InnoDB DEFAULT CHARSET=ucs2 COMMENT='个人与相册关系表' AUTO_INCREMENT=1 ;
 
 -- ----------------------------
 -- Table structure for `wmw_album_photo_comments`
@@ -109,7 +84,7 @@ CREATE TABLE `wmw_album_photos` (
 -- Table structure for `wmw_blog`
 -- ----------------------------
 DROP TABLE IF EXISTS `wmw_blog`;
-CREATE TABLE `wmw_blog` (
+CREATE TABLE IF NOT EXISTS `wmw_blog` (
   `blog_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(60) NOT NULL,
   `type_id` int(11) unsigned NOT NULL,
@@ -119,39 +94,27 @@ CREATE TABLE `wmw_blog` (
   `summary` varchar(255) NOT NULL,
   `comments` mediumint(8) unsigned NOT NULL,
   `add_account` bigint(20) unsigned NOT NULL,
-  `add_time` int(10) unsigned NOT NULL,
+  `add_time` int(11) unsigned NOT NULL,
   `upd_account` bigint(20) unsigned NOT NULL,
-  `upd_time` int(10) unsigned NOT NULL,
+  `upd_time` int(11) unsigned NOT NULL,
+  `first_img` varchar(1024) DEFAULT NULL COMMENT '第一张图片',
   PRIMARY KEY (`blog_id`),
   KEY `fk_add_account` (`add_account`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Table structure for `wmw_blog_class_grants`
--- ----------------------------
-DROP TABLE IF EXISTS `wmw_blog_class_grants`;
-CREATE TABLE `wmw_blog_class_grants` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `class_code` int(10) unsigned NOT NULL COMMENT '班级编号',
-  `blog_id` int(10) unsigned NOT NULL COMMENT '日志ID',
-  `grant` tinyint(1) NOT NULL COMMENT '权限',
-  PRIMARY KEY (`id`),
-  KEY `blog_id` (`blog_id`),
-  KEY `class_code` (`class_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='班级日志权限表';
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- ----------------------------
 -- Table structure for `wmw_blog_class_relation`
 -- ----------------------------
 DROP TABLE IF EXISTS `wmw_blog_class_relation`;
-CREATE TABLE `wmw_blog_class_relation` (
+CREATE TABLE IF NOT EXISTS `wmw_blog_class_relation` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `class_code` int(10) unsigned NOT NULL COMMENT '班级编号',
   `blog_id` int(10) unsigned NOT NULL COMMENT '日志ID',
+  `grant` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '权限 0:公开 1:好友 2:仅主人',
   PRIMARY KEY (`id`),
   KEY `class_code` (`class_code`),
   KEY `blog_id` (`blog_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='班级与日志关系表';
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='班级与日志关系表' AUTO_INCREMENT=1 ;
 
 -- ----------------------------
 -- Table structure for `wmw_blog_comments`
@@ -170,11 +133,6 @@ CREATE TABLE `wmw_blog_comments` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='日志评论表';
 
 -- ----------------------------
--- Records of wmw_blog_comments
--- ----------------------------
-INSERT INTO `wmw_blog_comments` VALUES ('1', '64', '123', '0', '11070004', '0', '0');
-
--- ----------------------------
 -- Table structure for `wmw_blog_content`
 -- ----------------------------
 DROP TABLE IF EXISTS `wmw_blog_content`;
@@ -185,32 +143,19 @@ CREATE TABLE `wmw_blog_content` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Table structure for `wmw_blog_person_grants`
--- ----------------------------
-DROP TABLE IF EXISTS `wmw_blog_person_grants`;
-CREATE TABLE `wmw_blog_person_grants` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `client_account` bigint(20) unsigned NOT NULL COMMENT '用户账号',
-  `blog_id` int(10) unsigned NOT NULL COMMENT '日志ID',
-  `grant` tinyint(1) NOT NULL COMMENT '权限',
-  PRIMARY KEY (`id`),
-  KEY `blog_id` (`blog_id`),
-  KEY `client_account` (`client_account`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='个人日志权限表';
-
-
--- ----------------------------
 -- Table structure for `wmw_blog_person_relation`
 -- ----------------------------
 DROP TABLE IF EXISTS `wmw_blog_person_relation`;
-CREATE TABLE `wmw_blog_person_relation` (
+
+CREATE TABLE IF NOT EXISTS `wmw_blog_person_relation` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `client_account` bigint(20) unsigned NOT NULL COMMENT '用户账号',
   `blog_id` int(10) unsigned NOT NULL COMMENT '日志ID',
+  `grant` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '0:公开 1:本班 2:本学校',
   PRIMARY KEY (`id`),
   KEY `client_account` (`client_account`),
   KEY `blog_id` (`blog_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='个人与日志关系表';
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='个人与日志关系表' AUTO_INCREMENT=1 ;
 
 
 -- ----------------------------

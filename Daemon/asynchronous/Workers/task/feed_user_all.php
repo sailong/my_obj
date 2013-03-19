@@ -12,7 +12,8 @@ class feed_user_all {
      * @param array $uids
      * @param int $feed_id
      */
-    public function run($uid, $feed_id){
+    public function run($uid, $class_code = null, $feed_id){
+        print_r(" feed_user_all run \n");
         if(empty($uid) || empty($feed_id)){
             if(C('LOG_RECORD')) Log::write('task UserLastLoginTime run error:',  "uid OR feed_id is null", Log::ERR);
             return false;
@@ -20,8 +21,9 @@ class feed_user_all {
         
         $mUserVm = ClsFactory::Create("RModel.mUserVm");
         $relation_uids = $mUserVm->getUserAllRelations($uid);
-        
-        $RM = ClsFactory::Create("RModel.Feed.mZsetUserMy");
+        print_r("relation_uids-------------------------\n");
+        print_r($relation_uids);
+        $RM = ClsFactory::Create("RModel.Feed.mZsetUserAll");
         foreach($relation_uids as $uid) {
             $RM->setFeed($uid, time(), $feed_id);
         }

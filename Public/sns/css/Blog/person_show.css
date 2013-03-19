@@ -23,7 +23,7 @@
 		.publish_main ul li a{color:#3a8a00;}
 		
 	.list_comment{width:600px;}
-			.list_textarea{width:600px; height:60px;}
+			.list_textarea{width:550px; height:60px;}
 			.list_comment p{height:25px; width:600px; padding-top:10px;}
 		    	.icon_face{background:url(../../images/Blog/person_show/icon_face.gif) left center no-repeat; display:inline-block; float:left; width:40px; padding-left:20px; color:#3a8a00;}
 				.green_btn{background:url(../../images/Blog/person_show/green_btn.gif) 0 0 no-repeat; width:57px; height:24px; border:none; color:#fff; cursor:pointer; float:left;}
@@ -45,7 +45,8 @@
 				.list_people dl dt img{width:36px; height:36px;}
 				.people_comment{float:left;}
 				
-			
+	.more_active{width:898px; text-align:center; margin-top:10px; border:1px #ccc dashed; padding:10px 0px;}	
+		.more_active a{background:url(../../images/Blog/class_show/icon_more.jpg) right center no-repeat; display:inline-block; padding-right:10px; color:#5f9400; font:14px "宋体";}		
 	
 
 /*弹出层*/

@@ -4,7 +4,7 @@
  * @author zlei 2013-1-5
  */
 class PublishAction extends SnsController {
-    private $summary_len = 135;
+    private $summary_len = 200;
     public function __construct() {
         parent::__construct ();
     }
@@ -105,8 +105,11 @@ class PublishAction extends SnsController {
         // 处理日志内容 主要是把图片从临时文件夹移动到真实路径
         $content = $BlogObj->processBlogImage($content);  
         
+        // 提取日志第一张图片
+        $first_img = $BlogObj->getFirstImg($content);
+
         // 提取日志摘要
-        $summary = $BlogObj->getSummary($content, $this->summary_len);
+        $summary   = $BlogObj->getSummary($content, $this->summary_len);
               
         $blog_datas = array (
             'title'   => $title,
@@ -118,6 +121,7 @@ class PublishAction extends SnsController {
             'add_time'     => time(),
             'contentbg'    => $contentbg,
             'summary'      => $summary,
+        	'first_img'    => $first_img,
             'comments'     => 0,
             'grant'        => $grant
         );
@@ -174,19 +178,23 @@ class PublishAction extends SnsController {
         // 处理日志内容 主要是把图片从临时文件夹移动到真实路径
         $content = $BlogObj->processBlogImage($content);  
         
+        // 提取日志第一张图片
+        $first_img = $BlogObj->getFirstImg($content);
+
         // 提取日志摘要
-        $summary = $BlogObj->getSummary($content, $this->summary_len);
+        $summary   = $BlogObj->getSummary($content, $this->summary_len);
         
         //拼装数据 为修改做准备  
         $blog_datas = array (
-            title   => $title,
-            content => $content,
-            type_id => $type_id,
-            contentbg    => $contentbg,
-            summary      => $summary,
-            grant        => $grant,
-            upd_account  => $this->user['client_account'], 
-            upd_time     => time()
+            'title'   => $title,
+            'content' => $content,
+            'type_id' => $type_id,
+            'contentbg'    => $contentbg,
+            'summary'      => $summary,
+            'first_img'    => $first_img,
+            'grant'        => $grant,
+            'upd_account'  => $this->user['client_account'], 
+            'upd_time'     => time()
         );
         
         //用户权限的判断
@@ -216,7 +224,7 @@ class PublishAction extends SnsController {
         
         $can_del_blog = $this->canDelBlog($del_blog_arr, $class_code);
         if (empty($can_del_blog)) {
-            $this->ajaxReturn(null, '要删除的草稿不存在或没有权限删除', -1, 'json'); 
+            $this->ajaxReturn(null, '要删除的日志不存在或没有权限删除', -1, 'json'); 
         }
         
         $is_success = $BlogByClass->delBlog($blog_id);
@@ -283,9 +291,9 @@ class PublishAction extends SnsController {
         if(!empty($draft_list)){
             $has_next_page = count($draft_list) > $limit ? true : false;
             $draft_list = array_slice($draft_list,0 ,$limit);
-            
+            import("@.Common_wmw.Date");
             foreach($draft_list as $blog_id => $blog_info) {
-                $blog_info['add_time'] = date('Y-m-d H:i', $blog_info['add_time']);
+                $blog_info['add_time'] =Date::timestamp($blog_info["add_time"]);
                 
                 $draft_list[$blog_id] = $blog_info;
             }

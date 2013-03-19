@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
-<title>老师首页</title>
+<title>班级首页</title>
 <link rel="stylesheet" href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/Common/sns_common.css" type="text/css" charset="utf-8">
 <link rel="stylesheet" href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/ClassIndex/main.css" type="text/css" charset="utf-8">
 
@@ -221,7 +221,9 @@
          <p>活跃值：{teacher_info.active_value}</p>
          <p>
          	{if teacher_info.is_self == false}
+         	{if teacher_info.is_friend == true}
          	<input type="button" value="" id="private_msg_{teacher_info.client_account}" class="gt_btn">
+         	{/if}
          	{if teacher_info.is_friend == false}
          		<input type="button" id="client_account_{teacher_info.client_account}" value="" class="add_btn">
          	{/if}
@@ -248,7 +250,8 @@
         <dt><img class="photo_width60" src="{student_info.header_pic}"></dt>
         <dt class="xsmp_jlq">
         	{if student_info.is_self == false}
-          	<input type="button" value="" id="private_msg_{student_info.client_account}" class="jhy" title="好友">{if student_info.is_friend == false}<input type="button" value="" id="client_account_{student_info.client_account}" title="私信" class="sx  add_friend">{/if}
+        	{if student_info.is_friend == false}
+          	<input type="button" value="" id="client_account_{student_info.client_account}" title="加好友" class="jhy  add_friend">{/if}{if student_info.is_friend == true}<input type="button" value="" id="private_msg_{student_info.client_account}" class="sx" title="发私信">{/if}
           	<input id="client_name_{student_info.client_account}" type="hidden" value="{student_info.client_name}"/>
           	{/if}
         </dt>
@@ -272,13 +275,15 @@
           <tr>
             <td>
             	{if student_info.is_father_self == false}
-            	<input type="button" value="" id="private_msg_{student_info.father_account}" class="gt_btn mr3">{if student_info.is_father_friend == false}<input type="button" value="" id="client_account_{student_info.father_account}" class="add_btn  add_friend">{/if}
+            	{if student_info.is_father_friend == true}
+            	<input type="button" value="" id="private_msg_{student_info.father_account}" class="gt_btn mr3">{/if}{if student_info.is_father_friend == false}<input type="button" value="" id="client_account_{student_info.father_account}" class="add_btn  add_friend">{/if}
             	<input id="client_name_{student_info.father_account}" type="hidden" value="{student_info.father_name}"/>
             	{/if}
             </td>
             <td>
             	{if student_info.is_mather_self == false}
-            	<input type="button" value="" id="private_msg_{student_info.mather_account}" class="gt_btn mr3">{if student_info.is_mather_friend == false}<input type="button" value="" id="client_account_{student_info.mather_account}" class="add_btn  add_friend">{/if}
+            	{if student_info.is_mather_friend == true}
+            	<input type="button" value="" id="private_msg_{student_info.mather_account}" class="gt_btn mr3">{/if}{if student_info.is_mather_friend == false}<input type="button" value="" id="client_account_{student_info.mather_account}" class="add_btn  add_friend">{/if}
             	<input id="client_name_{student_info.mather_account}" type="hidden" value="{student_info.mather_name}"/>
             	{/if}
             </td>

@@ -26,11 +26,25 @@ class IndexAction extends SnsController {
         $total_count = $Vistior->total_count($vuid);
         $total_count_day = $Vistior->total_count_day($vuid);
         
+        //统计当前用户的活跃值和当天获取的活跃值
+        import('@.Control.Api.ActiveApi');
+        $Active = new ActiveApi();
+        $active_count = array_shift($Active->client_active($client_account));
+        list($active_log, $active_count_day) = $Active->client_active_log($client_account);
+        
+        //获取个人帐号的基本信息
+        $mUSer = ClsFactory::Create('Model.mUser');
+        $user_list = $mUSer->getUserBaseByUid($client_account);
+        $user_list[$client_account]['active_count_day'] = $active_count_day;
+        $user_list[$client_account]['active_count'] = $active_count['value'];
+        $user_list[$client_account]['friend_total_count'] = $friend_total_count;
+        $user_list[$client_account]['total_count_day'] = $total_count_day;
+        $user_list[$client_account]['total_count'] = $total_count;
+        
+        
+        $this->assign('user_list',$user_list);
         $this->assign('vuid',$vuid);
-        $this->assign('friend_total_count',$friend_total_count);
         $this->assign('client_account',$client_account);
-        $this->assign('total_count_day',$total_count_day);
-        $this->assign('total_count',$total_count);
         $this->display("main_first");
     }
     

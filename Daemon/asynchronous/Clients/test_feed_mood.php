@@ -82,11 +82,11 @@ class testPersonMood {
 
 $uid = '11070004';
 // 创建一个说说实体
-//$i = 1;
-//while($i <= 105) {
-//    $feed_id = testPersonMood::createPersonFeed($uid);
-//    $i++;
-//}
+$i = 1;
+while($i <= 105) {
+    $feed_id = testPersonMood::createPersonFeed($uid);
+    $i++;
+}
 //exit;
 //读取动态
 

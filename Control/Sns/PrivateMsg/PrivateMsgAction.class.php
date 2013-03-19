@@ -95,6 +95,14 @@ class PrivateMsgAction extends SnsController{
         if(empty($to_uid) || empty($content)) {
             $this->ajaxReturn(null, "添加失败！", -1, 'json');
         }
+        
+        $mSetClientFriends = ClsFactory::Create('RModel.Common.mSetClientFriends');
+	    $friends = $mSetClientFriends->getClientFriendsByUid($current_uid);  
+        $friend_uid = !empty($friends) ? $friends : array();
+	    
+        if(!in_array($to_uid, $friend_uid))
+            $this->ajaxReturn(null, "不是好友不能发送私信！", -1, 'json');
+        
         $dataarr=array(
             'send_uid' => $current_uid,
             'to_uid' => $to_uid,

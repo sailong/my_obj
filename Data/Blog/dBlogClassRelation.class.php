@@ -6,6 +6,7 @@ class dBlogClassRelation extends dBase {
         'id',
         'class_code',
         'blog_id',
+    	'grant',
     );
     
     protected $_index_list = array(

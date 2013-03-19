@@ -5,7 +5,7 @@
 		.head_pic{width:150px; position:absolute; top:120px; left:15px;}
 			.head_pic dl{width:150px; text-align:center;}
 				.head_pic dl dt{padding:5px; background:#fff; border:1px #ccc solid;}
-				.head_pic dl dt a img{display:block;}
+				.head_pic dl dt a img{display:block; width:140px; height:140px;}
 				
 				.align_left{text-align:left;}
 				.value_bj{background:url(../../images/PersonIndex/main_first/icon_sz_bj.jpg) 0 0 no-repeat; width:26px; height:20px; display:inline-block; color:#fff; padding-left:25px;}
