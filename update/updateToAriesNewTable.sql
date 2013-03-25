@@ -164,7 +164,7 @@ CREATE TABLE IF NOT EXISTS `wmw_blog_person_relation` (
 DROP TABLE IF EXISTS `wmw_blog_types`;
 CREATE TABLE `wmw_blog_types` (
   `type_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(10) NOT NULL,
+  `name` varchar(12) NOT NULL,
   `add_account` bigint(20) unsigned NOT NULL,
   `add_time` int(11) unsigned NOT NULL,
   PRIMARY KEY (`type_id`)
@@ -400,6 +400,7 @@ CREATE TABLE IF NOT EXISTS `wmw_feed` (
   `feed_content` varchar(255) NOT NULL COMMENT '动态内容',
   `img_url` varchar(255) NOT NULL COMMENT '动态中涉及到得图片的url',
   `from_id` int(10) unsigned NOT NULL COMMENT '来源id',
+  `from_class_code` int(11) unsigned NOT NULL COMMENT '来源班级 默认0 表示为个人， > 0 表示为班级',
   `action` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '动作 1:发布 2：评论',
   PRIMARY KEY (`feed_id`),
   KEY `add_account` (`add_account`)

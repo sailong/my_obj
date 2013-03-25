@@ -11,6 +11,8 @@ class IndexAction extends SnsController {
         $client_account = $this->user['client_account'];
         
         $vuid = empty($vuid) ? $client_account : $vuid;
+        
+        //判断是否有新的访客
         if($vuid != $client_account) {
             $resault = $this->write_vistior($vuid);
         }
@@ -29,20 +31,19 @@ class IndexAction extends SnsController {
         //统计当前用户的活跃值和当天获取的活跃值
         import('@.Control.Api.ActiveApi');
         $Active = new ActiveApi();
-        $active_count = array_shift($Active->client_active($client_account));
-        list($active_log, $active_count_day) = $Active->client_active_log($client_account);
+        $active_count = array_shift($Active->client_active($vuid));
+        list($active_log, $active_count_day) = $Active->client_active_log($vuid);
         
         //获取个人帐号的基本信息
         $mUSer = ClsFactory::Create('Model.mUser');
-        $user_list = $mUSer->getUserBaseByUid($client_account);
-        $user_list[$client_account]['active_count_day'] = $active_count_day;
-        $user_list[$client_account]['active_count'] = $active_count['value'];
-        $user_list[$client_account]['friend_total_count'] = $friend_total_count;
-        $user_list[$client_account]['total_count_day'] = $total_count_day;
-        $user_list[$client_account]['total_count'] = $total_count;
+        $user_list = $mUSer->getUserBaseByUid($vuid);
+        $user_list[$vuid]['active_count_day'] = $active_count_day;
+        $user_list[$vuid]['active_count'] = $active_count['value'];
+        $user_list[$vuid]['friend_total_count'] = $friend_total_count;
+        $user_list[$vuid]['total_count_day'] = $total_count_day;
+        $user_list[$vuid]['total_count'] = $total_count;
         
-        
-        $this->assign('user_list',$user_list);
+        $this->assign('user_list',array_shift($user_list));
         $this->assign('vuid',$vuid);
         $this->assign('client_account',$client_account);
         $this->display("main_first");
@@ -50,9 +51,9 @@ class IndexAction extends SnsController {
     
     
     public function get_vistior_list_ajax() {
-        $client_account = $this->objInput->getInt('vuid');
+        $client_account = $this->objInput->getStr('vuid');
         if(empty($client_account) ) {
-            $client_account = $this->user['client_account'];     
+            $client_account = $this->user['client_account'];
         }
        
         import('@.Control.Api.VistiorApi');
@@ -73,35 +74,37 @@ class IndexAction extends SnsController {
     //首页获取好友列表
     public function get_friend_list_ajax() {
         $friend_num = 8;
-        $vuid = $this->objInput->getInt('vuid');
-        $client_account = $this->user['client_account'];
-        $vuid = empty($vuid) ? $client_account : $vuid;
+        $vuid = $this->objInput->getStr('vuid');
         
         //获取帐号的好友帐号
         $mAccountRelation = ClsFactory::Create('Model.mAccountrelation');
         $account_relation_infos = $mAccountRelation->getAccountRelationByClientAccout($vuid,'relation_id desc');
+        
         $friends_account_arr = array();
-        foreach($account_relation_infos[$client_account] as $relation_id => $account_relation) {
+        foreach($account_relation_infos[$vuid] as $relation_id => $account_relation) {
             $friends_account_arr[$account_relation['friend_account']] = $account_relation['friend_account'];        
         }
         
         $wheresql = array(
-            'uid='.$client_account,
+            'uid='.$vuid,
         );
         
         //获取最近访客列表及是该帐号好友的头像
         $mPersonVistior = ClsFactory::Create('Model.PersonVistior.mPersonVistior');
         $vistior_list = $mPersonVistior->getPersonVistiorInfo($wheresql,'timeline desc');
         
-        
-        foreach($vistior_list as $vuid=>$vistior_val) {
-            if(in_array($vuid,$friends_account_arr)) {
-                $new_vistior_account_arr[] = $vuid;
-                unset($friends_account_arr[$vuid]);
+        $new_vistior_account_arr = array();
+        if(!empty($vistior_list)) {
+            foreach($vistior_list as $key_vuid=>$vistior_val) {
+                if(in_array($key_vuid,$friends_account_arr)) {
+                    $new_vistior_account_arr[] = $key_vuid;
+                    unset($friends_account_arr[$key_vuid]);
+                }
             }
         }
-        $new_vistior_count = count($new_vistior_account_arr);
+        
         $tmp_friends_arr = array();
+        $new_vistior_count = count($new_vistior_account_arr);
         if($new_vistior_count < $friend_num) {
             $tmp_friends_arr = array_slice($friends_account_arr, 0, $friend_num-$new_vistior_count);
         }
@@ -134,19 +137,16 @@ class IndexAction extends SnsController {
             'uid='.$vuid,
             'vuid='.$client_account
         );
-        
-         
         $resault_vistior = $mPersonVistior->getPersonVistiorInfo($wheresql);
-        $vistior_id = array_shift($resault_vistior['id']);
-        
         $dataarr = array(
-                'uid' => $client_account,
-                'vuid'=> $vuid,
+                'uid' => $vuid,
+                'vuid'=> $client_account,
                 'timeline' => time()
          );
         if(empty($resault_vistior)) {
             $resault = $mPersonVistior->addPersonVistior($dataarr);
         } else {
+          $vistior_id = array_shift($resault_vistior['id']);
           $resault = $mPersonVistior->modifyPersonVistior($dataarr,$vistior_id);
         }
         

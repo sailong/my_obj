@@ -92,7 +92,6 @@ albumlist.prototype.delegateEvent=function() {
 	$('#dl_list').delegate('.delete_a_selector', 'click', function() {
 		var ancestorOb = $(this).parents('dl:first');
 		var album_datas = ancestorOb.data('datas') || {};
-		
 		var album_id = album_datas.album_id;
 		$('#del_album_div').trigger('openEvent',[{
 			class_code:me.class_code,
@@ -107,16 +106,18 @@ albumlist.prototype.delegateEvent=function() {
 };
 
 albumlist.prototype.deleteAlbum=function(obj) {
+	
 	var me = this;
 	var ancestorOb = obj;
 	var album_datas = ancestorOb.data('datas') || {};
 	
 	var album_id = album_datas.album_id;
+	
 	$.ajax({
 		type:"get",
-		dataType:"json",
 		url:"/Api/Album/delAlbumByClass/class_code/" + me.class_code + "/album_id/" + album_id,
-		async:false,
+		dataType:'json',
+		async:true,
 		success:function(json) {
 			if(json.status < 0) {
 				$.showError(json.info);

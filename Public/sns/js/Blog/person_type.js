@@ -376,6 +376,9 @@ modify_type.prototype = {
 			if(!$.trim(new_name)) {
 				$.showError('分类名字不能为空!');
 				return false;
+			} else if($.strLength(new_name) > 12) {
+				$.showError('对不起,分类名称长度不能超过12个字母/6个汉字');
+				return false;
 			} else if (old_name == new_name) {
 				$('#modify_tr').trigger('closeEvent');
 				return false;
@@ -389,6 +392,7 @@ modify_type.prototype = {
 					type_id:type_id
 				},
 				dataType:'json',
+				async:false,
 				success:function(json) {
 					if(json.status < 0) {
 						$.showError(json.info);
@@ -434,11 +438,11 @@ add_type.prototype = {
 			var name = $('#name', context).val();
 			var client_account = $('#client_account').val();
 			if (!$.trim(name)) {
-				alert('请输入分类名称');
+				$.showError('分类名字不能为空!');
 				return false;
 			}
 			if($.strLength(name) > 12) {
-				alert('对不起,分类名称长度不能超过12个字母/6个汉字');
+				$.showError('对不起,分类名称长度不能超过12个字母/6个汉字');
 				return false;
 			}
 			
@@ -447,6 +451,7 @@ add_type.prototype = {
 				url:'/Sns/Blog/PersonType/publishAjax',
 				data:{name:name,client_account:client_account},
 				dataType:'json',
+				async:false,
 				success:function(json) {
 					if(json.status < 0) {
 						$.showError(json.info);

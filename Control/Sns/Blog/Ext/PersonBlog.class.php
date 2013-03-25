@@ -143,7 +143,6 @@ class PersonBlog extends BlogBase {
         //日志关系表修改
         if($this->needModifyBlogRelation($blog_datas)) {
             //个人和日志的关系表 包含权限
-            $blog_person_relation_datas = $this->extractBlogRelation($blog_datas);
             $mBlogPersonRelation = ClsFactory::Create('Model.Blog.mBlogPersonRelation');
             $where = array(
                 'client_account='. $this->client_account,
@@ -152,7 +151,7 @@ class PersonBlog extends BlogBase {
             $relation_info = $mBlogPersonRelation->getBlogPersonRelationInfo($where, null, 0, 1); 
             $relation_info = reset($relation_info);
 
-            $mBlogPersonRelation->modifyBlogPersonRelation($blog_person_relation_datas, $relation_info['id']);
+            $mBlogPersonRelation->modifyBlogPersonRelation($blog_datas, $relation_info['id']);
 
         }
         return true;
@@ -257,10 +256,6 @@ class PersonBlog extends BlogBase {
         return !empty($is_return_id) ? $type_id : true;
     }
     
-    public function modifyBlogType($blog_datas, $blog_id) {
-    
-    }
-    
     /**
      * 删除个人日志分类
      * @param unknown_type $blog_id
@@ -331,7 +326,8 @@ class PersonBlog extends BlogBase {
         
         $blog_person_relation = array(
             'client_account' => $this->client_account,
-            'grant'   => $blog_datas['grant']
+            'grant'   => $blog_datas['grant'],
+        	'blog_id' => $blog_datas['blog_id']
         );
         
         return $blog_person_relation;
@@ -347,6 +343,7 @@ class PersonBlog extends BlogBase {
          $fields = array(
             'client_account',
             'grant',
+         	'blog_id',
          );
          
          foreach($fields as $field) {

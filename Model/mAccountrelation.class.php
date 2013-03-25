@@ -15,7 +15,7 @@ class mAccountrelation extends mBase{
 	    if(empty($client_accounts)) {
 	        return false;
 	    }
-	    
+
 	    return $this->_dAccountrelation->getAccountRelationByClientAccout($client_accounts,$orderby,$offset,$limit);
 	}
     

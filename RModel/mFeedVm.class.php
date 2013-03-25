@@ -149,8 +149,10 @@ class mFeedVm {
         if(empty($feed_ids)) {
             return false;
         }
+        
         $mFeed = ClsFactory::Create("Model.Feed.mFeed");
         $feed_list = $mFeed->getFeedByid($feed_ids);
+        
         return $feed_list;
     }
     

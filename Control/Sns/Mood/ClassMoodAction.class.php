@@ -51,9 +51,14 @@ class ClassMoodAction extends SnsController {
         );
 
         $MoodApi = ClsFactory::Create('@.Control.Api.MoodApi');
-        if(!$MoodApi->addClassMood($class_code, $mood_datas)) {
+        $mood_id = $MoodApi->addClassMood($class_code, $mood_datas);
+        if(empty($mood_id)) {
             $this->ajaxReturn(null, '班级说说发表失败!', -1, 'json');
         }
+        
+        import('@.Control.Api.FeedApi');
+        $FeedApi = new FeedApi();
+        $FeedApi->class_create($class_code, $this->user['client_account'], $mood_id, FEED_MOOD, FEED_ACTION_PUBLISH);
         
         $this->ajaxReturn(null, '班级说说发表成功!', 1, 'json');
     }

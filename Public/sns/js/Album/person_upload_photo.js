@@ -36,7 +36,7 @@ function filesUploadComplete() {
 	    //background: '#600', // 背景色
 	    opacity: 0.5,	// 透明度
 		title:'上传结束',
-		content:$(".edit_comment").get(0),
+		content:$(".sczp").get(0),
 		drag: false,
 		fixed: true //固定定位 ie 支持不好回默认转成绝对定位
 	}).lock();
@@ -53,7 +53,7 @@ class_photo_upload.prototype.attachEvent=function() {
 		//打开创建弹出层
 		me.createAlbum();
 	});
-	$("#upload_finish_close",$(".edit_comment")).click(function() {
+	$("#upload_finish_close",$(".sczp")).click(function() {
 		var dialogObj = art.dialog.list['upload_end'];
 		if(!$.isEmptyObject(dialogObj)) {
 			dialogObj.close();

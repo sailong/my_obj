@@ -143,8 +143,7 @@ class ClassBlog extends BlogBase {
         //修改的班级日志关系表 主要是权限修改
         if($this->needModifyBlogRelation($blog_datas)) {
             //个人和日志的关系表 包含权限
-            $blog_person_relation_datas = $this->extractBlogRelation($blog_datas);
-            $mBlogClassRelation = ClsFactory::Create('Model.Blog.mBlogPersonRelation');
+            $mBlogClassRelation = ClsFactory::Create('Model.Blog.mBlogClassRelation');
             $where = array(
                 'class_code='. $this->class_code,
                 "blog_id='$blog_id'"
@@ -152,7 +151,7 @@ class ClassBlog extends BlogBase {
             $relation_info = $mBlogClassRelation->getBlogClassRelationInfo($where, null, 0, 1); 
             $relation_info = reset($relation_info);
 
-            $mBlogClassRelation->modifyBlogClassRelation($blog_person_relation_datas, $relation_info['id']);
+            $mBlogClassRelation->modifyBlogClassRelation($blog_datas, $relation_info['id']);
 
         }
         
@@ -177,8 +176,8 @@ class ClassBlog extends BlogBase {
         $comment_del = $mBlogComments->delAllByBlogId($blog_id);
 
         //删除班级和日志的关系表
-        $mBlogPersonRelation = ClsFactory::Create('Model.Blog.mBlogClassRelation');
-        if(!$mBlogPersonRelation->delBlogClassRelationByBlogId($blog_id)) {
+        $mBlogClassRelation = ClsFactory::Create('Model.Blog.mBlogClassRelation');
+        if(!$mBlogClassRelation->delBlogClassRelationByBlogId($blog_id)) {
             return false;
         }
         
@@ -258,10 +257,6 @@ class ClassBlog extends BlogBase {
         return !empty($is_return_id) ? $type_id : true;
     }
     
-    public function modifyBlogType($blog_datas, $blog_id) {
-    
-    }
-    
     /**
      * 删除班级日志分类
      * @param unknown_type $blog_id
@@ -325,12 +320,13 @@ class ClassBlog extends BlogBase {
             return false;
         }
         
-        $blog_person_relation = array(
+        $blog_class_relation = array(
             'class_code' => $this->class_code,
             'grant' => $blog_datas['grant'],
+        	'blog_id' => $blog_datas['blog_id'],
         );
         
-        return $blog_person_relation;
+        return $blog_class_relation;
     }
     
     
@@ -344,6 +340,7 @@ class ClassBlog extends BlogBase {
          $fields = array(
             'class_code',
             'grant',
+         	'blog_id',
          );
          
          foreach($fields as $field) {

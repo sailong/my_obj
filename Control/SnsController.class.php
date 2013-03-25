@@ -32,17 +32,17 @@ class SnsController extends FrontController {
         if(empty($class_code_list)) {
            return false; 
         }
-
+        
         if(!isset($class_code_list[$class_code])){
             foreach($class_code_list as $classcode => $class_info) {
-                if($this->user["client_account"] == $class_info["headteacher_account"]){
+                if($this->user['client_account'] == $class_info['headteacher_account']){
                     $class_code = $classcode;
                     break;
                 }
             }
         }
-
-        return in_array($class_code, $class_code_list) ? $class_code : key($class_code_list);
+        
+        return in_array($class_code,array_keys($class_code_list)) ? $class_code : key($class_code_list);
     }
     
     /**
@@ -55,8 +55,9 @@ class SnsController extends FrontController {
         
         $mUser = ClsFactory::Create('RModel.mUserVm');
         $user_list = $mUser->getClientAccountById($client_account);
-        
-        return !empty($user_list) ? true : false;
+        $user_info = $user_list[$client_account];
+
+        return !empty($user_info) ? true : false;
     }
     
 	/**

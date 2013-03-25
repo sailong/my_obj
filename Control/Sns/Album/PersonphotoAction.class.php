@@ -90,9 +90,11 @@ class PersonphotoAction extends SnsController {
      * 单张照片
      */
     public function photo() {
+        
         $client_account = $this->objInput->getInt('client_account');
         $album_id = $this->objInput->getInt('album_id');
         $photo_id = $this->objInput->getInt('photo_id');
+        
         $login_account = $this->user['client_account'];
         
         if(empty($client_account) || empty($album_id)) {

@@ -66,6 +66,9 @@ class AlbumApi extends ApiController {
             $this->ajaxReturn(null, '', -1, 'json');
         }
         
+        import("@.Control.Api.FeedApi");
+        $feed_api = new FeedApi();
+        $feed_api->class_create($class_code, $client_account, $json_list, FEED_ACTION_PUBLISH);
         $this->ajaxReturn($json_list, '', 1, 'json');
     }
     
@@ -182,15 +185,15 @@ class AlbumApi extends ApiController {
         $album_id = $this->objInput->getInt('album_id');
         $class_code = $this->objInput->getInt('class_code');
         if(empty($album_id) && empty($class_code)) {
-            $this->ajaxReturn(null, '', -1, 'json');
+            $this->ajaxReturn(null, 'error', -1, 'json');
         }
         $ByClass = $this->initClass();
         $rs = $ByClass->delAlbumByClass($album_id, $class_code);
         if(empty($rs)) {
-            $this->ajaxReturn($rs, '删除失败', -1, 'json');
+            $this->ajaxReturn(null, '删除失败', -1, 'json');
         }
         
-        $this->ajaxReturn($rs, '删除成功', 1, 'json');
+        $this->ajaxReturn(null, '删除成功', 1, 'json');
     }
     
     /**
@@ -469,6 +472,7 @@ class AlbumApi extends ApiController {
     public function addCommentByClass() {
         $client_account = $this->objInput->postInt('add_uid');
         $content = $this->objInput->postStr("content");
+        $class_code = $this->objInput->postInt("class_code");
         $photo_id = $this->objInput->postInt("photo_id");
         $up_id = $this->objInput->postInt("up_id");
         if(empty($client_account) || empty($content) || empty($photo_id)) {
@@ -497,6 +501,11 @@ class AlbumApi extends ApiController {
         $data_arr['content'] = WmwFace::parseFace($data_arr['content']);
         $data_arr['comment_id']=$rs;
         $data_arr['add_date']=date('y-m-d H:i:s', $add_time);
+        import("@.Control.Api.FeedApi");
+        
+        //todo  需要传递class_code
+        $feed_api = new FeedApi();
+        $feed_api->class_create($class_code, $client_account, $rs, FEED_ACTION_COMMENT);
         $this->ajaxReturn($data_arr, '评论成功', 1, 'json');
     }
     
@@ -608,6 +617,9 @@ class AlbumApi extends ApiController {
             $this->ajaxReturn(null, '', -1, 'json');
         }
         
+        import("@.Control.Api.FeedApi");
+        $feed_api = new FeedApi();
+        $feed_api->user_create($client_account, $json_list, FEED_ACTION_PUBLISH);
         $this->ajaxReturn($json_list, '', 1, 'json');
     }
     
@@ -1039,6 +1051,10 @@ class AlbumApi extends ApiController {
         $data_arr['content'] = WmwFace::parseFace($data_arr['content']);
         $data_arr['comment_id']=$rs;
         $data_arr['add_date']=date('y-m-d H:i:s', $add_time);
+        
+        import("@.Control.Api.FeedApi");
+        $feed_api = new FeedApi();
+        $feed_api->user_create($client_account, $rs, FEED_ACTION_COMMENT);
         $this->ajaxReturn($data_arr, '评论成功', 1, 'json');
     }
     

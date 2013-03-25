@@ -5,7 +5,7 @@
 		.head_pic{width:150px; position:absolute; top:120px; left:15px;}
 			.head_pic dl{width:150px; text-align:center;}
 				.head_pic dl dt{padding:5px; background:#fff; border:1px #ccc solid;}
-				.head_pic dl dt a img{display:block; width:140px; height:140px;}
+				.head_pic dl dt a img{display:block;}
 				
 				.align_left{text-align:left;}
 				.value_bj{background:url(../../images/PersonIndex/main_first/icon_sz_bj.jpg) 0 0 no-repeat; width:26px; height:20px; display:inline-block; color:#fff; padding-left:25px;}
@@ -13,7 +13,7 @@
 				.ml10{margin-left:10px;}
 				
 		.head_btn{width:100px; height:25px; position:absolute; top:240px; left:80px;}
-			.gray_btn{width:64px; height:20px; border:1px #ccc solid; background:#f0f0f0; cursor:pointer;}
+			.gray_btn{width:64px; height:20px; border:1px #ccc solid; background:#f0f0f0; color:black; font:12px/20px "宋体"; display:inline-block; text-align:center; text-decoration:none;}
 				
 	.per_first_main{width:958px; border:1px #ccc solid; margin-top:10px; background:#fff;}	
 		
@@ -90,7 +90,7 @@
 					.my_friend h3 a:hover{color:#3a8a00;}
 					
 				.my_friend p{background:url(../../images/PersonIndex/main_first/class_people_bj.gif) repeat; border:1px #ccc solid; padding:10px 4px; margin:10px 0px 0px 0px;}	
-					.my_friend p a{display:inline-block; margin:0px 8px 8px 0px; background:#fff;}
+					.my_friend p a{display:inline-block; margin:0px 6px 8px 0px; background:#fff; padding:2px;}
 			
 			.visitor{width:210px; color:#464646;}
 				.visitor h3{font:14px "微软雅黑"; color:#3a8a00; height:32px; line-height:32px; border-bottom:1px #cdced0 solid;}

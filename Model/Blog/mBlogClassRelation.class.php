@@ -18,7 +18,7 @@ class mBlogClassRelation extends mBase {
          if (empty($where_arr)) {
              return false;
          }
-         
+
          return $this->_dBlogClassRelation->getInfo($where_arr, $order_by, $offset, $limit);
      }
      
@@ -66,7 +66,7 @@ class mBlogClassRelation extends mBase {
             return false;
         }
         
-        return $this->_dBlogClassRelation->delBlogClassRelation($datas, $id);
+        return $this->_dBlogClassRelation->modifyBlogClassRelation($datas, $id);
     }
 
     /**

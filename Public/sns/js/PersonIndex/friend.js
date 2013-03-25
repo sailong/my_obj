@@ -4,7 +4,12 @@ function friend() {
 
 friend.prototype.init=function() {
 	var me=this;
-	var vuid = $("#vuid").val();
+	var vuid =$("#vuid").val();
+	$("#active_id").hide();
+	$("#del_dynamic_id").hide();
+	$("#dynamic_id").hide();
+	$("#div_id").hide();
+	$("#share_id").hide();
 	//加载页面数据
 	$.ajax({
 		type:'get',
@@ -33,10 +38,10 @@ friend.prototype.fillFriendList=function(user_list) {
 		if($.isEmptyObject(user)) {
 			return false;
 		}
-		var divObj = $('.clone', $('#friend_list_div')).clone().removeClass('clone').show();
+		var divObj = $('.clone_selector', $('.my_friend')).clone().removeClass('clone_selector').show();
+		
 		divObj.renderHtml({
 			user_friend:user || {}
-		
 		});
 		
 		return divObj;
@@ -46,8 +51,11 @@ friend.prototype.fillFriendList=function(user_list) {
 	for(var i in user_list) {
 		var user = user_list[i];
 		var divObj = createDiv(user || {});
-		divObj.data('data',user);
-		divObj && parentObj.append(divObj);
+		var aObj = {};
+		aObj = $('a:first',divObj);
+		divObj.remove();
+		aObj.data('data',user);
+		aObj && parentObj.append(aObj);
 		
 	}
 };

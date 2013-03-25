@@ -48,14 +48,4 @@ class dAlbum extends dBase {
     public function getByAlbumId($album_ids) {
         return $this->getInfoByPk($album_ids);
     }
-    //修改相片数todo delete
-    public function updPhotoCountByAlbumId($count, $album_id) {
-        if(empty($album_id) || empty($count)) {
-            return false;
-        }
-        
-        $sql = "update {$this->_tablename} set photo_num=photo_num{$count} where album_id={$album_id}";
-       
-        return $this->execute($sql);
-    }
 }

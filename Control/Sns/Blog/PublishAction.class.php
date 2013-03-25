@@ -44,7 +44,7 @@ class PublishAction extends SnsController {
             $blog_id = !empty($edit_id) ? $edit_id : $draft_id ;
             $blog_info = $blogByClass->getBlogInfoById($blog_id);
             $blog_info = $blog_info[$blog_id];
-            
+
             //兼容草稿修改处理
             if (!empty($draft_id)) {
                 $blog_info['draft_id'] = $blog_info['blog_id'];
@@ -101,7 +101,6 @@ class PublishAction extends SnsController {
         }
         
         $BlogObj = $this->_initBlogObj($class_code);
-        
         // 处理日志内容 主要是把图片从临时文件夹移动到真实路径
         $content = $BlogObj->processBlogImage($content);  
         
@@ -131,6 +130,9 @@ class PublishAction extends SnsController {
         if (!empty($is_published)) {
             $error_msg = '日志发布失败!';
             $succeed_msg = '日志发布成功!';
+            import("@.Control.Api.FeedApi");
+            $feed_api = new FeedApi();
+            $feed_api->class_create($class_code, $this->user['client_account'], $blog_id, FEED_ACTION_PUBLISH);
         } else {
             $error_msg = '草稿保存失败,请稍后重试!';
             $succeed_msg = '草稿保存成功!';
@@ -415,9 +417,7 @@ class PublishAction extends SnsController {
         }
         
         //班主任或者班级管理员有权限删除
-        $client_class = $this->user['client_account'][$class_code];
-        $is_admin = in_array($client_class['teacher_class_role'], array(TEACHER_CLASS_ROLE_CLASSADMIN, TEACHER_CLASS_ROLE_CLASSBOTH));
-        if (!empty($is_admin) || ($client_class['class_admin'] == IS_CLASS_ADMIN)) {
+        if ($this->isClassAdminTeacher($class_code) || $this->isClassAdmin($class_code)) {
             return true;
         }
         

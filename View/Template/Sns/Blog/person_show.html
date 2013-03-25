@@ -35,14 +35,11 @@
      <div class="publish_main">
       <!--list_main_top star-->
        <div class="list_main_top">
-         <dl>
-          <dt><img src="{$head_pic_url_}"></dt>
-          <dd>{$add_blog_client_name}</dd>
-         </dl>
+         
          <div class="list_main_top_right">
            <h3>{$blog_info.title}</h3>
            <p>
-            <span class="pr10">发布日期：{$blog_info.add_time}</span><span class="pr10">分类标签：{$blog_info.type_name}</span>|
+            <span class="pr10">发布日期：{$blog_info.add_time}</span><span class="pr10">发布者：{$add_blog_client_name}</span><span class="pr10">分类标签：{$blog_info.type_name}</span>|
             <span class="pl_r10">{$blog_info.grant_name}</span><span class="pr10" id="class_blog_views">阅读({$blog_info.views})</span>|<span class="pl_r10"><a id="comment_text_num" href="#comment_text">评论({$blog_info.comments})</a></span>
             {if $can_edit}
             <span class="pr10"><a href="/Sns/Blog/PersonPublish/index/edit_id/{$blog_info.blog_id}">编辑</a></span>
@@ -50,12 +47,15 @@
             {if $can_del}
             <span class="pr10"><a href="javascript:;" id="del_blog">删除</a></span>
             {/if}
-            <span class="pl_r20">
-            <a href="/Sns/Blog/PersonContent/up_blog/blog_id/{$blog_info.blog_id}/client_account/{$client_account}">上一篇</a></span>|
-            <span class="pl10"><a href="/Sns/Blog/PersonContent/next_blog/blog_id/{$blog_info.blog_id}/client_account/{$client_account}">下一篇</a>
-            </span>
            </p>
-         </div>
+           <ul>
+		        <li>
+			        <a href="/Sns/Blog/PersonContent/up_blog/blog_id/{$blog_info.blog_id}/client_account/{$client_account}" class="pl_r10">上一篇</a>|
+			        <a href="/Sns/Blog/PersonContent/next_blog/blog_id/{$blog_info.blog_id}/client_account/{$client_account}" class="pl10">下一篇</a>
+		        </li>
+	       </ul>
+           
+        </div>
        </div>
        <!--list_main_top end-->
        <div class="blog_main_bjt">

@@ -96,13 +96,6 @@ class PrivateMsgAction extends SnsController{
             $this->ajaxReturn(null, "添加失败！", -1, 'json');
         }
         
-        $mSetClientFriends = ClsFactory::Create('RModel.Common.mSetClientFriends');
-	    $friends = $mSetClientFriends->getClientFriendsByUid($current_uid);  
-        $friend_uid = !empty($friends) ? $friends : array();
-	    
-        if(!in_array($to_uid, $friend_uid))
-            $this->ajaxReturn(null, "不是好友不能发送私信！", -1, 'json');
-        
         $dataarr=array(
             'send_uid' => $current_uid,
             'to_uid' => $to_uid,
@@ -113,7 +106,7 @@ class PrivateMsgAction extends SnsController{
         
         $mPrivateMsg = ClsFactory::Create("Model.PrivateMsg.mPrivateMsg");
         $private_msg_id = $mPrivateMsg->addPrivateMsg($dataarr, true);
-        
+
         $mPrivateMsgRelation = ClsFactory::Create("Model.PrivateMsg.mPrivateMsgRelation");
         
         $private_msg_relation_info = $mPrivateMsgRelation->getPrivateMsgRelationBySendUidAdnToUid($current_uid, $to_uid);
@@ -261,6 +254,13 @@ class PrivateMsgAction extends SnsController{
         $page = $this->objInput->getInt('page');
         $page = max(1, $page);
         $limit = 10;
+        
+        $mSetClientFriends = ClsFactory::Create('RModel.Common.mSetClientFriends');
+	    $friends = $mSetClientFriends->getClientFriendsByUid($this->user['client_account']);  
+        $friend_uid = !empty($friends) ? $friends : array();
+
+//        if(!in_array($to_uid, $friend_uid))
+//            $this->showError("不是好友不能发私信", "/Sns/PrivateMsg/PrivateMsg/index");
         $offset = ($page - 1) * $limit;
         $current_uid = $this->user['client_account'];
         

@@ -11,11 +11,11 @@ return array(
       	  
         'APP_DOMAINS'			=> array('vm1.wmw.cn', 'www.zscy.cn'),       
         
-        'SHOW_ERROR_MSG'        => true,
+        //'SHOW_ERROR_MSG'        => true,
 
-        'ERROR_MESSAGE'         =>'发生错误！',
+        //'ERROR_MESSAGE'         =>'发生错误！',
 
-		'ERROR_PAGE'            =>'/Public/web_site_error',                 
+		//'ERROR_PAGE'            =>'/Public/web_site_error',                 
         
         'APP_DEBUG' 			=> false , 		// 开启调试模式 
 
@@ -76,49 +76,49 @@ return array(
                 //默认db资源
                 'main' => array(
                     array(
-                        'host' => '192.168.1.254',
+                        'host' => '192.168.254.88',
                         'port' => '3306',
                         'user' => 'root',
-                        'password' => 'www.wmw.cn',
+                        'password' => 'root',
                         'db_name' => 'wmw_aries'
                         ),
                     array(
-                        'host' => '192.168.1.254',
+                        'host' => '192.168.254.88',
                         'port' => '3306',
                         'user' => 'root',
-                        'password' => 'www.wmw.cn',
+                        'password' => 'root',
                         'db_name' => 'wmw_aries'
                         )
                     ),
                 'sgip_sms' => array(
                     array(
-                        'host' => '192.168.1.254',
+                        'host' => '192.168.254.88',
                         'port' => '3306',
                         'user' => 'root',
-                        'password' => 'www.wmw.cn',
+                        'password' => 'root',
                         'db_name' => 'wmw_aries'
                         ),
                     array(
-                        'host' => '192.168.1.254',
+                        'host' => '192.168.254.88',
                         'port' => '3306',
                         'user' => 'root',
-                        'password' => 'www.wmw.cn',
+                        'password' => 'root',
                         'db_name' => 'wmw_aries'
                         )
                     ),
                 'bms' => array(
                     array(
-                        'host' => '192.168.1.254',
+                        'host' => '192.168.254.88',
                         'port' => '3306',
                         'user' => 'root',
-                        'password' => 'www.wmw.cn',
+                        'password' => 'root',
                         'db_name' => 'wmw_aries'
                         ),
                     array(
-                        'host' => '192.168.1.254',
+                        'host' => '192.168.254.88',
                         'port' => '3306',
                         'user' => 'root',
-                        'password' => 'www.wmw.cn',
+                        'password' => 'root',
                         'db_name' => 'wmw_aries'
                         )
                     ),
@@ -173,33 +173,33 @@ return array(
                         ),
                 'oa' => array(
                         array(
-                            'host' => '192.168.1.254',
+                            'host' => '192.168.254.88',
                             'port' => '3306',
                             'user' => 'root',
-                            'password' => 'www.wmw.cn',
+                            'password' => 'root',
                             'db_name' => 'wmw_aries'
                             ),
                         array(
-                            'host' => '192.168.1.254',
+                            'host' => '192.168.254.88',
                             'port' => '3306',
                             'user' => 'root',
-                            'password' => 'www.wmw.cn',
+                            'password' => 'root',
                             'db_name' => 'wmw_aries'
                             )
                         ),        
                 'user' => array(
                         array(
-                            'host' => '192.168.1.254',
+                            'host' => '192.168.254.88',
                             'port' => '3306',
                             'user' => 'root',
-                            'password' => 'www.wmw.cn',
+                            'password' => 'root',
                             'db_name' => 'wmw_aries'
                             ),
                         array(
-                            'host' => '192.168.1.254',
+                            'host' => '192.168.254.88',
                             'port' => '3306',
                             'user' => 'root',
-                            'password' => 'www.wmw.cn',
+                            'password' => 'root',
                             'db_name' => 'wmw_aries'
                             )
                         ),

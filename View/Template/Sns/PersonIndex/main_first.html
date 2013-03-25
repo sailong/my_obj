@@ -20,13 +20,13 @@
 {insert name="sns_header"}
 <!--弹出层 star-->
  <!--活跃值 star-->
-  <div class="tcc_value">
+  <div class="tcc_value" id="active_id">
     <p>今天已获<span class="f_red">55</span>活跃值</p>
   </div>
  <!--活跃值 end-->
 
  <!--提示信息弹出层 star-->
-  <div class="tcc_msg">
+  <div class="tcc_msg" id="del_dynamic_id">
     <p class="tcc_msg_top"></p>
     <div class="tcc_msg_center">
      <div class="msg_center_main">
@@ -44,7 +44,7 @@
   </div>
 <!--提示信息弹出层 end--> 
  <!--评论 star-->
-  <div class="tcc_comment">
+  <div class="tcc_comment" id="dynamic_id">
     <p class="tcc_comment_top"></p>
     <!--tcc_comment_main star-->
     <div class="tcc_comment_main">
@@ -63,7 +63,7 @@
       </div>
       <!--comment_tab end-->
       
-      <div class="comment_main_width">
+      <div class="comment_main_width" id="div_id">
       
           <!--一级评论 star-->
           <div class="mb10">
@@ -172,7 +172,7 @@
   </div>
  <!--评论 end--> 
  <!--分享 star-->
-  <div class="tcc_share">
+  <div class="tcc_share" id="share_id">
     <div class="tcc_share_main">
       <h1>分享<a href="#" class="icon_close"></a></h1>
       <div class="share_comment">
@@ -209,14 +209,14 @@
     <div class="banner">
        <div class="head_pic">
          <dl>
-           <dt><a href="javascript:;"><img src="{$user_list.$client_account.client_headimg_url}" ></a></dt>
-           <dd>{$user_list.$client_account.client_name}</dd>
+           <dt><a href="javascript:;"><img src="{$user_list.client_headimg_url}" class="photo_width140"></a></dt>
+           <dd>{$user_list.client_name}</dd>
            
-           {if $client_account == $vuid}<dd class="align_left"><span class="f_main_green">活跃值：{$user_list.$client_account.active_count}</span><a href="/Sns/PersonIndex/Active/showActiveInfo" target ="_blank"class="value_bj ml10">{$user_list.$client_account.active_count_day}</a></dd>{/if}
+           {if $client_account == $vuid}<dd class="align_left"><span class="f_main_green">活跃值：{$user_list.active_count}</span><a href="/Sns/PersonIndex/Active/showActiveInfo" target ="_blank"class="value_bj ml10">{$user_list.active_count_day}</a></dd>{/if}
          </dl>
        </div>
        <div class="head_btn">
-         <input type="button" value="更换头像" class="gray_btn">
+         {if $client_account == $vuid}<a href="/Uc/Userinfos/head_photo" class="gray_btn" >更换头像</a>{/if}
        </div>
     </div>
    <!--banner end--> 
@@ -230,7 +230,7 @@
          {if $vuid == $client_account}
           <tr onMouseOver="this.className='li_on'" onMouseOut="this.className=''">
             <td class="td_icon_width"><span class="icon_sx"></span></td>
-            <td><a href="#">私信</a></td>
+            <td><a href="/Sns/PrivateMsg/PrivateMsg/index" >私信</a></td>
             <td>&nbsp;</td>
           </tr>
           {/if}
@@ -241,17 +241,17 @@
           </tr>
           <tr onMouseOver="this.className='li_on'" onMouseOut="this.className=''">
             <td><span class="icon_photo"></span></td>
-            <td><a href="#">相册</a></td>
-            <td>{if $vuid == $client_account}<a href="#" class="f_666">上传</a>{/if}</td>
+            <td><a href="/Sns/Album/Person/albumlist/client_account/{$vuid}">相册</a></td>
+            <td>{if $vuid == $client_account}<a href="/Sns/Album/Person/uplaodPhoto/client_account/{$vuid}" class="f_666">上传</a>{/if}</td>
           </tr>
           <tr onMouseOver="this.className='li_on'" onMouseOut="this.className=''">
             <td><span class="icon_rz"></span></td>
-            <td><a href="#">日志</a></td>
-            <td>{if $vuid == $client_account}<a href="#" class="f_666">发表</a>{/if}</td>
+            <td><a href="/Sns/Blog/PersonList/index/client_account/{$vuid}" >日志</a></td>
+            <td>{if $vuid == $client_account}<a href="/Sns/Blog/PersonPublish/index" class="f_666" >发表</a>{/if}</td>
           </tr>
           <tr onMouseOver="this.className='li_on'" onMouseOut="this.className=''">
             <td><span class="icon_friend"></span></td>
-            <td><a href="#">好友</a></td>
+            <td><a href="/Sns/Friend/Manage/index">好友</a></td>
             <td>&nbsp;</td>
           </tr>
         </table>
@@ -353,12 +353,13 @@
        <div class="first_main_right">
          <!--my_friend star-->
          <div class="my_friend">
-           <h3>{if $client_account == $vuid}<span>我的好友({$user_list.$client_account.friend_total_count})</span><a href="/Sns/Friend/Manage/index" target="__blank;">更多&gt;&gt;</a>{else}<span>Ta的好友({$user_list.$client_account.friend_total_count})</span>{/if}</h3>
-           
+           <h3>{if $client_account == $vuid}<span>我的好友({$user_list.friend_total_count})</span><a href="/Sns/Friend/Manage/index" target="__blank;">更多&gt;&gt;</a>{else}<span>Ta的好友({$user_list.friend_total_count})</span>{/if}</h3>
+           {literal}
+           <span class="clone_selector" style="display:none;">
+           		<a href="/Sns/PersonIndex/Index/index/client_account/{user_friend.client_account}"><img src="{user_friend.client_headimg_url}" class="photo_width40"  title="{user_friend.client_name}" ></a>
+           </span>
+            {/literal}
            <p id="friend_list_div">
-             {literal}
-             	<a href="javascript:;" class="clone" style="display:none;"><img src="{user_friend.client_headimg_url}" class="photo_width40"  title="{user_friend.client_name}" ></a>
-             {/literal}
            </p>
            
          </div>
@@ -368,13 +369,12 @@
            <h3><span>最近访客</span>{if $client_account == $vuid}<a href="/Sns/Friend/Manage/person_vistior" target="__blank;">更多&gt;&gt;</a>{/if}</h3>
            <!--visitor_main star-->
            <div class="visitor_main" id="vistior_list_div">
-           <input type="hidden" value="{$vuid}" id="vuid"/>
              <!--visitor_main_tab star-->
              {literal}
              <div class="visitor_main_tab clone" style="display:none;">
                <table width="100%" border="0" cellspacing="0" cellpadding="0">
                   <tr>
-                    <td><a href="javascript:;"><img src="{user.client_headimg_url}" class="photo_width40"></a></td>
+                    <td><a href="/Sns/PersonIndex/Index/index/client_account/{user.client_account}" target="_blank;"><img src="{user.client_headimg_url}" class="photo_width40"></a></td>
                     <td>
                       <p>{user.client_name}</p>
                       <p>{user.timeline}</p>
@@ -388,7 +388,7 @@
              {/literal}
              <!--visitor_main_tab end-->
            </div>
-           <p class="visitor_p">今日访客：<a href="javascript:;" class="f_main_green">{$user_list.$client_account.total_count_day}</a><span></span>总访客：<a href="javascript:;" class="f_main_green">{$user_list.$client_account.total_count}</a></p>
+           <p class="visitor_p">今日访客：<a href="javascript:;" class="f_main_green">{$user_list.total_count_day}</a><span></span>总访客：<a href="javascript:;" class="f_main_green">{$user_list.total_count}</a></p>
            <!--visitor_main end-->
          </div>
          <!--visitor end-->
@@ -420,6 +420,7 @@
     <p class="tcc_msg_bottom"></p>
   </div>
 <!--content end-->
+ <input type="hidden" value="{$vuid}" id="vuid"/>
 {include file="Public/sns_footer.html"}
 </body>
 </html>

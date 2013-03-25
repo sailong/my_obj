@@ -16,6 +16,7 @@ Class PhotoCommentsAction extends SnsController {
         $AlbumApi = new AlbumApi();
         
         $comment_list = $AlbumApi->getPhotoCommentsByPhotoId($photo_id, 0, 10);
+        $comment_list = $this->appendCommentsAccess($comment_list);
         
         $this->ajaxReturn($comment_list, '获取成功!', 1, 'json');
     }
@@ -68,6 +69,9 @@ Class PhotoCommentsAction extends SnsController {
         }
         
         $comment_list = $AlbumApi->getPhotoCommentsById($comment_id);
+        
+        $comment_list = $this->appendCommentsAccess($comment_list);
+        
         $comment_info = & $comment_list[$comment_id];
         
         $this->ajaxReturn($comment_info, '评论添加成功!', 1, 'json');
@@ -103,4 +107,34 @@ Class PhotoCommentsAction extends SnsController {
         
         $this->ajaxReturn(null, '评论删除成功!', 1, 'json');
     }
+    
+    /**
+     * 追加评论的删除权限
+     * @param $comment_list
+     */
+    private function appendCommentsAccess($comment_list) {
+        if(empty($comment_list)) {
+            return false;
+        } else if(!is_array($comment_list)) {
+            return $comment_list;
+        }
+        
+        foreach($comment_list as $comment_id=>$comment) {
+            if($comment['client_account'] == $this->user['client_account']) {
+                $comment['can_del'] = true;
+            }
+            if(!empty($comment['child_items'])) {
+                foreach($comment['child_items'] as $child_comment_id=>$child_comment) {
+                    if($child_comment['client_account'] == $this->user['client_account']) {
+                        $child_comment['can_del'] = true;
+                    }
+                    $comment['child_items'][$child_comment_id] = $child_comment;
+                }
+            }
+            $comment_list[$comment_id] = $comment;
+        }
+        
+        return $comment_list;
+    }
+    
 }

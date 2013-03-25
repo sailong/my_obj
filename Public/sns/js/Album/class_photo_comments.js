@@ -4,7 +4,8 @@ function sendCommentBox(sendOptions){
 	var photo_id = sendOptions.photo_id || '';
 	var add_uid = login_account || '';
 	var up_id = sendOptions.up_id || '';
-	var paramData = {"photo_id":photo_id,"add_uid":login_account,"up_id":up_id};
+	var class_code = sendOptions.class_code || '';
+	var paramData = {"photo_id":photo_id,"add_uid":login_account,"up_id":up_id,"class_code":class_code};
 	/*for(var i in paramData) {
 		alert(i + "" + paramData[i]);
 	}*/

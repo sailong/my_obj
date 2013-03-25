@@ -71,5 +71,11 @@ type.prototype.delegateEvent=function() {
 };
 
 
+$(document).ready(function(){
+	var pubObj = new type();
+});
+
+
+
 
 

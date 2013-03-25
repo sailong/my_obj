@@ -2,7 +2,7 @@
    {literal}
    <dl>
     <dt>
-    	<img width="40" height="40" src="{child_comment.user_info.client_headimg_url}">
+    	<img width="40" height="40" data-original="{child_comment.user_info.client_headimg_url}">
     </dt>
    </dl>
    <div class="agin_reply">
@@ -14,9 +14,11 @@
          <td>
          	<p>{child_comment.content}（{child_comment.add_time_format}）</p>
          </td>
+         {if child_comment.can_del}
          <td>
          	<a class="fc_288c00 comment_2nd_delete_selector" href="javascript:;">删除</a>
          </td>
+         {/if}
        </tr>
      </table>
     </div>

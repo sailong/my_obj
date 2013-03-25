@@ -16,6 +16,8 @@ class CommentsAction extends SnsController {
             $this->ajaxReturn(null, '没有更多评论信息!', -1, 'json');
         }
         
+        $comment_list = $this->appendCommentsAccess($comment_list);
+        
         $this->ajaxReturn($comment_list, '获取成功!', 1, 'json');
     }
     
@@ -32,7 +34,7 @@ class CommentsAction extends SnsController {
         $max_comment_id = $max_comment_id > 0 ? $max_comment_id : 0;
         $page = max(1, $page);
         
-        $perpage = 1;
+        $perpage = 10;
         $offset = ($page - 1) * $perpage;
         $where_appends = array();
         $where_appends[] = "level='1'";
@@ -57,6 +59,9 @@ class CommentsAction extends SnsController {
         }
         //获取最大的comment_id值，注意以第一次获取数据时的最大comment_id为基准
         $max_comment_id = !empty($max_comment_id) ? $max_comment_id : max((array)array_keys($comment_list));
+        
+        //追加评论的删除权限
+        $comment_list = $this->appendCommentsAccess($comment_list);
         
         $ret_datas = array(
             'has_next_page' => $has_next_page,
@@ -100,6 +105,9 @@ class CommentsAction extends SnsController {
         }
         
         $comment_list = $MoodApi->getMoodCommentsById($comment_id);
+        
+        $comment_list = $this->appendCommentsAccess($comment_list);
+        
         $comment_info = & $comment_list[$comment_id];
         
         $this->ajaxReturn($comment_info, '评论发布成功!', 1, 'json');
@@ -132,4 +140,34 @@ class CommentsAction extends SnsController {
         
         $this->ajaxReturn(null, '删除成功!', 1, 'json');
     }
+    
+    /**
+     * 追加评论列表的管理权限
+     * @param $comment_list
+     */
+    private function appendCommentsAccess($comment_list) {
+        if(empty($comment_list)) {
+            return false;
+        } else if(!is_array($comment_list)) {
+            return $comment_list;
+        }
+        
+        foreach($comment_list as $comment_id=>$comment) {
+            if($comment['client_account'] == $this->user['client_account']) {
+                $comment['can_del'] = true;
+            }
+            if(!empty($comment['child_items'])) {
+                foreach($comment['child_items'] as $child_comment_id=>$child_comment) {
+                    if($child_comment['client_account'] == $this->user['client_account']) {
+                        $child_comment['can_del'] = true;
+                    }
+                    $comment['child_items'][$child_comment_id] = $child_comment;
+                }
+            }
+            $comment_list[$comment_id] = $comment;
+        }
+        
+        return $comment_list;
+    }
+    
 }

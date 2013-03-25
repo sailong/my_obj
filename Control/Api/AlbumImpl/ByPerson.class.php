@@ -207,15 +207,7 @@ class ByPerson extends Album {
         $mAlbumPersonRelation = ClsFactory::Create('Model.Album.mAlbumPersonRelation');
         $rs = $mAlbumPersonRelation->delByAlbumId($album_id);
         if(empty($rs)) {
-            echo "删除个人相册关系失败";
             return false;
-        }
-        //删除相册权限
-        $mAlbumPersonGrants = ClsFactory::Create('Model.Album.mAlbumPersonGrants');
-        $rs = $mAlbumPersonGrants->delByAlbumId($album_id);
-        if(empty($rs)) {
-           echo "删除相册权限失败";
-           return false;
         }
         
         $mAlbumPhotos = ClsFactory::Create('Model.Album.mAlbumPhotos');
@@ -229,7 +221,6 @@ class ByPerson extends Album {
             if(!empty($comments_list)) {
                 $rs = $mAlbumPhotoComments->delByPhotoId($photo_ids);
                 if(empty($rs)) {
-                    echo "删除相册评论失败";
                     return false;
                 }
             }
@@ -240,7 +231,6 @@ class ByPerson extends Album {
         if(!empty($photo_lists)) {
             $rs = $mAlbumPhotos->delByAlbumId($album_id);
             if(empty($rs)) {
-                echo "删除相册照片信息失败";
                 return false;
             }
         }

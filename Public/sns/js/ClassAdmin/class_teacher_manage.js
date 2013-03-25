@@ -132,8 +132,11 @@ class_teacher_manage.prototype.teacher_select = function(){
 class_teacher_manage.prototype.checked_is_add = function(subject_id){
 	var context = $("#teacher_select_list");
 	var con = $("#selected_subject_" + subject_id, context).html();
+	var result = false;
+	if(con == null)
+		result = true;
 
-	return {'result':!$.isEmptyObject(con)};
+	return {'result':result};
 };
 
 class_teacher_manage.prototype.data = function(data,type){

@@ -88,6 +88,10 @@ class PersonMoodAction extends SnsController {
             $this->ajaxReturn(null, '说说发表失败!', -1, 'json');
         }
         
+        import('@.Control.Api.FeedApi');
+        $FeedApi = new FeedApi();
+        $FeedApi->user_create($this->user['client_account'], $mood_id, FEED_MOOD, FEED_ACTION_PUBLISH);
+        
         //获取说说的相关信息
         $mood_info = $MoodApi->getPersonMood($this->user['client_account'], $mood_id);
         

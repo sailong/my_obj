@@ -37,7 +37,7 @@ function dump(obj) {
 
 function feed(options, elem) {
 	this.init(options, elem);
-	this.loadFeed(1);
+	this.loadFeed();
 };
 
 //动态相关的默认设置
@@ -57,6 +57,8 @@ feed.prototype = {
 	
 	//是否有下一页
 	,hasNextPage : true
+	
+	,isFristTimeLoad:true
 	
 	//相关的设置
 	,settings: {}
@@ -112,9 +114,8 @@ feed.prototype = {
 				return false;
 			}
 			
-			var page = $(this).data('page') || 1;
-			me.loadFeed(page + 1);
-			$(this).data('page', page + 1);
+			var last_id = $(this).data('last_id') || 0;
+			me.loadFeed(last_id);
 			
 			return false;
 		});
@@ -138,26 +139,49 @@ feed.prototype = {
 	}
 	
 	//加载动态信息
-	,loadFeed:function(page) {
+	,loadFeed:function(last_id) {
 		var me = this;
-		page = page >= 1 ? page : 1;
+		
+		last_id = last_id || 0;
+		
 		$.ajax({
 			type:'get',
-			url:me.settings['url'] + "/page/" + page,
+			url:me.settings['url'] + "/last_id/" + last_id,
 			dataType:'json',
+			async:false,
 			success:function(json) {
-				var feed_list = json.data || {};
+				var rs_list = json.data || {};
+				
+				var feed_list = rs_list.feed_list || {};
+				var last_id = rs_list.last_id || 0;
+				
 				if($.isEmptyObject(feed_list)) {
 					me.hasNextPage = false;
+					$('#load_more_feed_a', me.loadMoreDivObj).closest('.more_active').hide();
+					//如果第一次加载没有拿到动态信息
+					if(me.isFristTimeLoad) {
+						$("<span style='padding:10px 0;display:block;text-align:center;clear:both;'>" + json.info + "</span>").appendTo(me.$elem);
+					}
+					
 					return false;
 				}
 				
+				me.isFristTimeLoad = false;
+				
+				//通知加载更多信息是的last_id参数
+				$('#load_more_feed_a', me.loadMoreDivObj).closest('.more_active').show();
+				$('#load_more_feed_a', me.loadMoreDivObj).data('last_id', last_id);
+				
+				var feed_type_maps = {
+					1 : 'mood',
+					2 : 'blog',
+					3 : 'photo'
+				};
 				//填充动态信息
 				for(var i in feed_list) {
 					var feed_datas = feed_list[i] || {};
-					
-					//todolist
-					var divObj = $.createFeedUnit(feed_datas, 'mood');
+					var feed_type = feed_datas.feed_type || 1;
+					var divObj = $.createFeedUnit(feed_datas, feed_type_maps[feed_type]);
 					
 					divObj.data('datas', feed_datas);
 					me.feedListDivObj.append(divObj);
@@ -166,10 +190,3 @@ feed.prototype = {
 		});
 	}
 };
-
-$(document).ready(function() {
-	          
-	$('#show_feed').loadFeed({
-		url:'/Sns/Feed/List/getUserAllFeedAjax'
-	});
-});

@@ -500,11 +500,11 @@ class ManageAction extends SnsController{
             $resault = $mMsgRequire->modifyMsgRequire($dataarr,$req_id);
         }
         
-        $mMsgNoticeList = ClsFactory::Create("RModel.Msg.mStringRequest");
-        $mMsgNoticeList->publishMsg($req_id, 'req');
         if(empty($req_id)) {
             $this->ajaxReturn(null,'添加好友发送失败！',-1,'json');
         }
+        $mMsgNoticeList = ClsFactory::Create("RModel.Msg.mStringRequest");
+        $mMsgNoticeList->publishMsg($req_id, 'req');
             $this->ajaxReturn($req_id,'添加好友发送成功！',1,'json');
     }
     
@@ -557,7 +557,6 @@ class ManageAction extends SnsController{
         $req_id = $this->objInput->postInt('req_id');
         
         
-        $mMsgNoticeList = ClsFactory::Create("RModel.Msg.mStringRequest");
         if(!empty($friend_account)) {
             //同意好友请求
             $dataarr = array(
@@ -568,8 +567,9 @@ class ManageAction extends SnsController{
             );
             
             $mMsgResponse = ClsFactory::Create('Model.Message.mMsgResponse');
-            $res_id = $mMsgResponse->addMsgResponse($dataarr,'true');
-            $mMsgNoticeList->publishMsg($res_id, 'res');
+            $res_id = $mMsgResponse->addMsgResponse($dataarr,true);
+//            $mMsgNoticeList = ClsFactory::Create("RModel.Msg.mStringResponse");
+//            $mMsgNoticeList->publishMsg($res_id, 'res');
             if($res_id) {
                 $accountrelation_arr = array(
                     'client_account' => $client_account,
@@ -578,14 +578,24 @@ class ManageAction extends SnsController{
                     'add_account' => $client_account,
                     'add_date' => time()
                 );
+                
+                $accountrelation_arr1 = array(
+                    'client_account' => $friend_account,
+                    'friend_account' => $client_account,
+                    'friend_group' => 0,
+                    'add_account' => $client_account,
+                    'add_date' => time()
+                );
                 $mAccountrelation = ClsFactory::Create('Model.mAccountrelation');
                 $resault = $mAccountrelation->addAccountRelation($accountrelation_arr);
+                $resault = $mAccountrelation->addAccountRelation($accountrelation_arr1);
             }
         }
         
         //删除消息请求
         $mMsgRequire = ClsFactory::Create('Model.Message.mMsgRequire');
         $resault = $mMsgRequire->delMsgRequire($req_id);
+        $mMsgNoticeList = ClsFactory::Create("RModel.Msg.mStringRequest");
         $mMsgNoticeList->decrMsg($client_account);
         $this->ajaxReturn(null,'同意请求成功！',1,'json');
     }

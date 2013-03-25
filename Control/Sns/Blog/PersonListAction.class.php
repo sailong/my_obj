@@ -52,7 +52,7 @@ class PersonListAction extends SnsController {
         
         $blogObj = $this->_initBlogObj($client_account);
         $where_arr = array(
-            "add_account='" . $this->user['client_account'] . "'",
+            "add_account='$client_account'",
             "is_published=0"  //0 草稿 1 发布
         );
         
@@ -64,7 +64,7 @@ class PersonListAction extends SnsController {
         $this->assign('client_account', $client_account);
         $this->assign('draft_list', $draft_list);
         
-        $this->display('class_draft_list');
+        $this->display('person_draft_list');
     }
     /**
      * 获取日志列表包括添加人等
@@ -75,6 +75,11 @@ class PersonListAction extends SnsController {
         $type_id    = $this->objInput->postInt('type_id');
         $start_time = $this->objInput->postStr('start_time');
         $end_time   = $this->objInput->postStr('end_time');
+        
+        $client_account_isset = $this->checkoutAccount($client_account);
+        if (empty($client_account_isset)) {
+        	$this->ajaxReturn(null, '你访问的用户不存在！', -1, 'json'); 
+        }
         
         $page = max(1, $page);
         $perpage = $this->blog_perpage;
@@ -178,11 +183,12 @@ class PersonListAction extends SnsController {
         $type_list  = $mBlogTypes->getByTypeId(array_unique($type_id_arr));
         
         //数据页面显示处理
+        import("@.Common_wmw.Date");
         foreach($blog_list as $blog_id=>$blog_info) {
             $add_account = $blog_info['add_account'];
             $type_id = $blog_info['type_id'];
             
-            $blog_info['add_time']     = date('Y-m-d', $blog_info['add_time']);
+            $blog_info['add_time']     = Date::timestamp($blog_info['add_time']);
             $blog_info['type_name']    = !empty($type_list[$type_id]['name']) ? $type_list[$type_id]['name'] : '个人日志';
             $blog_info['client_name']  = $user_list[$add_account]['client_name'];
             

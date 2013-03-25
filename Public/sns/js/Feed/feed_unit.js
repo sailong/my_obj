@@ -21,6 +21,82 @@ function dump(obj) {
 	
 }
 
+//扩展图片的处理函数
+(function($) {
+	//加载容器内部的图片信息
+	$.fn.loadImg=function() {
+		$('img', $(this)).each(function() {
+			var data_original = $(this).attr('data-original');
+			if(data_original) {
+				$(this).attr('src', data_original);
+			}
+		});
+		return this;
+	};
+})(jQuery);
+
+
+(function($) {
+	
+	$(document).click(function(evt) {
+		var pageX = evt.pageX;
+		var pageY = evt.pageY;
+		
+		//$.sendboxHandler.close(aObj[0].handler_id);
+	});
+	
+})(jQuery);
+
+
+
+//针对sendbox句柄管理的扩展
+(function($) {
+	function handler() {
+		
+	}
+	
+	handler.prototype = {
+		current_handler_id : 0
+		
+		,handler_pointer: 1
+		
+		,handler_list : []
+		
+		,register:function(openFunc, closeFunc) {
+			var me = this;
+			
+			openFunc = openFunc || $noop;
+			closeFunc = closeFunc || $.noop;
+			
+			me.handler_list[me.handler_pointer] = [openFunc, closeFunc];
+			
+			return me.handler_pointer++;
+		}
+	
+		,open:function(handler_id) {
+			this.close(this.current_handler_id);
+			
+			var handler_funcs = this.handler_list[handler_id];
+			if(!$.isEmptyObject(handler_funcs)) {
+				var fn = handler_funcs[0];
+				typeof fn == 'function' && fn.call();
+			}
+			this.current_handler_id = handler_id;
+		}
+		
+		,close:function(handler_id) {
+			var handler_funcs = this.handler_list[handler_id];
+			if(!$.isEmptyObject(handler_funcs)) {
+				var fn = handler_funcs[1];
+				typeof fn == 'function' && fn.call();
+			}
+		}
+		
+	};
+	
+	$.sendboxHandler = new handler();
+})(jQuery);
+
 (function($) {
 	$.createFeedUnit=function(feed_datas, feed_type_name) {
 		
@@ -104,6 +180,38 @@ feed_unit.prototype = {
 		unit_1st_params:'%s_comments_1st_params',
 		unit_2nd_params:'%s_comment_2nd_params'
 	}
+	
+	//动态对应的实体对象
+	,feedUnitDivObj:{}
+
+	//刷新动态对应实体的评论信息
+	,reflushComments:function() {
+		var me = this;
+		
+		var params = feed_unit.collectParams($('.feed_unit_params_selector', me.feedUnitDivObj));
+		$.ajax({
+			type:'get',
+			url:"/Sns/Feed/List/getEntityAjax/feed_type/" + params.feed_type + "/from_id/" + params.from_id,
+			dataType:'json',
+			success:function(json) {
+				if(json.status < 0) {
+					return false;
+				}
+				var comments = json.data.comments || 0;
+				var aObj = $('.feed_comment_selector', me.feedUnitDivObj);
+				var html = aObj.html().toString() || "";
+				var parttern = /([^\d]+)(\d+)([^\d*?])/;
+				if(html.match(parttern)) {
+					html = html.replace(parttern, function(a, b, c, d) {
+						return b + comments + d;
+					});
+				} else {
+					html = html + "(" + comments + ")";
+				}
+				aObj.html(html);
+			}
+		});
+	}
 
 	//创建动态对象
 	,createFeedUnit:function(feed_datas) {
@@ -131,6 +239,11 @@ feed_unit.prototype = {
 			};
 		}
 		
+		//加载内容内的图片信息
+		divObj.loadImg();
+		
+		this.feedUnitDivObj = divObj;
+		
 		return divObj;
 	}
 	
@@ -149,6 +262,9 @@ feed_unit.prototype = {
 		});
 		
 		divObj = $(divObj);
+		//加载内容内的图片信息
+		divObj.loadImg();
+		
 		var params = feed_unit.collectParams($('.comment_params_selector', divObj));
 		//加载实体的评论信息
 		var comment_list = {};
@@ -192,6 +308,8 @@ feed_unit.prototype = {
 				var unitDivObj = me.create1stUnit(json.data || {});
 				containObj.prepend(unitDivObj);
 				$('.reply_1st_content_selector', divObj).val('');
+				
+				me.reflushComments();
 			}
 		});
 	}
@@ -223,6 +341,9 @@ feed_unit.prototype = {
 			parentObj.append(childDivObj);
 		}
 		
+		//加载内容内的图片信息
+		divObj.loadImg();
+		
 		return divObj;
 	}
 	
@@ -237,6 +358,9 @@ feed_unit.prototype = {
 		divObj.renderHtml({
 			child_comment:child_comment || {}
 		});
+		//加载内容内的图片信息
+		divObj.loadImg();
+		
 		return divObj;
 	}
 	
@@ -262,11 +386,16 @@ comment_events.prototype = {
 			var params = feed_unit.collectParams($('.feed_unit_params_selector', ancestorObj));
 			//触发删除相关的事件
 			$('#feed_delete_div').trigger('openEvent', [{
-				datas : params,
+				datas : {
+					feed_id:params.feed_id
+				},
 				follow:aObj.get(0),
 				callback:function() {
 					$(ancestorObj[0].followDiv).remove();
-					ancestorObj.remove();
+					//动画相关慢慢移除
+					ancestorObj.animate({
+						height:0
+					}, 'slow').remove();
 				}
 			}]);
 		});
@@ -300,6 +429,10 @@ comment_events.prototype = {
 		//一级评论的删除事件
 		$('.comment_1st_delete_selector').live('click', function() {
 			var ancestorObj = $(this).closest('.comment_1st_unit_selector');
+			
+			var commentDivObj = $(this).closest('.comment_main_selector');
+			var feedUnitObject = commentDivObj[0].feedUnitObject;
+			
 			var params = feed_unit.collectParams($('.comment_1st_unit_params_selector', ancestorObj));
 			$.ajax({
 				type:'get',
@@ -310,13 +443,20 @@ comment_events.prototype = {
 						$.showError(json.info);
 						return false;
 					}
-					ancestorObj.remove();
+					ancestorObj.animate({
+						height:'0px'
+					}, 'slow').remove();
+					
+					//刷新评论数
+					feedUnitObject.reflushComments();
 				}
 			});
 		});
 		
 		//一级评论的回复事件,多次点击有切换功能
 		$('.comment_1st_reply_selector').live('click', function() {
+			var aObj = $(this);
+			
 			var commentDivObj = $(this).closest('.comment_main_selector');
 			var feedUnitObject = commentDivObj[0].feedUnitObject;
 			
@@ -342,21 +482,32 @@ comment_events.prototype = {
 						var unit2divObj = feedUnitObject.create2ndUnit(json.data || {});
 						$('#second_comment_list', ancestorObj).prepend(unit2divObj);
 						
-						$('.reply_2nd_content_selector', ancestorObj).val('');
-						reply2ndObj.hide();
+						$.sendboxHandler.close(aObj[0].handler_id);
+						
+						//刷新评论数
+						feedUnitObject.reflushComments();
 					}
+				});
+				
+				//注册到sendbox的管理列表
+				aObj[0].handler_id = $.sendboxHandler.register(function() {
+					reply2ndObj.css('display', 'block');
+				}, function() {
+					$('.reply_2nd_content_selector', ancestorObj).val('');
+					reply2ndObj.css('display', 'none');
 				});
 			}
 			//显示状态的切换
 			if(reply2ndObj.css('display') == 'none') {
-				reply2ndObj.css('display', 'block');
+				$.sendboxHandler.open(aObj[0].handler_id);
 			} else {
-				reply2ndObj.css('display', 'none');
+				$.sendboxHandler.close(aObj[0].handler_id);
 			}
 		});
 		
 		//绑定"我也来说一句"
 		$('.reply_2nd_simple_selector').live('click', function() {
+			var inpObj = $(this);
 			//按钮所在的P元素范围
 			var pObj = $(this).closest('p');
 			//处理相关的逻辑
@@ -385,16 +536,27 @@ comment_events.prototype = {
 						//创建一个二级评论的对象
 						var unit2divObj = feedUnitObject.create2ndUnit(json.data || {});
 						$('#second_comment_list', scopeObj).prepend(unit2divObj);
-						pObj.show();
-						$('.simple_reply_div_selector', ancestorObj).hide();
+						
+						$.sendboxHandler.close(inpObj[0].handler_id);
+						//刷新评论数
+						feedUnitObject.reflushComments();
 					}
 				});
+				
+				//注册到sendbox的管理列表
+				inpObj[0].handler_id = $.sendboxHandler.register(function() {
+					//获取输入焦点
+					pObj[0].sendBoxObj.focus();
+					//显示sendbox所在的div
+					pObj.hide();
+					$('.simple_reply_div_selector', ancestorObj).show();
+				}, function() {
+					pObj.show();
+					$('.simple_reply_div_selector', ancestorObj).hide();
+				});
 			}
-			//获取输入焦点
-			pObj[0].sendBoxObj.focus();
-			//显示sendbox所在的div
-			pObj.hide();
-			$('.simple_reply_div_selector', ancestorObj).show();
+			
+			$.sendboxHandler.open(inpObj[0].handler_id);
 		});
 	}
 	
@@ -403,6 +565,10 @@ comment_events.prototype = {
 		//2级评论的删除事件
 		$('.comment_2nd_delete_selector').live('click', function() {
 			var ancestorObj = $(this).closest('.comment_2nd_unit_selector');
+			
+			var commentDivObj = $(this).closest('.comment_main_selector');
+			var feedUnitObject = commentDivObj[0].feedUnitObject;
+			
 			var params = feed_unit.collectParams($('.comment_2nd_unit_params_selector', ancestorObj));
 			$.ajax({
 				type:'get',
@@ -413,7 +579,12 @@ comment_events.prototype = {
 						$.showError(json.info);
 						return false;
 					}
-					ancestorObj.remove();
+					ancestorObj.animate({
+						height:'0px'
+					}, 'slow').remove();
+					
+					//刷新评论数
+					feedUnitObject.reflushComments();
 				}
 			});
 		});
@@ -501,12 +672,3 @@ feed_unit.register(function() {
 });
 
 })();
-
-
-
-
-
-
-
-
-

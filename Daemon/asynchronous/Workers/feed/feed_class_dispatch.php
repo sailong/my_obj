@@ -4,11 +4,11 @@ class feed_class_dispatch extends BackGroundController {
 
     //注意大小写
     
-    protected $_common_task = array( 
-//        'feed_class_all',
-//        'feed_user_my',
+    protected $_common_tasks = array( 
+        'feed_class_all',
+        'feed_user_my',
         'feed_user_all',
-//        'feed_user_children',
+        'feed_user_children',
     );
     
     protected $_tasks = array(
@@ -43,7 +43,7 @@ class feed_class_dispatch extends BackGroundController {
         $workload = $job->workload();
         
         $workload = unserialize($workload);
-        print_r($workload);
+        
         $class_code = $workload["class_code"];
         $uid = $workload["uid"];
         $feed_id = $workload["feed_id"];
@@ -54,11 +54,10 @@ class feed_class_dispatch extends BackGroundController {
             return false;  
         }
         
-        $tasks = array_merge((array)$this->_common_task, (array)$this->_tasks[$feed_type][$action]);
-        print_r($tasks);
-        foreach($tasks as $_taskName) {
-            $task = $this->getTaskClass($_taskName);
-            print_r($task);
+        $tasks = array_merge((array)$this->_common_tasks, (array)$this->_tasks[$feed_type][$action]);
+
+        foreach($tasks as $taskName) {
+            $task = $this->getTaskClass($taskName);
             if (!empty($task)) {
                 $result = $task->run($uid, $class_code, $feed_id);
             }

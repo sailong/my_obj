@@ -35,7 +35,7 @@ class PersonTypeAction extends SnsController {
     public function getBlogTypeListAjax() {
         $client_account = $this->objInput->getInt('client_account');
         
-        //获取班级的分类列表
+        //获取个人的分类列表
         $BlogObj = $this->_initBlogObj($client_account);
         $type_list = $BlogObj->getBlogType($client_account);
         $type_list[0] = array('type_id'=>'0', 'name'=>'个人日志');
@@ -74,6 +74,7 @@ class PersonTypeAction extends SnsController {
         
         $blogObj = $this->_initBlogObj($client_account);
         $person_type_list = $blogObj->getBlogType();
+        //dump($person_type_list);dump($name);exit;
         if (!empty($person_type_list)) {
             foreach ($person_type_list as $type_id=>$type_info) {
                 if ($name == $type_info['name'] || $name == '个人日志') {
@@ -99,7 +100,7 @@ class PersonTypeAction extends SnsController {
     
     /**
      * ajax 删除日志分类 删除后
-     * 日志分类默认为班级分类 即分类id 为0
+     * 日志分类默认为个人分类 即分类id 为0
      */
     public function deleteTypeAjax() {
         $type_id = $this->objInput->getInt('type_id');
@@ -135,6 +136,17 @@ class PersonTypeAction extends SnsController {
         import("@.Common_wmw.WmwString");
         if(WmwString::mbstrlen($name, 2) > 12) {
             $this->ajaxReturn(null, '分类名称长度不能超过12个字母/6个汉字', -1, 'JSON'); 
+        }
+        
+        $client_account = $this->user['client_account'];
+        $blogObj = $this->_initBlogObj($client_account);
+        $person_type_list = $blogObj->getBlogType();
+        if (!empty($person_type_list)) {
+            foreach ($person_type_list as $type_info) {
+                if ($name == $type_info['name'] || $name == '个人日志') {
+                    $this->ajaxReturn(null, "分类 \"$name\"已经存在，请不要重复添加", -1, 'JSON'); 
+                }
+            }
         }
         
         //验证权限

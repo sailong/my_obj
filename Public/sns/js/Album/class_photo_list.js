@@ -3,7 +3,8 @@
 		var photo_id = sendOptions.photo_id || {};
 		var login_account = sendOptions.login_account || {};
 		var up_id = photo_id || {};
-		var paramData = {"photo_id":photo_id,"add_uid":login_account,"up_id":up_id};
+		var class_code  = sendOptions.class_code || {};
+		var paramData = {"photo_id":photo_id,"add_uid":login_account,"up_id":up_id,"class_code":class_code};
 		var commnetTextareaObj = sendOptions.textareaObj || {};
 		var sendBoxObj = commnetTextareaObj.sendBox({
 			//加载工具条，多个选项之间使用逗号隔开，目前支持：表情：emoto，文件上传：upload(form表单提交的文件的名字为:pic)

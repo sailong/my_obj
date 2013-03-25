@@ -18,6 +18,8 @@ class CommentsAction extends SnsController {
         
         $comment_list = $BlogApi->getBlogCommentsByBlogId($blog_id, "level='1'", 0, 10);
         
+        $comment_list = $this->appendCommentsAccess($comment_list);
+        
         $this->ajaxReturn($comment_list, '获取成功!', 1, 'json');
     }
     
@@ -65,6 +67,9 @@ class CommentsAction extends SnsController {
         
         //获取日志的评论信息
         $comment_list = $BlogApi->getBlogCommentsById($comment_id);
+        //追加日志评论的权限信息
+        $comment_list = $this->appendCommentsAccess($comment_list);
+        
         $comment_info = & $comment_list[$comment_id];
         
         $this->ajaxReturn($comment_info, '评论发表成功!', 1, 'json');
@@ -101,4 +106,36 @@ class CommentsAction extends SnsController {
         
         $this->ajaxReturn(null, '评论删除成功!', 1, 'json');
     }
+    
+    /**
+     * 追加评论对应的权限信息
+     * @param $comment_list
+     */
+    private function appendCommentsAccess($comment_list) {
+        if(empty($comment_list)) {
+            return false;
+        } else if(!is_array($comment_list)) {
+            return $comment_list;
+        }
+        
+        foreach($comment_list as $comment_id=>$comment) {
+            if($comment['client_account'] == $this->user['client_account']) {
+                $comment['cal_del'] = true;
+            }
+            
+            if(!empty($comment['child_items'])) {
+                foreach($comment['child_items'] as $child_comment_id=>$child_comment) {
+                    if($child_comment['client_account'] == $this->user['client_account']) {
+                        $child_comment['can_del'] = true;
+                    }
+                    $comment['child_items'][$child_comment_id] = $child_comment;
+                }
+            }
+            
+            $comment_list[$comment_id] = $comment;
+        }
+        
+        return $comment_list;
+    }
+    
 }

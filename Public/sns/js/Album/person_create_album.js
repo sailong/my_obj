@@ -88,7 +88,8 @@ create_album.prototype.attachEvent=function(){
 
 create_album.prototype.validatorAlbumInfo=function() {
 	var self = this;
-	if(!$('#album_name').val()) {
+	var album_name = $('#album_name').val();
+	if(!album_name || album_name == self.default_album_name) {
 		$.showError('请填写相册名称!');
 		return false;
 	}

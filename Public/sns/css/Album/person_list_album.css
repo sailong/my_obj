@@ -1,7 +1,7 @@
 @charset "utf-8";
 /* CSS Document */
 
-.main h4{background:url(../../images/Album/class_list_album/h4_bj.jpg) 0 0 no-repeat; height:44px; margin:10px;}
+.main h4{background:url(../../images/Album/person_list_album/h4_bj.jpg) 0 0 no-repeat; height:44px; margin:10px;}
 
 .publish_main{background:#fff; border-left:1px #6db500 solid;border-right:1px #6db500 solid; border-top:1px #6db500 solid;font:14px "微软雅黑";color:#464646; padding:10px 10px 0px;}
 	.upload_main_top{margin-bottom:20px;height:30px;}
@@ -15,7 +15,7 @@
 		.hide_main a{margin-right:20px;}
 		
 		.see_homework{text-align:center; margin-top:20px;}	
-	    	.see_homework span{ background:url(../../images/Album/class_list_album/see_icon_bj.gif) 0 0 no-repeat; width:242px; height:31px; display:inline-block; line-height:31px;}	
+	    	.see_homework span{ background:url(../../images/Album/person_list_album/see_icon_bj.gif) 0 0 no-repeat; width:242px; height:31px; display:inline-block; line-height:31px;}	
 	    	.see_homework span a{color:#288c00;} 	
 			
 
@@ -23,17 +23,17 @@
 			
 /*提示信息*/	   
 .tcc_msg{width:310px; color:#666; background:#fff;}
-	.tcc_msg_top{background:url(../../images/Album/class_list_album/tcc_msg_top.gif) 0 0 no-repeat; height:5px; overflow:hidden;}
-	.tcc_msg_center{background:url(../../images/Album/class_list_album/tcc_msg_center.gif) 0 0 repeat-y; padding:20px 10px;}
+	.tcc_msg_top{background:url(../../images/Album/person_list_album/tcc_msg_top.gif) 0 0 no-repeat; height:5px; overflow:hidden;}
+	.tcc_msg_center{background:url(../../images/Album/person_list_album/tcc_msg_center.gif) 0 0 repeat-y; padding:20px 10px;}
 	    .msg_center_main dl{float:left; margin-right:8px;}
-		.icon_question{background:url(../../images/Album/class_list_album/icon_question.gif) 0 0 no-repeat; width:8px; height:14px; display:inline-block;}
+		.icon_question{background:url(../../images/Album/person_list_album/icon_question.gif) 0 0 no-repeat; width:8px; height:14px; display:inline-block;}
 		.msg_center_main p{font:bold 14px "宋体"; float:left; line-height:24px;}
 		.msg_center_main p span{font:normal 12px "宋体";}
 		.msg_center_btn{text-align:right; padding-top:10px;}
 		
-		.qd_btn{background:url(../../images/Album/class_list_album/qd_btn.gif) 0 0 no-repeat; width:57px; height:24px; border:none; cursor:pointer;}
-		.qx_btn{background:url(../../images/Album/class_list_album/qx_btn.gif) 0 0 no-repeat; width:57px; height:24px; line-height:24px; border:none; cursor:pointer; text-align:center; color:#73797c; margin-left:10px;}
-	.tcc_msg_bottom{background:url(../../images/Album/class_list_album/tcc_msg_bottom.gif) 0 0 no-repeat; height:5px; overflow:hidden;}				
+		.qd_btn{background:url(../../images/Album/person_list_album/qd_btn.gif) 0 0 no-repeat; width:57px; height:24px; border:none; cursor:pointer;}
+		.qx_btn{background:url(../../images/Album/person_list_album/qx_btn.gif) 0 0 no-repeat; width:57px; height:24px; line-height:24px; border:none; cursor:pointer; text-align:center; color:#73797c; margin-left:10px;}
+	.tcc_msg_bottom{background:url(../../images/Album/person_list_album/tcc_msg_bottom.gif) 0 0 no-repeat; height:5px; overflow:hidden;}				
 	
 	
 
@@ -41,7 +41,7 @@
 /*创建相册*/
 .edit_comment{width:500px;border:1px #6db500 solid; background:#fff;}
 	.tcc_title{font:14px "微软雅黑"; background:#f8f8f8; border-bottom:1px #e9e9e9 solid; padding:0px 10px; height:33px; line-height:33px; width:480px; position:relative;}
-	    .close_icon{background:url(../../images/Album/class_upload/icon_close.gif) 0 0 no-repeat;width:10px;height:9px;display:inline-block;position:absolute;right:10px;top:12px;overflow:hidden;}
+	    .close_icon{background:url(../../images/Album/person_upload/icon_close.gif) 0 0 no-repeat;width:10px;height:9px;display:inline-block;position:absolute;right:10px;top:12px;overflow:hidden;}
 	  
 	.edit_comment_tab{padding:10px; font:12px "宋体";}  
 		.edit_comment_tab th{width:62px; text-align:right; color:#464646;font-weight:normal; height:45px;}
@@ -53,8 +53,8 @@
 	
 	.msg_btn{padding:6px 10px 0px; height:30px; background:#f2f2f2;}	
 		.msg_btn p{text-align:right;}
-		.green_btn{background:url(../../images/Album/class_upload/green_btn.gif) 0 0 no-repeat; width:57px; height:24px; color:#fff; border:none; cursor:pointer;}
-		.qx_btn{background:url(../../images/Album/class_upload/qx_btn.gif) 0 0 no-repeat; width:57px; height:24px; line-height:24px; border:none; cursor:pointer; text-align:center; color:#73797c; margin-left:10px;}		
+		.green_btn{background:url(../../images/Album/person_upload/green_btn.gif) 0 0 no-repeat; width:57px; height:24px; color:#fff; border:none; cursor:pointer;}
+		.qx_btn{background:url(../../images/Album/person_upload/qx_btn.gif) 0 0 no-repeat; width:57px; height:24px; line-height:24px; border:none; cursor:pointer; text-align:center; color:#73797c; margin-left:10px;}		
 				
 		
 		

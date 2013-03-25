@@ -40,23 +40,25 @@ class feed_person_dispatch extends BackGroundController {
     public function run($job, &$log) {
 
         $workload = $job->workload();
-        
+       
         $workload = unserialize($workload);
-        $id = $workload["id"];
+        $class_code = $workload["class_code"];
+        $uid = $workload["uid"];
         $feed_id = $workload["feed_id"];
         $feed_type = $workload["feed_type"];
         $action = $workload["action"];
-        if(empty($action) || empty($id) || empty($feed_id) || empty($feed_type)){
+
+        if(empty($action) || empty($feed_id) || empty($feed_type)){
             $log[] = "Work Failure: id or feed_id or feed_type or action is null";
             return false;  
         }
         
-        $this->_tasks = array_merge((array)$this->_common_task, (array)$this->_tasks[$feed_type][$action]);
-        
-        foreach($this->_tasks as $_taskName) {
-            $task = $this->getTaskClass($_taskName);
+        $tasks = array_merge((array)$this->_common_tasks, (array)$this->_tasks[$feed_type][$action]);
+
+        foreach($tasks as $taskName) {
+            $task = $this->getTaskClass($taskName);
             if (!empty($task)) {
-                $result = $task->run($id, $feed_id);
+                $result = $task->run($uid, $class_code, $feed_id);
             }
         }
         

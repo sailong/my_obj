@@ -60,7 +60,7 @@ class PersonContentAction extends SnsController {
         !empty($result) ? $this->ajaxReturn(null,"添加阅读数量成功！", 1, "json") : $this->ajaxReturn(null,"添加阅读数量失败！", -1, "json");
     }
     
-    public function next_blog(){
+    public function up_blog(){
         $client_account = $this->objInput->getStr("client_account");
         $blog_id = $this->objInput->getInt("blog_id");
         $mBlogPersonRelation = ClsFactory::Create("Model.Blog.mBlogPersonRelation");
@@ -83,7 +83,7 @@ class PersonContentAction extends SnsController {
         $this->redirect("/Sns/Blog/PersonContent/index/client_account/$client_account/blog_id/$next_blog_id");
     }
     
-    public function up_blog() {
+    public function next_blog() {
         $client_account = $this->objInput->getStr("client_account");
         $blog_id = $this->objInput->getInt("blog_id");
         $mBlogPersonRelation = ClsFactory::Create("Model.Blog.mBlogPersonRelation");
@@ -98,7 +98,7 @@ class PersonContentAction extends SnsController {
         	$wherearr[] = $grant; 
         }
         
-        $blog_list = $mBlogPersonRelation->getPersonBlogByUid($client_account, $wherearr, 'blog_id asc', 0, 1);
+        $blog_list = $mBlogPersonRelation->getPersonBlogByUid($client_account, $wherearr, 'blog_id desc', 0, 1);
         $blog_list = $blog_list[$client_account];
         $BlogPersonRelation = reset($blog_list);
         $up_blog_id = !empty($BlogPersonRelation) ? $BlogPersonRelation['blog_id'] : $blog_id;
@@ -159,6 +159,10 @@ class PersonContentAction extends SnsController {
             $comments_content[$comment_id]['client_name'] = $user_info[$uid]['client_name'];
             $comments_content[$comment_id]['header_pic_url'] = $user_info[$uid]['client_headimg_url'];
             $comments_content[$comment_id]['add_time'] = Date::timestamp($comments_content[$comment_id]['add_time']);
+            
+            import("@.Control.Api.FeedApi");
+            $feed_api = new FeedApi();
+            $feed_api->user_create($this->user['client_account'], $blog_id, FEED_ACTION_COMMENT);
         }
         
         

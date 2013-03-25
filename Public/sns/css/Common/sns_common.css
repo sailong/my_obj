@@ -2,7 +2,7 @@
 *{ margin:0; padding:0;}
 ul{ list-style:none;}
 a{text-decoration:none;}
-.clear{ clear:both; overflow:hidden; height:0px;}
+.clear{ clear:both; overflow:hidden; height:1px;}
 a:hover{text-decoration:underline;}
 a img{border:none; display:inline-block;}
 a[title]{text-decoration:none;}
@@ -30,18 +30,14 @@ a[title]{text-decoration:none;}
 	      .tip_main p a span{float:left; display:inline-block; cursor:pointer;}
 		  .tip_main p a span:hover{text-decoration:underline;}
 	  .icon_01{background:url(../../images/Common/sns_images/triangle_green.gif) 0 0 no-repeat; width:9px; height:5px; display:inline-block; margin:4px 0px 0px 4px; float:left;}
-
-	 .tip_main a.bjgl{ margin-left:50px; color:#2b6800; font:bold 14px/32px "宋体"; text-decoration:none; }
-
-/*上下箭头*/
-.icon_down{background:url(../../images/Common/sns_images/triangle_green.gif) 0 center no-repeat; width:9px; height:10px; display:inline-block; margin:2px 0px 0px 4px; }
-.icon_up{background:url(../../images/Common/sns_images/up_sjx_green.gif) 0 center no-repeat; width:9px; height:10px; display:inline-block; margin:2px 0px 0px 4px; }
-
+.bjgl{ margin-left:50px; color:#2b6800; font:bold 14px/32px "宋体"; text-decoration:none;}
+ 
 
 /*主要内容*/
 .content{background:url(../../images/Common/sns_images/cotent_bj.gif) 0 0 repeat; overflow:hidden; o}
 
 .main{width:960px; margin:0 auto; padding:26px 0px 0px; margin-bottom:20px;}
+
 /*导航样式*/
 .nav{ background:url(../../images/Common/sns_images/nav_bj.jpg) 0 0 no-repeat; height:56px; padding:0px 0px 0px 34px;}
 	.nav ul li{float:left;}
@@ -111,4 +107,5 @@ a[title]{text-decoration:none;}
 .photo_width60{ width:60px; height:60px;}
 .photo_width40{ width:40px; height:40px;}
 .photo_width75{ width:75px; height:75px;}
+.photo_width140{width:140px; height:140px;}
 	

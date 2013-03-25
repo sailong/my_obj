@@ -204,15 +204,7 @@ class ByClass extends Album {
         $mAlbumClassRelation = ClsFactory::Create('Model.Album.mAlbumClassRelation');
         $rs = $mAlbumClassRelation->delByAlbumId($album_id);
         if(empty($rs)) {
-            echo "删除班级相册关系失败";
             return false;
-        }
-        //删除相册权限
-        $mAlbumClassGrants = ClsFactory::Create('Model.Album.mAlbumClassGrants');
-        $rs = $mAlbumClassGrants->delByAlbumId($album_id);
-        if(empty($rs)) {
-           echo "删除相册权限失败";
-           return false;
         }
         
         $mAlbumPhotos = ClsFactory::Create('Model.Album.mAlbumPhotos');
@@ -226,7 +218,6 @@ class ByClass extends Album {
             if(!empty($comments_list)) {
                 $rs = $mAlbumPhotoComments->delByPhotoId($photo_ids);
                 if(empty($rs)) {
-                    echo "删除相册评论失败";
                     return false;
                 }
             }
@@ -237,7 +228,6 @@ class ByClass extends Album {
         if(!empty($photo_lists)) {
             $rs = $mAlbumPhotos->delByAlbumId($album_id);
             if(empty($rs)) {
-                echo "删除相册照片信息失败";
                 return false;
             }
         }
@@ -245,10 +235,8 @@ class ByClass extends Album {
         //删除相册信息
         $rs = $this->delete($album_id);
         if(empty($rs)) {
-            echo "删除相册信息失败";
             return false;
         }
-        //删除照片实体
         
         return true;
     }

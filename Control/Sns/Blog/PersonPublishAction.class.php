@@ -116,6 +116,9 @@ class PersonPublishAction extends SnsController {
         if (!empty($is_published)) {
             $error_msg = '日志发布失败!';
             $succeed_msg = '日志发布成功!';
+            import("@.Control.Api.FeedApi");
+            $feed_api = new FeedApi();
+            $feed_api->user_create($this->user['client_account'], $blog_id, FEED_ACTION_PUBLISH);
         } else {
             $error_msg = '草稿保存失败,请稍后重试!';
             $succeed_msg = '草稿保存成功!';
