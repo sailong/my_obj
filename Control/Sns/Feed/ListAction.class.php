@@ -160,7 +160,11 @@ class ListAction extends SnsController {
      * 加载动态的模板信息
      */
     public function loadFeedTemplateAjax() {
-        $this->display('feed');
+        $tpl = $this->objInput->getStr('tpl');
+        
+        $tpl = in_array($tpl, array('big', 'middle')) ? $tpl : 'middle';
+        
+        $this->display('feed_' . $tpl);
     }
     
     /**

@@ -29,7 +29,7 @@ Friend.prototype.init=function() {
 		async:false,
 		success:function(json) {
 			if(json.status < 0) {
-				$("#friend_group_list_ul").html('暂无好友');
+				//$("#friend_group_list_ul").html('暂无好友');
 				return false;
 			}
 			
@@ -303,6 +303,13 @@ Friend.prototype.delegateEventForLeftMenu=function() {
 		var ancestorObj = $(this).closest('li');
 		var group_name = $('.group_name_selector', ancestorObj).val();
 		var group_id = ancestorObj.attr('id').toString().match(/(\d+)/)[1];
+		var bj_color_obj = $(".bj_color",$("#friend_group_list_ul"));
+		var bj_color_length = bj_color_obj.length;
+		for(var i = 0; i < bj_color_length; i++) {
+			bj_color_obj.eq(i).removeClass('bj_color');
+		}
+		ancestorObj.addClass('bj_color');
+		
 		Friend.registerFilters({
 			type:'post',
 			url:'/Sns/Friend/Manage/getMyFriendByGroupIdAjax',

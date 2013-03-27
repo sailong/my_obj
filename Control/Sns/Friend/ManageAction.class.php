@@ -178,6 +178,7 @@ class ManageAction extends SnsController{
     public function getMyFriendByGroupIdAjax() {
         $page = $this->objInput->getInt('page');
         $group_id = $this->objInput->postInt('group_id');
+        $client_account = $this->user['client_account'];
         
         if($group_id < 0) {
              $this->ajaxReturn(null,'获取好友列表失败!',-1,'json');
@@ -193,9 +194,13 @@ class ManageAction extends SnsController{
         );
         $mAccountrelation = ClsFactory::Create('Model.mAccountrelation');
         $friend_list = $mAccountrelation->getGroupFriendsByarrData($arr_data, $offset, $limit);
+        
         //获取好友帐号
         $friend_uids = array();
         foreach($friend_list as $relation_id => $group_info) {
+            if($group_info['friend_account'] == $client_account) {
+                unset($friend_list[$relation_id]);
+            }
             $friend_uids[] = $group_info['friend_account'];
         }
         

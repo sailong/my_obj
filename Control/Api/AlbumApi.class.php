@@ -69,6 +69,7 @@ class AlbumApi extends ApiController {
         import("@.Control.Api.FeedApi");
         $feed_api = new FeedApi();
         $feed_api->class_create($class_code, $client_account, $json_list, FEED_ACTION_PUBLISH);
+        
         $this->ajaxReturn($json_list, '', 1, 'json');
     }
     

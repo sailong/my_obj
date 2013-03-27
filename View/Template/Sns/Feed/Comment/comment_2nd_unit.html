@@ -1,27 +1,24 @@
-<div id="comment_2nd_unit_div" class="agin_reply_main comment_2nd_unit_selector" style="display:none;">
-   {literal}
-   <dl>
-    <dt>
-    	<img width="40" height="40" data-original="{child_comment.user_info.client_headimg_url}">
-    </dt>
-   </dl>
-   <div class="agin_reply">
-     <table width="100%" cellspacing="0" cellpadding="0" border="0">
-       <tr>
-         <td>
-         	<a class="fc_288c00" href="javascript:;">{child_comment.user_info.client_name}:</a>
-         </td>
-         <td>
-         	<p>{child_comment.content}（{child_comment.add_time_format}）</p>
-         </td>
-         {if child_comment.can_del}
-         <td>
-         	<a class="fc_288c00 comment_2nd_delete_selector" href="javascript:;">删除</a>
-         </td>
-         {/if}
-       </tr>
-     </table>
-    </div>
-   <div class="clear"></div>  
-   {/literal}
+{literal}
+<div id="comment_2nd_unit_div" class="comment_2nd_unit_selector" style="display:none;">
+	<table cellpadding="0" cellspacing="0" border="0" class="second_comment">
+	   <tr>
+	      <td rowspan="2" class="user_tx">
+	        <img width="40" height="40" data-original="{child_comment.user_info.client_headimg_url}" class="photo_width40" />                    				
+	      </td>
+	      <td colspan="2">
+	        <a href="javascript:;" class="f_green">{child_comment.user_info.client_name}</a>:&nbsp;{child_comment.content}
+		  </td>
+	   </tr>
+	   <tr class="comment_2nd_delete_slide_selector">
+	       <td>
+	         <span class="comment_time">{child_comment.add_time_format}</span>
+	       </td>
+	       <td>
+	         {if child_comment.can_del}
+	       	 <a href="javascript:;" class="comment_delete comment_2nd_delete_selector" style="display:none;">删除</a>
+	       	 {/if}
+	       </td>
+	   </tr> 
+	</table>
 </div>
+{/literal}

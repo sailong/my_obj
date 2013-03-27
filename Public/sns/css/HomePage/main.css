@@ -104,7 +104,7 @@
 		
 		.bwl_bj{ background:url(../../images/HomePage/main/bw_bj.gif) 0 bottom no-repeat; width:200px; padding:10px 0 15px 15px;}
 			.bwl_bj h4{ color:#000; font:bold 14px "微软雅黑"; display:inline-block; margin-bottom:10px;}
-			.szbwl{ font:12px "宋体"; color:#000; text-decoration:underline; margin-left:40px;margin-bottom:10px;}
+			.szbwl{ font:12px "宋体"; color:#000; text-decoration:underline; padding-right:10px;margin-bottom:10px;}
 			.bwl_bj table{ font:13px/22px "宋体"; color:#8e8e8e;}
 	/*签到及备忘 end*/
 	
@@ -152,7 +152,7 @@
 .hyz_tcc span{ font:bold 16px/25px "微软雅黑"; color:#ff9e00;}
 
 /*班级列表*/
-.bjlb_style{ width:100px; background-color:#237d00; text-align:center; border:#fff solid 1px; }
+.bjlb_style{background-color:#237d00; text-align:center; border:#fff solid 1px; }
 .bjlb_style a{ display:block; color:#FFF; font:12px "宋体"; line-height:25px ; border-bottom:#8cd800 solid 1px;}
 
 /*评论*/

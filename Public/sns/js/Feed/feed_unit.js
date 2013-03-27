@@ -27,8 +27,11 @@ function dump(obj) {
 	$.fn.loadImg=function() {
 		$('img', $(this)).each(function() {
 			var data_original = $(this).attr('data-original');
+			var data_from = $(this).attr('data-from');
 			if(data_original) {
 				$(this).attr('src', data_original);
+			} else if(data_from) {
+				$(this).attr('src', $(data_from).val());
 			}
 		});
 		return this;
@@ -220,35 +223,25 @@ feed_unit.prototype = {
 		feed_datas = feed_datas || {};
 		
 		//创建feed_unit对象
-		var divObj = $('#' + me.options.feed_unit_tpl).clone().removeAttr('id').show();
+		var FeedUnitdivObj = $('#' + me.options.feed_unit_tpl).clone().removeAttr('id').show();
 		//根据feed类型创建不同的对象
-		divObj.renderHtml({
+		FeedUnitdivObj.renderHtml({
 			feed:feed_datas || {}
 		});
 		
-		//绑定feed_unit对应的评论层的初始化函数
-		if(divObj.length > 0) {
-			divObj[0].initComment = function() {
-				me.buildComment(feed_datas.from_id, function(followDiv) {
-					followDiv.insertAfter(divObj);
-					//将feed_unit对象绑定到comment_div上
-					followDiv[0].feedUnitObject = me;
-					
-					divObj[0].followDiv = followDiv;
-				});
-			};
-		}
-		
 		//加载内容内的图片信息
-		divObj.loadImg();
+		FeedUnitdivObj.loadImg();
 		
-		this.feedUnitDivObj = divObj;
+		this.feedUnitDivObj = FeedUnitdivObj;
 		
-		return divObj;
+		//feed_unit元素对象保存了对应的当前类对象的引用
+		FeedUnitdivObj[0].referObject = me;
+		
+		return FeedUnitdivObj;
 	}
 	
 	//创建评论信息
-	,buildComment:function(from_id, callback) {
+	,createComment:function(from_id) {
 		var me = this;
 		
 		var divObj = $("#" + me.options.comment_tpl).clone().removeAttr('id');
@@ -287,31 +280,7 @@ feed_unit.prototype = {
 			containObj.append(childDivObj);
 		}
 		
-		//将div对象加载到document
-		if(typeof callback == 'function') {
-			callback(divObj);
-		}
-		
-		//初始一级菜单的sendbox对象
-		$('.reply_1st_content_selector', divObj).sendBox({
-			panels:'emote',
-			type:'post',
-			url:params.publish_comment_url || "",
-			data:params.post_params || {},
-			dataType:'json',
-			success:function(json) {
-				if(json.status < 0) {
-					$.showError(json.info);
-					return false;
-				}
-				//添加对应的评论层
-				var unitDivObj = me.create1stUnit(json.data || {});
-				containObj.prepend(unitDivObj);
-				$('.reply_1st_content_selector', divObj).val('');
-				
-				me.reflushComments();
-			}
-		});
+		return divObj;
 	}
 	
 	//创建一级评论对象
@@ -323,6 +292,7 @@ feed_unit.prototype = {
 		var divObj = $('#' + me.options.unit_1st_tpl).clone().removeAttr('id').show();
 		var paramsDiv = $('#' + me.options.unit_1st_params).clone().removeAttr('id');
 		divObj.append(paramsDiv);
+		
 		//对象的渲染操作
 		divObj.renderHtml({
 			comment:comment_datas || {}
@@ -371,13 +341,31 @@ feed_unit.prototype = {
 	
 //评论相关的事件需要集中处理
 function comment_events() {
+	this.delegateEventForEffect();
 	this.delegateEventForFeedUnit();
+	this.delegateEventForComment();
 	this.delegateEventForComment1stUnit();
 	this.delegateEventForComment2ndUnit();
 }
 
 comment_events.prototype = {
-	delegateEventForFeedUnit:function() {
+	delegateEventForEffect:function() {
+		//一级评论的删除效果
+		$('.comment_1st_delete_slide_selector').live('mouseover', function() {
+			$('.comment_1st_delete_selector', $(this)).show();
+		}).live('mouseleave', function() {
+			$('.comment_1st_delete_selector', $(this)).hide();
+		});
+	
+		//二级评论的删除效果
+		$('.comment_2nd_delete_slide_selector').live('mouseover', function() {
+			$('.comment_2nd_delete_selector', $(this)).show();
+		}).live('mouseleave', function() {
+			$('.comment_2nd_delete_selector', $(this)).hide();
+		});
+	}
+
+	,delegateEventForFeedUnit:function() {
 		//删除按钮
 		$('.feed_delete_selector').live('click', function() {
 			var ancestorObj = $(this).closest('.feed_unit_selector');
@@ -402,17 +390,20 @@ comment_events.prototype = {
 		
 		//评论按钮, 点击有切换的效果
 		$('.feed_comment_selector').live('click', function() {
-			var ancestorObj = $(this).closest('.feed_unit_selector');
 			var aObj = $(this);
+			var ancestorObj = $(this).closest('.feed_unit_selector');
 			
 			var params = feed_unit.collectParams($('.feed_unit_params_selector', ancestorObj));
 			var toggled_nums = aObj.data('toggled_nums') || 1;
 			//初始化动态对应的评论层信息
 			if(toggled_nums == 1) {
-				var fn = ancestorObj[0].initComment || $.noop;
-				if(typeof fn == 'function') {
-					fn.call();
-				}
+				//创建评论层
+				var referObject = ancestorObj[0].referObject;
+				var commentDivObj = referObject.createComment(params.from_id);
+				
+				commentDivObj.insertAfter(ancestorObj);
+				commentDivObj[0].feedUnitObject = referObject;
+				ancestorObj[0].followDiv = commentDivObj;
 			}
 			
 			if(toggled_nums % 2 == 0) {
@@ -421,10 +412,61 @@ comment_events.prototype = {
 				$(ancestorObj[0].followDiv).show();
 			}
 			aObj.data('toggled_nums', toggled_nums + 1);
+			
+			return false;
 		});
 	}
-		
+	
 	//comment相关的事件
+	,delegateEventForComment:function() {
+		$('.reply_1st_txt_selector').live('click', function() {
+			var textObj = $(this);
+			var ancestorObj = $(this).closest('.comment_main_selector');
+			var tabObj = $('.reply_1st_full_tab_selector', ancestorObj);
+			
+			var params = feed_unit.collectParams($('.comment_params_selector', ancestorObj));
+			//初始一级菜单的sendbox对象
+			if(!tabObj.data('inited')) {
+				$('.reply_1st_content_selector', tabObj).sendBox({
+					panels:'emote',
+					type:'post',
+					url:params.publish_comment_url || "",
+					data:params.post_params || {},
+					dataType:'json',
+					success:function(json) {
+						if(json.status < 0) {
+							$.showError(json.info);
+							return false;
+						}
+						
+						//添加对应的评论层
+						var feedUnitObject = ancestorObj[0].feedUnitObject;
+						var containObj = $('#first_comment_list', ancestorObj);
+						var unitDivObj = feedUnitObject.create1stUnit(json.data || {});
+						containObj.prepend(unitDivObj);
+						$('.reply_1st_content_selector', tabObj).val('');
+						
+						feedUnitObject.reflushComments();
+						
+						$.sendboxHandler.close(textObj[0].handler_id);
+					}
+				});
+				//注册到全局的句柄管理中去
+				textObj[0].handler_id = $.sendboxHandler.register(function() {
+					tabObj.show();
+					textObj.hide();
+				}, function() {
+					tabObj.hide();
+					textObj.show();
+				});
+				tabObj.data('inited', true);
+			}
+			
+			$.sendboxHandler.open(textObj[0].handler_id);
+		});
+	}
+
+	//一级评论相关的事件
 	,delegateEventForComment1stUnit:function() {
 		//一级评论的删除事件
 		$('.comment_1st_delete_selector').live('click', function() {
@@ -508,20 +550,17 @@ comment_events.prototype = {
 		//绑定"我也来说一句"
 		$('.reply_2nd_simple_selector').live('click', function() {
 			var inpObj = $(this);
-			//按钮所在的P元素范围
-			var pObj = $(this).closest('p');
+			var inpElem = inpObj[0];
+			
 			//处理相关的逻辑
 			var ancestorObj = $(this).closest('.reply_2nd_simple_div_selector');
 			var scopeObj = $(this).closest('.comment_1st_unit_selector');
 			
-			var commentDivObj = $(this).closest('.comment_main_selector');
-			var feedUnitObject = commentDivObj[0].feedUnitObject;
-			
 			var params = feed_unit.collectParams($('.comment_1st_unit_params_selector', scopeObj));
 			//获取要提交的相关数据信息
 			//处理编辑框的相关事件
-			if($.isEmptyObject(pObj[0].sendBoxObj)) {
-				pObj[0].sendBoxObj = $('.reply_2nd_simple_content_selector', ancestorObj).sendBox({
+			if($.isEmptyObject(inpElem.sendBoxObj)) {
+				inpElem.sendBoxObj = $('.reply_2nd_simple_content_selector', ancestorObj).sendBox({
 					panels:'emote',
 					type:'post',
 					url:params.publish_comment_url || "",
@@ -534,29 +573,32 @@ comment_events.prototype = {
 						}
 						
 						//创建一个二级评论的对象
+						var commentDivObj = inpObj.closest('.comment_main_selector');
+						var feedUnitObject = commentDivObj[0].feedUnitObject;
+						
 						var unit2divObj = feedUnitObject.create2ndUnit(json.data || {});
 						$('#second_comment_list', scopeObj).prepend(unit2divObj);
 						
-						$.sendboxHandler.close(inpObj[0].handler_id);
+						$.sendboxHandler.close(inpElem.handler_id);
 						//刷新评论数
 						feedUnitObject.reflushComments();
 					}
 				});
 				
 				//注册到sendbox的管理列表
-				inpObj[0].handler_id = $.sendboxHandler.register(function() {
+				inpElem.handler_id = $.sendboxHandler.register(function() {
 					//获取输入焦点
-					pObj[0].sendBoxObj.focus();
+					inpElem.sendBoxObj.focus();
 					//显示sendbox所在的div
-					pObj.hide();
+					inpObj.hide();
 					$('.simple_reply_div_selector', ancestorObj).show();
 				}, function() {
-					pObj.show();
+					inpObj.show();
 					$('.simple_reply_div_selector', ancestorObj).hide();
 				});
 			}
 			
-			$.sendboxHandler.open(inpObj[0].handler_id);
+			$.sendboxHandler.open(inpElem.handler_id);
 		});
 	}
 	
@@ -582,11 +624,12 @@ comment_events.prototype = {
 					ancestorObj.animate({
 						height:'0px'
 					}, 'slow').remove();
-					
 					//刷新评论数
 					feedUnitObject.reflushComments();
 				}
 			});
+			
+			return false;
 		});
 	}
 };

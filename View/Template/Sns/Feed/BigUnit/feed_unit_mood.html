@@ -1,0 +1,80 @@
+<!--personal_active star-->
+<div id="feed_unit_mood" class="personal_active feed_unit_selector" style="display:none;">
+  {literal}
+  <div class="per_active_l">
+   <dl>
+    <dt>
+    	<img height="40px" width="40px" data-original="{feed.client_headimg_url}">
+    </dt>
+   </dl>
+  </div>
+  <!--per_active_r star-->
+  <div class="per_active_r">
+    <p class="per_right_top">
+    	<span class="fc_288c00">{feed.client_name}</span>&nbsp;&nbsp;&nbsp;&nbsp;{if feed.action == 1}发布了说说{else}{评论了说说}{/if}
+    </p>
+    <div class="per_right_center">
+      <h6>{feed.title}</h6>
+      {if feed.img_url}
+      <dl>
+        <dt>
+        	<img height="181" data-original="{feed.img_url}">
+        </dt>
+      </dl>
+      {/if}
+      <p>
+         {feed.feed_content}
+         {if feed.src_url}
+         <a class="fc_288c00 ml10" href="{feed.src_url}" target="_blank">(阅读全文)</a>
+         {/if}
+      </p>
+      <div class="per_release_time">
+       <p class="per_p_width">发布时间：{feed.add_time_format}</p>
+       <p>
+           {if feed.can_del}
+	       <a class="fc_288c00 feed_delete_selector" href="javascript:;">删除</a>
+	       {/if}
+	       <a class="fc_288c00 feed_comment_selector" href="javascript:;">评论{if feed.comments > 0}({feed.comments}){/if}</a>
+       </p>
+      </div>
+    </div>
+    <p class="per_right_bottom"></p>
+  </div>
+  <!--per_active_r end-->
+  <div class="clear"></div>
+  <div class="feed_unit_params_selector">
+	  <input type="hidden" name="feed_id" value="{feed.feed_id}"/>
+	  <input type="hidden" name="feed_type" value="{feed.feed_type}"/>
+	  <input type="hidden" name="from_id" value="{feed.from_id}"/>
+  </div>
+  {/literal}
+</div>
+<!--personal_active end-->
+
+{literal}
+ <div id="mood_comment_params" class="comment_params_selector" style="display:none;">
+ 	<input type="hidden" name="publish_comment_url" value="/Sns/Mood/Comments/publishMoodCommentsAjax"/>
+ 	<input type="hidden" name="get_comments_url" value="/Sns/Mood/Comments/getMoodCommentsForFeedAjax/mood_id/{from_id}/page/1"/>
+ 	<div class="post_selector">
+ 		<input type="hidden" name="mood_id" value="{from_id}"/>
+ 		<input type="hidden" name="up_id" value="0"/>
+ 	</div>
+ </div>
+ 
+ <div id="mood_comments_1st_params" class="comment_1st_unit_params_selector" style="display:none;">
+    <input type="hidden" name="publish_comment_url" value="/Sns/Mood/Comments/publishMoodCommentsAjax"/>
+    <input type="hidden" name="delete_comment_url" value="/Sns/Mood/Comments/deleteMoodCommentsAjax/comment_id/{comment.comment_id}"/>
+    <input type="hidden" name="child_items_name" value="child_items"/>
+    <div class="post_selector">
+	  <input type="hidden" name="mood_id" value="{comment.mood_id}"/>
+	  <input type="hidden" name="up_id" value="{comment.comment_id}"/>
+    </div>
+ </div>
+ 
+ <div id="mood_comment_2nd_params" class="comment_2nd_unit_params_selector">
+  	<input type="hidden" name="delete_comment_url" value="/Sns/Mood/Comments/deleteMoodCommentsAjax/comment_id/{child_comment.comment_id}"/>
+ </div>
+ 
+ <input type="hidden" name="register_model" value="mood"/>
+ 
+{/literal}

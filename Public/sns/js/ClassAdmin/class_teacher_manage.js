@@ -98,6 +98,8 @@ class_teacher_manage.prototype.teacher_add = function() {
 		    var windowHeight = document.documentElement.clientHeight;   
 		    var popupHeight = $("#del_teacher_tip").height();   
 		    var popupWidth = $("#del_teacher_tip").width();  
+		    var subject_name= $("#subject_id_" + self.selected_subject_id, $("#subject_list")).html();
+		    $("p:eq(1)", $("#teacher_selected_repeat")).html(subject_name + "课老师已存在&nbsp;请重新选择");
 			$("#teacher_selected_repeat").css({
 				'z-index':200,
 				"position":"absolute",

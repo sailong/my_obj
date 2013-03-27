@@ -11,30 +11,30 @@
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/jquery-1.5.2.min.js"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/tip_msg/showtip.js"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/template/template.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/HomePage/view_list.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/HomePage/homepage.js"></script>
 </head>
 
 <body>
-
 <!--弹出层 star-->
 	<!--提示信息弹出层 star-->
-<div class="hyz_tcc">
+<div class="hyz_tcc" style="display:none;">
 	<span>每天登录</span><br />
     <span>活跃值+10</span>
 </div>  	
 	<!--提示信息弹出层 end--> 
 
  <!-- 班级列表star-->
- 	<div class="bjlb_style">
-       <a href="#">说说</a>
-       <a href="#">日志</a>
-       <a href="#">相册</a>
-       <a href="#">好友</a>   
+ 	<div id="class_list_div" class="bjlb_style" style="display:none;">
+ 	{foreach from=$user_info.class_info item=class_info}
+       <a href="/Sns/HomePage/Index/index/class_code/{$class_info.class_code}">{$class_info.class_name}</a>
+    {/foreach}
     </div>
- 
+
  <!--班级列表 end-->
  
  <!--评论 star-->
-  <div class="tcc_comment">
+  <div class="tcc_comment" style="display:none;">
     <p class="tcc_comment_top"></p>
     <!--tcc_comment_main star-->
     <div class="tcc_comment_main">
@@ -162,7 +162,7 @@
   </div>
  <!--评论 end--> 
  <!--分享 star-->
-  <div class="tcc_share">
+  <div class="tcc_share" style="display:none;">
     <div class="tcc_share_main">
       <h1>分享<a href="#" class="icon_close"></a></h1>
       <div class="share_comment">
@@ -186,11 +186,8 @@
     </div>
   </div>
  <!--分享 end-->
- 
- 
 
 <!--弹出层 end-->
-
 <!--content star-->
 {insert name="sns_header"}
 <div class="content">
@@ -198,54 +195,15 @@
 	<div class="jh_main">
     
     	<!--jh_main_left star-->
-    	<div class="jh_main_left">
-        
-        	<!--头像 star-->
-        	<div class="jh_m_l_tx">
-            	<a href="#" ><img src="__PUBLIC__/sns/images/HomePage/main/jh_m_tx.jpg" width="160" height="160" /></a>
-                <h4>挪威小卒</h4> 
-            </div>
-            <!--头像 end-->
-        	
-            <!-- 班级功能模块列表 star-->
-            <div class="bj_gn_list">
-            	<div class="bj_mc_list">
-                	<span class="bj_dqmc">一年级一班</span>
-                    <a href="#" class="bj_list_btn"></a>                    
-                </div>
-                <div class="bj_gn_list_border">
-                    	<a href="#" class="gg">发布公告</a>
-                        <a href="#" class="zy">布置作业</a>
-                        <a href="#" class="cj">发布成绩</a>
-                        <a href="#" class="sczy">上传资源</a> 
-                </div>
-                
-                <div class="gr_gn_list_border">
-                	<a href="#" class="ss">个人说说</a>
-                    <a href="#" class="rz">个人日志</a><a href="#" class="fb">发表</a>
-                    <a href="#" class="xc">个人相册</a><a href="#" class="sc">上传</a>
-                </div>
-                
-                <div class="zh_gn_list_border">
-                	<a href="#" class="jzbg">集中办公平台</a>
-                    <a href="#" class="zycp">作业评测系统</a>
-                    <a href="#" class="cyzz">雏鹰争章</a>
-                    <a href="#" class="lydh">乐优导航</a>
-                </div>
-            
-            </div>
-            
-            <!-- 班级功能模块列表 end-->
-        
-        </div>
+		{include file="Sns/HomePage/main_left.html"}
         <!--jh_main_left end-->
         
         <!--jh_main_center star-->
     	<div class="jh_main_center">
-        	<div class="news_pic">
+        	<!--<div class="news_pic">
             	<img src="__PUBLIC__/sns/images/HomePage/main/tupian.gif"  width="580" height="75"/>
             </div>
-            <!--说说框 star-->
+            --><!--说说框 star-->
             <div class="shuoshuo_style">
             	<textarea></textarea>
             </div>
@@ -254,11 +212,7 @@
             <div class="sec_nav">
             	<a href="#" class="sec_nav_selected">全部动态</a> <a href="#" class="sec_nav_noselected">班级动态</a> <a href="#" class="sec_nav_noselected">好友动态</a> <a href="#" class="sec_nav_noselected">与我相关</a>           	
             </div>
-            
-            
-            
-            
-            
+       
             <!--system_message star-->
        <div class="system_message">
          <p class="system_top"></p>
@@ -336,41 +290,7 @@
          <p class="system_bottom"></p>
          </div>
          <!--system_center end-->
-         
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
+   
             
           
             
@@ -421,17 +341,17 @@
     	<div class="jh_main_right">
         	
         	<!--签到及备忘 star-->
-            	<div class="qd_bw">
+            	<div class="qd_bw checkin_selector">
                 	<table cellpadding="0" cellspacing="0"  class="qd_bw_bj">
                   		<tr>
-                        	<td width="55"><span class="rq_font">02.21</span></td>
-                            <td rowspan="2"><span class="qd_font">签到</span></td>                            
+                        	<td width="55"><span class="rq_font">{$today_date}</span></td>
+                            <td rowspan="2" id="qd_td">{if $is_qd}<span class="qd_font">已签到</span>{else}<a id="checkin" href="javascript:;"><span class="qd_font">签到</span></a>{/if}</td>                            
                         </tr>
-                    	<tr><td><span class="rq_font">星期四</span></td> </tr>
+                    	<tr><td><span class="rq_font">星期{$week_day}</span></td> </tr>
                     </table>                     
                 </div>
                 <div class="bwl_bj">
-                    	<h4>我的备忘录</h4><a href="#" class="szbwl">设置备忘录</a>
+                    	<!--<h4>我的备忘录</h4><a href="#" class="szbwl">设置备忘录</a>
                         <table cellpadding="0" cellspacing="0">
                         	<tr>
                             	<td width="135">1.今天下午开家长会</td>
@@ -449,49 +369,25 @@
                             	<td>4.下午放学前开班会</td>
                                 <td>02.22</td>
                             </tr>
-                        </table>
+                        </table>-->
                     </div>            	
             <!--签到及备忘 end-->
             
             <!--最近访客 star-->
             <div class="zjfk_top">
-            	<h4>最近访客</h4> <a href="#"> 更多</a>
+            	<h4>最近访客</h4><a href="/Sns/Friend/Manage/person_vistior"> 更多</a>
             </div>
             <div class="zjfk_content">
-            	<table cellpadding="0" cellspacing="0">
-                	<tr>
-                    	<td><img src="__PUBLIC__/sns/images/HomePage/main/zjfk_tx.gif"  class="zjfk_tx" /></td>
-                        <td><span class="zjfk_name">莫小贝</span></td>
-                        <td><span class="zjfk_time">2012-12-12</span></td>
+            	<table cellpadding="0" cellspacing="0" id="vistior_list_tab">
+            		{literal}
+                	<tr class="clone" style="display:none">
+                    	<td><a href="/Sns/PersonIndex/Index/index/client_account/{user.client_account}" target="_blank;"><img src="{user.client_headimg_url}"  class="zjfk_tx" /></a></td>
+                        <td><span class="zjfk_name">{user.client_name}</span></td>
+                        <td><span class="zjfk_time">{user.timeline}</span></td>
                     </tr>
-                    <tr>
-                    	<td><img src="__PUBLIC__/sns/images/HomePage/main/zjfk_tx.gif"  class="zjfk_tx" /></td>
-                        <td><span class="zjfk_name">莫小贝</span></td>
-                        <td><span class="zjfk_time">2012-12-12</span></td>
-                    </tr>
-                    <tr>
-                    	<td><img src="__PUBLIC__/sns/images/HomePage/main/zjfk_tx.gif"  class="zjfk_tx" /></td>
-                        <td><span class="zjfk_name">莫小贝</span></td>
-                        <td><span class="zjfk_time">2012-12-12</span></td>
-                    </tr>
-                    <tr>
-                    	<td><img src="__PUBLIC__/sns/images/HomePage/main/zjfk_tx.gif"  class="zjfk_tx" /></td>
-                        <td><span class="zjfk_name">莫小贝</span></td>
-                        <td><span class="zjfk_time">2012-12-12</span></td>
-                    </tr>
-                    <tr>
-                    	<td><img src="__PUBLIC__/sns/images/HomePage/main/zjfk_tx.gif"  class="zjfk_tx" /></td>
-                        <td><span class="zjfk_name">莫小贝</span></td>
-                        <td><span class="zjfk_time">2012-12-12</span></td>
-                    </tr>
-                    <tr>
-                    	<td><img src="__PUBLIC__/sns/images/HomePage/main/zjfk_tx.gif"  class="zjfk_tx" /></td>
-                        <td><span class="zjfk_name">莫小贝</span></td>
-                        <td><span class="zjfk_time">2012-12-12</span></td>
-                    </tr>
-                	
+                	{/literal}
                 </table>
-                <p class="fk_info">今日访客:0 &nbsp;&nbsp;最近访客:50</p>
+                <p class="fk_info">今日访客:{$total_count_day} &nbsp;&nbsp;最近访客:{$total_count}</p>
             
             </div>
             <div class="zjfk_bottom"></div>
@@ -509,48 +405,7 @@
             <!--相册 end-->
             
             <!--热门资源推荐 star-->
-            <div class="rmzytj_top">
-            	<h4>热门资源推荐</h4> 
-            </div>
-            <div class="rmzytj_content">
-            	<table cellpadding="0" cellspacing="0">
-                	<tr>
-                    	<td><span class="num_bj_hot">1</span></td>
-                        <td><a href="#"class="rmzytj_hot">矩形的面积特例</a></td>
-                    </tr>
-                    <tr>
-                    	<td><span class="num_bj_hot">2</span></td>
-                        <td><a href="#" class="rmzytj_hot">长方体的体积计算</a></td>
-                    </tr>
-                    <tr>
-                    	<td><span class="num_bj_hot">3</span></td>
-                        <td><a href="#" class="rmzytj_hot">学雷锋活动系列</a></td>
-                    </tr><tr>
-                    	<td><span class="num_bj">4</span></td>
-                        <td><a href="#">立方体都有什么</a></td>
-                    </tr>
-                    <tr>
-                    	<td><span class="num_bj">5</span></td>
-                        <td><a href="#">未知的谜团</a></td>
-                    </tr>
-                    <tr>
-                    	<td><span class="num_bj">6</span></td>
-                        <td><a href="#">小学三年级优秀作文讲解</a></td>
-                    </tr><tr>
-                    	<td><span class="num_bj">7</span></td>
-                        <td><a href="#">爱上大自然</a></td>
-                    </tr><tr>
-                    	<td><span class="num_bj">8</span></td>
-                        <td><a href="#">培养良好学习习惯的好方法</a></td>
-                    </tr>
-                </table> 
-            </div>
-            <div class="rmzytj_bottom"></div>
-            
-            
-            
-            
-            
+            {include file="Sns/HomePage/hotresource.html"}
             <!--热门资源推荐 end-->
             
             
@@ -567,7 +422,7 @@
 </div>
 
 <!--content end-->
-
+<input type="hidden" id="client_account" value="{$client_account}"/>
 
 </body>
 </html>

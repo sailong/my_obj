@@ -10,6 +10,16 @@ friend.prototype.init=function() {
 	$("#dynamic_id").hide();
 	$("#div_id").hide();
 	$("#share_id").hide();
+	
+	//显示和隐藏头像更换头像按钮
+	$(".banner").mouseover(function() {
+		
+		$("#head_pic_id").show();
+	});
+	
+	$(".banner").mouseout(function() {
+		$("#head_pic_id").hide();
+	});
 	//加载页面数据
 	$.ajax({
 		type:'get',

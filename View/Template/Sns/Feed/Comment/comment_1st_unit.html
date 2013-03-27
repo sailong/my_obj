@@ -1,87 +1,55 @@
-<!--一级评论 star-->
-<div id="comment_1st_unit_div" class="mb10 comment_1st_unit_selector" style="display:none;">
-     {literal}
-     <dl>
-       <dt>
-       	<img width="40" height="40" data-original="{comment.user_info.client_headimg_url}">
-       </dt>
-     </dl>
-     <!--tcc_single star-->
-     <div class="tcc_single">
-        <div class="tcc_single_tab">
-		  <table width="100%" cellspacing="0" cellpadding="0" border="0">
-		   <tr>
-			   <td>
-			   	<a class="fc_288c00" href="javascript:;">{comment.user_info.client_name}:</a>
-			   </td>
-			   <td>
-			   	<p>{comment.content}（{comment.add_time_format}）</p>
-			   </td>
-			   {if comment.can_del}
-			   <td>
-			   		<a class="fc_288c00 comment_1st_delete_selector" href="javascript:;">删除</a>
-			   </td>
-			   {/if}
-			   <td>
-			   	    <a class="fc_288c00 ml10 comment_1st_reply_selector" href="javascript:;">回复</a>
-			   </td>
-		  </tr>
-		 </table>
-		</div>
-        <!--tcc_reply star-->
-		<div class="tcc_reply reply_2nd_selector" style="display:none;">
-		  <p class="tcc_reply_top"></p>
-		  <!--tcc_reply_main star-->
-		  <div class="tcc_reply_main">
-		   <div class="reply_tab">
-		   <table width="100%" cellspacing="0" cellpadding="0" border="0">
-		     <tr>
-		       <td colspan="3">
-		       	<textarea id="reply_2nd_conent" class="reply_text reply_2nd_content_selector" name="content"></textarea>
-		       </td>
-		     </tr>
-		   </table>
-		   </div>
-		   <div class="clear"></div>
-		 </div>
-		 <!--tcc_reply_main end-->
-		</div>
-		<!--tcc_reply end-->
-
-	   <div id="second_comment_list">
-	   
-       </div>
-       
-       <!-- reply_2nd_simple -->
-       <div class="reply_2nd_simple_div_selector">
-		  <p>
-		  	<input type="text" class="er_comment_text reply_2nd_simple_selector" value="我也说一句">
-		  </p>
-		  <!--tcc_reply_main star-->
-		  <div class="tcc_reply_main simple_reply_div_selector" style="display:none;">
-		   <div class="reply_tab">
-		   <table width="100%" cellspacing="0" cellpadding="0" border="0">
-		     <tr>
-		       <td colspan="3">
-		       	<textarea id="reply_2nd_conent" class="reply_text reply_2nd_simple_content_selector" name="content"></textarea>
-		       </td>
-		     </tr>
-		   </table>
-		   </div>
-		   <div class="clear"></div>
-		 </div>
-		 <!--tcc_reply_main end-->
-	   </div>
-	   
-       {if comment.remain_nums}
-       <div>
-		  <p class="click_see">后面还有{comment.remain_nums}条评论回复<a class="f12 f_red ml10" href="/Sns/Feed/List">点击查看&gt;&gt;</a></p>
-	   </div>
-	   {/if}
-	</div>
-	<!--tcc_single end-->
-	<div class="clear"></div>
-  {/literal}
-
- </div>
-<!--一级评论  end-->
+<div id="comment_1st_unit_div" class="comment_1st_unit_selector" style="display:none;">
+	{literal}
+	<table cellpadding="0" cellspacing="0" border="0" width="100%" class="first_comment">
+	  <tr>
+	      <td rowspan="3" class="user_tx">
+	          <img width="40px" height="40px" data-original="{comment.user_info.client_headimg_url}" class="photo_width40" /> 
+	      </td>
+	      <td colspan="2">
+	      	<a href="javascript:;" class="f_green">{comment.user_info.client_name}</a>:&nbsp;{comment.content}
+	      </td>
+	  </tr>
+	  <tr class="comment_1st_delete_slide_selector">
+	      <td><span class="comment_time">{comment.add_time_format}</span></td>
+	      <td>
+	      	{if comment.can_del}
+	      	<a href="javascript:;" class="comment_delete comment_1st_delete_selector" style="display:none;">删除</a>
+	      	{/if}
+	      </td>
+	  </tr>
+	  <tr>
+	      <td colspan="2">
+	      	<!--二级评论 star-->
+		  	<div id="second_comment_list" class="all_second_comment">   
+		         
+		    </div>
+		    {if comment.remain_nums}
+		    <p class="more_huifu">后面还有{comment.remain_nums}条评论回复 <a href="javascript:;">点击查看&gt;&gt;</a></p>
+		    {/if}
+		    <!--二级评论 end-->
+		
+			<!--默认回复样式 star-->
+			<table class="mr_huifu reply_2nd_simple_div_selector">
+			    <tr>
+			        <td class="user_tx">
+			        	<img width="40px" height="40px" data-from="#user_headimg_url" />
+			        </td>
+			        <td>
+			        	<!--点击之前的样式 star-->
+			            <input name="" type="text" class="text_border reply_2nd_simple_selector" value="我也说一句"/>
+			            <!--点击之前的样式 end-->
+			            
+			            <!--点击之后的样式 star-->
+			            <div class="tk_huifu simple_reply_div_selector" style="display:none;">
+			                <textarea id="reply_2nd_conent" class="reply_text reply_2nd_simple_content_selector" name="content"></textarea>
+			            </div>
+			            <!--点击之后的样式 end-->
+			        </td>
+			     </tr>
+			</table>
+			<!--默认回复样式 end-->
+	    </td>
+	  </tr>
+	</table>
+    {/literal}
+</div>

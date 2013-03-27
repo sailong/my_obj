@@ -1,4 +1,3 @@
-
 function main_first() {
 	this.attachEvent();
 }
@@ -19,6 +18,11 @@ main_first.prototype = {
 				}
 				$.showSuccess(json.info);
 			}
+		});
+		
+		//加载用户动态信息
+		$('#my_feed_list_div').loadFeed({
+			url:'/Sns/Feed/List/getUserAllFeedAjax'
 		});
 	}
 };

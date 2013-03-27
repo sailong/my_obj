@@ -14,6 +14,9 @@ class IndexAction extends SnsController {
         
         //判断是否有新的访客
         if($vuid != $client_account) {
+            if(!$this->check_space($vuid)) {
+                $this->showError('个人空间访问受限！','/Sns/ClassIndex/Index/index');
+            }
             $resault = $this->write_vistior($vuid);
         }
         //统计帐号好友
@@ -151,6 +154,39 @@ class IndexAction extends SnsController {
         }
         
         return !empty($resault) ? $resault : false;
+    }
+    
+    /*
+     * 检测个人空间访问权限
+     */
+    
+    private function check_space($vuid) {
+        if(empty($vuid)) {
+            return false;
+        }
+        
+        $client_account = $this->user['client_account'];
+        $mPersonconfig = ClsFactory::Create('Model.mPersonconfig');
+        $user_personconfig_list = $mPersonconfig->getPersonConfigByaccount($vuid);
+        $space_access = $user_personconfig_list[$vuid]['space_access'];
+        
+        if(empty($space_access) || $space_access == 0) {
+            $access_fl = true;
+        } elseif($space_access == 1) {
+            $mAccountRelation = ClsFactory::Create('Model.mAccountrelation');
+            $vuid_relation_list = $mAccountRelation->getAccountRelationByClientAccout($vuid);
+            //获取当前登录人的好友帐号
+            $friend_accounts = array();
+            foreach($vuid_relation_list[$vuid] as $relation_id => $account_relation) {
+                $friend_accounts[$account_relation['friend_account']] = $account_relation['friend_account'];        
+            }
+            
+            $access_fl = in_array($client_account,$friend_accounts) ?  true : false;
+        } else {
+            $access_fl = false;
+        }
+        
+        return $access_fl;
     }
         
 }

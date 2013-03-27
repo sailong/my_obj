@@ -76,9 +76,11 @@ class CommentsAction extends SnsController {
      * 发布说说的评论信息
      */
     public function publishMoodCommentsAjax() {
-        $mood_id = $this->objInput->postInt('mood_id');
-        $up_id   = $this->objInput->postInt('up_id');
-        $content = $this->objInput->postStr('content');
+        //班级说说在发表评论的时候需要class_code的值
+        $class_code = $this->objInput->postInt('class_code');
+        $mood_id    = $this->objInput->postInt('mood_id');
+        $up_id      = $this->objInput->postInt('up_id');
+        $content    = $this->objInput->postStr('content');
         
         if(empty($content)) {
             $this->ajaxReturn(null, '评论内容不能为空!', -1, 'json');
@@ -104,10 +106,17 @@ class CommentsAction extends SnsController {
             $this->ajaxReturn(null, '评论信息添加失败!', -1, 'json');
         }
         
+        //产生对应的动态信息
+        import('@.Control.Api.FeedApi');
+        $FeedApi = new FeedApi();
+        if(!empty($class_code)) {
+            $FeedApi->class_create($class_code, $this->user['client_account'], $mood_id, FEED_MOOD, FEED_ACTION_COMMENT);
+        } else {
+            $FeedApi->user_create($this->user['client_account'], $mood_id, FEED_MOOD, FEED_ACTION_COMMENT);
+        }
+        
         $comment_list = $MoodApi->getMoodCommentsById($comment_id);
-        
         $comment_list = $this->appendCommentsAccess($comment_list);
-        
         $comment_info = & $comment_list[$comment_id];
         
         $this->ajaxReturn($comment_info, '评论发布成功!', 1, 'json');
