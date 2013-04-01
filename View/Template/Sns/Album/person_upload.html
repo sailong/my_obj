@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<title>上传照片</title>
+<link rel="stylesheet" href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/Common/sns_common.css" type="text/css" charset="utf-8">
+<link rel="stylesheet" href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/Album/person_upload.css" type="text/css" charset="utf-8">
+
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/jquery-1.5.2.min.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/jquery.form.min.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/artDialog4.1.6/artDialog.source.js?skin=idialog"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/artDialog4.1.6/plugins/iframeTools.source.js"></script>
+
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_flash/swfupload/swfupload.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_flash/swfupload/js/swfupload.queue.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_flash/swfupload/js/fileprogress.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_flash/swfupload/js/handlers.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/tip_msg/showtip.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/template/template.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/Album/person_upload_photo.js"></script>
+</head>
+<body>
+<!--弹出层 star-->
+ <!--提示信息弹出层-->
+ <!--上传照片 star-->
+ <div class="sczp" style="display:none;">
+ 	已经成功上传<span id="upload_photo_count"></span>张图片，点击<a href="javascript:;" id="gotoAlbum">进入相册</a>或<a href="javascript:;" id="upload_finish_close">继续上传</a> 
+ </div>
+ 
+ <!--上传照片 end-->
+ 
+ <div class="sczp upload_create_album" style="display:none;">
+    	还没有相册,<a href="javascript:;" id="upload_create_album">快来创建相册吧！</a>
+ </div>
+  
+ <!--提示信息弹出层-->
+<!--弹出层 end-->
+
+<!-- 头部start -->
+{insert name="sns_header" uid = $client_account}
+<!-- 头部end -->
+
+<!--per_tip star-->
+{insert name="sns_person_second_header" uid = $client_account}
+<!--content star-->
+<div class="content">
+  <!--main star-->
+   <div class="main">
+    <h4><a href="/Sns/Album/Personalbum/albumlist/client_account/{$client_account}"><span class="btn_left"></span><span class="btn_right">返回相册首页</span></a></h4>
+    <div class="clear"></div>
+    <!--publish_main star-->
+    <div class="publish_main">
+      <h3>个人相册>上传照片</h3>
+      <div class="publish_main_tab">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <th>选择相册：</th>
+            <td>
+	            <select name="xcid" id="xcid" class="select_font">
+	            </select>
+	                              或<a id="create_album_btn" href="#">创建相册</a>
+	             <!--<a href="#" class="f14 ml20" id="create_album_btn" title="创建相册"><span class="btn_left"></span><span class="btn_right">创建相册</span></a>-->                
+            </td>
+          </tr>
+          <tr>
+            <th></th>
+            <td>
+				   <div id="divMovieContainer" style="height:18px; border: solid 1px #7FAAFF;background-color: #C5D9FF; padding:2px; width:200px; margin-bottom:6px;">
+						<span id="spanButtonPlaceHolder"></span>
+				   </div>
+				   
+				   <div style="display:block;">
+				  	<input id="start_upload" type="button" value="开始上传" class="up_blue_btn" />
+				   </div>
+				 <span>照片大小不能超过8M</span><br>
+				 <span>最多可以上传10张</span><br>
+				 
+            	<!-- <input type="file" class="liulan_text">
+            	<a href="#" class="f14" title="">
+            	<span class="btn_left"></span>
+            	<span class="btn_right">上传照片</span>
+            	</a>-->
+           	</td>
+          </tr>
+          <tr>
+          	<th>上传状态：</th>
+          	<td><span id="divStatus" class="status">已选择文件数量：0</span></td>
+          </tr>
+          <tr>
+            <th class="volign">上传队列：</th>
+            <td>
+            <div class="fieldset flash" id="fsUploadProgress" style="margin-top:12px;">
+				
+		    </div>
+            </td>
+          </tr>
+      </table>
+      </div>
+    </div>
+    <!--publish_main end-->
+    <div class="clear"></div>
+    <div class="main_bottom"></div>
+  </div>
+  <!--main end-->
+  <div class="clear"></div> 
+  </div>
+  {include file="Sns/Album/Subtemplate/create_album.inc.html"}
+<!--content end-->
+<input id="client_account" type="hidden" value="{$client_account}"/>
+<input id="album_id" type="hidden" value="{$album_id}"/>
+<input id="img_server" type="hidden" value="{$smarty.const.IMG_SERVER}__PUBLIC__"/>
+<input type="hidden" id="secret_key" value="{$secret_key}"/>
+</body>
+</html>
+
+
+

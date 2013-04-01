@@ -1,0 +1,428 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>首页</title>
+
+
+<link href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/Common/sns_common.css" rel="stylesheet" type="text/css" charset="utf-8" />
+<link href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/HomePage/main.css" rel="stylesheet" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/jquery-1.5.2.min.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/tip_msg/showtip.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/template/template.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/HomePage/view_list.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/HomePage/homepage.js"></script>
+</head>
+
+<body>
+<!--弹出层 star-->
+	<!--提示信息弹出层 star-->
+<div class="hyz_tcc" style="display:none;">
+	<span>每天登录</span><br />
+    <span>活跃值+10</span>
+</div>  	
+	<!--提示信息弹出层 end--> 
+
+ <!-- 班级列表star-->
+ 	<div id="class_list_div" class="bjlb_style" style="display:none;">
+ 	{foreach from=$user_info.class_info item=class_info}
+       <a href="/Sns/HomePage/Index/index/class_code/{$class_info.class_code}">{$class_info.class_name}</a>
+    {/foreach}
+    </div>
+
+ <!--班级列表 end-->
+ 
+ <!--评论 star-->
+  <div class="tcc_comment" style="display:none;">
+    <p class="tcc_comment_top"></p>
+    <!--tcc_comment_main star-->
+    <div class="tcc_comment_main">
+      <!--comment_tab star-->
+      <div class="comment_tab">
+       <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td colspan="3"><input type="text" class="comment_text"></td>
+          </tr>
+          <tr>
+            <td><a href="#" class="tcc_icon_face"></a></td>
+            <td><p class="f12 f_gray">您还可以输入<span class="f_red">140</span>字</p></td>
+            <td><input type="button" value="确定" class="green_btn"></td>
+          </tr>
+       </table>
+      </div>
+      <!--comment_tab end-->
+      
+      <div>
+      
+          <!--一级评论 star-->
+          <div class="mb10">
+               <dl>
+                 <dt><img src="__PUBLIC__/sns/images/HomePage/main/tcc_pic01.jpg"></dt>
+               </dl> 
+               <!--tcc_single star-->
+               <div class="tcc_single">
+                 <div class="tcc_single_tab">
+                  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                   <tr>
+                    <td><a href="#" class="fc_288c00">李艳琼:</a></td>
+                    <td><p>我们需要和孩子一起成长，关注心灵健康。（5分钟前）</p></td>
+                    <td><a href="#" class="fc_288c00">删除</a></td>
+                    <td><a href="#" class="fc_288c00 ml10">回复</a></td>
+                   </tr>
+                 </table>
+                </div>
+                <!--tcc_reply star-->
+                <div class="tcc_reply">
+                  <p class="tcc_reply_top"></p>
+                  <!--tcc_reply_main star-->
+                  <div class="tcc_reply_main">
+                    <div class="reply_tab">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td colspan="3"><input type="text" class="reply_text"></td>
+                      </tr>
+                      <tr>
+                        <td><a href="#" class="tcc_icon_face"></a></td>
+                        <td><p class="f12 f_gray">您还可以输入<span class="f_red">140</span>字</p></td>
+                        <td><input type="button" value="确定" class="green_btn"></td>
+                      </tr>
+                    </table>
+                    </div>
+                    <div class="clear"></div>
+                  </div>
+                  <!--tcc_reply_main end-->
+                </div>
+                <!--tcc_reply end-->
+                
+                <div>
+                <!--agin_reply_main star-->
+                <div class="agin_reply_main">
+                  <dl>
+                     <dt><img src="__PUBLIC__/sns/images/HomePage/main/tcc_pic01.jpg"></dt>
+                    </dl>
+                    <div class="agin_reply">
+                      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                          <td><a href="#" class="fc_288c00">李艳琼:</a></td>
+                          <td><p>我们需要和孩子一起成长，关注心灵健康。</p></td>
+                          <td><a href="#" class="fc_288c00">删除</a></td>
+                        </tr>
+                      </table>
+                     </div>
+                    <div class="clear"></div>  
+                    </div>
+                    <!--agin_reply_main end-->
+                    
+                   </div>
+                   
+                   <div>
+                     <p><input type="text" value="我也说一句" class="er_comment_text"></p>
+                   </div>
+                   
+                   <div>
+                     <p class="click_see">后面还有10条评论回复<a href="#" class="f12 f_red ml10">点击查看&gt;&gt;</a></p>
+                   </div>
+                   
+                   </div>
+                   <!--tcc_single end-->
+          <div class="clear"></div> 	
+          </div>
+          <!--一级评论  end-->
+          
+          <!--一级评论 star-->
+          <div>
+               <dl>
+                 <dt><img src="__PUBLIC__/sns/images/HomePage/main/tcc_pic01.jpg"></dt>
+               </dl> 
+               <!--tcc_single star-->
+               <div class="tcc_single">
+                 <div class="tcc_single_tab">
+                  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                   <tr>
+                    <td><a href="#" class="fc_288c00">李艳琼:</a></td>
+                    <td><p>我们需要和孩子一起成长，关注心灵健康。（5分钟前）</p></td>
+                    <td><a href="#" class="fc_288c00">删除</a></td>
+                    <td><a href="#" class="fc_288c00 ml10">回复</a></td>
+                   </tr>
+                 </table>
+                </div>
+              </div>
+              <!--tcc_single end-->
+          <div class="clear"></div> 	
+          </div>
+          <!--一级评论  end-->
+         
+      </div>
+       
+      <p class="gdpl ">后面还有1250条评论 <a href="#" class="f_green">点击查看</a></p>
+       <div class="clear"></div>
+    </div>
+    <!--tcc_comment_main end-->
+  </div>
+ <!--评论 end--> 
+ <!--分享 star-->
+  <div class="tcc_share" style="display:none;">
+    <div class="tcc_share_main">
+      <h1>分享<a href="#" class="icon_close"></a></h1>
+      <div class="share_comment">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <th colspan="4"><textarea class="share_textarea"></textarea></th>
+          </tr>
+          <tr>
+            <td class="td_share_class"><input type="checkbox" name="" class="mr10">分享到班级</td>
+            <td class="td_share_class"><input type="checkbox" name="" class="mr10">分享到个人空间</td>
+            <td class="td_nr_width"><p class="f12 f_gray">您还可以输入<span class="f_red">140</span>字</p></td>
+            <td class="td_btn_width"><input type="button" value="确定" class="green_btn"></td>
+          </tr>
+        </table>
+      </div>
+      <div class="share_main">
+        <h2>张鹏：【司马光为什么要砸缸】</h2>
+        <p>王献之小时候，问父亲王羲之书法的秘诀。王羲之说哪里有什么秘诀，惟在一个勤字。你去把院子里的十八口缸水写完，书法就成了。王献之日夜苦练，遂成一代大家。司马光的父亲司马池很喜欢这故事，也在家里准备了十八缸水让司马光练字。过了一会儿，管家来报：老爷，少爷可真聪明！</p>
+        <p class="f12 f_gray">来自&nbsp;张鹏&nbsp;-&nbsp;2012.12.12 13:37</p>
+      </div>
+    </div>
+  </div>
+ <!--分享 end-->
+
+<!--弹出层 end-->
+<!--content star-->
+{insert name="sns_header"}
+<div class="content">
+	<!--jh_main star-->
+	<div class="jh_main">
+    
+    	<!--jh_main_left star-->
+		{include file="Sns/HomePage/main_left.html"}
+        <!--jh_main_left end-->
+        
+        <!--jh_main_center star-->
+    	<div class="jh_main_center">
+        	<!--<div class="news_pic">
+            	<img src="__PUBLIC__/sns/images/HomePage/main/tupian.gif"  width="580" height="75"/>
+            </div>
+            --><!--说说框 star-->
+            <div class="shuoshuo_style">
+            	<textarea></textarea>
+            </div>
+            <!--说说框 end-->
+            
+            <div class="sec_nav">
+            	<a href="#" class="sec_nav_selected">全部动态</a> <a href="#" class="sec_nav_noselected">班级动态</a> <a href="#" class="sec_nav_noselected">好友动态</a> <a href="#" class="sec_nav_noselected">与我相关</a>           	
+            </div>
+       
+            <!--system_message star-->
+       <div class="system_message">
+         <p class="system_top"></p>
+         <!--system_center star-->
+         <div class="system_center">
+           <!--info star-->
+           <div class="info">
+             <dl>
+               <dt><img src="__PUBLIC__/sns/images/HomePage/main/icon_info.jpg"></dt>
+               <dd>系统消息</dd>
+             </dl>
+             <div class="info_right">
+               <p class="info_right_top"></p>
+               <p class="info_right_center">
+                 欢迎您加入我们网——老师、家长、学生教育sns互动交流平台。
+               </p>
+               <p class="info_right_bottom"></p>
+               <p class="info_time">发布时间：2012.12.05<span class="pl10">13:21</span><span class="pl20">发布者：我们网</span><a href="#" class="fc_4f9f32 f14">删除</a></p>
+             </div>
+             <div class="clear"></div>
+           </div>
+           <!--info end-->
+           <!--info star-->
+           <div class="info">
+             <dl>
+               <dt><img src="__PUBLIC__/sns/images/HomePage/main/icon_notice.jpg"></dt>
+               <dd>公告</dd>
+             </dl>
+             <div class="info_right">
+               <p class="info_right_top"><span class="fc_288c00">周五大扫除</span></p>
+               <p class="info_right_center">
+                 周五全校大扫除，放学后请值日班长安排值日生对班级桌椅板凳及分担区进行彻底清扫。
+               </p>
+               <p class="info_right_bottom"></p>
+               <p class="info_time">发布时间：2012.12.05<span class="pl10">13:21</span><span class="pl20">发布者：我们网</span><a href="#" class="fc_4f9f32 f14">删除</a></p>
+             </div>
+             <div class="clear"></div>
+           </div>
+           <!--info end-->
+           <!--info star-->
+           <div class="info">
+             <dl>
+               <dt><img src="__PUBLIC__/sns/images/HomePage/main/icon_homework.jpg"></dt>
+               <dd>作业</dd>
+             </dl>
+             <div class="info_right">
+               <p class="info_right_top"><span class="fc_288c00">语文作业</span></p>
+               <p class="info_right_center">
+                 交作业日期 2012.12.05<a href="#" class="fc_4f9f32 f14">查看作业</a>
+               </p>
+               <p class="info_right_bottom"></p>
+               <p class="info_time">发布时间：2012.12.05<span class="pl10">13:21</span><span class="pl20">发布者：我们网</span><a href="#" class="fc_4f9f32 f14">删除</a></p>
+             </div>
+             <div class="clear"></div>
+           </div>
+           <!--info end-->
+            <!--info star-->
+           <div class="info">
+             <dl>
+               <dt><img src="__PUBLIC__/sns/images/HomePage/main/icon_exam.jpg"></dt>
+               <dd>成绩</dd>
+             </dl>
+             <div class="info_right">
+               <p class="info_right_top"><span class="fc_288c00">期中考试成绩公布</span></p>
+               <p class="info_right_center">
+                 考试日期 2012.12.20<a href="#" class="fc_4f9f32 f14">查看成绩</a>
+               </p>
+               <p class="info_right_bottom"></p>
+               <p class="info_time">发布时间：2012.12.05<span class="pl10">13:21</span><span class="pl20">发布者：我们网</span><a href="#" class="fc_4f9f32 f14">删除</a></p>
+             </div>
+             <div class="clear"></div>
+           </div>
+           <!--info end-->
+         </div>
+         <p class="system_bottom"></p>
+         </div>
+         <!--system_center end-->
+   
+            
+          
+            
+            <!--个人动态信息部分 star-->
+            
+            <table class="grdt_news">
+                <tr>
+                    <td width="100" valign="top" align="center"> <img src="__PUBLIC__/sns/images/HomePage/main/jh_m_tx_01.jpg" width="75" height="75" /></td>
+                    <td>
+                        <div class="grdt_news_bg">
+                            <div class="grdt_news_bg_top">
+                                <a href="#" class="g_n_name">李洪亮</a>
+                                <h4 class="wz_bt">为什么要和孩子一起阅读</h4>
+                                <img src="__PUBLIC__/sns/images/HomePage/main/litp.gif" class="wz_tp" />
+                                <p class="wz_nr">妈妈或爸爸带孩子一起看书，这种一对一的模式，最能培养孩子的注意力。孩子喜欢模仿父母行为，父母参与的活动会让孩子兴趣大增。而且父母和孩子在阅读中建立的情感交流是孩子成长中最需要的营养成分。这种爱让孩子感受到阅读的幸福，并让他一生爱书。<a href="#" class="f_green f12">(阅读全文)</a>
+                                </p>
+                                <p class="wz_info"><span>发布时间：2012年1月5日 14:25</span> <a href="#">删除</a> <a href="#">分享</a> <a href="#">评论</a></p>  
+                            </div>                            	
+                        </div>                        	
+                    </td>
+                </tr>
+            </table>
+            <table class="grdt_news">
+                <tr>
+                    <td width="100" valign="top" align="center"> <img src="__PUBLIC__/sns/images/HomePage/main/jh_m_tx_01.jpg" width="75" height="75" /></td>
+                    <td>
+                        <div class="grdt_news_bg">
+                            <div class="grdt_news_bg_top">
+                                <a href="#" class="g_n_name">李洪亮</a>
+                                <h4 class="wz_bt">为什么要和孩子一起阅读</h4>
+                                <p class="wz_nr">妈妈或爸爸带孩子一起看书，这种一对一的模式，最能培养孩子的注意力。孩子喜欢模仿父母行为，父母参与的活动会让孩子兴趣大增。而且父母和孩子在阅读中建立的情感交流是孩子成长中最需要的营养成分。这种爱让孩子感受到阅读的幸福，并让他一生爱书。<a href="#" class="f_green f12">(阅读全文)</a>
+                                </p>
+                                <p class="wz_info"><span>发布时间：2012年1月5日 14:25</span>  <a href="#">分享</a> <a href="#">评论</a></p>  
+                            </div>                            	
+                        </div>                        	
+                    </td>
+                </tr>
+            </table>
+            
+            <!--个人动态信息部分 end-->
+            	
+         <div class="news_moreamore" ><a href="#"> 查看更多动态 </a></div>   	
+        
+        </div>
+        <!--jh_main_center end-->
+        
+        <!--jh_main_right star-->
+    	<div class="jh_main_right">
+        	
+        	<!--签到及备忘 star-->
+            	<div class="qd_bw checkin_selector">
+                	<table cellpadding="0" cellspacing="0"  class="qd_bw_bj">
+                  		<tr>
+                        	<td width="55"><span class="rq_font">{$today_date}</span></td>
+                            <td rowspan="2" id="qd_td">{if $is_qd}<span class="qd_font">已签到</span>{else}<a id="checkin" href="javascript:;"><span class="qd_font">签到</span></a>{/if}</td>                            
+                        </tr>
+                    	<tr><td><span class="rq_font">星期{$week_day}</span></td> </tr>
+                    </table>                     
+                </div>
+                <div class="bwl_bj">
+                    	<!--<h4>我的备忘录</h4><a href="#" class="szbwl">设置备忘录</a>
+                        <table cellpadding="0" cellspacing="0">
+                        	<tr>
+                            	<td width="135">1.今天下午开家长会</td>
+                                <td>02.20</td>
+                            </tr>
+                            <tr>
+                            	<td>2.维护班级成绩</td>
+                                <td>02.21</td>
+                            </tr>
+                            <tr>
+                            	<td>3.修改课程表</td>
+                                <td>02.21</td>
+                            </tr>
+                            <tr>
+                            	<td>4.下午放学前开班会</td>
+                                <td>02.22</td>
+                            </tr>
+                        </table>-->
+                    </div>            	
+            <!--签到及备忘 end-->
+            
+            <!--最近访客 star-->
+            <div class="zjfk_top">
+            	<h4>最近访客</h4><a href="/Sns/Friend/Manage/person_vistior"> 更多</a>
+            </div>
+            <div class="zjfk_content">
+            	<table cellpadding="0" cellspacing="0" id="vistior_list_tab">
+            		{literal}
+                	<tr class="clone" style="display:none">
+                    	<td><a href="/Sns/PersonIndex/Index/index/client_account/{user.client_account}" target="_blank;"><img src="{user.client_headimg_url}"  class="zjfk_tx" /></a></td>
+                        <td><span class="zjfk_name">{user.client_name}</span></td>
+                        <td><span class="zjfk_time">{user.timeline}</span></td>
+                    </tr>
+                	{/literal}
+                </table>
+                <p class="fk_info">今日访客:{$total_count_day} &nbsp;&nbsp;最近访客:{$total_count}</p>
+            
+            </div>
+            <div class="zjfk_bottom"></div>
+            
+            <!--最近访客 end-->
+            
+            <!--相册 star-->
+            <div class="xiangce"> 
+            	<img src="__PUBLIC__/sns/images/HomePage/main/xt_pic.gif" />
+                <div >
+                <a href="#" class="syz">上一张</a><a href="#" class="xyz">下一张</a>
+            	</div>
+            </div>
+            
+            <!--相册 end-->
+            
+            <!--热门资源推荐 star-->
+            {include file="Sns/HomePage/hotresource.html"}
+            <!--热门资源推荐 end-->
+            
+            
+			        
+        
+        
+        
+        </div>
+        <!--jh_main_right end-->
+        
+	</div>
+    <!--jh_main end-->
+
+</div>
+
+<!--content end-->
+<input type="hidden" id="client_account" value="{$client_account}"/>
+
+</body>
+</html>

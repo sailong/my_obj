@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<title>班级首页</title>
+<link rel="stylesheet" href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/Common/sns_common.css" type="text/css" charset="utf-8">
+<link rel="stylesheet" href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/ClassIndex/main.css" type="text/css" charset="utf-8">
+
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/wmw_js/jquery-1.5.2.js"></script>
+
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/tip_msg/showtip.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/sendbox/sendbox.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/template/template.js"></script>
+
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/Feed/feed.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/Feed/feed_unit.js"></script>
+
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/ClassIndex/main.js"></script>
+
+</head>
+<body>
+{insert name="sns_header"}
+
+<!--tip star-->
+  {insert name="sns_class_header" class_code = $class_code}
+<!--tip end--> 
+<!--content star-->
+<div class="content">
+  <!--main star-->
+   <div class="main">
+     <!--nav star-->
+    {insert name="sns_nav" class_code = $class_code}
+    <!--nav end-->
+    <!--bladkground star-->
+    {include file="Sns/ClassIndex/backborad.html"}
+    <!--bladkground end-->
+    <!--active_member star-->
+    {include file="Sns/ClassIndex/active_member.html"}
+    <!--active_member end-->
+    <!--主要内容 star-->
+     <div class="mian_index">
+     <!--main_left star-->
+     <div class="main_left">
+       <ul>
+          <li>
+          	<a id="show_class_feed_a" href="javascript:;" class="main_nav_a1 mr6" title="">班级动态</a>
+          	{if $user.client_type == 2}
+          	<a id="show_children_feed_a" href="javascript:;" class="main_nav_a2" title="">孩子动态</a>
+          	{/if}
+          </li>
+       </ul>
+       
+       <!-- 班级动态展示区信息 -->
+       <div id="class_feed_list_div">
+	       <!--say_box star-->
+	       <div class="say_box">
+	         <p>
+	         	<textarea class="say_text" style="display:none;"></textarea>
+	         </p>
+	         <input id="client_account" type="hidden" value="{$user.client_account}"/>
+	       </div>
+	       <!--say_box end-->
+	       <!--system_message star-->
+	       <div class="system_message">
+	         <p class="system_top"></p>
+	         <!--system_center star-->
+	         <div class="system_center">
+	           <!--info star-->
+	           <div class="info">
+	             <dl>
+	               <dt><img src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/images/ClassIndex/icon_info.jpg"></dt>
+	               <dd>系统消息</dd>
+	             </dl>
+	             <div class="info_right">
+	               <p class="info_right_top"></p>
+	               <p class="info_right_center">
+	                	 欢迎您加入我们网——老师、家长、学生教育sns互动交流平台。
+	               </p>
+	               <p class="info_right_bottom"></p>
+	               <p class="info_time">发布时间：2012.12.05<span class="pl10">13:21</span><span class="pl20">发布者：我们网</span><a href="#" class="fc_4f9f32 f14">删除</a></p>
+	             </div>
+	             <div class="clear"></div>
+	           </div>
+	           <!--info end-->
+	           <!--info star-->
+	           <div class="info">
+	             <dl>
+	               <dt><img src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/images/ClassIndex/icon_notice.jpg"></dt>
+	               <dd>公告</dd>
+	             </dl>
+	             <div class="info_right">
+	               <p class="info_right_top"><span class="fc_288c00">周五大扫除</span></p>
+	               <p class="info_right_center">
+	                 	周五全校大扫除，放学后请值日班长安排值日生对班级桌椅板凳及分担区进行彻底清扫。
+	               </p>
+	               <p class="info_right_bottom"></p>
+	               <p class="info_time">发布时间：2012.12.05<span class="pl10">13:21</span><span class="pl20">发布者：我们网</span><a href="#" class="fc_4f9f32 f14">删除</a></p>
+	             </div>
+	             <div class="clear"></div>
+	           </div>
+	           <!--info end-->
+	           <!--info star-->
+	           <div class="info">
+	             <dl>
+	               <dt><img src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/images/ClassIndex/icon_homework.jpg"></dt>
+	               <dd>作业</dd>
+	             </dl>
+	             <div class="info_right">
+	               <p class="info_right_top"><span class="fc_288c00">语文作业</span></p>
+	               <p class="info_right_center">
+	                	 交作业日期 2012.12.05<a href="#" class="fc_4f9f32 f14">查看作业</a>
+	               </p>
+	               <p class="info_right_bottom"></p>
+	               <p class="info_time">发布时间：2012.12.05<span class="pl10">13:21</span><span class="pl20">发布者：我们网</span><a href="#" class="fc_4f9f32 f14">删除</a></p>
+	             </div>
+	             <div class="clear"></div>
+	           </div>
+	           <!--info end-->
+	            <!--info star-->
+	           <div class="info">
+	             <dl>
+	               <dt><img src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/images/ClassIndex/icon_exam.jpg"></dt>
+	               <dd>成绩</dd>
+	             </dl>
+	             <div class="info_right">
+	               <p class="info_right_top"><span class="fc_288c00">期中考试成绩公布</span></p>
+	               <p class="info_right_center">
+	               	  考试日期 2012.12.20<a href="#" class="fc_4f9f32 f14">查看成绩</a>
+	               </p>
+	               <p class="info_right_bottom"></p>
+	               <p class="info_time">发布时间：2012.12.05<span class="pl10">13:21</span><span class="pl20">发布者：我们网</span><a href="#" class="fc_4f9f32 f14">删除</a></p>
+	             </div>
+	             <div class="clear"></div>
+	           </div>
+	           <!--info end-->
+	         </div>
+	         <!--system_center end-->
+	         <p class="system_bottom"></p>
+	       </div>
+	       <!--system_message end-->
+	       
+	       
+	       <div id="show_class_feed">
+	
+	
+		  </div>
+	      <div class="clear"></div>
+        </div>
+        
+        <!-- 孩子相关的动态展示区  -->
+        <div id="child_feed_list_div" style="display:none;">
+          <div id="show_children_feed">
+	
+	
+		  </div>
+		  <div class="clear"></div>
+        </div>
+        
+     </div>
+      <!--main_left end-->
+      
+      <!--mian_right star-->
+      <div class="mian_right">
+        <div class="photo_index">
+          <dl>
+            <dt>
+            	<img id="photo_img" width="180px" height="166px" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/images/ClassIndex/photo_pic01.jpg">
+            </dt>
+            <dd>
+            	<input id="up_photo_btn" type="button" value="上一张" class="up_btn"><input id="next_photo_btn" type="button" value="下一张" class="up_btn">
+            </dd>
+          </dl>
+        </div>
+        <!--hot_resource star-->
+        {include file="Sns/ClassIndex/hotresource.html"}
+        <!--hot_resource end-->
+      </div>
+      <!--mian_right end-->
+      <div class="clear"></div>
+      </div>
+    <!--主要内容 end-->
+    <div class="clear"></div>
+  </div>
+  <!--main end-->
+  <div class="clear"></div>
+  </div>
+<!--content end-->
+{include file="Public/sns_footer.html"}
+{include file="Sns/ClassIndex/Subtemplate/main_pop_div.html"}
+
+<input id="class_code" type="hidden" value="{$class_code}"/>
+<input id="user_headimg_url" type="hidden" value="{$user.client_headimg_url}"/>
+
+</body>
+</html>

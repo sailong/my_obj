@@ -1,0 +1,55 @@
+<div id="comment_1st_unit_div" class="comment_1st_unit_selector" style="display:none;">
+	{literal}
+	<table cellpadding="0" cellspacing="0" border="0" width="100%" class="first_comment">
+	  <tr>
+	      <td rowspan="3" class="user_tx">
+	          <img width="40px" height="40px" data-original="{comment.user_info.client_headimg_url}" class="photo_width40" /> 
+	      </td>
+	      <td colspan="2">
+	      	<a href="javascript:;" class="f_green">{comment.user_info.client_name}</a>:&nbsp;{comment.content}
+	      </td>
+	  </tr>
+	  <tr class="comment_1st_delete_slide_selector">
+	      <td><span class="comment_time">{comment.add_time_format}</span></td>
+	      <td>
+	      	{if comment.can_del}
+	      	<a href="javascript:;" class="comment_delete comment_1st_delete_selector" style="display:none;">删除</a>
+	      	{/if}
+	      </td>
+	  </tr>
+	  <tr>
+	      <td colspan="2">
+	      	<!--二级评论 star-->
+		  	<div id="second_comment_list" class="all_second_comment">   
+		         
+		    </div>
+		    {if comment.remain_nums}
+		    <p class="more_huifu">后面还有{comment.remain_nums}条评论回复 <a href="javascript:;">点击查看&gt;&gt;</a></p>
+		    {/if}
+		    <!--二级评论 end-->
+		
+			<!--默认回复样式 star-->
+			<table class="mr_huifu reply_2nd_simple_div_selector">
+			    <tr>
+			        <td class="user_tx">
+			        	<img width="40px" height="40px" data-from="#user_headimg_url" />
+			        </td>
+			        <td>
+			        	<!--点击之前的样式 star-->
+			            <input name="" type="text" class="text_border reply_2nd_simple_selector" value="我也说一句"/>
+			            <!--点击之前的样式 end-->
+			            
+			            <!--点击之后的样式 star-->
+			            <div class="tk_huifu simple_reply_div_selector" style="display:none;">
+			                <textarea id="reply_2nd_conent" class="reply_text reply_2nd_simple_content_selector" name="content"></textarea>
+			            </div>
+			            <!--点击之后的样式 end-->
+			        </td>
+			     </tr>
+			</table>
+			<!--默认回复样式 end-->
+	    </td>
+	  </tr>
+	</table>
+    {/literal}
+</div>
