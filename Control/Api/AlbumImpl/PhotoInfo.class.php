@@ -239,16 +239,14 @@ class PhotoInfo {
         if(empty($photo_list)) {
             return false;
         }
-<<<<<<< HEAD
+
         if(!is_array($photo_list) && is_int($photo_list)) {
             $photo_id = $photo_list;
             $photo_list = $this->getPhotoByPhotoId($photo_id);
         }
         $photo_id = key($photo_list);
         $this->updateAlbumPhotoCountByAlbumId($photo_list[$photo_id]['album_id']);
-=======
-        
->>>>>>> fd68c2cd94b8c18e08c0892c9c1935676ec489c2
+
         import('@.Common_wmw.Pathmanagement_sns');
         $photo_path_list = array();
         foreach($photo_list as $photo_id=>$photo_val) {
