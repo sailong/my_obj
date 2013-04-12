@@ -20,7 +20,7 @@ class feed_user_all {
         }
 
         $RM = ClsFactory::Create("RModel.Feed.mZsetUserAll");
-        $RM->setFeed($uid, time(), $feed_id);
+        $RM->setFeed($uid, $feed_id, $feed_id);
 
         return true;
     }

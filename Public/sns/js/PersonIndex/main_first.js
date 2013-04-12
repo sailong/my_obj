@@ -17,12 +17,18 @@ main_first.prototype = {
 					return false;
 				}
 				$.showSuccess(json.info);
+				
+				var data = json.data;
+				var feed_info = data.feed_info;
+
+				$('#my_feed_list_div').prependChild(feed_info);
 			}
 		});
 		
 		//加载用户动态信息
 		$('#my_feed_list_div').loadFeed({
-			url:'/Sns/Feed/List/getUserAllFeedAjax'
+			url:'/Sns/Feed/List/getUserAllFeedAjax',
+			skin:'mini'
 		});
 	}
 };

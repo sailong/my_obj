@@ -120,19 +120,22 @@ class PhotoComments {
             return false;
         }
         
+        $each_limit = 5;
         $up_ids = array_keys($comment_list);
+
+        $mAlbumPhotoComments = ClsFactory::Create('Model.Album.mAlbumPhotoComments');
+
+        $stat_list = $mAlbumPhotoComments->getAlbumPhotoCommentsChildrenStatByUpid($up_ids);
         
-        $child_comment_arr = $this->mAlbumPhotoComments->getAlbumPhotoCommentByUpId($up_ids, 2);
-        
-        //todolist M层和D层得数据处理不规范
-        $new_child_comment_arr = array();
-        foreach((array)$child_comment_arr as $comment) {
-            $new_child_comment_arr[$comment['up_id']][$comment['comment_id']] = $comment;
-        }
+        $child_comment_arr = $mAlbumPhotoComments->getAlbumPhotoCommentsChildrenByUpid($up_ids, $each_limit);
         
         foreach($comment_list as $comment_id=>$comment) {
-            if(isset($new_child_comment_arr[$comment_id])) {
-                $comment['child_items'] = (array)$new_child_comment_arr[$comment_id];
+            if(isset($child_comment_arr[$comment_id])) {
+                $comment['child_items'] = (array)$child_comment_arr[$comment_id];
+                $remain_nums = $stat_list[$comment_id] - $each_limit;
+                if($remain_nums > 0) {
+                    $comment['remain_nums'] = $remain_nums;
+                }
             } else {
                 $comment['child_items'] = array();
             }

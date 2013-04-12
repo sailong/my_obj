@@ -116,12 +116,13 @@ vistior.prototype.attcheEvent = function(){
 	$("#queding_btn",divObj).click(function() {
 		var parentObj = divObj.data('parentObj');
 		var client_info = parentObj.data('data');
+		var vuid = $("#vuid").val();
 		$.ajax({
 			type:'get',
 			url:'/Sns/Friend/Manage/del_vistior',
 			dataType:'json',
 			async:false,
-			data:{id:client_info.id},
+			data:{id:client_info.id,uid:vuid},
 			success:function(json){
 				if(json.status < 0) {
 					$.showError(json.info);

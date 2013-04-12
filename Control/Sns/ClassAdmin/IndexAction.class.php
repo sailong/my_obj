@@ -48,7 +48,7 @@ class IndexAction extends SnsController{
      */
     public function setClassAdminAjax(){
         $class_code     = $this->objInput->getInt('class_code');
-        $client_account = $this->objInput->postStr('client_account');
+        $client_account = $this->objInput->postInt('client_account');
         
         $class_code = $this->checkoutClassCode($class_code);
         if(empty($class_code) || !$this->isClassAdmin($class_code)) {

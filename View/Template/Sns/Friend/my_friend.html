@@ -42,7 +42,7 @@
           <input id="search_btn" type="button" value="搜索" class="green_btn">
         </p>
         <p class="nr_title"><strong>好友分组</strong></p>
-        <p class="bj_color"><a href="/Sns/Friend/Manage/index">全部好友(<font id="friend_total_count"></font>)</a></p>
+        <p ><a href="/Sns/Friend/Manage/index" style="padding-left:10px;color:#464646;">全部好友(<font id="friend_total_count"></font>)</a></p>
         {literal}
         <ul id="friend_group_list_ul" style="display:none;">
         {each friend_group_list as friend_group index}
@@ -56,7 +56,7 @@
 	          <a class="group_delete_selector_a" href="javascript:;">删除</a>
 	          </font>
 	          {/if}
-	          <input class="group_name_selector" type="hidden" value="{friend_group.group_name}"/>
+	          <input class="group_name_selector" type="hidden" value="{friend_group.group_name_bak}"/>
           </li>
         {/each}
         </ul>
@@ -70,7 +70,7 @@
           {literal}
           <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="photo_width"><img src="{user.client_headimg_url}"></td>
+            <td class="photo_width"><a href="/Sns/PersonIndex/Index/index/client_account/{user.friend_account}"><img src="{user.client_headimg_url}"></a></td>
             <td>
               <p id="client_name_p">{user.client_name}</p>
               <p>{if user.client_sex == 1}男{else}女{/if}</p>

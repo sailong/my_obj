@@ -60,7 +60,7 @@ albumlist.prototype.delegateEvent=function() {
 	var me = this;
 	
 	$('#dl_list').delegate('dl', 'mouseover', function() {
-		if($("#is_edit").val()) {
+		if(me.is_edit || $(this).data('is_edit')) {
 			$('.hide_main', $(this)).show();
 			$('#photo_num_dd',$(this)).hide();
 		}else{
@@ -177,7 +177,16 @@ albumlist.prototype.fillAlbum=function(album_list) {
 		if(album_datas.album_img_path == '') {
 			album_datas.album_img_path = me.no_photo_img;
 		}
-		var dlObj = dlClone.clone().removeClass('clone_selector').insertBefore(insertPosDivObj).show();
+		var dlObj = dlClone.clone();
+		if(!me.is_edit) {
+			if(me.client_account == album_datas.upd_account) {
+				dlObj.data('is_edit', true);
+			}else{
+				dlObj.data('is_edit', false);
+			}
+		}
+		
+		dlObj.removeClass('clone_selector').insertBefore(insertPosDivObj).show();
 		dlObj.data('datas', album_datas).renderHtml(album_datas);
 	}
 };

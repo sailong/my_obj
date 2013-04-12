@@ -31,7 +31,7 @@ class feed_user_children {
 
         $RM = ClsFactory::Create("RModel.Feed.mZsetUserChildren");
         foreach($parent_uids as $uid) {
-            $RM->setFeed($uid, time(), $feed_id);
+            $RM->setFeed($uid, $feed_id, $feed_id);
         }
         
         return true;

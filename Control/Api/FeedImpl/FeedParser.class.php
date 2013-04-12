@@ -34,8 +34,23 @@ class FeedParser {
         import('@.Common_wmw.Date');
         
         foreach($feed_list as $feed_id=>$feed) {
-            $feed['add_time_format'] = Date::timestamp($feed['add_time']);
+            $feed['add_time_format'] = Date::timestamp($feed['timeline']);
+            
+            $content = $feed['feed_content'];
+            if (!empty($content)) {
+                $content = str_replace('#分享照片#', ' ', $content);
+            }
+            $feed['feed_content'] = $content;
             $feed['feed_content'] = WmwFace::parseFace($feed['feed_content']);
+            
+            $img_url = $feed['img_url'];
+            if (!empty($img_url)) {
+                $path_parts = pathinfo($img_url);
+                $src_path = $path_parts['dirname'];
+                $filename = $path_parts['basename'];
+                $big_filename = str_replace('_m', '', $filename);
+                $feed['big_img_url'] = $src_path . '/' . $big_filename;
+            }
             
             $feed_list[$feed_id] = $feed;
         }

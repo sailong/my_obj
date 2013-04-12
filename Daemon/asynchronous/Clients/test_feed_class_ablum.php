@@ -5,8 +5,8 @@ include_once(dirname(dirname(dirname(__FILE__))) . '/Daemon.inc.php');
 class testClassAblum {
     public static function createClassAblum($uid, $class_code) {
         $data=array(
-			'album_id'      => 23,  
-			'name'          => "", // 类中返回的$up_r['filename']有误，同$up_r['getfilename']值相同
+			'album_id'      => 148,  
+			'name'          => "sdfsd", // 类中返回的$up_r['filename']有误，同$up_r['getfilename']值相同
 			'file_big'      => "qqqq",  //该字段可删除
             'file_middle'   => "wwwww",
 			'file_small'    => "233333",
@@ -16,9 +16,9 @@ class testClassAblum {
 			'upd_account'   => $uid,
 		);
 		
-		import("@.Control/Api/AlbumImpl/ByClass");
-        $ByClass = new ByClass();
-        $photo_id = $ByClass->addClassPhoto($data,true);
+		import("@.Control/Api/AlbumImpl/PhotoInfo");
+        $PhotoInfo = new PhotoInfo();
+        $photo_id = $PhotoInfo->addPhoto($data);
             
         /**
          * 创建日志动态
@@ -68,8 +68,8 @@ class testClassAblum {
 }
 
 
-$client_account = 96159664;//95469975;
-$class_code = 146;//23527;
+$client_account = 11070004;//95469975;
+$class_code = 23527;
 
 // 创建一个班级相册实体
 /*for($i = 0 ; $i < 110; $i++) {*/
@@ -83,6 +83,7 @@ $limit = 10;
 
 $result =  testClassAblum::debugClassAblum($class_code, $last_id);
 print_r(" page = 1   count = " . count($result) . " \n");
+print_r("feed_id = $feed_id \n");
 print_r($result);
 while (true) {
     

@@ -33,13 +33,13 @@ var galleriaWmwRoot = src.substring(0, src.indexOf('galleria.wmw.js') - 1);
 */
 
 function galleriaWmw (galleria, options, params, galleriaOptions){
-
     this.options = {
         showSize : 0,								// 总个数
         preloadSize : 10,							// 预先加载
         theme : 'classic/galleria.classic.min.js', 	// 默认样式
         imageSize: 'big',              				// 大图数据获取字段
-        thumbSize: 'thumb'            				// 小图数据获取字段
+        thumbSize: 'thumb',            				// 小图数据获取字段
+        callback : {}
     };
     
     this.galleriaOptions = {
@@ -52,6 +52,10 @@ function galleriaWmw (galleria, options, params, galleriaOptions){
     	page: 1                       				// default page  = 1           
     };
     
+    this.dataSource = [];
+    
+    this.show_index = 0;
+
     this.require_optios = ['url', 'theme', 'imageSize', 'thumbSize'];
     
     this.init(galleria, options, params, galleriaOptions);
@@ -71,10 +75,14 @@ galleriaWmw.prototype = {
 		this.loadTheme(this.options.theme);
 		//设置Galleria参数
 		this.setGalleraiOptions(galleriaOptions || {});
+
+		this._find();	
+		
+		this._findIndex();
 		//Galleria控件初始化
 		this.galleriaInit();
 		//默认读取第一页数据
-//		this._find(1);		
+	
 	},
 	
     /**
@@ -138,7 +146,6 @@ galleriaWmw.prototype = {
 			themeName = 'classic/galleria.classic.min.js';
 		}
 		Galleria.loadTheme(galleriaWmwRoot + '/themes/' + themeName);
-		console.log(galleriaWmwRoot + '/themes/' + themeName);
 	    return this;
 	},
 
@@ -149,11 +156,14 @@ galleriaWmw.prototype = {
 	
     galleriaInit:function() {
     	var self = this;
-    	
+    	Galleria.configure({
+    		dataSource: self.dataSource,
+    		show : self.show_index
+    	});
 		Galleria.run('#galleria', this.gelleriaOptions);
 	    
 		Galleria.ready(function() {		
-
+				
 		    $('.galleria-total').text(self.options.showSize); //update total # of slides
 		    
 		    // 全屏模式
@@ -181,43 +191,81 @@ galleriaWmw.prototype = {
 			        this.play(3000);
 			    }
 			});		    
-
-			//左右箭头事件
-		    this.bind("loadstart", function(e) {
-		        $('.galleria-total').text(self.options.showSize); //update total # of slides
-		        
-		        //check e.index and see if more needs loaded
-		        //compare dataLength with (self.options.preloadSize+e.index)
-
-		        var pos = e.index + 1;
-		        var preloadSize = self.options.preloadSize;
-		        var dataLength = Galleria.get(0).getDataLength();
-		        if(pos%preloadSize == 0 && e.index!=0 && (dataLength < preloadSize + pos)){
-		            if(self.options.showSize==Galleria.get(0).getDataLength()) return; //show is done loading
-		            self.params.page = self.params.page + 1;
-		            console.log(self.params.page);
-		            self._find();
-		        }
-		    });	 
 		    
+		    //图片切换事件
+			this.bind('image', function(e) {
+			    var photo_id = 0;
+			    var title = '';
+			    var description = '';
+			    var cur_index = e.index;
+			    
+			    
+			    //针对两种数据结构的取值
+			    //1.从 img = src   属性 photo_id 中获取，在 e.galleriaData.original.attributes 中存在
+			    //2.从data.push 中获得，在  e.galleriaData.id中获取
+			    if (e.galleriaData) {
+			    	var galleriaData = e.galleriaData;
+			    	title = galleriaData.title;
+			    	description = galleriaData.description;
+			    	
+			    	
+			    	if (galleriaData.original) {
+			    		var attributes = galleriaData.original.attributes;
+				    	photo_id = attributes.photo_id.value;
+				    } else if (galleriaData.id) {
+				    	photo_id = galleriaData.id;
+				    }
+			    }
+			    
+			    var data = {photo_index : cur_index,
+			                photo_id:photo_id,
+			                title : title,
+			                description: description};
+			    
+
+			    if (self.options.callback) {
+			    	self.options.callback(data);
+			    }
+			     
+			});		    
+		    
+			//左右箭头事件
+//		    this.bind("loadstart", function(e) {
+//		        $('.galleria-total').text(self.options.showSize); //update total # of slides
+
+//		        //check e.index and see if more needs loaded
+//		        //compare dataLength with (self.options.preloadSize+e.index)
+//
+//		        var pos = e.index + 1;
+//		        var preloadSize = self.options.preloadSize;
+//		        var dataLength = Galleria.get(0).getDataLength();
+//		        
+//		        if(pos%preloadSize == 0 && e.index!=0 && (dataLength < preloadSize + pos)){
+//		            if(self.options.showSize==Galleria.get(0).getDataLength()) return; //show is done loading
+//		            self.params.page = self.params.page + 1;
+//		            self._find();
+//		        }
+//		    });	 			
+
 		    //下一组右箭头事件
-			this.$('thumb-nav-right').click(function(e) {
-			        if ($('div').hasClass('galleria-thumb-nav-right disabled')){
-			            if(self.options.showSize==Galleria.get(0).getDataLength()) return; //show is done loading
-			            //load more images
-			            //get total loaded and add next self.options.preloadSize worth
-			            
-			            self.params.page = self.params.page + 1;
-			            self._find();         
-			        }
-			        //update total # of slides 
-			        // the .push is asynchronous, so total count will show total loaded
-			        // for a short time.
-			        $('.galleria-total').text(self.showSize); 
-			});	
+//			this.$('thumb-nav-right').click(function(e) {
+//			        if ($('div').hasClass('galleria-thumb-nav-right disabled')){
+//			            if(self.options.showSize==Galleria.get(0).getDataLength()) return; //show is done loading
+//			            //load more images
+//			            //get total loaded and add next self.options.preloadSize worth
+//			            
+//			            self.params.page = self.params.page + 1;
+//			            self._find();         
+//			        }
+//			        //update total # of slides 
+//			        // the .push is asynchronous, so total count will show total loaded
+//			        // for a short time.
+//			        $('.galleria-total').text(self.showSize); 
+//			});	
 			
 		});		
 		$("#galleria").css('display','block');  
+		
     },
     
     /**
@@ -237,7 +285,7 @@ galleriaWmw.prototype = {
 			}
 			url_params += "/" + name + "/" + params[name];
 		};
-		console.log(params);
+
 		$.ajax({
 			type:"get",
 			url:self.options.url + url_params,
@@ -248,25 +296,49 @@ galleriaWmw.prototype = {
 					self.unbind("loadstart");
 					return this;
 				}
-				var gallery = Galleria.get(0);
-				console.log(gallery);
+//				var gallery = Galleria.get(0);
 				var photo_list = json.data;
 				var data = [];
 				for(var i in photo_list) {
 						var photo = photo_list[i] || {};
-						data.push({thumb: photo.img_path + self._getSize(photo, self.options.thumbSize),
+						data.push({id : photo.photo_id,
+								   thumb: photo.img_path + self._getSize(photo, self.options.thumbSize),
 								   image: photo.img_path + self._getSize(photo, self.options.imageSize),
 								   big: photo.img_path + self._getSize(photo, self.options.imageSize),
 								   title: photo.name,
 								   description: photo.description
+								  
+									   
 						});
 				}
-
-				gallery.push(data);
+				self.dataSource = data;
+//				gallery.push(data);
 
 			}
 		});           
     },
+    
+    /**
+     * _find_index
+     * 根据photo_id 来查找定位显示
+    */	
+	
+    _findIndex:function() {
+    	var self = this;
+    	if (!self.options.photo_id) return false;
+    	if (self.options.photo_id == 0) return false;
+    	if (self.dataSource ) {
+    		var len = self.dataSource.length;
+    		for(var i = 0; i < len; i++) {
+    			var item = self.dataSource[i];
+
+    			if (item.id == self.options.photo_id) {
+    				self.show_index = i;
+    				break;
+    			}
+    		}
+    	};
+    },    
 
 // get image size by option name
 

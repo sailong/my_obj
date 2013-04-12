@@ -83,7 +83,7 @@
        </div>
       <!--left end-->
       <!--center star-->
-       <div class="first_main_center">
+       <div class="first_main_center" >
          <!--say_tab star-->
           <div id="send_mood_div" class="say_tab">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -108,13 +108,13 @@
             </table>
           </div>
          <!--say_tab end-->
-         <ul>
+         <ul >
            <li>
               <a href="javascript:;" class="main_nav_a1">我的动态</a>
            </li>
          </ul>
          <!--first_info star-->
-         <div id="my_feed_list_div" class="first_info">
+         <div id="my_feed_list_div" class="first_info" >
          
          </div>
          <!--first_info end-->
@@ -175,13 +175,13 @@
 
 <!--弹出层 star-->
  <!--活跃值 star-->
-  <div class="tcc_value" id="active_id">
+  <div class="tcc_value" id="active_id" style="display:none;">
     <p>今天已获<span class="f_red">55</span>活跃值</p>
   </div>
  <!--活跃值 end-->
 
 <!--提示信息弹出层 star-->
-  <div class="tcc_msg" id="del_div">
+  <div class="tcc_msg" id="del_div" style="display:none;">
     <p class="tcc_msg_top"></p>
     <div class="tcc_msg_center">
      <div class="msg_center_main">
@@ -199,6 +199,7 @@
   </div>
 <!--content end-->
  <input type="hidden" value="{$vuid}" id="vuid"/>
+ <input id="user_headimg_url" type="hidden" value="{$user_list.client_headimg_url}"/>
 {include file="Public/sns_footer.html"}
 </body>
 </html>

@@ -89,12 +89,16 @@ class PersonalbumAction extends SnsController{
         if(empty($data_arr)) {
             $this->ajaxReturn(null, '', -1, 'json');
         }
-        $json_list = $this->AlbumApi->addPersonAlbum($data_arr);
-        if(empty($json_list)) {
+        $album_id = $this->AlbumApi->addPersonAlbum($data_arr);
+        if(empty($album_id)) {
             $this->ajaxReturn(null, '', -1, 'json');
         }
+        //添加动态
+        import("@.Control.Api.FeedApi");
+        $feed_api = new FeedApi();
+        $feed_api->user_create($this->user['client_account'], $album_id, FEED_ACTION_PUBLISH);
         
-        $this->ajaxReturn($json_list, '', 1, 'json');
+        $this->ajaxReturn($album_id, '', 1, 'json');
     }
     
     /**
@@ -156,7 +160,24 @@ class PersonalbumAction extends SnsController{
         $this->ajaxReturn($rs, '', 1, 'json');
     }
     
-    
+	/**
+     * 更新相册封面
+     */
+    public function setAlbumImg() {
+        $album_id = $this->objInput->postInt('album_id');
+        $album_img = $this->objInput->postStr('album_img');
+        $client_account = $this->user['client_account'];
+        if(empty($album_id) && empty($album_img)) {
+            $this->ajaxReturn('', '更新失败', -1, 'json');
+        }
+        
+        $album_data = array('album_img'=>$album_img);
+        $rs = $this->AlbumApi->updPersonAlbum($album_data, $album_id, $client_account);
+        if(empty($rs)) {
+            $this->ajaxReturn(null, '更新失败', -1, 'json');
+        }
+        $this->ajaxReturn($rs, '更新成功', 1, 'json');
+    }
     
     
     /**
@@ -174,7 +195,6 @@ class PersonalbumAction extends SnsController{
         if(empty($is_client)) {
             return false;
         }
-        
         return true;
     }
 }

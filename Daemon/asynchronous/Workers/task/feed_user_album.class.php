@@ -24,7 +24,7 @@ class feed_user_album {
         $RM = ClsFactory::Create("RModel.Feed.mZsetAblumAll");
 
         foreach($friend_uids as $friend_uid) {
-            $RM->setFeed($friend_uid, time(), $feed_id);
+            $RM->setFeed($friend_uid, $feed_id, $feed_id);
         }
         
         return true;

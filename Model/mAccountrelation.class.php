@@ -137,7 +137,7 @@ class mAccountrelation extends mBase{
             return false;
         }
         
-       return  $this->_dAccountrelation->getInfo($arrdata,'relation_id desc',$offset,$limit);
+       return $this->_dAccountrelation->getInfo($arrdata,'relation_id desc',$offset,$limit);
     }
     
     

@@ -5,7 +5,7 @@
 		var client_account = sendOptions.client_account || {};
 		var up_id = photo_id || {};
 		var album_id = sendOptions.album_id || {};
-		var paramData = {"photo_id":photo_id,"add_uid":login_account,"up_id":up_id,"client_account":client_account,"album_id":album_id};
+		var paramData = {"photo_id":photo_id,"add_uid":login_account,"up_id":up_id,"album_id":album_id};
 		var commnetTextareaObj = sendOptions.textareaObj || {};
 		var sendBoxObj = commnetTextareaObj.sendBox({
 			//加载工具条，多个选项之间使用逗号隔开，目前支持：表情：emoto，文件上传：upload(form表单提交的文件的名字为:pic)
@@ -184,11 +184,11 @@ photo_list.prototype.delegateEvent=function() {
 	
 	//显示设为封面，删除，移动操作
 	$('.list_photo_left').delegate('dl', 'mouseover', function() {
-		if(me.is_edit) {
+		//if(me.is_edit) {
 			$('.float_main', $(this)).show();
-		}else{
+		/*}else{
 			$('.float_main', $(this)).remove();
-		}
+		}*/
 		
 	});
 	
@@ -350,7 +350,10 @@ photo_list.prototype.fillPhotoList=function(photo_list) {
 	var img_server = me.img_server || {};
 	var parentObj = $('.list_photo_left');
 	var dlClone = $('.clone_selector', parentObj);
-
+	if(!me.is_edit) {
+		$('.edit_photo_name a').attr('title','');
+		$('.edit_photo_name a span').removeClass('photo_name');
+	}
 	var insertPosDivObj = $('.insert_pos_div', parentObj);
 	for(var i in photo_list) {
 		var photo_datas = photo_list[i] || {};

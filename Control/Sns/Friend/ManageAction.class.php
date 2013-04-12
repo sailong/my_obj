@@ -54,7 +54,7 @@ class ManageAction extends SnsController{
         $offset = ($page - 1) * $limit;
         
         $mUser = ClsFactory::Create('Model.mUser');
-        if(!empty($search_account)) {
+        if(!empty($search_account) && $page == 1) {
              $client_account_list = $mUser->getUserBaseByUid($search_account);
         } elseif (!empty($search_name)) {
              $client_account_info = $mUser->getUserByUsername($search_name,$offset,$limit);
@@ -189,7 +189,7 @@ class ManageAction extends SnsController{
         $offset = ($page-1) * $limit;
         
         $arr_data = array(
-            'add_account=' . $this->user['client_account'],
+            'add_account=' . $client_account,
             'friend_group=' . $group_id,
         );
         $mAccountrelation = ClsFactory::Create('Model.mAccountrelation');
@@ -306,16 +306,8 @@ class ManageAction extends SnsController{
     /***************************************************************************
      * 好友关系管理
      **************************************************************************/
-    public function sendPrivateSmgAjax() {
-        $content         = $this->objInput->postStr('content');
-        $friend_account  = $this->objInput->postStr('friend_account');
     
-        //发送的图片信息在   $_FILES['pic']
-        
-        
-        $this->ajaxReturn(null, '发送成功!', 1, 'json');
-    }
-    
+    //发送私信直接调用/Sns/PrivateMsg/PrivateMsg/add_private_msg方法
     
     /***********************************************关于好友分组的管理******************************************/
     
@@ -324,10 +316,10 @@ class ManageAction extends SnsController{
      *
      */
     public function getFriendGroupAjax() {
-        
         $add_account = $this->user['client_account'];
         $mClientgroup = ClsFactory::Create('Model.mClientgroup');
         $ClientGrouplist = $mClientgroup->getClientGroupByaddAccount($add_account);
+        
         $ClientGrouplist[0] =  array('group_id'=>0, 'group_name'=>'未分组');
         ksort($ClientGrouplist);
         $group_ids = array_keys($ClientGrouplist);
@@ -335,6 +327,7 @@ class ManageAction extends SnsController{
         $mAccountRelation = ClsFactory::Create('Model.mAccountrelation');
         
         $account_relation_list = $mAccountRelation->getaccountrelationbyuid($add_account);
+        
         $new_account_relation_list = array();
         foreach($account_relation_list as $relation_id => $relation_list) {
             if(!empty($relation_list['friend_group'])) {
@@ -344,6 +337,7 @@ class ManageAction extends SnsController{
             }
         }
         
+        import('@.Common_wmw.WmwString');
         $total_count = 0;
         //统计每个组里面有多少人
         foreach($ClientGrouplist as $group_id => $group_list) {
@@ -351,6 +345,10 @@ class ManageAction extends SnsController{
             if(empty($count)) {
                 $count = 0;
             }
+            if(strlen($group_list['group_name']) > 10) {
+                 $ClientGrouplist[$group_id]['group_name'] = WmwString::msubstr($group_list['group_name'],0,5).'...';
+            }
+            $ClientGrouplist[$group_id]['group_name_bak'] = $group_list['group_name'];
             $ClientGrouplist[$group_id]['count'] = $count;
             $total_count += $count;
         }
@@ -510,7 +508,7 @@ class ManageAction extends SnsController{
         }
         $mMsgNoticeList = ClsFactory::Create("RModel.Msg.mStringRequest");
         $mMsgNoticeList->publishMsg($req_id, 'req');
-            $this->ajaxReturn($req_id,'添加好友发送成功！',1,'json');
+        $this->ajaxReturn($req_id,'添加好友发送成功！',1,'json');
     }
     
     
@@ -588,7 +586,7 @@ class ManageAction extends SnsController{
                     'client_account' => $friend_account,
                     'friend_account' => $client_account,
                     'friend_group' => 0,
-                    'add_account' => $client_account,
+                    'add_account' => $friend_account,
                     'add_date' => time()
                 );
                 $mAccountrelation = ClsFactory::Create('Model.mAccountrelation');
@@ -655,12 +653,9 @@ class ManageAction extends SnsController{
         //获取当前登录人的好友信息
         $client_account_relation_list = $this->getAccountRelationByClientAccount($client_account);
         //获取当前登录人的好友帐号
+        
         $client_friends_account_arr = array();
-        foreach($client_account_relation_list[$client_account] as $relation_id => $account_relation) {
-            $client_friends_account_arr[$account_relation['friend_account']] = $account_relation['friend_account'];        
-        }
-        
-        
+        $client_friends_account_arr = array_keys($client_account_relation_list);
         $new_friend_friend_arr = array();
       //判断好友的好友是否是登录人的好友
         $new_falg_arr = array();//标识是否是好友数组
@@ -671,6 +666,7 @@ class ManageAction extends SnsController{
                 $new_friend_friend_arr[$account] = $account;
             }
         }
+        
         
          //判断是否已给好友发送请求
         $mMsgRequire = ClsFactory::Create('Model.Message.mMsgRequire');
@@ -698,6 +694,7 @@ class ManageAction extends SnsController{
             $client_account_list[$account]['id'] = $vistior_list[$account]['id'];
         }
         
+        
         //按照时间排序
         array_multisort($new_client_account_list_sort, SORT_DESC,$client_account_list);
         if($client_account_list) {
@@ -710,11 +707,12 @@ class ManageAction extends SnsController{
     //删除最近访客信息
     public function del_vistior() {
         $id = $this->objInput->getInt('id');
+        $uid = $this->objInput->getStr('uid');
         if(empty($id)) {
             $this->ajaxReturn(null,'参数错误',-1,'json');
         }
         
-        $uid = $this->user['client_account'];
+        $uid = !empty($uid) ? $uid : $this->user['client_account'];
         //获取当前登录人的所有访客id检测$id是否正确
         $mPersonVistior = ClsFactory::Create('Model.PersonVistior.mPersonVistior');
         $PersonVistiorInfo = $mPersonVistior->getPersonVistiorByUid($uid);

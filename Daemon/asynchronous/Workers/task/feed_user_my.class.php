@@ -20,6 +20,6 @@ class feed_user_my {
         }
         
         $RM = ClsFactory::Create("RModel.Feed.mZsetUserMy");
-        return $RM->setFeed($uid, time(), $feed_id);
+        return $RM->setFeed($uid, $feed_id, $feed_id);
     }
 }

@@ -5,13 +5,19 @@
 <title>首页</title>
 
 
-<link href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/Common/sns_common.css" rel="stylesheet" type="text/css" charset="utf-8" />
-<link href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/HomePage/main.css" rel="stylesheet" type="text/css" charset="utf-8" />
+<link rel="stylesheet" type="text/css" charset="utf-8" href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/Common/sns_common.css"/>
+<link rel="stylesheet" type="text/css" charset="utf-8" href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/HomePage/main.css"/>
 
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/jquery-1.5.2.min.js"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/tip_msg/showtip.js"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/template/template.js"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/HomePage/view_list.js"></script>
+
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/sendbox/sendbox.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/Feed/feed.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/Feed/feed_unit.js"></script>
+
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/HomePage/main.js"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/HomePage/homepage.js"></script>
 </head>
 
@@ -26,7 +32,7 @@
 
  <!-- 班级列表star-->
  	<div id="class_list_div" class="bjlb_style" style="display:none;">
- 	{foreach from=$user_info.class_info item=class_info}
+ 	{foreach from=$user.class_info item=class_info}
        <a href="/Sns/HomePage/Index/index/class_code/{$class_info.class_code}">{$class_info.class_name}</a>
     {/foreach}
     </div>
@@ -42,12 +48,12 @@
       <div class="comment_tab">
        <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td colspan="3"><input type="text" class="comment_text"></td>
+            <td colspan="3"><input type="text" class="comment_text"/></td>
           </tr>
           <tr>
             <td><a href="#" class="tcc_icon_face"></a></td>
             <td><p class="f12 f_gray">您还可以输入<span class="f_red">140</span>字</p></td>
-            <td><input type="button" value="确定" class="green_btn"></td>
+            <td><input type="button" value="确定" class="green_btn"/></td>
           </tr>
        </table>
       </div>
@@ -99,7 +105,7 @@
                 <!--agin_reply_main star-->
                 <div class="agin_reply_main">
                   <dl>
-                     <dt><img src="__PUBLIC__/sns/images/HomePage/main/tcc_pic01.jpg"></dt>
+                     <dt><img src="__PUBLIC__/sns/images/HomePage/main/tcc_pic01.jpg" style="width:100px;"/></dt>
                     </dl>
                     <div class="agin_reply">
                       <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -117,7 +123,7 @@
                    </div>
                    
                    <div>
-                     <p><input type="text" value="我也说一句" class="er_comment_text"></p>
+                     <p><input type="text" value="我也说一句" class="er_comment_text"/></p>
                    </div>
                    
                    <div>
@@ -133,7 +139,7 @@
           <!--一级评论 star-->
           <div>
                <dl>
-                 <dt><img src="__PUBLIC__/sns/images/HomePage/main/tcc_pic01.jpg"></dt>
+                 <dt><img src="__PUBLIC__/sns/images/HomePage/main/tcc_pic01.jpg"/></dt>
                </dl> 
                <!--tcc_single star-->
                <div class="tcc_single">
@@ -171,10 +177,10 @@
             <th colspan="4"><textarea class="share_textarea"></textarea></th>
           </tr>
           <tr>
-            <td class="td_share_class"><input type="checkbox" name="" class="mr10">分享到班级</td>
-            <td class="td_share_class"><input type="checkbox" name="" class="mr10">分享到个人空间</td>
+            <td class="td_share_class"><input type="checkbox" name="" class="mr10"/>分享到班级</td>
+            <td class="td_share_class"><input type="checkbox" name="" class="mr10"/>分享到个人空间</td>
             <td class="td_nr_width"><p class="f12 f_gray">您还可以输入<span class="f_red">140</span>字</p></td>
-            <td class="td_btn_width"><input type="button" value="确定" class="green_btn"></td>
+            <td class="td_btn_width"><input type="button" value="确定" class="green_btn"/></td>
           </tr>
         </table>
       </div>
@@ -199,141 +205,65 @@
         <!--jh_main_left end-->
         
         <!--jh_main_center star-->
-    	<div class="jh_main_center">
+    	<div class="jh_main_center" >
         	<!--<div class="news_pic">
             	<img src="__PUBLIC__/sns/images/HomePage/main/tupian.gif"  width="580" height="75"/>
             </div>
-            --><!--说说框 star-->
-            <div class="shuoshuo_style">
-            	<textarea></textarea>
-            </div>
+            -->
+          <!--说说框 star-->
+
+          <div id="send_mood_div" class="say_tab">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td colspan="3">
+	                <span class="icon_say_pic"></span>
+	                <span class="f16 f_main_green">说说</span>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="3">
+                	<textarea class="say_textarea" name="content"></textarea>
+                </td>
+              </tr>
+            </table>
+          </div>
             <!--说说框 end-->
             
             <div class="sec_nav">
-            	<a href="#" class="sec_nav_selected">全部动态</a> <a href="#" class="sec_nav_noselected">班级动态</a> <a href="#" class="sec_nav_noselected">好友动态</a> <a href="#" class="sec_nav_noselected">与我相关</a>           	
+            	<a id="user_all_feed_a" href="#f1" class="sec_nav_selected">全部动态</a>
+            	<a id="class_feed_a" href="#f2" class="sec_nav_noselected">班级动态</a>
+            	<a id="user_friend_feed_a" href="#f3" class="sec_nav_noselected">好友动态</a>
+            	<a id="user_my_feed_a" href="#f4" class="sec_nav_noselected">与我相关</a>
             </div>
        
             <!--system_message star-->
        <div class="system_message">
          <p class="system_top"></p>
          <!--system_center star-->
-         <div class="system_center">
-           <!--info star-->
-           <div class="info">
-             <dl>
-               <dt><img src="__PUBLIC__/sns/images/HomePage/main/icon_info.jpg"></dt>
-               <dd>系统消息</dd>
-             </dl>
-             <div class="info_right">
-               <p class="info_right_top"></p>
-               <p class="info_right_center">
-                 欢迎您加入我们网——老师、家长、学生教育sns互动交流平台。
-               </p>
-               <p class="info_right_bottom"></p>
-               <p class="info_time">发布时间：2012.12.05<span class="pl10">13:21</span><span class="pl20">发布者：我们网</span><a href="#" class="fc_4f9f32 f14">删除</a></p>
-             </div>
-             <div class="clear"></div>
-           </div>
-           <!--info end-->
-           <!--info star-->
-           <div class="info">
-             <dl>
-               <dt><img src="__PUBLIC__/sns/images/HomePage/main/icon_notice.jpg"></dt>
-               <dd>公告</dd>
-             </dl>
-             <div class="info_right">
-               <p class="info_right_top"><span class="fc_288c00">周五大扫除</span></p>
-               <p class="info_right_center">
-                 周五全校大扫除，放学后请值日班长安排值日生对班级桌椅板凳及分担区进行彻底清扫。
-               </p>
-               <p class="info_right_bottom"></p>
-               <p class="info_time">发布时间：2012.12.05<span class="pl10">13:21</span><span class="pl20">发布者：我们网</span><a href="#" class="fc_4f9f32 f14">删除</a></p>
-             </div>
-             <div class="clear"></div>
-           </div>
-           <!--info end-->
-           <!--info star-->
-           <div class="info">
-             <dl>
-               <dt><img src="__PUBLIC__/sns/images/HomePage/main/icon_homework.jpg"></dt>
-               <dd>作业</dd>
-             </dl>
-             <div class="info_right">
-               <p class="info_right_top"><span class="fc_288c00">语文作业</span></p>
-               <p class="info_right_center">
-                 交作业日期 2012.12.05<a href="#" class="fc_4f9f32 f14">查看作业</a>
-               </p>
-               <p class="info_right_bottom"></p>
-               <p class="info_time">发布时间：2012.12.05<span class="pl10">13:21</span><span class="pl20">发布者：我们网</span><a href="#" class="fc_4f9f32 f14">删除</a></p>
-             </div>
-             <div class="clear"></div>
-           </div>
-           <!--info end-->
-            <!--info star-->
-           <div class="info">
-             <dl>
-               <dt><img src="__PUBLIC__/sns/images/HomePage/main/icon_exam.jpg"></dt>
-               <dd>成绩</dd>
-             </dl>
-             <div class="info_right">
-               <p class="info_right_top"><span class="fc_288c00">期中考试成绩公布</span></p>
-               <p class="info_right_center">
-                 考试日期 2012.12.20<a href="#" class="fc_4f9f32 f14">查看成绩</a>
-               </p>
-               <p class="info_right_bottom"></p>
-               <p class="info_time">发布时间：2012.12.05<span class="pl10">13:21</span><span class="pl20">发布者：我们网</span><a href="#" class="fc_4f9f32 f14">删除</a></p>
-             </div>
-             <div class="clear"></div>
-           </div>
-           <!--info end-->
-         </div>
-         <p class="system_bottom"></p>
-         </div>
+         {include file="Public/system_center.html"}
          <!--system_center end-->
-   
-            
-          
-            
+         <p class="system_bottom"></p>
+	   </div>
+         <div style="display:block;overflow:hidden;width:100%;">
             <!--个人动态信息部分 star-->
+            <div id="user_all_feed_div" name="f1">
             
-            <table class="grdt_news">
-                <tr>
-                    <td width="100" valign="top" align="center"> <img src="__PUBLIC__/sns/images/HomePage/main/jh_m_tx_01.jpg" width="75" height="75" /></td>
-                    <td>
-                        <div class="grdt_news_bg">
-                            <div class="grdt_news_bg_top">
-                                <a href="#" class="g_n_name">李洪亮</a>
-                                <h4 class="wz_bt">为什么要和孩子一起阅读</h4>
-                                <img src="__PUBLIC__/sns/images/HomePage/main/litp.gif" class="wz_tp" />
-                                <p class="wz_nr">妈妈或爸爸带孩子一起看书，这种一对一的模式，最能培养孩子的注意力。孩子喜欢模仿父母行为，父母参与的活动会让孩子兴趣大增。而且父母和孩子在阅读中建立的情感交流是孩子成长中最需要的营养成分。这种爱让孩子感受到阅读的幸福，并让他一生爱书。<a href="#" class="f_green f12">(阅读全文)</a>
-                                </p>
-                                <p class="wz_info"><span>发布时间：2012年1月5日 14:25</span> <a href="#">删除</a> <a href="#">分享</a> <a href="#">评论</a></p>  
-                            </div>                            	
-                        </div>                        	
-                    </td>
-                </tr>
-            </table>
-            <table class="grdt_news">
-                <tr>
-                    <td width="100" valign="top" align="center"> <img src="__PUBLIC__/sns/images/HomePage/main/jh_m_tx_01.jpg" width="75" height="75" /></td>
-                    <td>
-                        <div class="grdt_news_bg">
-                            <div class="grdt_news_bg_top">
-                                <a href="#" class="g_n_name">李洪亮</a>
-                                <h4 class="wz_bt">为什么要和孩子一起阅读</h4>
-                                <p class="wz_nr">妈妈或爸爸带孩子一起看书，这种一对一的模式，最能培养孩子的注意力。孩子喜欢模仿父母行为，父母参与的活动会让孩子兴趣大增。而且父母和孩子在阅读中建立的情感交流是孩子成长中最需要的营养成分。这种爱让孩子感受到阅读的幸福，并让他一生爱书。<a href="#" class="f_green f12">(阅读全文)</a>
-                                </p>
-                                <p class="wz_info"><span>发布时间：2012年1月5日 14:25</span>  <a href="#">分享</a> <a href="#">评论</a></p>  
-                            </div>                            	
-                        </div>                        	
-                    </td>
-                </tr>
-            </table>
+            </div>
             
-            <!--个人动态信息部分 end-->
-            	
-         <div class="news_moreamore" ><a href="#"> 查看更多动态 </a></div>   	
-        
+            <div id="class_feed_div" name="f2">
+            
+            </div>
+            
+            <div id="user_friend_feed_div" name="f3">
+            
+            </div>
+            
+            <div id="user_my_feed_div" name="f4">
+            
+            </div>
+           
+         </div>
+         <!--个人动态信息部分 end--> 
         </div>
         <!--jh_main_center end-->
         
@@ -423,6 +353,8 @@
 
 <!--content end-->
 <input type="hidden" id="client_account" value="{$client_account}"/>
+<input type="hidden" id="class_code" value="{$class_code}"/>
+<input type="hidden" id="user_headimg_url" value="{$user.client_headimg_url}"/>
 
 </body>
 </html>

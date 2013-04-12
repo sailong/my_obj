@@ -15,10 +15,9 @@ class testPersonAblum {
 			'upd_time'      => time(),
 			'upd_account'   => $uid,
 		);
-		
-		import("@.Control/Api/AlbumImpl/ByPerson");
-        $ByPerson = new ByPerson();
-        $photo_id = $ByPerson->addPersonPhoto($data,true);
+		import("@.Control/Api/AlbumImpl/PhotoInfo");
+        $PhotoInfo = new PhotoInfo();
+        $photo_id = $PhotoInfo->addPhoto($data);
             
         /**
          * 创建日志动态

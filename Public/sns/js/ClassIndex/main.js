@@ -27,6 +27,9 @@ main.prototype = {
 					return false;
 				}
 				$.showSuccess(json.info);
+				
+				var feed_info = json.data;
+				$('#show_class_feed').prependChild(feed_info);
 			}
 		});
 	}

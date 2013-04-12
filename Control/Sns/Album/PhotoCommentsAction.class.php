@@ -1,6 +1,6 @@
 <?php
 
-Class PhotoCommentsAction extends SnsController {
+Class PhotocommentsAction extends SnsController {
     
     /**
      * 获取照片的评论信息列表
@@ -135,6 +135,35 @@ Class PhotoCommentsAction extends SnsController {
         }
         
         return $comment_list;
+    }
+    
+    
+    
+    
+    /**
+     * author sailong
+     * 获取相片评论
+     */
+    public function getCommentsList() {
+        $photo_id = $this->objInput->getInt('photo_id');
+        $page = $this->objInput->getInt('page');
+        if(empty($photo_id)) {
+            $this->ajaxReturn(null, '获取评论失败!', -1, 'json');
+        }
+        $limit = 10;
+        $offset = null;
+        $page = max(1,$page);
+        $offset = ($page-1)*$limit;
+        
+        import('@.Control.Api.AlbumApi');
+        $AlbumApi = new AlbumApi();
+        
+        $comment_list = $AlbumApi->getPhotoCommentsByPhotoId($photo_id, $offset, $limit);
+        $comment_list = $this->appendCommentsAccess($comment_list);
+        if(empty($comment_list)) {
+            $this->ajaxReturn(null, '获取评论失败!', -1, 'json');
+        }
+        $this->ajaxReturn($comment_list, '获取成功!', 1, 'json');
     }
     
 }

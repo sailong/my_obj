@@ -76,7 +76,8 @@ class FeedApi extends ApiController {
         $createFeed = new CreateFeed();
         $feed_id = $createFeed->createPersonFeed($uid, $from_id, $feed_type, $action);
 
-        return $this->person_dispatch($uid, $feed_id, $feed_type, $action);
+        $this->person_dispatch($uid, $feed_id, $feed_type, $action);
+        return $feed_id;
     }
     
     /**
@@ -96,7 +97,8 @@ class FeedApi extends ApiController {
         $createFeed = new CreateFeed();
         $feed_id = $createFeed->createClassFeed($class_code, $uid, $from_id, $feed_type, $action);
         
-        return $this->class_dispatch($class_code, $uid, $feed_id, $feed_type, $action);
+        $this->class_dispatch($class_code, $uid, $feed_id, $feed_type, $action);
+        return $feed_id;
     }
     
     /**
@@ -207,6 +209,26 @@ class FeedApi extends ApiController {
         
         return $this->FeedParser->parseFeed($feed_list);
     }
+    
+    /**
+     * 得到单个动态信息
+     * @param int $uid 			我们网账号
+     * @param int $lastId      最后查询feed_id
+     * @param int $limit       查询数量
+     */
+    public function getFeedById($feed_ids) {
+        if(empty($feed_ids)) {
+            return false;
+        }
+        
+        $feed_ids = (array)$feed_ids;
+        
+        $mFeed = ClsFactory::Create("Model.Feed.mFeed");
+
+        $feed_list = $mFeed->getFeedByid($feed_ids);
+        
+        return $this->FeedParser->parseFeed($feed_list);
+    }    
     
     /**
      * 得到朋友动态

@@ -170,11 +170,11 @@ photo_list.prototype.delegateEvent=function() {
 	
 	//显示设为评论操作
 	$('.list_photo_left').delegate('dl', 'mouseover', function() {
-		if(me.is_edit) {
+		//if(me.is_edit) {
 			$('.float_main', $(this)).show();
-		}else{
+		/*}else{
 			$('.float_main', $(this)).remove();
-		}
+		}*/
 		
 	});
 	
@@ -227,6 +227,9 @@ photo_list.prototype.delegateEvent=function() {
 	});
 	//修改照片名称
 	$('.list_photo_left').delegate('.photo_name','click',function() {
+		if(!me.is_edit) {
+			return false;
+		}
 		var photo_name = $(this).html();
 		var parentObj = $(this).parents('div:first');
 		$('span',parentObj).hide();
@@ -337,7 +340,10 @@ photo_list.prototype.fillPhotoList=function(photo_list) {
 	var img_server = me.img_server || {};
 	var parentObj = $('.list_photo_left');
 	var dlClone = $('.clone_selector', parentObj);
-
+	if(!me.is_edit) {
+		$('.edit_photo_name a').attr('title','');
+		$('.edit_photo_name a span').removeClass('photo_name');
+	}
 	var insertPosDivObj = $('.insert_pos_div', parentObj);
 	for(var i in photo_list) {
 		var photo_datas = photo_list[i] || {};

@@ -20,6 +20,6 @@ class feed_class_all {
 
         $RM = ClsFactory::Create("RModel.Feed.mZsetClassAll");
 
-        return $RM->setFeed($class_code, time(), $feed_id);
+        return $RM->setFeed($class_code, $feed_id, $feed_id);
     }
 }

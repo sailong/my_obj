@@ -9,21 +9,21 @@ class ClassMoodAction extends SnsController {
         $mood_id    = $this->objInput->getStr('mood_id');
         
         $class_code = $this->checkoutClassCode($class_code);
-        //todolist 调整到个人空间
         if(empty($class_code)) {
-            //$this->showError('您暂时没有权限查看班级说说!', '/Sns/');
+            $this->showError('您暂时没有权限查看班级说说!', '/Sns/PersonIndex/Index/index');
         }
         
         $MoodApi = ClsFactory::Create('@.Control.Api.MoodApi');
         $mood_info = $MoodApi->getClassMood($class_code, $mood_id);
         
         if(empty($mood_info)) {
-            //$this->showError('班级说说不存在或已删除!', '/Sns/');
+            $this->showError('班级说说不存在或已删除!', '/Sns/ClassIndex/Index/index/class_code/' . $class_code);
         }
         
         $this->assign('class_code', $class_code);
         $this->assign('user', $this->user);
         $this->assign('mood_info', $mood_info);
+        
         $this->display('class_show');
     }
     
@@ -58,9 +58,11 @@ class ClassMoodAction extends SnsController {
         
         import('@.Control.Api.FeedApi');
         $FeedApi = new FeedApi();
-        $FeedApi->class_create($class_code, $this->user['client_account'], $mood_id, FEED_MOOD, FEED_ACTION_PUBLISH);
+        $feed_id = $FeedApi->class_create($class_code, $this->user['client_account'], $mood_id, FEED_MOOD, FEED_ACTION_PUBLISH);
         
-        $this->ajaxReturn(null, '班级说说发表成功!', 1, 'json');
+        $feed_info = $FeedApi->getFeedById($feed_id);        
+
+        $this->ajaxReturn($feed_info, '班级说说发表成功!', 1, 'json');
     }
     
     /**

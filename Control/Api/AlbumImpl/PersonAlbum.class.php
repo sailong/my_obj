@@ -202,7 +202,7 @@ class PersonAlbum {
             1=>"好友",
             2=>"自己"
         );
-        if(empty($grant_id) && $grant_id==null) {
+        if($grant_id===NULL) {
             return $grant_arr;
         }
         

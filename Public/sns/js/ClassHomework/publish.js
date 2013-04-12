@@ -161,7 +161,7 @@ Publish.prototype.attachEventForAcceptList=function(div_id) {
 	//回显信息的编辑按钮,以班级组织数据
 	$('#edit_a', context).click(function() {
 		var subject_id = $(':input[name="subject_id"]:checked', $('#publish_main')).val();
-		$('body').trigger('initPopDivEvent', [function(datas) {
+		$('#pop_div').trigger('initPopDivEvent', [function(datas) {
 			me.popDivCallback(datas);
 		}, subject_id, context.data('data') || {}]);
 	});

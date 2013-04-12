@@ -49,13 +49,13 @@ if(isWidescreen){document.write("<style type='text/css'>.demo{width:1194px;}</st
 <div class="demo content">
   <!--main star-->
    <div class="main">
-    <h4><a href="/Sns/Album/Person/albumlist/client_account/{$client_account}" class="f14" title=""><span class="btn_left"></span><span class="btn_right">返回相册首页</span></a></h4>
+    <h4><a href="/Sns/Album/Personalbum/albumlist/client_account/{$client_account}" class="f14" title=""><span class="btn_left"></span><span class="btn_right">返回相册首页</span></a></h4>
     <div class="clear"></div>
     <!--publish_main star-->
     <div class="publish_main">
       <h3>个人相册>{$album_list.album_name}</h3>
       <p class="photo_sub">
-         <a href="/Sns/Album/Person/uplaodPhoto/client_account/{$client_account}/album_id/{$album_id}" class="f14" title=""><span class="btn_left"></span><span class="btn_right">上传照片</span></a><a href="/Sns/Album/Personphoto/photolist/client_account/{$client_account}/album_id/{$album_id}/client_account/{$client_account}" class="ppl_photo" title="">普通模式</a>
+         {if $is_edit}<a href="/Sns/Album/Personalbum/uplaodPhoto/client_account/{$client_account}/album_id/{$album_id}" class="f14" title=""><span class="btn_left"></span><span class="btn_right">上传照片</span></a>{/if}<a href="/Sns/Album/Personphoto/photolist/client_account/{$client_account}/album_id/{$album_id}/client_account/{$client_account}" class="ppl_photo" title="">普通模式</a>
       </p>
       <div class="clear"></div>
       {literal}

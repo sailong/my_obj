@@ -65,8 +65,8 @@
       <div class="list_photo_main">
         <div class="list_photo_left">
           <p class="photo_left_top">
-           <a href="/Sns/Album/Classphoto/uplaodPhoto/class_code/{$class_code}/album_id/{$album_id}" class="f14" title=""><span class="btn_left"></span><span class="btn_right">上传照片</span></a>
-           <a href="/Sns/Album/Classphoto/photoPlist/class_code/{$class_code}/album_id/{$album_id}/client_account/{$client_account}" class="up_photo" title="">瀑布流</a>
+           {if $is_edit}<a href="/Sns/Album/Classphoto/uplaodPhoto/class_code/{$class_code}/album_id/{$album_id}" class="f14" title=""><span class="btn_left"></span><span class="btn_right">上传照片</span></a>{/if}
+           {if $album_list.photo_num gt 20}<a href="/Sns/Album/Classphoto/photoPlist/class_code/{$class_code}/album_id/{$album_id}/client_account/{$client_account}" class="up_photo" title="">瀑布流</a>{/if}
            <a href="#" class="xcxq_zk f_green"><span>相册详情</span><span id="icon_img" class="icon_down"></span></a>
           </p>
           <div class="clear"></div>

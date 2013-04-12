@@ -128,14 +128,21 @@ class BlogComments {
             return false;
         }
         
+        $each_limit = 5;
         $up_ids = array_keys($comment_list);
         
         $mBlogComments = ClsFactory::Create('Model.Blog.mBlogComments');
-        $child_comment_arr = $mBlogComments->getBlogCommentsByUpId($up_ids);
+        
+        $stat_list = $mBlogComments->getBlogCommentsChildrenStatByUpid($up_ids);
+        $child_comment_arr = $mBlogComments->getBlogCommentsChildrenByUpid($up_ids, $each_limit);
         
         foreach($comment_list as $comment_id=>$comment) {
             if(isset($child_comment_arr[$comment_id])) {
                 $comment['child_items'] = (array)$child_comment_arr[$comment_id];
+                $remain_nums = $stat_list[$comment_id] - $each_limit;
+                if($remain_nums > 0) {
+                    $comment['remain_nums'] = $remain_nums;
+                }
             } else {
                 $comment['child_items'] = array();
             }

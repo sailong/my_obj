@@ -18,6 +18,8 @@ class CommentsAction extends SnsController {
         
         $comment_list = $this->appendCommentsAccess($comment_list);
         
+        //dump($comment_list);
+        
         $this->ajaxReturn($comment_list, '获取成功!', 1, 'json');
     }
     

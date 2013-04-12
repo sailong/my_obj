@@ -19,6 +19,6 @@ class feed_class_album{
         }
         
         $RM = ClsFactory::Create("RModel.Feed.mZsetClassAlbum");
-        return $RM->setFeed($class_code, time(), $feed_id);
+        return $RM->setFeed($class_code, $feed_id, $feed_id);
     }
 }

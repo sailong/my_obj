@@ -132,6 +132,68 @@ class ListAction extends SnsController {
         $this->ajaxReturn($ret_list, '获取成功!',  1, 'json');
     }
     
+	/**
+     * 获取与我相关的动态信息
+     */
+    public function getUserMyFeedAjax() {
+        $last_id = $this->objInput->getStr('last_id');
+        
+        $last_id = max(0, $last_id);
+        
+        import('@.Control.Api.FeedApi');
+        $FeedApi = new FeedApi();
+        $feed_list = $FeedApi->getUserMyFeed($this->user['client_account'], $last_id, 10);
+        if(empty($feed_list)) {
+            $this->ajaxReturn(null, '没有更多的动态信息!', -1, 'json');
+        }
+        
+        //处理动态的删除权限问题
+        foreach((array)$feed_list as $feed_id => $feed) {
+            if($feed['add_account'] == $this->user['client_account']) {
+                $feed['can_del'] = true;
+            }
+            $feed_list[$feed_id] = $feed;
+        }
+        
+        $ret_list = array(
+            'feed_list' => $feed_list,
+            'last_id' => min(array_keys($feed_list)),
+        );
+        
+        $this->ajaxReturn($ret_list, '获取成功!',  1, 'json');
+    }
+    
+    /**
+     * 获取用户的好友的动态信息
+     */
+    public function getUserFriendFeedAjax() {
+        $last_id = $this->objInput->getStr('last_id');
+        
+        $last_id = max(0, $last_id);
+        
+        import('@.Control.Api.FeedApi');
+        $FeedApi = new FeedApi();
+        $feed_list = $FeedApi->getUserFriendFeed($this->user['client_account'], $last_id, 10);
+        if(empty($feed_list)) {
+            $this->ajaxReturn(null, '没有更多的动态信息!', -1, 'json');
+        }
+        
+        //处理动态的删除权限问题
+        foreach((array)$feed_list as $feed_id => $feed) {
+            if($feed['add_account'] == $this->user['client_account']) {
+                $feed['can_del'] = true;
+            }
+            $feed_list[$feed_id] = $feed;
+        }
+        
+        $ret_list = array(
+            'feed_list' => $feed_list,
+            'last_id' => min(array_keys($feed_list)),
+        );
+        
+        $this->ajaxReturn($ret_list, '获取成功!',  1, 'json');
+    }
+    
     /**
      * 删除动态信息
      */
@@ -160,11 +222,11 @@ class ListAction extends SnsController {
      * 加载动态的模板信息
      */
     public function loadFeedTemplateAjax() {
-        $tpl = $this->objInput->getStr('tpl');
+//        $tpl = $this->objInput->getStr('tpl');
+//        
+//        $tpl = in_array($tpl, array('big', 'middle')) ? $tpl : 'middle';
         
-        $tpl = in_array($tpl, array('big', 'middle')) ? $tpl : 'middle';
-        
-        $this->display('feed_' . $tpl);
+        $this->display('feed');
     }
     
     /**

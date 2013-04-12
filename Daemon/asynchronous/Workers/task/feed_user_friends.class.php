@@ -24,8 +24,8 @@ class feed_user_friends {
         $RM1 = ClsFactory::Create("RModel.Feed.mZsetUserAll");
         
         foreach($friend_uids as $uid) {
-            $RM->setFeed($uid, time(), $feed_id);
-            $RM1->setFeed($uid, time(), $feed_id);
+            $RM->setFeed($uid, $feed_id, $feed_id);
+            $RM1->setFeed($uid, $feed_id, $feed_id);
         }
         
         return true;

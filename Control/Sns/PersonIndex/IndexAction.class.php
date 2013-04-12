@@ -40,6 +40,7 @@ class IndexAction extends SnsController {
         //获取个人帐号的基本信息
         $mUSer = ClsFactory::Create('Model.mUser');
         $user_list = $mUSer->getUserBaseByUid($vuid);
+        
         $user_list[$vuid]['active_count_day'] = $active_count_day;
         $user_list[$vuid]['active_count'] = $active_count['value'];
         $user_list[$vuid]['friend_total_count'] = $friend_total_count;
@@ -48,10 +49,10 @@ class IndexAction extends SnsController {
         
         $this->assign('user_list',array_shift($user_list));
         $this->assign('vuid',$vuid);
-        $this->assign('client_account',$client_account);
+        $this->assign('client_account', $client_account);
+        
         $this->display("main_first");
     }
-    
     
     public function get_vistior_list_ajax() {
         $client_account = $this->objInput->getStr('vuid');

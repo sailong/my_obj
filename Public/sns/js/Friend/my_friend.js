@@ -696,7 +696,7 @@ Friend.register(function() {
 		var sendBoxObj = $('#content', divObj).sendBox({
 			panels:'emote,upload',
 			type:'post',
-			url:'/Sns/Friend/Manage/sendPrivateSmgAjax',
+			url:'/Sns/PrivateMsg/PrivateMsg/add_private_msg',
 			dataType:'json',
 			//表单提交前得验证
 			beforeSubmit:function() {
@@ -708,7 +708,7 @@ Friend.register(function() {
 				}
 				var friend_account = $('#friend_account', divObj).val();
 				if($('*[name="friend_account"]').length == 0) {
-					$('<input type="hidden" name="friend_account" value="' + friend_account + '" />').appendTo(formObj);
+					$('<input type="hidden" name="to_uid" value="' + friend_account + '" />').appendTo(formObj);
 				} else {
 					$('*[name="friend_account"]').val(friend_account);
 				}

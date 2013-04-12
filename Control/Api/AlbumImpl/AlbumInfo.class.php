@@ -116,7 +116,8 @@ class AlbumInfo {
                     $img_file_url = $album_auto_img;
                 }
             }
-             
+            $album_val['add_date'] = date('Y-m-d',$album_val['add_time']);
+            $album_val['upd_date'] = date('Y-m-d',$album_val['upd_time']);
             $album_val['album_img_path'] = $img_file_url;
             $album_list[$album_id] = $album_val;
             

@@ -53,7 +53,7 @@ class_photo_upload.prototype.attachEvent=function() {
 		//打开创建弹出层
 		me.createAlbum();
 	});
-	$("#upload_finish_close",$(".sczp")).click(function() {
+	$("#upload_finish_close",$(".finishupload")).click(function() {
 		var dialogObj = art.dialog.list['upload_end'];
 		if(!$.isEmptyObject(dialogObj)) {
 			dialogObj.close();
@@ -63,12 +63,12 @@ class_photo_upload.prototype.attachEvent=function() {
 	//绑定开始上传的事件
 	$("#start_upload").click(function() {
 		var secret_key = $("#secret_key").val();
-		var album_obj = $("#xcid") || {};
-		if($.isEmptyObject(album_obj)) {
+		var xcid = $("#xcid").val() || '';
+		if(xcid == '') {
 			me.no_album_tip();
 			return false;
 		}
-		var postobj = { "secret_key" : secret_key, "client_account" : me.client_account, "album_id" : album_obj.val()};
+		var postobj = { "secret_key" : secret_key, "client_account" : me.client_account, "album_id" :xcid};
 		me.swfu.setPostParams(postobj);
 		me.swfu.startUpload();
 	});
@@ -88,7 +88,7 @@ class_photo_upload.prototype.initUpload=function() {
 	var me = this;
 	var settings = {
 		flash_url : me.img_server + "/tool_flash/swfupload/swfupload.swf",
-		upload_url: "/Sns/Album/Personphotoupload/index",
+		upload_url: "/Sns/Album/Photoupload/index",
 		post_params:{
 			
 		},
@@ -189,6 +189,7 @@ class_photo_upload.prototype.createAlbum = function () {
 				album_id = i; 
 			}
 			if(album_id != '') {
+				me.album_id = album_id;
 				xcselect_obj.val(album_id);
 			}
 		}

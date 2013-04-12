@@ -9,25 +9,29 @@ class ClassalbumAction extends SnsController{
     
     public function albumlist() {
         $class_code = $this->objInput->getInt('class_code');
-        $page = $this->objInput->getInt('page');
-        
-        $class_code = $this->check_class_code($class_code);
+        $tmp_class_code = $this->check_class_code($class_code);
         if(empty($class_code)) {
             $this->showError('班级不存在！','/Sns/Index');
             exit;
         }
+        
         //检测登陆者是否有编辑的权限
         $is_edit = false;
-        $class_role = $this->user['client_class'][$class_code]['teacher_class_role'];
-        if(in_array($class_role, array(1,2,3))) {
-            $is_edit = true;
+        if($tmp_class_code == $class_code) {
+            $class_role = $this->user['client_class'][$class_code]['teacher_class_role'];
+            $class_admin = $this->user['client_class'][$class_code]['class_admin'];
+            
+            if(in_array($class_role, array(1,3)) || !empty($class_admin)) {
+                $is_edit = true;
+            }
         }
+        
         $img_file_url = '/Public/wmw_images/auto_photo_img/wzp.jpg';
         $this->assign('is_edit', $is_edit);
         $this->assign('class_code', $class_code);
         $this->assign('client_account', $this->user['client_account']);
         $this->assign('no_photo_img', $img_file_url);
-      
+        
         $this->display('class_list_album');
     }
     
@@ -88,12 +92,16 @@ class ClassalbumAction extends SnsController{
         if(empty($data_arr)) {
             $this->ajaxReturn(null, '', -1, 'json');
         }
-        $json_list = $this->AlbumApi->addClassAlbum($data_arr);
-        if(empty($json_list)) {
+        $album_id = $this->AlbumApi->addClassAlbum($data_arr);
+        if(empty($album_id)) {
             $this->ajaxReturn(null, '', -1, 'json');
         }
+        //添加动态
+        import("@.Control.Api.FeedApi");
+        $feed_api = new FeedApi();
+        $feed_id = $feed_api->class_create($class_code,$this->user['client_account'],$album_id,FEED_ALBUM, FEED_ACTION_PUBLISH);
         
-        $this->ajaxReturn($json_list, '', 1, 'json');
+        $this->ajaxReturn($album_id, '', 1, 'json');
     }
     
     /**
@@ -149,7 +157,26 @@ class ClassalbumAction extends SnsController{
         
         $this->ajaxReturn($rs, '', 1, 'json');
     }
-    
+    /**
+     * 更新相册封面
+     */
+    public function setAlbumImg() {
+        $album_id = $this->objInput->postInt('album_id');
+        $album_img = $this->objInput->postStr('album_img');
+        $class_code = $this->objInput->postInt('class_code');
+        if(empty($album_id) && empty($album_img)) {
+            $this->ajaxReturn('', '更新失败', -1, 'json');
+        }
+        if(!$this->check_class_code($class_code)) {
+            $this->ajaxReturn('', '更新失败', -1, 'json');
+        }
+        $album_data = array('album_img'=>$album_img);
+        $rs = $this->AlbumApi->updClassAlbum($album_data, $album_id, $class_code);
+        if(empty($rs)) {
+            $this->ajaxReturn(null, '更新失败', -1, 'json');
+        }
+        $this->ajaxReturn($rs, '更新成功', 1, 'json');
+    }
     /**
      * 检测班级编号是否存在
      * @param int $class_code

@@ -195,7 +195,7 @@ class ClassAlbum {
     }
     
     /**
-     * 相册权限常量                                  提取到公共配置文件中*******************************************
+     * 相册权限常量         提取到公共配置文件中*******************************************
      * @param int $grant_id
      * 
      * @return Array || String
@@ -206,7 +206,7 @@ class ClassAlbum {
             1=>"本班",
             2=>"本学校"
         );
-        if(empty($grant_id) && $grant_id==null) {
+        if($grant_id === NULL) {
             return $grant_arr;
         }
         

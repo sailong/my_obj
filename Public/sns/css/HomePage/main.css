@@ -4,7 +4,7 @@
 
 
 /*jh_main_left star*/
-.jh_main_left{ width:160px; float:left; display:block;}
+.jh_main_left{ width:160px; float:left; display:inline-block;overflow:hidden;}
 
 	/*头像 star*/
 	.jh_m_l_tx img{ width:160px; height:160px; border:none; }
@@ -45,7 +45,7 @@
 
 
 /*jh_main_center star*/
-.jh_main_center{ width:580px; float:left; margin-left:10px; p}
+.jh_main_center{ width:580px; float:left; margin-left:10px;overflow:hidden; }
 	.sec_nav{ border-bottom:#419400 solid 2px; margin-top:10px;}
 		.sec_nav .sec_nav_selected{ background:url(../../images/HomePage/main/sec_nav_selected.gif) 0 0 no-repeat; width:112px; height:36px; display:inline-block; text-align:center; font:bold 15px/36px "微软雅黑"; color:white; text-decoration:none;}
 		.sec_nav .sec_nav_noselected{ background:url(../../images/HomePage/main/sec_nav_noselected.gif) 0 bottom no-repeat; width:112px; height:36px; display:inline-block; text-align:center; font:14px/36px "微软雅黑"; color:#444; text-decoration:none; }
@@ -54,7 +54,7 @@
 .system_message{width:578px; padding:1px; background:#fff; float:left; margin:10px 0;}
 .system_top{background:url(../../images/HomePage/main/system_top_bj.gif) 0 0 no-repeat; height:7px; overflow:hidden; }
 
-.system_center{background:url(../../images/HomePage/main/class_people_bj.gif) repeat; border-right:1px #CCCCCC solid; border-left:1px #CCCCCC solid; padding:10px 20px; }
+.system_center{background:url(../../images/HomePage/main/class_people_bj.gif) repeat; border-right:1px #CCCCCC solid; border-left:1px #CCCCCC solid; padding:10px 20px 0 20px; }
 .info{width:540px; padding-bottom:10px; }
 .info dl{float:left; width:60px; text-align:center; margin-right:10px;}
 
@@ -88,13 +88,28 @@
 	
 	.news_moreamore{ text-align:center; border:#317400 dotted 1px;padding:5px 0;}
 		.news_moreamore a{ color:#317400}
-		
+	
+	/* 说说框 */
+	.say_tab{width:580px; padding-top:6px; overflow:hidden;}
+				.icon_say_pic{background:url(../../images/PersonIndex/main_first/icon_say_pic.gif) 0 0 no-repeat;width:26px;height:22px;display:inline-block;float:left;margin:2px 8px 0px;}
+			    
+				.say_textarea{width:534px; height:40px; border:1px #ccc solid; margin:4px 0px 6px;}
+			  
+			    .say_tab p a{display:inline-block; color:#464646; margin-right:8px;}
+			  		.icon_face{background:url(../../images/PersonIndex/main_first/icon_face.gif) 0 0 no-repeat; width:22px; height:22px; display:inline-block; float:left;}
+			        .icon_pic{background:url(../../images/PersonIndex/main_first/icon_pic.gif) 0 0 no-repeat; width:24px; height:20px; display:inline-block;float:left; margin:2px 1px 0px 0px;}
+			        .say_tab p a:hover{text-decoration:none;}
+				
+				    .td_pic_width{width:160px;}
+				    .td_width{width:300px; text-align:right; color:#6b6b6b; font:12px "微软雅黑";}
+					.align_right{text-align:right;}
+		            .green_btn{background:url(../../images/PersonIndex/main_first/green_btn.gif) 0 0 no-repeat; width:57px; height:24px; color:#fff; border:none; cursor:pointer;}
 
 /*jh_main_center end*/
 
 
 /*jh_main_right star*/
-.jh_main_right{ width:200px; float:left; margin-left:10px;}
+.jh_main_right{ width:200px; float:left; margin-left:10px;overflow:hidden;}
 
 	/*签到及备忘 star*/
 	.qd_bw{ background:url(../../images/HomePage/main/qd_bj.gif) 0 0 no-repeat; width:200px; height:46px; padding:15px 0 0 15px}

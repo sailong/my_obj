@@ -49,8 +49,17 @@ class PrivateMsgAction extends SnsController{
             $private_msg['send_url'] = $user_info[$private_msg['send_uid']]['client_headimg_url'];
             $private_msg['to_name'] = $user_info[$private_msg['to_uid']]['client_name'];
             $private_msg['to_url'] = $user_info[$private_msg['to_uid']]['client_headimg_url'];
-            $img_str = "<img src='" . $private_msg['img_url'] . "'/>";
-            $private_msg['content'] = preg_replace("/#分享照片#/", $img_str, $private_msg['content']);
+//            $img_str = "<img src='" . $private_msg['img_url'] . "'/>";
+            $img_url = $private_msg['img_url'];
+            if (!empty($img_url)) {
+                $path_parts = pathinfo($img_url);
+                $src_path = $path_parts['dirname'];
+                $filename = $path_parts['basename'];
+                $big_filename = str_replace('_m', '', $filename);
+                $private_msg['img_url'] = $img_url;
+                $private_msg['big_img_url'] = $src_path . '/' . $big_filename;
+            }
+            $private_msg['content'] = preg_replace("/#分享照片#/", "", $private_msg['content']);
             $private_msg['add_time'] = date('Y-m-d H:i', $private_msg['add_time']);
             if($current_uid  == $private_msg['send_uid']) {
                 $private_msg['is_send'] = true;
@@ -79,8 +88,15 @@ class PrivateMsgAction extends SnsController{
 			$uploadObj = ClsFactory::Create('@.Common_wmw.WmwUpload');  
             $uploadObj->_set_options($up_init);
             $up_rs = $uploadObj->upfile($name);
+
+            $filename = $up_rs['filename'];
             
-			return '/'.str_replace(WEB_ROOT_DIR . '/', '', $up_rs['getfilename']);
+            import('@.Common_wmw.WmwScaleImage');
+            $wmwScaleImage = new WmwScaleImage();
+            $s_path = $wmwScaleImage->scaleSmall($filename);
+            $m_path = $wmwScaleImage->scaleMiddle($filename);                   
+            
+			return '/'.str_replace(WEB_ROOT_DIR . '/', '', $m_path);
 		}
 		
 	    return '';
@@ -89,6 +105,7 @@ class PrivateMsgAction extends SnsController{
     public function add_private_msg(){
         $current_uid = $this->user['client_account'];
         $to_uid = $this->objInput->getStr("to_uid");
+        $to_uid = $to_uid ? $to_uid : $this->objInput->postStr("to_uid");
         $content = $this->objInput->postStr("content");
         $img_url = $this->upload_img("pic");
         
@@ -294,8 +311,18 @@ class PrivateMsgAction extends SnsController{
                     $private_msg['to_name'] = $user_info[$private_msg['to_uid']]['client_name'];
                     $private_msg['send_url'] = $user_info[$private_msg['send_uid']]['client_headimg_url'];
                     $private_msg['to_url'] = $user_info[$private_msg['to_uid']]['client_headimg_url'];
-                    $img_str = "<img src='" . $private_msg['img_url'] . "'/>";
-                    $private_msg['content'] = preg_replace("/#分享照片#/", $img_str, $private_msg['content']);
+                    $private_msg['content'] = preg_replace("/#分享照片#/", '', $private_msg['content']);
+                    
+                    $img_url = $private_msg['img_url'];
+                    if (!empty($img_url)) {
+                        $path_parts = pathinfo($img_url);
+                        $src_path = $path_parts['dirname'];
+                        $filename = $path_parts['basename'];
+                        $big_filename = str_replace('_m', '', $filename);
+                        $private_msg['img_url'] = $img_url;
+                        $private_msg['big_img_url'] = $src_path . '/' . $big_filename;
+                    }         
+                    
                     if($this->user['client_account']  == $private_msg['send_uid']) {
                         $private_msg['is_send'] = true;
                     }else{
@@ -310,7 +337,7 @@ class PrivateMsgAction extends SnsController{
                 array_multisort($priavte_msg_list,SORT_DESC,$keys);
             }
         }
-        
+
         $this->assign("to_name", $user_info[$to_uid]['client_name']);
         $this->assign("to_uid", $to_uid);
         $this->assign("is_end_page", $is_end_page);
