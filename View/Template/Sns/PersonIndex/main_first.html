@@ -127,7 +127,7 @@
            <h3>{if $client_account == $vuid}<span>我的好友({$user_list.friend_total_count})</span><a href="/Sns/Friend/Manage/index" target="__blank;">更多&gt;&gt;</a>{else}<span>Ta的好友({$user_list.friend_total_count})</span>{/if}</h3>
            {literal}
            <span class="clone_selector" style="display:none;">
-           		<a href="/Sns/PersonIndex/Index/index/client_account/{user_friend.client_account}"><img src="{user_friend.client_headimg_url}" class="photo_width40"  title="{user_friend.client_name}" ></a>
+           		<a href="/Sns/PersonIndex/Index/index/client_account/{user_friend.client_account}" target="_blank"><img src="{user_friend.client_headimg_url}" class="photo_width40"  title="{user_friend.client_name}" ></a>
            </span>
             {/literal}
            <p id="friend_list_div">

@@ -23,8 +23,8 @@ class SystemcenterAction extends SnsController{
             $client_info = reset($client_info);
             $data_arr['notice']['sys_id'] = $notice_info['notice_id'];
             $data_arr['notice']['sys_name'] = '班级公告';
-            $data_arr['notice']['sys_img'] = '/Public/sns/images/HomePage/main/icon_notice.jpg';
-            $data_arr['notice']['sys_title'] = $notice_info['notice_title'];
+            $data_arr['notice']['sys_img'] = IMG_SERVER.'/Public/sns/images/HomePage/main/icon_notice.jpg';
+            $data_arr['notice']['sys_title'] = '<a href="/Sns/ClassNotice/Published/index/class_code/'.$class_code.'" class="fc_4f9f32 f14">'.$notice_info['notice_title'].'</a>';
             $data_arr['notice']['sys_content'] = $notice_info['notice_content'];
             $data_arr['notice']['sys_time'] = $notice_info['add_time'];
             $data_arr['notice']['client_name'] = $client_info['client_name'];
@@ -47,10 +47,10 @@ class SystemcenterAction extends SnsController{
             $subject_infos = $mSubjectInfo->getSubjectInfoById($home_work['subject_id']);
             $subject_infos = reset($subject_infos);
             $data_arr['homework']['sys_name'] = '班级作业';
-            $data_arr['homework']['sys_img'] = '/Public/sns/images/HomePage/main/icon_homework.jpg';
+            $data_arr['homework']['sys_img'] = IMG_SERVER.'/Public/sns/images/HomePage/main/icon_homework.jpg';
             $data_arr['homework']['sys_id'] = $home_work['homework_id'];
-            $data_arr['homework']['sys_title'] = $subject_infos['subject_name'];
-            $data_arr['homework']['sys_content'] = '交作业日期 '.date('Y.m.d H.i',$home_work['end_time']).'<a href="/Sns/ClassHomework/Published/index/class_code/'.$class_code.'" class="fc_4f9f32 f14">查看作业</a>';
+            $data_arr['homework']['sys_title'] = '<a href="/Sns/ClassHomework/Published/index/class_code/'.$class_code.'" class="fc_4f9f32 f14">'.$subject_infos['subject_name'].'</a>';
+            $data_arr['homework']['sys_content'] = '交作业日期 '.date('Y.m.d H.i',$home_work['end_time']);
             $data_arr['homework']['sys_time'] = date('Y.m.d H.i',$home_work['add_time']);
             $data_arr['homework']['client_name'] = $client_info['client_name'];
             
@@ -68,10 +68,10 @@ class SystemcenterAction extends SnsController{
             $client_info = $this->getClientInfo($exam_info['add_account']);
             $client_info = reset($client_info);
             $data_arr['exam']['sys_name'] = '班级成绩';
-            $data_arr['exam']['sys_img'] = '/Public/sns/images/HomePage/main/icon_exam.jpg';
+            $data_arr['exam']['sys_img'] = IMG_SERVER.'/Public/sns/images/HomePage/main/icon_exam.jpg';
             $data_arr['exam']['sys_id'] = $exam_info['exam_id'];
-            $data_arr['exam']['sys_title'] = $exam_info['exam_name'];
-            $data_arr['exam']['sys_content'] = '考试日期 '.date('Y.m.d',$exam_info['exam_date']).'<a href="/Sns/ClassExam/View/index/exam_id/'.$exam_info['exam_id'].'" class="fc_4f9f32 f14">查看成绩</a>';
+            $data_arr['exam']['sys_title'] = '<a href="/Sns/ClassExam/View/index/exam_id/'.$exam_info['exam_id'].'" class="fc_4f9f32 f14">'.$exam_info['exam_name'].'</a>';
+            $data_arr['exam']['sys_content'] = '考试日期 '.date('Y.m.d',$exam_info['exam_date']);
             $data_arr['exam']['sys_time'] = date('Y.m.d H.i',$exam_info['add_time']);
             $data_arr['exam']['client_name'] = $client_info['client_name'];
             

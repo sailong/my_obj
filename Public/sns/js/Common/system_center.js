@@ -53,9 +53,11 @@ system_center.prototype = {
 			sys_list = sys_list || {};
 			var parentObj = $("#system_center_selector");
 			for(var i in sys_list) {
+				var item = sys_list[i];
+				item.sys_img_obj = '<img src="' + item.sys_img  + '" />';
 				var sysObj = $('#system_center_clone_selector').clone().removeAttr('id');
 				sysObj.renderHtml({
-					items:sys_list[i]
+					items:item
 				});
 				$(sysObj).appendTo(parentObj);
 			}

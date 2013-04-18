@@ -70,12 +70,38 @@ class ListAction extends SnsController {
         
         $this->ajaxReturn($ret_list, '获取成功!', 1, 'json');
     }
+    
+    /**
+     * 获取个人相应的相册的动态信息
+     */
+    public function getAblumAllFeedAjax() {
+        $client_account = $this->objInput->getInt('client_account');
+        $last_id = $this->objInput->getInt('last_id');
+        
+        $last_id = max(0, $last_id);
+        
+        import('@.Control.Api.FeedApi');
+        $FeedApi = new FeedApi();
+        $feed_list = $FeedApi->getAblumAllFeed($client_account, $last_id, 10);
+        
+        if(empty($feed_list)) {
+            $this->ajaxReturn(null, '没有更多的动态信息!', -1, 'json');
+        }
+        
+        $ret_list = array(
+            'feed_list' => $feed_list,
+            'last_id'	=> min(array_keys($feed_list)),
+        );
+        
+        $this->ajaxReturn($ret_list, '获取成功!', 1, 'json');
+    }    
 
     
     /**
      * 获取孩子的动态信息
      */
     public function getUserChildrenFeedAjax() {
+        $client_account = $this->objInput->getInt('client_account');
         $last_id = $this->objInput->getInt('last_id');
         
         $last_id = max(0, $last_id);
@@ -87,7 +113,7 @@ class ListAction extends SnsController {
         
         import('@.Control.Api.FeedApi');
         $FeedApi = new FeedApi();
-        $feed_list = $FeedApi->getUserChildrenFeed($this->user['client_account'], $last_id, 10);
+        $feed_list = $FeedApi->getUserChildrenFeed($client_account, $last_id, 10);
         
         if(empty($feed_list)) {
             $this->ajaxReturn(null, '没有更多的动态信息!', -1, 'json');
@@ -105,13 +131,14 @@ class ListAction extends SnsController {
      * 获取用户的全部动态信息
      */
     public function getUserAllFeedAjax() {
+        $client_account = $this->objInput->getInt('client_account');
         $last_id = $this->objInput->getStr('last_id');
         
         $last_id = max(0, $last_id);
         
         import('@.Control.Api.FeedApi');
         $FeedApi = new FeedApi();
-        $feed_list = $FeedApi->getUserAllFeed($this->user['client_account'], $last_id, 10);
+        $feed_list = $FeedApi->getUserAllFeed($client_account, $last_id, 10);
         if(empty($feed_list)) {
             $this->ajaxReturn(null, '没有更多的动态信息!', -1, 'json');
         }
@@ -136,13 +163,14 @@ class ListAction extends SnsController {
      * 获取与我相关的动态信息
      */
     public function getUserMyFeedAjax() {
+        $client_account = $this->objInput->getInt('client_account');
         $last_id = $this->objInput->getStr('last_id');
         
         $last_id = max(0, $last_id);
         
         import('@.Control.Api.FeedApi');
         $FeedApi = new FeedApi();
-        $feed_list = $FeedApi->getUserMyFeed($this->user['client_account'], $last_id, 10);
+        $feed_list = $FeedApi->getUserMyFeed($client_account, $last_id, 10);
         if(empty($feed_list)) {
             $this->ajaxReturn(null, '没有更多的动态信息!', -1, 'json');
         }
@@ -167,13 +195,14 @@ class ListAction extends SnsController {
      * 获取用户的好友的动态信息
      */
     public function getUserFriendFeedAjax() {
+        $client_account = $this->objInput->getInt('client_account');
         $last_id = $this->objInput->getStr('last_id');
         
         $last_id = max(0, $last_id);
         
         import('@.Control.Api.FeedApi');
         $FeedApi = new FeedApi();
-        $feed_list = $FeedApi->getUserFriendFeed($this->user['client_account'], $last_id, 10);
+        $feed_list = $FeedApi->getUserFriendFeed($client_account, $last_id, 10);
         if(empty($feed_list)) {
             $this->ajaxReturn(null, '没有更多的动态信息!', -1, 'json');
         }

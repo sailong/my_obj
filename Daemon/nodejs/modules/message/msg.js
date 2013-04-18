@@ -39,7 +39,7 @@ module.exports.msg = function(io){
     	        		news_arr.exam = (response[4] == null) ? 0 : response[4];
 //    	        		news_arr.res = (response[5] == null) ? 0 : response[5];
     	        		news_arr.privatemsg = (response[6] == null) ? 0 : response[6];
-    	        		console.log(news_arr);
+
             		socket.emit('get_msg', news_arr);
             });
         });

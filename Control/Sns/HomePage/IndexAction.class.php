@@ -39,8 +39,9 @@ class IndexAction extends SnsController{
         $this->assign('user_info',$this->user);
         $this->assign('client_account', $client_account);
         $this->assign('class_code', $class_code);
-        $this->assign('user', $this->user);
-        
+//        $this->assign('user', $this->user);
+//        echo '<pre>';
+//        print_r($this->user);
         $this->display("main");    
     }
     

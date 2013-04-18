@@ -204,7 +204,7 @@ class PhotoInfo {
             $img_path = Pathmanagement_sns::getHeadImg($client_acount);
             $head_img_url =$img_path.$client_info['client_headimg'];
             if(!file_exists( WEB_ROOT_DIR.$head_img_url)){
-                $head_img_url = '/Public/uc/images/user_headpic/head_pic.jpg';
+                $head_img_url = IMG_SERVER.'/Public/uc/images/user_headpic/head_pic.jpg';
             }
             $client_info['head_img'] = $head_img_url;
             $client_list[$client_acount] = $client_info;
@@ -239,7 +239,6 @@ class PhotoInfo {
         if(empty($photo_list)) {
             return false;
         }
-
         if(!is_array($photo_list) && is_int($photo_list)) {
             $photo_id = $photo_list;
             $photo_list = $this->getPhotoByPhotoId($photo_id);
@@ -288,4 +287,12 @@ class PhotoInfo {
         return $data;
     }
     
+    public function getPhotos($offset, $limit) {
+      $mAlbumPhotos = ClsFactory::Create('Model.Album.mAlbumPhotos');
+      return $mAlbumPhotos->getPhotos($offset, $limit);
+    }
+    public function getAllCount() {
+      $mAlbumPhotos = ClsFactory::Create('Model.Album.mAlbumPhotos');
+      return $mAlbumPhotos->getAllCount();
+    }
 }

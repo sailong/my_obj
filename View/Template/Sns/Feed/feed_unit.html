@@ -15,7 +15,7 @@
         	<span>{if feed.action == 1}发表{else}评论{/if}了说说</span>
         	{else if feed.feed_type == 2}
         	<span>{if feed.action == 1}发表{else}评论{/if}了日志</span>
-        	{else if feed_type == 3}
+        	{else if feed.feed_type == 3}
         	<span>{if feed.action == 1}上传{else}评论{/if}了照片</span>
         	{/if}
         </div>
@@ -26,12 +26,29 @@
                 	<a href="{feed.src_url}" target="_blank">{feed.title}</a>
                 </h3>
                 {if feed.img_url}
-                <a href = "{feed.big_img_url}" target="_blank"><img data-original="{feed.img_url}" /></a>
+                	{if feed.feed_type == 1} 
+                		<a href = "{feed.big_img_url}" target="_blank"><img data-original="{feed.img_url}" /></a>
+                	{else if feed.feed_type == 2}
+                		<img data-original="{feed.img_url}" />
+                	{else if feed.feed_type == 3}
+                		
+                		<a id="feed_src_url" href="{feed.src_url}" target="_blank"><img data-original="{feed.img_url}" /></a>
+                	{/if}
                 {/if}
                 <p class="d_c_text">
-                   	{feed.feed_content}
+                	{if feed.feed_type == 1} 
+                		{feed.feed_content}
+                	{else if feed.feed_type == 2}
+                		{if feed.feed_content}
+                			{feed.feed_content}
+                		{/if}
+                		<a id="feed_src_url" href="{feed.src_url}" target="_blank">(阅读全文)</a>
+                	{else if feed.feed_type == 3}
+                		
+                	{/if}
+                   	
                    	{if feed.src_url}
-                    <a id="feed_src_url" href="{feed.src_url}" target="_blank">(阅读全文)</a>
+                    
                     {/if}
                 </p>
                 <div class="d_c_info" >
@@ -53,41 +70,31 @@
                     <!--一级默认评论框 star-->
                     <div class="comment_content_mr reply_1st_selector">
                     
-                        <!--默认样式 star-->
-                        <input name="" type="text" class="text_border reply_1st_txt_selector" />
-                        <!--默认样式 end-->
-                        
-			             <table class="mr_huifu reply_2nd_simple_div_selector">
-			                 <tr>
-			                     <td class="user_tx">
-			                     	<img width="40px" height="40px" data-from="#user_headimg_url" />
-			                     </td>
-			                     <td>
-			                         <!--点击之前的样式 star-->
-			                         <input name="" type="text" class="text_border reply_1st_txt_selector" value="我也说一句"/>
-			                         <!--点击之前的样式 end-->
-			                         
-			                         <!--点击之后的样式 star-->
-			                         <div class="tk_huifu simple_reply_div_selector" style="display:none;">
-			                            <textarea id="reply_2nd_conent" name="" cols="5" rows="5"  class="textarea_border reply_2nd_simple_content_selector" name="content" ></textarea>
-			                         </div>
-			                         <!--点击之后的样式 end-->
-			                     </td>
-			                 </tr>
-			             </table>                        
-                        
-                        
-                        <!--点击后样式 star-->
-                        <table id="reply_1st_tab" width="100%" border="0" cellspacing="0" cellpadding="0" style="display:none;">
-                          <tr>
-                            <td colspan="3">
-                            	<textarea id="reply_1st_content" name="" cols="" rows="5" class="textarea_border textarea_border_width reply_1st_content_selector" name="content"></textarea>
-                            </td>
-                          </tr>
-                        </table>
-                        <!--点击后样式 end-->
+		             <!--默认回复样式 star-->
+		             <table class="mr_huifu reply_2nd_simple_div_selector">
+		                 <tr>
+		                     <td class="user_tx">
+		                     	<img width="40px" height="40px" data-from="#user_headimg_url" />&nbsp;&nbsp;
+		                     </td>
+		                     <td>
+		                        <!--默认样式 star-->
+		                        <input name="" type="text" width="100%" class="text_border reply_1st_txt_selector" value="我也说一句"/>
+		                        <!--默认样式 end-->     
+		                         
+		                        <!--点击后样式 star-->
+		                        <table id="reply_1st_tab" width="100%" border="0" cellspacing="0" cellpadding="0" style="display:none;">
+		                          <tr>
+		                            <td colspan="3">
+		                            	<textarea id="reply_1st_content" name="" cols="" rows="5" class="textarea_border textarea_border_width reply_1st_content_selector" name="content"></textarea>
+		                            </td>
+		                          </tr>
+		                        </table>
+		                        <!--点击后样式 end-->
+		                     </td>
+		                 </tr>
+		             </table>                    
                     </div>
-                    
+
                     <!--一级评论及其附属的二级评论 全部内容 star-->
                     <div id="first_comment_list" class="all_first_comment">   
                        

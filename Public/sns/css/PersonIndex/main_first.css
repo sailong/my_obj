@@ -41,7 +41,7 @@
 			.say_tab{width:580px; padding-top:6px; overflow:hidden;}
 				.icon_say_pic{background:url(../../images/PersonIndex/main_first/icon_say_pic.gif) 0 0 no-repeat;width:26px;height:22px;display:inline-block;float:left;margin:2px 8px 0px;}
 			    
-				.say_textarea{width:578px; height:40px; border:1px #ccc solid; margin:4px 0px 6px;}
+				.say_textarea{width:560px; height:40px; border:1px #ccc solid; margin:4px 0px 6px;}
 			  
 			    .say_tab p a{display:inline-block; color:#464646; margin-right:8px;}
 			  		.icon_face{background:url(../../images/PersonIndex/main_first/icon_face.gif) 0 0 no-repeat; width:22px; height:22px; display:inline-block; float:left;}
@@ -58,7 +58,7 @@
 				.main_nav_a1:hover{text-decoration:none;}
 				
 				
-			.first_info{width:578px; padding:10px 0; background:url(../../images/PersonIndex/main_first/class_people_bj.gif) repeat; border:1px #c9c9c9 solid; border-top:none;}
+			.first_info{width:578px; padding:10px 0;  border-top:none;}
 				.pre_info{width:558px; margin-bottom:10px;}
 					.pre_info dl{width:60px; float:left; margin-right:10px; text-align:center;}
 						.pre_info dl dt img{width:60px; height:60px;}

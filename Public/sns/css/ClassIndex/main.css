@@ -46,8 +46,8 @@
 		.main_nav_a1{background:url(../../images/ClassIndex/main_nav_a1.jpg) 0 0 no-repeat; width:112px; height:36px; display:inline-block; text-align:center; font:16px "微软雅黑";line-height:36px;                      color:#fff;}
 		.main_nav_a2{background:url(../../images/ClassIndex/main_nav_a2.jpg) 0 0 no-repeat; width:112px; height:36px; display:inline-block; text-align:center; font:16px "微软雅黑";line-height:36px; color:#464646;}
 		.mr6{margin-right:6px;}
-	.say_box{width:746px; border:1px #d2d2d2 solid; margin:10px 0px; background:#fff; padding:1px;}
-		.say_text{width:742px; border:none; background:#fff; padding:2px 0px 0px 2px; height:60px;}	
+	.say_box{width:746px; border:1px #d2d2d2 solid; margin:10px 0px; padding:1px;}
+		.say_text{width:730px; border:none; background:#fff; padding:2px 0px 0px 2px; height:60px;margin:0 auto;}	
 		.say_box .say_box_main{background:#e5f6cc; color:#6b6b6b; height:28px; padding:0px 20px;}
 			.icon_face{background:url(../../images/ClassIndex/icon_face.gif) 0 0 no-repeat; width:22px; height:22px; display:inline-block; float:left; margin:3px 10px 0px 0px;}
 			.icon_pic{background:url(../../images/ClassIndex/icon_pic.gif) 0 0 no-repeat; width:24px; height:20px; display:block; float:left; margin:4px 0px 0px 0px;}
@@ -220,7 +220,7 @@
 
 
 /*添加好友*/
-.edit_comment{width:500px;border:1px #6db500 solid; background:#fff; font:14px "宋体";}
+.edit_comment{width:550px;border:1px #6db500 solid; background:#fff; font:14px "宋体";}
 	.tcc_title{font:14px "宋体"; background:#f8f8f8; border-bottom:1px #e9e9e9 solid; padding:0px 10px; height:33px; line-height:33px; width:480px; position:relative;}
 	  .close_icon{background:url(../../images/Common/sns_images/icon_close.gif) 0 0 no-repeat; width:10px; height:9px; display:inline-block; position:absolute; right:10px; top:12px;}
 	.textarea_main{padding:10px;}

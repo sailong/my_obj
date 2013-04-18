@@ -299,14 +299,16 @@
     font-size: 12px;
     height: 65px;
 	padding:6px;
-    margin: 0;
+   
     outline: medium none;
     overflow: auto;
     resize: none;
-    width: 320px;                /*文本框宽度 设定值-12px 文本框最小宽度不能小于320px*/
+    width: 320px; 
+     margin: 0 auto;               /*文本框宽度 设定值-12px 文本框最小宽度不能小于320px*/
 }
 .sendbox_mini {
     display: inline-block;
     margin: 10px auto 0;
-    text-align: left;
+    text-align: center;
+  
 }

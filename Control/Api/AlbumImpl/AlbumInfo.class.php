@@ -98,10 +98,10 @@ class AlbumInfo {
         import("@.Common_wmw.Pathmanagement_sns");
         foreach($album_list as $album_id=>$album_val) {
             $img_path = Pathmanagement_sns::getAlbum($album_val['add_account']);
-            $img_file_url = '/Public/wmw_images/auto_photo_img/wfm.jpg';
+            $img_file_url = IMG_SERVER.'/Public/wmw_images/auto_photo_img/wfm.jpg';
             if(empty($album_val['photo_num'])) {
                 //无封面
-                $img_file_url = '/Public/wmw_images/auto_photo_img/wzp.jpg';
+                $img_file_url = IMG_SERVER.'/Public/wmw_images/auto_photo_img/wzp.jpg';
             }elseif(!empty($album_val['album_img'])) {
                 //有封面
                 $album_img = $img_path.$album_val['album_img'];
@@ -137,7 +137,7 @@ class AlbumInfo {
                 $img_path = Pathmanagement_sns::getHeadImg($client_acount);
                 $head_img_url =$img_path.$client_info['client_headimg'];
                 if(!file_exists( WEB_ROOT_DIR.$head_img_url)){
-                    $head_img_url = '/Public/uc/images/user_headpic/head_pic.jpg';
+                    $head_img_url = IMG_SERVER.'/Public/uc/images/user_headpic/head_pic.jpg';
                 }
                 $client_info['head_img'] = $head_img_url;
                 $client_list[$client_acount] = $client_info;

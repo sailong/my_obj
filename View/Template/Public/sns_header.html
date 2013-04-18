@@ -13,7 +13,7 @@
 
 <input type="hidden" id="uid" value="{$uid}"/>
 <input type="hidden" id="class_code" value="{$class_code}"/>
-<div class="head" id="header_list">
+<div class="head" id="header_list" style="z-index:999;position:relative;">
   <!--head_main star-->
     <div class="head_main">
       <!--logo star-->
@@ -38,7 +38,7 @@
       
       <!--urse_info star-->
       
-	  <div class="user_info" id="msg_dispaly">
+	  <div class="user_info" id="msg_dispaly" >
          <ul class="user_msg_ul" >
              <li class="user_tcc">
                  <a href="javascript:;" class="user_info_a">
@@ -77,7 +77,7 @@
  
 <!--弹出层 star-->
  
- <div id="show_msg_on_load" class="news_tcc"  style="display:none;">
+ <div id="show_msg_on_load" class="news_tcc"  style="z-index:1000;display:none;">
    <p class="news_tcc_top"></p>
    <div class="news_tcc_main" id="show_msg_load_main">
      <ul><a href="javascript:;" class="news_close"></a></ul>

@@ -17,8 +17,8 @@ header.prototype.init = function(){
 	});	
 
 	function openSubMenu() {
+		
 		$(this).find('ul').css('visibility', 'visible');
-		$(this).find('ul').css('z-index', 1000);
 		$("#show_msg_on_load").trigger('click');
 	};
 	

@@ -367,7 +367,7 @@ sendBox.prototype = {
 				var keyCode = evt.keyCode || evt.which;
 				//字符超过限制后只有Backspace键能够按
 				if(keyCode != 8) {
-					$.showError('公告内容不能超过' + options.chars + '字!');
+					$.showError('内容不能超过' + options.chars + '字!');
 					return false;
 				}
 			}

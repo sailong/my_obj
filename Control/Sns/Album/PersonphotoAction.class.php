@@ -172,8 +172,15 @@ class PersonphotoAction extends SnsController {
         
         $login_account = $this->user['client_account'];
         
-        if(empty($client_account) || empty($album_id)) {
+        if(empty($client_account) || empty($photo_id)) {
             $this->showError("数据错误",'/Sns/PersonIndex/Index');exit;
+        }
+        if(empty($album_id)) {
+            import("@.Control/Api/AlbumImpl/PhotoInfo");
+            $PhotoInfo = new PhotoInfo();
+            $photo_list = $PhotoInfo->getPhotoByPhotoId($photo_id);
+            $photo_list = reset($photo_list);
+            $album_id = $photo_list['album_id'];
         }
         
         //检测登陆者是否有编辑的权限
@@ -199,7 +206,7 @@ class PersonphotoAction extends SnsController {
             }
         }
         
-        $this->assign('album', $album_list[$album_id]);
+        $this->assign('album', $album_list);
         $this->assign('is_edit', $is_edit);
         $this->assign('photo_id', $photo_id);
         $this->assign('album_id', $album_id);

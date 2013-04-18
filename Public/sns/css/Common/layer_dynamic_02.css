@@ -11,8 +11,8 @@
 		.user_photo70{ width:70px; height:70px; border:white solid 1px;}
 	
 	/*右侧内容*/
-	.dynamic_content{ float:left; width:500px; background:url(../../images/Common/layer_dynamic_02/d_content.jpg) 0 0 repeat-y; }
-		.d_c_top{ background:url(../../images/Common/layer_dynamic_02/d_top.jpg) 0 0 no-repeat; width:446px; height:26px; padding-left:36px; padding-right:18px; padding-top:15px; font:14px "微软雅黑";}
+	.dynamic_content{ float:left; width:500px; background:url(../../images/Common/layer_dynamic_02/d_content.png) 0 0 repeat-y;margin-bottom:15px; }
+		.d_c_top{ background:url(../../images/Common/layer_dynamic_02/d_top.png) 0 0 no-repeat; width:446px; height:26px; padding-left:36px; padding-right:18px; padding-top:15px; font:14px "微软雅黑";}
 			.d_c_top span{ color:#666; margin-left:10px;}
 			.d_c_top a{ color:green; }
 		.d_c_content{ margin-left:36px; margin-right:18px;}
@@ -25,7 +25,7 @@
 				.d_c_time span{font:14px/30px "宋体"; color:#999; display:inline-block; float:left;}
 				.d_c_active a{font:14px/30px "宋体"; color:green;display:inline-block; float:right; margin-left:10px;}
 			.d_c_content img{ max-width:600px;}
-		.d_c_footer{ background:url(../../images/Common/layer_dynamic_02/d_footer.jpg) 0 0 no-repeat; width:500px; height:29px; }
+		.d_c_footer{ background:url(../../images/Common/layer_dynamic_02/d_footer.png) 0 0 no-repeat; width:500px; height:29px; }
 
 
 /*评论样式*/
@@ -38,6 +38,7 @@
 			.srwz_b{ width:80%; text-align:right;}
 			.text_border{ border:#dfdfdf solid 1px; width:100%; font:12px/20px "宋体";  margin-bottom:5px; height:20px;}
 			.textarea_border{ border:#dfdfdf solid 1px; width:100%; font:12px/14px "宋体";  margin-bottom:5px;}
+			.textarea_border_width{width:355px; height:50px;}
 			.biaoqing{ background:url(../../images/Common/layer_dynamic_02/tcc_icon_face.gif) 0 0 no-repeat; width:16px; height:16px; display:inline-block;}
 			.green_btn{background:url(../../images/Common/layer_dynamic_02/green_btn.gif) 0 0 no-repeat; width:57px; height:24px; border:none; cursor:pointer; color:#fff; float:right;}
 			
@@ -47,8 +48,9 @@
 				.first_comment td{font:14px/22px "宋体";}
 				.comment_time{ width:50%; height:20px;}
 					.comment_time span{font:12px/22px "宋体"; color:gray;}
-				.comment_delete{ width:50%;text-align:right; height:20px;}
-					.comment_delete a{font:12px/22px "宋体"; color:green; float:right;}
+				.comment_btn{ width:50%;text-align:right; height:20px;}
+					.comment_btn a.delete_btn{font:12px/22px "宋体"; color:green; float:right;}
+					.comment_btn a.reply_btn{ background:url(../../images/Common/layer_dynamic/icon_del.gif) 0 center no-repeat;display:inline-block; width:11px; height:22px; margin-right:10px;}
 			
 			.user_tx{ width:50px;vertical-align:text-top; text-align:center; padding-right:5px; }
 				.user_tx img{ border:#dfdfdf solid 1px; margin-bottom:10px;}
@@ -62,8 +64,8 @@
 		
 		/*默认回复样式*/
 		.mr_huifu{ width:100%;}
-			.tk_huifu{ width:290px;}	
-			
+			.tk_huifu{ width:246px;}	
+			.tk_huifu textarea{ width:246px;height:50px;}
 			
 /*加载更多*/
 .loadmore{ background-color:#ebebeb; border:#b0b0b0 dashed 1px; text-align:center; font:14px/30px "宋体"; margin:10px 0;}

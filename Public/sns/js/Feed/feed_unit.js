@@ -414,7 +414,7 @@ comment_1st_unit.prototype = {
 		var comment2ndUnit = new comment_2nd_unit(child_comment, me.feed_type);
 		var childDivObj =comment2ndUnit.getElement();
 		childDivObj.data('datas', child_comment);
-		
+
 		parentObj.append(childDivObj);
 	}
 	
@@ -558,7 +558,7 @@ comment_events.prototype = {
 				$('.reply_1st_content_selector', tabObj).sendBox({
 					panels:'emote',
 					type:'post',
-					skin: skin || 'mini',
+					skin:'mini',
 					url:params.publish_comment_url || "",
 					data:params.post_params || {},
 					dataType:'json',
@@ -599,6 +599,7 @@ comment_events.prototype = {
 
 	//一级评论相关的事件
 	,delegateEventForComment1stUnit:function() {
+
 		//一级评论的删除事件
 		$('.comment_1st_delete_selector').live('click', function() {
 			var ancestorObj = $(this).closest('.comment_1st_unit_selector');
@@ -629,9 +630,9 @@ comment_events.prototype = {
 		
 		//绑定"我也来说一句"
 		$('.reply_2nd_simple_selector').live('click', function() {
+			
 			var inpObj = $(this);
 			var inpElem = inpObj[0];
-			
 			//处理相关的逻辑
 			var ancestorObj = $(this).closest('.comment_1st_unit_selector');
 			var handler = ancestorObj[0].handler;
@@ -644,9 +645,10 @@ comment_events.prototype = {
 			//获取要提交的相关数据信息
 			//处理编辑框的相关事件
 			if($.isEmptyObject(inpElem.sendBoxObj)) {
+				
 				inpElem.sendBoxObj = $('.reply_2nd_simple_content_selector', ancestorObj).sendBox({
 					panels:'emote',
-					skin:skin,
+					skin:'mini',
 					type:'post',
 					url:params.publish_comment_url || "",
 					data:params.post_params || {},
@@ -671,7 +673,7 @@ comment_events.prototype = {
 				//注册到sendbox的管理列表
 				inpElem.sendbox_handler_id = $.sendboxHandler.register(function() {
 					//获取输入焦点
-					inpElem.sendBoxObj.focus();
+//					inpElem.sendBoxObj.focus();
 					//显示sendbox所在的div
 					inpObj.hide();
 					$('.simple_reply_div_selector', ancestorObj).show();
@@ -679,9 +681,11 @@ comment_events.prototype = {
 					inpObj.show();
 					$('.simple_reply_div_selector', ancestorObj).hide();
 				});
+				
+				$.sendboxHandler.open(inpElem.sendbox_handler_id);
 			}
 			
-			$.sendboxHandler.open(inpElem.sendbox_handler_id);
+			
 		});
 		
 		//查看更多评论对应的按钮
@@ -700,6 +704,7 @@ comment_events.prototype = {
 	
 	//委托二级评论对应的事件
 	,delegateEventForComment2ndUnit:function() {
+    
 		//2级评论的删除事件
 		$('.comment_2nd_delete_selector').live('click', function() {
 			var ancestorObj = $(this).closest('.comment_2nd_unit_selector');

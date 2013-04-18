@@ -675,6 +675,9 @@ class ClassclientmanageAction extends AmsController{
            );
            $mUser = ClsFactory::Create('Model.mUser');
            $result = $mUser->modifyUserClientAccount($datarr , $child_account);
+           
+         $mHashClient = ClsFactory::Create('RModel.Common.mHashClient');
+         $client_base = $mHashClient->getClientbyUid($child_account, true); 
            echo $result;
        }else{
             echo false;

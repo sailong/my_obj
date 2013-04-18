@@ -72,7 +72,7 @@ main.prototype = {
 
 	,attachEventForLeft:function() {
 		var class_code = $('#class_code').val();
-		new photo(class_code, $('#photo_img')[0], $('#up_photo_btn')[0], $('#next_photo_btn')[0]);
+		new photo($('.photo_index'), class_code, $('#photo_img')[0], $('#next_photo_btn')[0]);
 	}
 };
 
@@ -82,11 +82,11 @@ main.prototype = {
  * @param elem
  * @return
  */
-function photo(class_code, elem, up_btn, next_btn) {
+function photo(parentObj, class_code, elem, next_btn) {
+	this.parentObj = parentObj;
 	this.class_code = class_code;
 	this.elem = elem;
 	this.$elem = $(elem);
-	this.$up_btn = $(up_btn);
 	this.$next_btn = $(next_btn);
 	
 	//当前游标的位置
@@ -96,7 +96,7 @@ function photo(class_code, elem, up_btn, next_btn) {
 	
 	//初始化
 	this.preload();
-	this.refreshBtns();
+
 	
 	var img_url = this.img_list[0] || "";
 	this.$elem.attr('src', img_url);
@@ -109,45 +109,21 @@ photo.prototype = {
 	attachEvent:function() {
 		var me = this;
 		
-		me.$up_btn.click(function() {
-	    	me.pointer = (me.pointer >= 1) ? me.pointer : 1;
-	    	var img_url = me.img_list[me.pointer - 1];
-	    	me.pointer >= 1 && me.pointer--;
-	    	
-	    	me.$elem.attr('src', img_url);
-	    	me.refreshBtns();
-		});
-		
 		me.$next_btn.click(function() {
+			me.pointer++;
 	    	var img_url = "",
 	    	    len = me.img_list.length;
-	    	if(me.pointer >= len) {
-	    		img_url = me.img_list[len - 1];
+
+	    	if (me.pointer >= len) {
+	    		me.pointer = 0;
+	    		img_url = me.img_list[0];
 	    	} else {
-	    		img_url = me.img_list[me.pointer + 1];
+	    		img_url = me.img_list[me.pointer];
 	    	}
-	    	
-	    	me.pointer++;
 	    	
 	    	me.$elem.attr('src', img_url);
 	    	
-	    	me.refreshBtns();
 		});
-	}
-
-	,refreshBtns:function() {
-		var me = this;
-		if(me.pointer <= 0) {
-			me.$up_btn.hide();
-		} else {
-			me.$up_btn.show();
-		}
-		
-		if(me.pointer == me.img_list.length - 1) {
-			me.$next_btn.hide();
-		} else {
-			me.$next_btn.show();
-		}
 	}
 
     //预加载图片的相关信息
@@ -163,6 +139,7 @@ photo.prototype = {
 				if(json.status < 0) {
 					return false;
 				}
+				me.parentObj.css('display', 'block');
 				var data = json.data || {};
 				var feed_list = data.feed_list || {};
 				var last_id = data.last_id || {};

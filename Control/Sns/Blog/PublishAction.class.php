@@ -132,7 +132,7 @@ class PublishAction extends SnsController {
             $succeed_msg = '日志发布成功!';
             import("@.Control.Api.FeedApi");
             $feed_api = new FeedApi();
-            $feed_api->class_create($class_code, $this->user['client_account'], $blog_id, FEED_ACTION_PUBLISH);
+            $feed_api->class_create($class_code, $this->user['client_account'], $blog_id, FEED_BLOG, FEED_ACTION_PUBLISH);
         } else {
             $error_msg = '草稿保存失败,请稍后重试!';
             $succeed_msg = '草稿保存成功!';

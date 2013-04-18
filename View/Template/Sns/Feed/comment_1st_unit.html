@@ -15,10 +15,12 @@
 	         <td class="comment_time">
 	         	<span>{comment.add_time_format}</span>
 	         </td>
-	         <td class="comment_delete">
+	         <td class="comment_btn">
+
+	         	<a href="javascript:;" class="reply_btn reply_2nd_simple_selector "></a>
 	         	{if comment.can_del}
-	         	<a href="javascript:;" class="comment_1st_delete_selector">删除</a>
-	         	{/if}
+	         	<a href="javascript:;" class="delete_btn comment_1st_delete_selector">删除</a>
+	         	{/if}	         	
 	         </td>
 	     </tr>
 	     <tr>
@@ -36,18 +38,14 @@
 	             <!--二级评论 end-->
 	            
 	             <!--默认回复样式 star-->
-	             <table class="mr_huifu reply_2nd_simple_div_selector">
+	             <table class="mr_huifu reply_2nd_simple_div_selector simple_reply_div_selector" style="display:none;">
 	                 <tr>
 	                     <td class="user_tx">
 	                     	<img width="40px" height="40px" data-from="#user_headimg_url" />
 	                     </td>
 	                     <td>
-	                         <!--点击之前的样式 star-->
-	                         <input name="" type="text" class="text_border reply_2nd_simple_selector" value="我也说一句"/>
-	                         <!--点击之前的样式 end-->
-	                         
 	                         <!--点击之后的样式 star-->
-	                         <div class="tk_huifu simple_reply_div_selector" style="display:none;">
+	                         <div class="tk_huifu " >
 	                            <textarea id="reply_2nd_conent" name="" cols="5" rows="5"  class="textarea_border reply_2nd_simple_content_selector" name="content" ></textarea>
 	                         </div>
 	                         <!--点击之后的样式 end-->

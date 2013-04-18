@@ -14,13 +14,13 @@ class ClassalbumAction extends SnsController{
             $this->showError('班级不存在！','/Sns/Index');
             exit;
         }
-        
         //检测登陆者是否有编辑的权限
         $is_edit = false;
-        if($tmp_class_code == $class_code) {
+        $is_stu_edit = false;
+        if($tmp_class_code == $class_code && $this->user['client_type'] != CLIENT_TYPE_FAMILY) {
             $class_role = $this->user['client_class'][$class_code]['teacher_class_role'];
             $class_admin = $this->user['client_class'][$class_code]['class_admin'];
-            
+            $is_stu_edit = true;
             if(in_array($class_role, array(1,3)) || !empty($class_admin)) {
                 $is_edit = true;
             }
@@ -28,6 +28,7 @@ class ClassalbumAction extends SnsController{
         
         $img_file_url = '/Public/wmw_images/auto_photo_img/wzp.jpg';
         $this->assign('is_edit', $is_edit);
+        $this->assign('is_stu_edit', $is_stu_edit);
         $this->assign('class_code', $class_code);
         $this->assign('client_account', $this->user['client_account']);
         $this->assign('no_photo_img', $img_file_url);

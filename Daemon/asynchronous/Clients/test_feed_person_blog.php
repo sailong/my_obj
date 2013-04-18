@@ -70,7 +70,7 @@ class testPersonBlog {
 }
 
 
-$client_account = 96159664;
+$client_account = 11070004;
 $class_code = 146;
 
 // 创建一个班级相册实体

@@ -162,8 +162,15 @@ class ClassphotoAction extends SnsController {
         $client_account = $this->objInput->getInt('client_account');
         $login_account = $this->user['client_account'];
         
-        if(empty($class_code) || empty($album_id)) {
+        if(empty($class_code) || empty($photo_id)) {
             $this->showError("数据错误",'/Sns/ClassIndex/Index');exit;
+        }
+        if(empty($album_id)) {
+            import("@.Control/Api/AlbumImpl/PhotoInfo");
+            $PhotoInfo = new PhotoInfo();
+            $photo_list = $PhotoInfo->getPhotoByPhotoId($photo_id);
+            $photo_list = reset($photo_list);
+            $album_id = $photo_list['album_id'];
         }
         
         if(empty($client_account)) {
@@ -192,8 +199,7 @@ class ClassphotoAction extends SnsController {
                 $this->showError("没有权限查看","/Sns/Album/Classalbum/albumlist/class_code/{$class_code}");exit;
             }
         }
-        
-        $this->assign('album', $album_list[$album_id]);
+        $this->assign('album', $album_list);
         $this->assign('photo_id', $photo_id);
         $this->assign('is_edit', $is_edit);
         $this->assign('class_code', $class_code);

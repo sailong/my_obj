@@ -70,7 +70,7 @@
           {literal}
           <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="photo_width"><a href="/Sns/PersonIndex/Index/index/client_account/{user.friend_account}"><img src="{user.client_headimg_url}"></a></td>
+            <td class="photo_width">{if user.friend_account}<a href="/Sns/PersonIndex/Index/index/client_account/{user.friend_account}">{else}<a href="/Sns/PersonIndex/Index/index/client_account/{user.client_account}">{/if}<img src="{user.client_headimg_url}"></a></td>
             <td>
               <p id="client_name_p">{user.client_name}</p>
               <p>{if user.client_sex == 1}男{else}女{/if}</p>

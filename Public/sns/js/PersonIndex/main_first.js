@@ -26,8 +26,9 @@ main_first.prototype = {
 		});
 		
 		//加载用户动态信息
+		var vuid = $('#vuid').val();
 		$('#my_feed_list_div').loadFeed({
-			url:'/Sns/Feed/List/getUserAllFeedAjax',
+			url:'/Sns/Feed/List/getUserMyFeedAjax/client_account/' + vuid,
 			skin:'mini'
 		});
 	}

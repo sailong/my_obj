@@ -42,6 +42,7 @@ view_list.prototype.fillFriendList=function(user_list) {
 	var parentObj = $('#vistior_list_tab');
 	for(var i in user_list) {
 		var user = user_list[i];
+		user.client_headimg_url_obj = '<img src="' + user.client_headimg_url + '"  class="zjfk_tx" />';
 		var divObj = createDiv(user || {});
 		divObj.data('data',user);
 		divObj && parentObj.append(divObj);

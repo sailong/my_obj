@@ -5,7 +5,7 @@ include_once(dirname(dirname(dirname(__FILE__))) . '/Daemon.inc.php');
 class testPersonAblum {
     public static function createPersonAblum($uid) {
         $data=array(
-			'album_id'      => 23,  
+			'album_id'      => 1,  
 			'name'          => "", // 类中返回的$up_r['filename']有误，同$up_r['getfilename']值相同
 			'file_big'      => "qqqq",  //该字段可删除
             'file_middle'   => "wwwww",
