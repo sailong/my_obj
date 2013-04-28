@@ -291,8 +291,15 @@ class PhotoInfo {
       $mAlbumPhotos = ClsFactory::Create('Model.Album.mAlbumPhotos');
       return $mAlbumPhotos->getPhotos($offset, $limit);
     }
+    
     public function getAllCount() {
       $mAlbumPhotos = ClsFactory::Create('Model.Album.mAlbumPhotos');
       return $mAlbumPhotos->getAllCount();
+    }
+    
+    public function getLastSql() {
+        $mAlbumPhotos = ClsFactory::Create('Model.Album.mAlbumPhotos');
+        
+        return $mAlbumPhotos->getLastSql();
     }
 }

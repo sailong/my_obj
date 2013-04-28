@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<title>班级相册-瀑布流</title>
+<link rel="stylesheet" href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/Common/sns_common.css" type="text/css" charset="utf-8">
+<link rel="stylesheet" href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/Album/class_list_photo_p.css" type="text/css" charset="utf-8">
+
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/jquery-1.5.2.min.js"></script>
+
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/tip_msg/showtip.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/artDialog4.1.6/artDialog.source.js?skin=idialog"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/artDialog4.1.6/plugins/iframeTools.source.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/template/template.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/sendbox/sendbox.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/Album/class_photo_list_p.js"></script>
+
+</head>
+<body>
+<!--tip star-->
+ <!--评论照片 star-->
+{include file="Sns/Album/Subtemplate/comment_photo.inc.html"}
+	{literal}
+       <div class="twc-item" id="clone_selector" style="display:none;">
+           <a class="twci-link" href="/Sns/Album/Classphoto/photo/album_id/{album_id}/photo_id/{photo_id}/class_code/{class_code}">
+               <img class="twcil-img" alt="{name}" src="{file_middle_url}">
+           </a>
+           <p class="pinlun comments">
+           	<a href="javascript:;">评论（<span class="pl_count">{comments}</span>）</a>
+           </p>
+           <h4 class="twci-header ">
+               <a class="twcih-txt" href="#">{name}</a> 
+           </h4>
+       </div>
+    {/literal}	
+ <!--评论照片 end-->
+ <!--弹出层 end-->
+
+<!--tip star-->
+{insert name="sns_header"}
+<!--tip star-->
+{insert name="sns_class_header" class_code = $class_code}
+<!--content star-->
+<div class="main_width">
+    <ul class="tw-container clearfix" id="container" style="width:1440px;">
+   		<li class="twc-item-li"></li>
+		<li class="twc-item-li"></li>
+		<li class="twc-item-li"></li>
+		<li class="twc-item-li"></li>
+		<li class="twc-item-li"></li>
+    </ul>
+    <div id="gotopbtn" style="display:none;" class="to_top"><a title="返回顶部" href="javascript:void(0);"></a></div>
+    <div id="more">
+      	<a href="/Sns/Album/Classphoto/getPhotosByAlbumId/class_code/{$class_code}/album_id/{$album_id}/client_account/{$client_account}/page/2"></a>
+    </div>
+</div>
+<!--content end-->
+<input id="is_edit" type="hidden" value="{$is_edit}"/>
+<input id="album_id" type="hidden" value="{$album_id}">
+<input id="class_code" type="hidden" value="{$class_code}">
+<input id="client_account" type="hidden" value="{$client_account}">
+<input id="login_account" type="hidden" value="{$login_account}"/>
+<input id="img_server" type="hidden" value="{$smarty.const.IMG_SERVER}__PUBLIC__"/>
+<!--<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/wmw_js/waterfall_flow/jquery.masonry.min.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/wmw_js/waterfall_flow/jquery.infinitescroll.min.js"></script>-->
+<!-- 尾部start -->
+{include file="Public/sns_footer.html"}
+<!-- 尾部end -->
+</body>
+</html>
+
+
+

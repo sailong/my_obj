@@ -133,6 +133,10 @@ class PublishAction extends SnsController {
             import("@.Control.Api.FeedApi");
             $feed_api = new FeedApi();
             $feed_api->class_create($class_code, $this->user['client_account'], $blog_id, FEED_BLOG, FEED_ACTION_PUBLISH);
+            //提交活跃度
+            import('@.Control.Api.ActiveApi');
+            $activeApi = new ActiveApi();
+            $activeApi->setactive($this->user['client_account'], 205, 5);
         } else {
             $error_msg = '草稿保存失败,请稍后重试!';
             $succeed_msg = '草稿保存成功!';

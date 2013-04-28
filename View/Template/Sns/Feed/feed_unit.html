@@ -1,6 +1,7 @@
 <!--每一条动态 star-->	
 <div id="feed_unit_div" class="dynamic_each feed_unit_selector" style="display:none;">
 	{literal}
+
     <!--左侧用户头像信息 star-->
     <div class="user_photo">
         <img height="40px" width="40px" data-original="{feed.client_headimg_url}" class="user_photo70" />  	
@@ -11,6 +12,11 @@
     <div class="dynamic_content">
         <div class="d_c_top">
         	<a href="/Sns/PersonIndex/Index/index/client_account/{feed.add_account}">{feed.client_name}</a>
+        	
+        	{if feed.from_class_code > 0}
+        		<a href="/Sns/ClassIndex/Index/index/class_code/{feed.from_class_code}"><font color="red">{feed.from_class_name}</font></a>
+        	{/if}
+        	
         	{if feed.feed_type == 1}
         	<span>{if feed.action == 1}发表{else}评论{/if}了说说</span>
         	{else if feed.feed_type == 2}
@@ -31,25 +37,20 @@
                 	{else if feed.feed_type == 2}
                 		<img data-original="{feed.img_url}" />
                 	{else if feed.feed_type == 3}
-                		
                 		<a id="feed_src_url" href="{feed.src_url}" target="_blank"><img data-original="{feed.img_url}" /></a>
                 	{/if}
                 {/if}
                 <p class="d_c_text">
                 	{if feed.feed_type == 1} 
                 		{feed.feed_content}
+                		<a id="feed_src_url" href="{feed.src_url}" target="_blank" style="display:none">(阅读全文)</a>
                 	{else if feed.feed_type == 2}
                 		{if feed.feed_content}
                 			{feed.feed_content}
                 		{/if}
-                		<a id="feed_src_url" href="{feed.src_url}" target="_blank">(阅读全文)</a>
-                	{else if feed.feed_type == 3}
-                		
+                		<a id="feed_src_url" href="{feed.src_url}" target="_blank">(阅读全文)</a>                		
                 	{/if}
                    	
-                   	{if feed.src_url}
-                    
-                    {/if}
                 </p>
                 <div class="d_c_info" >
                     <p class="d_c_time"><span>发布时间：{feed.add_time_format}</span></p> 
@@ -98,10 +99,16 @@
                     <!--一级评论及其附属的二级评论 全部内容 star-->
                     <div id="first_comment_list" class="all_first_comment">   
                        
-                    </div>  
+                    </div> 
+				     {if feed.comments > 10}
+				      	<p class="click_see">后面还有条{echo feed.comments - 10}评论回复<a class="f12 f_red ml10" href="{feed.src_url}" target="_blank">点击查看&gt;&gt;</a></p>
+
+				     {/if}                     
                 </div>
                 <!--一级评论及其附属的二级评论 全部内容 end-->
+                
             </div>
+            
 		<!--评论内容 end-->
         </div>
         <div class="d_c_footer"></div>

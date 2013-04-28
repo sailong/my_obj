@@ -100,6 +100,38 @@ class FeedApi extends ApiController {
         $this->class_dispatch($class_code, $uid, $feed_id, $feed_type, $action);
         return $feed_id;
     }
+
+    /**
+     * 创建用户与动态关系
+     * @param $uid       	  		帐号
+     * @param $class_code       	班级id
+     * @param $feed_type     int    枚举值   1:说说  2：日志  3：相册
+     */
+    public function user_create_my($uid, $class_code, $feed_id, $feed_type) {
+        if(empty($uid) || empty($feed_type)) {
+            return false;
+        }
+        
+        $mFeedTimeLine = ClsFactory::Create('Model.Feed.mFeedTimeLine');
+        $datas = $mFeedTimeLine->getFeedByUidsAndFeedId( $client_account, $feed_id);
+        if (empty($datas)) {
+         
+            $timeline = array(
+             'feed_id'	=> $feed_id,
+             'feed_type'	=> $feed_type,
+             'client_account'	=> $uid,
+             'timeline'			=> time(),
+             'from_class_code'	=> empty($class_code) ? 0 : $class_code
+            );
+            
+            $mFeedTimeLine->addTimeLine($timeline);
+        }
+        
+        $RM = ClsFactory::Create("RModel.Feed.mZsetUserMy");
+        $RM->setFeed($uid, $feed_id, $feed_id);
+             
+         return true;
+    }    
     
     /**
      * 得到班级全部动态

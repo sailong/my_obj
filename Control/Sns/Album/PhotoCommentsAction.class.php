@@ -29,6 +29,7 @@ Class PhotocommentsAction extends SnsController {
         $content  = $this->objInput->postStr('content');
         $up_id    = $this->objInput->postInt('up_id');
         $photo_id = $this->objInput->postInt('photo_id');
+        $feed_id    = $this->objInput->postInt('feed_id');
         
         if(empty($photo_id)) {
             $this->ajaxReturn(null, '照片信息不存在!', -1, 'json');
@@ -67,6 +68,13 @@ Class PhotocommentsAction extends SnsController {
         if(empty($comment_id)) {
             $this->ajaxReturn(null, '评论信息添加失败!', -1, 'json');
         }
+        
+        //是否与我相关的填充。
+        if (!empty($feed_id)) {
+            import('@.Control.Api.FeedApi');
+            $FeedApi = new FeedApi();
+            $FeedApi->user_create_my($this->user['client_account'], $class_code, $feed_id, FEED_ALBUM);
+        }        
         
         $comment_list = $AlbumApi->getPhotoCommentsById($comment_id);
         

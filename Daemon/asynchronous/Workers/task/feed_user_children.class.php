@@ -30,8 +30,10 @@ class feed_user_children {
         $parent_uids = $mSetClientParent->getClientParentByUid($uid);
 
         $RM = ClsFactory::Create("RModel.Feed.mZsetUserChildren");
+        $rm_feed_all = ClsFactory::Create("RModel.Feed.mZsetUserAll");
         foreach($parent_uids as $uid) {
             $RM->setFeed($uid, $feed_id, $feed_id);
+            $rm_feed_all->setFeed($uid, $feed_id, $feed_id);
         }
         
         return true;

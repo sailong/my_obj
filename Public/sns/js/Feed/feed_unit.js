@@ -113,7 +113,8 @@ function settings() {
 			get_comments_url:'/Sns/Blog/Comments/getBlogCommentsForFeedAjax/blog_id/{from_id}/page/1',
 			post_params:{
 				blog_id : '{from_id}',
-				up_id:0
+				up_id:0,
+				feed_id:'{feed_id}'
 			}
 		}
 		
@@ -123,7 +124,8 @@ function settings() {
 			child_items_name:'child_items',
 			post_params: {
 				blog_id:'{blog_id}',
-				up_id:'{comment_id}'
+				up_id:'{comment_id}',
+				feed_id:'{feed_id}'
 			}
 		}
 		
@@ -141,7 +143,8 @@ function settings() {
 			get_comments_url:'/Sns/Mood/Comments/getMoodCommentsForFeedAjax/mood_id/{from_id}/page/1',
 			post_params:{
 				mood_id : '{from_id}',
-				up_id:0
+				up_id:0,
+				feed_id:'{feed_id}'
 			}
 		}
 		
@@ -151,7 +154,8 @@ function settings() {
 			child_items_name:'child_items',
 			post_params: {
 				mood_id:'{mood_id}',
-				up_id:'{comment_id}'
+				up_id:'{comment_id}',
+				feed_id:'{feed_id}'
 			}
 		}
 		
@@ -169,7 +173,8 @@ function settings() {
 			get_comments_url:'/Sns/Album/PhotoComments/getPhotoCommentsForFeedAjax/photo_id/{from_id}/page/1',
 			post_params:{
 				photo_id : '{from_id}',
-				up_id:0
+				up_id:0,
+				feed_id:'{feed_id}'
 			}
 		}
 		
@@ -179,7 +184,8 @@ function settings() {
 			child_items_name:'child_items',
 			post_params: {
 				photo_id:'{photo_id}',
-				up_id:'{comment_id}'
+				up_id:'{comment_id}',
+				feed_id:'{feed_id}'
 			}
 		}
 		
@@ -768,7 +774,7 @@ feed_delete.prototype = {
 					init:function() {
 						
 					}
-				}).lock();
+				});
 			},
 			//关闭删除层
 			closeEvent:function() {

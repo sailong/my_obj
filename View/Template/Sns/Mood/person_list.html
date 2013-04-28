@@ -23,7 +23,7 @@
 {insert name="sns_header"}
 
 <!--tip star-->
-  {insert name="sns_class_header" class_code = $class_code}
+
 <!--tip end-->
 <!--content star-->
 <div class="content pt20">
@@ -80,16 +80,17 @@
  <div class="per_active_r">
    <p class="per_right_top">
    	<a href="/Sns/PersonIndex/Index/index/client_account/{mood_info.add_account}" target="_blank" class="fc_288c00">{mood_info.user_info.client_name}</a>
-   	<a href="/Sns/Mood/PersonMood/show/client_account/{mood_info.add_account}/mood_id/{mood_info.mood_id}" target="_blank">查看说说</a>
+   	
    </p>
    <!--per_right_center star-->
    <div class="per_right_center">
      <p>
-       	{mood_info.content}
+       	
        	{if mood_info.img_url}
        		<br />
 			<img data-original="{mood_info.img_url}"/> 	
        	{/if}
+       	{mood_info.content}
      </p>
      <div class="per_release_time">
       <p class="per_p_width">发布时间：{mood_info.add_time_format}</p>
@@ -112,7 +113,7 @@
      <!--comment_pl_tab end-->
      
      <!--list_comment star-->
-     <div id="comment_list_div" class="list_comment" style="display:none;">
+     <div id="comment_list_div" style="display:none;">
        <div class="clear"></div>
      </div>
      

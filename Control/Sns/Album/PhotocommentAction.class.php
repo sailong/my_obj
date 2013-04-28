@@ -45,13 +45,13 @@ class PhotocommentAction extends SnsController {
         if(empty($comment_id)) {
             $this->ajaxReturn(null, '评论失败', -1, 'json');
         }
-        import("@.Control.Api.FeedApi");
-        $feed_api = new FeedApi();
-         if(!empty($class_code)) {
-            $feed_api->class_create($class_code, $this->user['client_account'], $photo_id, FEED_ALBUM, FEED_ACTION_COMMENT);
-        }else{
-            $feed_api->user_create($this->user['client_account'], $photo_id, FEED_ALBUM, FEED_ACTION_COMMENT);
-        }
+//        import("@.Control.Api.FeedApi");
+//        $feed_api = new FeedApi();
+//         if(!empty($class_code)) {
+//            $feed_api->class_create($class_code, $this->user['client_account'], $photo_id, FEED_ALBUM, FEED_ACTION_COMMENT);
+//        }else{
+//            $feed_api->user_create($this->user['client_account'], $photo_id, FEED_ALBUM, FEED_ACTION_COMMENT);
+//        }
         import('@.Common_wmw.WmwFace');
         $data_arr['content'] = WmwFace::parseFace($data_arr['content']);
         $data_arr['comment_id']=$comment_id;

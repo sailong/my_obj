@@ -114,7 +114,7 @@ class ClassphotoAction extends SnsController {
         $limit = null;
         if(empty($js_page)) {
             $page = max(1,$page);
-            $limit = 10;
+            $limit = 20;
             $offset = null;
             $page = max(1,$page);
             $offset = ($page-1)*$limit;

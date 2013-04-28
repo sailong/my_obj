@@ -44,15 +44,49 @@
       <p>（2）可以提升自己在圈圈活跃成员的排名。</p>
       <p>（3）可以提升班级在班级广场的综合排名。</p>
      <h3>活跃值详情</h3>
-     <table width="100%" border="0" cellspacing="1" cellpadding="0" border=1>
+     
+     <!-- 活跃值一次性加分 -->
+     
+     <table width="100%" border="0" cellspacing="1" cellpadding="0" border=1 style="margin-bottom:30px;">
       <tr>
       	<th rowspan="2">获得活跃值项目</th>
         <th colspan="2">增加活跃值</th>
-        <th rowspan="2">每日获得最大活跃值</th>
+        <th rowspan="2">活跃奖励</th>
       </tr>
       <tr>
         <th>操作</th>
-        <th>加分</th>
+        <th>已获得</th>
+      </tr>
+      {foreach from=$active_log_list_once item=val}
+      <tr>
+      	<td rowspan="{$val.action_num}">{$val.message}</td>
+      	{foreach from=$val.action_list item=val1}
+      	{if $val.action_num>1}
+      	<tr>
+	        <td>{$val1.action}</td>
+	        <td>+{$val1.value}</td>
+	        <td>{$val1.day_limit}</td>
+        </tr>
+        {else}
+        	<td>{$val1.action}</td>
+	        <td>+{$val1.value}</td>
+	        <td>{$val1.day_limit}</td>
+        {/if}
+        {/foreach}
+      </tr>
+      {/foreach}
+    </table>
+    
+    <!-- 活跃值每日加分 -->
+    <table width="100%" border="0" cellspacing="1" cellpadding="0" border=1>
+      <tr>
+      	<th rowspan="2">获得活跃值项目</th>
+        <th colspan="2">增加活跃值</th>
+        <th rowspan="2">每日最大活跃奖励</th>
+      </tr>
+      <tr>
+        <th>操作</th>
+        <th>今日已获得</th>
       </tr>
       {foreach from=$active_log_list item=val}
       <tr>
@@ -73,7 +107,6 @@
       </tr>
       {/foreach}
     </table>
-    <p class="f12 f_red mt10">说明：查看学习资源，每日最多增长5点活跃值，需要查看5个不同资源，而且需要和当前年级匹配的资源。</p>
     </div>   
   </div>
   <!--main end-->

@@ -10,7 +10,7 @@ class PublishedAction extends SnsController {
     public function index() {
         $class_code = $this->objInput->getInt('class_code');
         $class_code = $this->checkoutClassCode($class_code);
-         
+        
         //获取用户的管理权限
         import('@.Control.Sns.ClassNotice.Ext.NoticeContext');
         $context = new NoticeContext($this->user);
@@ -71,6 +71,15 @@ class PublishedAction extends SnsController {
         
         //解析用户对公告的管理权限
         $notice_list = $this->appendUserNoticeAccess($notice_list, $manage_access_list);
+        if($page == 1) {
+            if($this->user['client_type'] == CLIENT_TYPE_STUDENT || $this->user['client_type'] == CLIENT_TYPE_FAMILY) {
+                //提交活跃度
+                import('@.Control.Api.ActiveApi');
+                $activeApi = new ActiveApi();
+                $activeApi->setactive($this->user['client_account'], 201, 22);
+            }
+            
+        }
         
         $this->ajaxReturn($notice_list, '公告获取成功!', 1, 'json');
     } 

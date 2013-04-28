@@ -101,7 +101,11 @@ class ExamAction extends SnsController{
         $exam_list  = !empty($exam_list) ? $exam_list : array();
         $class_info = $this->user['class_info'][$class_code];
         $class_name = !empty($class_info) ? ($class_info['grade_id_name'].$class_info['class_name']) : '暂无';
-
+        //提交活跃度
+        import('@.Control.Api.ActiveApi');
+        $activeApi = new ActiveApi();
+        $activeApi->setactive($this->user['client_account'], 203, 24);
+        
         $this->assign('class_name', $class_name);
         $this->assign('class_code', $class_code);
         $this->assign('exam_name',    $exam_name);

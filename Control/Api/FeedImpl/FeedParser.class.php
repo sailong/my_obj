@@ -15,6 +15,7 @@ class FeedParser {
         
         $feed_list = $this->formatFeed($feed_list);
         $feed_list = $this->appendFeedUserInfo($feed_list);
+        $feed_list = $this->appendFeedClassInfo($feed_list);
         $feed_list = $this->appendFeedEntity($feed_list);
         $feed_list = $this->appendFeedEntityUrl($feed_list);
         
@@ -41,7 +42,7 @@ class FeedParser {
                 $content = str_replace('#分享照片#', ' ', $content);
             }
             $feed['feed_content'] = $content;
-            $feed['feed_content'] = WmwFace::parseFace($feed['feed_content']);
+//            $feed['feed_content'] = WmwFace::parseFace($feed['feed_content']);
             
             $img_url = $feed['img_url'];
             if (!empty($img_url)) {
@@ -93,6 +94,29 @@ class FeedParser {
         
         return $feed_list;
     }
+    
+    /**
+     * 添加动态的班级信息
+     * @param $feed_list
+     */
+    private function appendFeedClassInfo($feed_list) {
+        if(empty($feed_list)) {
+            return false;
+        }
+        
+        $mHashClass = ClsFactory::Create('RModel.Common.mHashClass');         
+        foreach($feed_list as $feed_id=>$feed) {
+            $class_code = $feed['from_class_code'];
+            if (!empty($class_code) && $class_code > 0) {
+                $class_info = $mHashClass->getClassById($class_code);
+                $feed['from_class_name'] = $class_info['class_name'];       
+            }
+
+            $feed_list[$feed_id] = $feed;
+        }
+        
+        return $feed_list;
+    }    
     
     /**
      * 获取动态对应实体的相关信息

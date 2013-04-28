@@ -80,21 +80,23 @@ class CommentsAction extends SnsController {
     public function publishMoodCommentsAjax() {
         //班级说说在发表评论的时候需要class_code的值
         $class_code = $this->objInput->postInt('class_code');
+        $feed_id    = $this->objInput->postInt('feed_id');
         $mood_id    = $this->objInput->postInt('mood_id');
         $up_id      = $this->objInput->postInt('up_id');
         $content    = $this->objInput->postStr('content');
-        
+
         if(empty($content)) {
             $this->ajaxReturn(null, '评论内容不能为空!', -1, 'json');
         } else if(empty($mood_id)) {
             $this->ajaxReturn(null, '说说信息已删除或不存在!', -1, 'json');
         }
         
+        $client_account = $this->user['client_account'];
         $comment_datas = array(
             'mood_id' => $mood_id,
             'up_id' => $up_id,
             'content' => $content,
-            'client_account' => $this->user['client_account'],
+            'client_account' => $client_account,
             'add_time' => time(),
             'level' => empty($up_id) ?  1 : 2,
         );
@@ -108,13 +110,19 @@ class CommentsAction extends SnsController {
             $this->ajaxReturn(null, '评论信息添加失败!', -1, 'json');
         }
         
-        //产生对应的动态信息
-        import('@.Control.Api.FeedApi');
-        $FeedApi = new FeedApi();
-        if(!empty($class_code)) {
-            $FeedApi->class_create($class_code, $this->user['client_account'], $mood_id, FEED_MOOD, FEED_ACTION_COMMENT);
+        //是否与我相关的填充。
+        if (!empty($feed_id)) {
+            import('@.Control.Api.FeedApi');
+            $FeedApi = new FeedApi();
+            $FeedApi->user_create_my($client_account, $class_code, $feed_id, FEED_MOOD);
+        }
+        
+                import('@.Control.Api.ActiveApi');
+        $activeApi = new ActiveApi();
+        if (!empty($class_code)) {
+            $activeApi->setactive($this->user['client_account'], 207, 7);
         } else {
-            $FeedApi->user_create($this->user['client_account'], $mood_id, FEED_MOOD, FEED_ACTION_COMMENT);
+            $activeApi->setactive($this->user['client_account'], 305, 7);
         }
         
         $comment_list = $MoodApi->getMoodCommentsById($comment_id);

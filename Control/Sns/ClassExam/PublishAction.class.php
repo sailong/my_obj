@@ -204,7 +204,12 @@ class PublishAction extends SnsController{
         
         $mMsgExamList = ClsFactory::Create("RModel.Msg.mStringExam");
         $mMsgExamList->publishMsg($exam_id, 'exam'); 
-
+        
+        //提交活跃度
+        import('@.Control.Api.ActiveApi');
+        $activeApi = new ActiveApi();
+        $activeApi->setactive($this->user['client_account'], 203, 3);
+        
         $this->showSuccess("成绩发布成功，查看已发布成绩", '/Sns/ClassExam/Exam/index/class_code/'.$class_code);
     }
 

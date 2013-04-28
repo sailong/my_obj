@@ -23,9 +23,7 @@
 <div class="content">
   <!--main star-->
    <div class="main">
-     <!--nav star-->
-    {insert name="sns_nav" class_code = $class_code}
-    <!--nav end-->
+
     <ul><li><a href="#" class="main_nav_a1" title="">班级管理</a></li></ul> 
     <!--publish_main star-->
      <div class="publish_main">
@@ -67,7 +65,7 @@
           <p><span>班级老师（{$teacher_nums}人）</span><a href="/Sns/ClassAdmin/Teacher/index/class_code/{$class_code}">老师信息维护</a></p>
           <div class="class_admin_main">
           	{if $headteacher}
-            <div class="single_bj_main">
+            <div class="single_bj_main ancestor_selector">
               <dl>
                <dt>
                	<a href="javascript:;">
@@ -78,6 +76,16 @@
               		{/if}
                	</a>
                </dt>
+               {if !$headteacher.is_admin}
+                <!--float_mai star-->
+                 <div class="float_main float_div_selector" style="display:none;">
+                   <div class="float_main_p">
+                     <a class="set_class_admin_selector_a" href="javascript:;">设置为管理员</a>                   
+                   </div>
+                   <input class="client_account_selector" type="hidden" value="{$headteacher.client_account}"/>
+                  </div>
+                 <!--float_main end-->
+               {/if}
                <dd>{$headteacher.client_name}</dd>
               </dl>
               <p>{$headteacher.subject_name}</p>

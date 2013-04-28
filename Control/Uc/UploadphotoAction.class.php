@@ -108,13 +108,18 @@ class UploadphotoAction extends SnsController {
     	        	'img_path' => Pathmanagement_sns::getHeadImg($uid) . $pic_name,
     	        );
     	        
+    	         //提交活跃度
+                import('@.Control.Api.ActiveApi');
+                $activeApi = new ActiveApi();
+                $activeApi->setactive($uid, 301, 14);
+    	        
     	        $fp = fopen(WEB_ROOT_DIR.'/er.txt', 'a+');
     	        fwrite($fp, $dataarr['img_path']);
     	        fclose($fp);
     	        
                 $mHashClient = ClsFactory::Create('RModel.Common.mHashClient');
-        	    $client_base = $mHashClient->getClientbyUid($uid, true);    	        
-    	        
+        	    $client_base = $mHashClient->getClientbyUid($uid, true);  
+
     	    } else {
     	        $dataarr = array(
     	            'error' => -1,

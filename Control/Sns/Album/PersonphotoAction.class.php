@@ -86,7 +86,6 @@ class PersonphotoAction extends SnsController {
         $this->assign('is_edit', $is_edit);
         $this->assign('client_account', $client_account);
         $this->assign('album_id', $album_id);
-        $this->assign('client_account', $client_account);
         $this->assign('login_account', $login_account);
         
         $this->display('person_list_photo_p');

@@ -14,6 +14,7 @@
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/HomePage/view_list.js"></script>
 
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/sendbox/sendbox.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/sendbox/parseFace.js"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/Feed/feed.js"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/Feed/feed_unit.js"></script>
 
@@ -234,6 +235,9 @@
             	<a id="class_feed_a" href="#f2" class="sec_nav_noselected">班级动态</a>
             	<a id="user_friend_feed_a" href="#f3" class="sec_nav_noselected">好友动态</a>
             	<a id="user_my_feed_a" href="#f4" class="sec_nav_noselected">与我相关</a>
+	          	{if $user_info.client_type == 2}
+	          	<a id="user_children_feed_a" href="#f5" class="sec_nav_noselected">孩子动态</a>
+	          	{/if}            	
             </div>
        
             <!--system_message star-->
@@ -261,6 +265,10 @@
             <div id="user_my_feed_div" name="f4">
             
             </div>
+            
+            <div id="user_children_feed_div" name="f5">
+            
+            </div>            
            
          </div>
          <!--个人动态信息部分 end--> 
@@ -355,6 +363,8 @@
 <input type="hidden" id="client_account" value="{$client_account}"/>
 <input type="hidden" id="class_code" value="{$class_code}"/>
 <input type="hidden" id="user_headimg_url" value="{$user_info.client_headimg_url}"/>
-
+ <!-- 尾部start -->
+{include file="Public/sns_footer.html"}
+<!-- 尾部end -->
 </body>
 </html>

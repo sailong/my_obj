@@ -61,7 +61,12 @@ class ClassMoodAction extends SnsController {
         $feed_id = $FeedApi->class_create($class_code, $this->user['client_account'], $mood_id, FEED_MOOD, FEED_ACTION_PUBLISH);
         
         $feed_info = $FeedApi->getFeedById($feed_id);        
-
+        
+        //活跃度
+        import('@.Control.Api.ActiveApi');
+        $activeApi = new ActiveApi();
+        $activeApi->setactive($this->user['client_account'], 206, 6);
+        
         $this->ajaxReturn($feed_info, '班级说说发表成功!', 1, 'json');
     }
     

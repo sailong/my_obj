@@ -795,18 +795,22 @@ class Date {
      * 
      * return boolean
      */
-	public static function isToday($daytime){
-	    if(empty($daytime)) {
+	public static function isToday($timestamp){
+	    if(empty($timestamp)) {
 	        return false;
 	    }
 	    
-	    $daytime = (intval($daytime) == $daytime) ? $daytime : strtotime($daytime);
-	    
-	    $nowtime = strtotime(date("Y-m-d"));
-	    
-	    $daytime = $nowtime+86400 < $daytime ? $nowtime+86400 : $daytime;
+//	    $daytime = (intval($daytime) == $daytime) ? $daytime : strtotime($daytime);
+//	    
+//	    $nowtime = strtotime(date("Y-m-d"));
+//	    
+//	    $daytime = ($nowtime + 86400) < $daytime ? $nowtime+86400 : $daytime;
+//
+//	    return abs($nowtime - $daytime) < 86400 && $daytime < $nowtime ? false : true;
 
-	    return abs($nowtime - $daytime) < 86400 && $daytime < $nowtime ? false : true;
+	    $date = date("Y-m-d", $timestamp);
+	    
+	    return $date == date("Y-m-d");
 	}
 	
 	/**
@@ -818,17 +822,21 @@ class Date {
      * 
      * return boolean
      */
-	public static function isYestoday($daytime){
-	    if(empty($daytime)) {
+	public static function isYestoday($timestamp){
+	    if(empty($timestamp)) {
 	        return false;
 	    }
 	    
-	    $daytime = (intval($daytime) == $daytime) ? $daytime : strtotime($daytime);
+//	    $daytime = (intval($daytime) == $daytime) ? $daytime : strtotime($daytime);
+//	    
+//	    $nowtime = strtotime(date("Y-m-d"));
+//	    $daytime = $nowtime+86400 < $daytime ? $nowtime+86400 : $daytime;
+//	    
+//	    return 86400*2 < abs($nowtime - $daytime) && !Date::isToday($daytime) ? false : true;
+
+        $date = date("Y-m-d", $timestamp);
 	    
-	    $nowtime = strtotime(date("Y-m-d"));
-	    $daytime = $nowtime+86400 < $daytime ? $nowtime+86400 : $daytime;
-	    
-	    return 86400*2 < abs($nowtime - $daytime) && !Date::isToday($daytime) ? false : true;
+	    return $date == date('Y-m-d', time() - (24 * 60 * 60));	    
 	}
 	
 	

@@ -61,11 +61,13 @@ class IndexAction extends SnsController{
         
         $mClinetClass = ClsFactory::Create("Model.mClientClass");
         $client_class_id = $mClinetClass->getClientClassId($class_code, $client_account);
-        $mClientClassVm = ClsFactory::Create("RModel.Common.mHashClientClass");
-        $mClientClassVm->setClientClassbyUid($client_account, $dataarr);
         if(!$mClinetClass->modifyClientClass($dataarr, $client_class_id)) {
             $this->ajaxReturn(null, "管理员设置失败！", -1, 'json');
         }
+        
+        $mClientClassVm = ClsFactory::Create("RModel.Common.mHashClientClass");
+        $mClientClassVm->getClientClassbyUid($client_account, true);
+        
         
         $this->ajaxReturn(null, "管理员设置成功！", 1, 'json');
     }
@@ -92,6 +94,10 @@ class IndexAction extends SnsController{
             $this->ajaxReturn(null, "管理员取消失败！", -1, 'json');
         }
         
+        $mClientClassVm = ClsFactory::Create("RModel.Common.mHashClientClass");
+        $mClientClassVm->getClientClassbyUid($client_account, true);
+        
+        
         $this->ajaxReturn(null, "管理员取消成功！", 1, 'json');
     }
     
@@ -117,7 +123,7 @@ class IndexAction extends SnsController{
         }
         
         $mHashClass = ClsFactory::Create("RModel.Common.mHashClass");
-        $mHashClass->setClassById($class_code, $class_info_datas);
+        $mHashClass->getClassById($class_code, true);
         
         $this->ajaxReturn("", '修改成功！', 1, 'json');
     }

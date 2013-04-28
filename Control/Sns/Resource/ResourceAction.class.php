@@ -680,6 +680,11 @@ class ResourceAction extends SnsController{
             $r_info ['show_type_flag'] = 'img';
         }
         
+         //提交活跃度
+        import('@.Control.Api.ActiveApi');
+        $activeApi = new ActiveApi();
+        $activeApi->setactive($this->user['client_account'], 402, 13);
+        
         $this->assign ( 'product_name', $product_name );  
         $this->assign ( 'r_info', $r_info );
         
@@ -755,6 +760,7 @@ class ResourceAction extends SnsController{
                 $ResourceInfo[$resource_id] = $resource_info;
             }
             
+            
             return !empty($ResourceInfo) ? $ResourceInfo : false;
     }
 
@@ -798,6 +804,11 @@ class ResourceAction extends SnsController{
        } catch(Exception $e) {
            $this->showError($e->getMessage());
        }
+       
+        //提交活跃度
+        import('@.Control.Api.ActiveApi');
+        $activeApi = new ActiveApi();
+        $activeApi->setactive($this->user['client_account'], 402, 13);
     }
     
    /*********************************************前台上传资源页面**********************************************/

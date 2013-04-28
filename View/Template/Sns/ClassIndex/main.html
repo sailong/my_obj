@@ -14,6 +14,7 @@
 
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/tip_msg/showtip.js"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/sendbox/sendbox.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/sendbox/parseFace.js"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/template/template.js"></script>
 
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/Feed/feed.js"></script>
@@ -48,9 +49,7 @@
        <ul>
           <li>
           	<a id="show_class_feed_a" href="javascript:;" class="main_nav_a1 mr6" title="">班级动态</a>
-          	{if $user.client_type == 2}
-          	<a id="show_children_feed_a" href="javascript:;" class="main_nav_a2" title="">孩子动态</a>
-          	{/if}
+
           </li>
        </ul>
        
@@ -71,14 +70,7 @@
 	      <div class="clear"></div>
         </div>
         
-        <!-- 孩子相关的动态展示区  -->
-        <div id="child_feed_list_div" style="display:none;">
-          <div id="show_children_feed">
-	
-	
-		  </div>
-		  <div class="clear"></div>
-        </div>
+
         
      </div>
       <!--main_left end-->
@@ -114,6 +106,6 @@
 
 <input id="class_code" type="hidden" value="{$class_code}"/>
 <input id="user_headimg_url" type="hidden" value="{$user.client_headimg_url}"/>
-
+<input id="client_type" type="hidden" value="{$user.client_type}"/>
 </body>
 </html>

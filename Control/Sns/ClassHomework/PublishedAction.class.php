@@ -13,6 +13,7 @@ class PublishedAction extends SnsController {
         $class_code = $this->objInput->getStr('class_code');
         
         $class_code = $this->checkoutClassCode($class_code);
+        
         if(empty($class_code)) {
             $this->showError('您暂时没有权限查看该班的作业信息', '/Sns/ClassHomework/Published/index');
         }
@@ -116,6 +117,14 @@ class PublishedAction extends SnsController {
         $mClassHomework = ClsFactory::Create('Model.ClassHomework.mClassHomework');
         $homework_list = $mClassHomework->getClassHomework($wherearr, 'homework_id desc', $offset, $perpage);
         $homework_list = $this->ConvertHomeworkInfos($homework_list);
+        if($page == 1) {
+            if($this->user['client_type'] == CLIENT_TYPE_STUDENT || $this->user['client_type'] == CLIENT_TYPE_FAMILY) {
+                //提交活跃度
+                import('@.Control.Api.ActiveApi');
+                $activeApi = new ActiveApi();
+                $activeApi->setactive($this->user['client_account'], 202, 23);
+            }
+        }
         
         if(empty($homework_list)) {
            $this->ajaxReturn(null, '没有更多作业了!', -1, 'json');

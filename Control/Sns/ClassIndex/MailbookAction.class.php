@@ -114,6 +114,7 @@ class MailbookAction extends SnsController{
         //获取家长信息
         $parents_infos = $mClientInfo->getClientInfoById($parents_accounts);
         $parents_account_infos = $mClientInfo->getClientAccountById($parents_accounts);
+        
         //依据帐号查询家长手机号
         $mBusinessphone = ClsFactory::Create('Model.mBusinessphone');
         $parents_phone = $mBusinessphone->getbusinessphonebyalias_id($parents_accounts);
@@ -121,6 +122,7 @@ class MailbookAction extends SnsController{
         $new_parents_arr = array();
         foreach($parents_account_infos as $account=>$account_info) {
             $new_parents_arr[$account] = array_merge($account_info,$parents_account_infos[$account]);
+            $new_parents_arr[$account]['client_email'] = $parents_infos[$account]['client_email'];
             $new_parents_arr[$account]['phone_id'] = $parents_phone[$account]['account_phone_id2'];
         }
         

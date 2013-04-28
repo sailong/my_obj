@@ -84,6 +84,18 @@ class ActivateAction extends UcController {
         if(empty($effect_row)) {
             $this->showError('激活失败!', "/Uc/Activate" . (!empty($callback) ? "/callback/$callback" : ""));
         }
+        
+        //提交活跃度
+        import('@.Control.Api.ActiveApi');
+        $activeApi = new ActiveApi();
+        $resault = $activeApi->setactive($this->user['client_account'], 101, 21);
+        if($this->user['client_type'] == CLIENT_TYPE_STUDENT) {
+            $class_info = array_shift($this->user['class_info']);
+            $activeApi->setactive($class_info['headteacher_account'], 101, 25);
+        }elseif($this->user['client_type'] == CLIENT_TYPE_FAMILY) {
+            $activeApi->setactive($class_info['headteacher_account'], 101, 26);
+        }
+        
         $this->showSuccess('激活成功!', !empty($decode_callback) ? $decode_callback : '/Uc/Index');
     }
 }

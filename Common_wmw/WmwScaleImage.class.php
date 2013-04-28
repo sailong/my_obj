@@ -151,33 +151,35 @@ class WmwScaleImage  {
         
         $extension = $this->getImgExt($img_path);
         if(empty($extension) || !in_array($extension, $this->allow_types)) {
-            throw new Exception("系统暂时不支持缩放成{$ext}格式的图片!");
+            throw new Exception("系统暂时不支持缩放成{$extension}格式的图片!");
             break;
         }
         
         $im = $this->loadImg($img_path);
         
         if(!is_resource($im)) {
-            throw new Exception('源文件加载失败!');
+            unlink($img_path);
+            return false;
+            //throw new Exception('源文件加载失败!');
+        }else{
+            $width = $this->getImgWidth($im);
+            $height = $this->getImgHeight($im);
+            
+            if ($max_height == 'auto') $max_height = $height;
+            //获取缩放比例
+            $w_scale = $max_width * 100 / $width;
+            $h_scale = $max_height * 100 / $height;
+            $scale = $w_scale > $h_scale ? $h_scale : $w_scale;
+            $scale = $scale > 0 ? $scale : 75;
+            //缩放宽高
+            $newWidth = round($width * $scale / 100);
+            $newHeight = round($height * $scale / 100);        
+            
+            $newIm = imagecreatetruecolor($newWidth, $newHeight);
+            $do  = imagecopyresampled($newIm, $im, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+            $success = $this->saveImgFile($newIm, $save_path);
+            return $success ? $save_path : false;
         }
-        
-        $width = $this->getImgWidth($im);
-        $height = $this->getImgHeight($im);
-        
-        if ($max_height == 'auto') $max_height = $height;
-        //获取缩放比例
-        $w_scale = $max_width * 100 / $width;
-        $h_scale = $max_height * 100 / $height;
-        $scale = $w_scale > $h_scale ? $h_scale : $w_scale;
-        $scale = $scale > 0 ? $scale : 75;
-        //缩放宽高
-        $newWidth = round($width * $scale / 100);
-        $newHeight = round($height * $scale / 100);        
-        
-        $newIm = imagecreatetruecolor($newWidth, $newHeight);
-        $do  = imagecopyresampled($newIm, $im, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-        $success = $this->saveImgFile($newIm, $save_path);
-        return $success ? $save_path : false;
     }
 
     /**

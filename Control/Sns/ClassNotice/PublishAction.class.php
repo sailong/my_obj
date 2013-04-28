@@ -55,6 +55,13 @@ class PublishAction extends SnsController {
         if(!empty($notice_id)) {
             $mMsgNoticeList = ClsFactory::Create("RModel.Msg.mStringNotice");
             $mMsgNoticeList->publishMsg($notice_id, 'notice');
+            
+            //提交活跃度
+            
+            import('@.Control.Api.ActiveApi');
+            $activeApi = new ActiveApi();
+            $activeApi->setactive($this->user['client_account'], 201, 1);
+            
             $this->showSuccess('发布公告成功！','/Sns/ClassNotice/Published/index/class_code/' . $class_code);
         } else {
             $this->showError('发布公告失败！','/Sns/ClassNotice/Publish/index/class_code/' . $class_code);

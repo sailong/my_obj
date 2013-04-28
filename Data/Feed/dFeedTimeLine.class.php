@@ -6,7 +6,8 @@ class dFeedTimeLine extends dBase{
         'feed_id',
         'feed_type',
         'client_account',
-        'timeline'
+        'timeline',
+        'from_class_code'
     );
     protected $_pk = 'id';
     protected $_index_list = array(
@@ -18,7 +19,7 @@ class dFeedTimeLine extends dBase{
     public function getTimeLineByUids($uids) {
         return $this->getInfoByFk($uids, 'client_account', 'timeline desc');
     }
-    
+
     public function addTimeLine($datas, $is_return_id) {
         return $this->add($datas, $is_return_id);
     }

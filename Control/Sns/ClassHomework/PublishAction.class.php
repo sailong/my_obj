@@ -117,6 +117,12 @@ class PublishAction extends SnsController {
             
         }
         
+        //提交活跃度
+        import('@.Control.Api.ActiveApi');
+        $activeApi = new ActiveApi();
+        $activeApi->setactive($this->user['client_account'], 202, 2);
+        
+        
         $mMsgHomeworkList = ClsFactory::Create("RModel.Msg.mStringHomework");
         $mMsgHomeworkList->publishMsg($homework_id, 'homework');
         
@@ -140,7 +146,7 @@ class PublishAction extends SnsController {
         $client_infos = $mClientInfo->getClientAccountById($client_accounts);
         
         foreach($client_infos as $account=>$val) {
-            $val['client_headimg'] = Pathmanagement_sns::getHeadImg($account).$val['client_headimg'];
+            $val['client_headimg'] = $val['client_headimg'] ? $val['client_headimg_url'] : Pathmanagement_sns::getHeadImg($account).$val['client_headimg'];
             $client_infos[$account] = $val;
         }
         

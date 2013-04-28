@@ -77,6 +77,12 @@ class PersonMoodAction extends SnsController {
     public function publishAjax() {
         $content = $this->objInput->postStr('content');
         
+        //返回 发布本身还是返回动态信息
+        $returnType = $this->objInput->postStr('returnType');
+        if (!empty($returnType)) {
+            $returnType = 'mood_info';
+        }
+        
         if(empty($content)) {
             $this->ajaxReturn(null, '说说内容不能为空!', -1, 'json');
         }
@@ -100,14 +106,24 @@ class PersonMoodAction extends SnsController {
         
         $feed_info = $FeedApi->getFeedById($feed_id);
         
+        import('@.Control.Api.ActiveApi');
+        $activeApi = new ActiveApi();
+        $activeApi->setactive($this->user['client_account'], 302, 9);        
+        
         //获取说说的相关信息
         $mood_info = $MoodApi->getPersonMood($this->user['client_account'], $mood_id);
         
-        $result = array('mood_info' => $mood_info,
-                        'feed_info' => $feed_info);
+        if ($returnType == 'mood_info') {
+            $result = $mood_info;
+        } else {
+            $result = $feed_info;
+        }
         
         $this->ajaxReturn($result, '说说发表成功!', 1, 'json');
     }
+    
+    
+    
     
     /**
      * 删除个人说说

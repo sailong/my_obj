@@ -9,7 +9,7 @@ main_first.prototype = {
 			panels:'emote,upload',
 			chars:140,
 			type:'post',
-			url:'/Sns/Mood/PersonMood/publishAjax',
+			url:'/Sns/Mood/PersonMood/publishAjax/resultType/feed_info',
 			dataType:'json',
 			success:function(json) {
 				if(json.status < 0) {
@@ -18,12 +18,12 @@ main_first.prototype = {
 				}
 				$.showSuccess(json.info);
 				
-				var data = json.data;
-				var feed_info = data.feed_info;
+				var feed_info = json.data;
 
 				$('#my_feed_list_div').prependChild(feed_info);
 			}
 		});
+		
 		
 		//加载用户动态信息
 		var vuid = $('#vuid').val();

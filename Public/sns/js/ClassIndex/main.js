@@ -15,6 +15,9 @@ main.prototype = {
 	//绑定事件
 	attachEventForSayBox:function() {
 		var class_code = $('#class_code').val();
+		var client_type = $('#client_type').val();
+		
+		if (client_type == 2) return ;  //家长没有说说框;
 		$('.say_text').sendBox({
 			panels:'emote,upload',
 			chars:140,
@@ -41,33 +44,12 @@ main.prototype = {
 		//查看班级动态信息
 		$('#show_class_feed_a').click(function() {
 			$('#show_class_feed_a').removeClass('main_nav_a2').addClass('main_nav_a1');
-			$('#show_children_feed_a').removeClass('main_nav_a1').addClass('main_nav_a2');
-			
+
 			$('#class_feed_list_div').show();
-			$('#child_feed_list_div').hide();
-			
+
 			return false;
 		});
-		
-		//查看孩子动态
-		$('#show_children_feed_a').click(function() {
-			$('#show_children_feed_a').removeClass('main_nav_a2').addClass('main_nav_a1');
-			$('#show_class_feed_a').removeClass('main_nav_a1').addClass('main_nav_a2');
-			
-			//第一次点击需要加载孩子动态列表
-			var inited = $(this).data('inited');
-			if(!inited) {
-				$('#show_children_feed').loadFeed({
-					url:'/Sns/Feed/List/getUserChildrenFeedAjax'
-				});
-				$(this).data('inited', true);
-			}
-			
-			$('#child_feed_list_div').show();
-			$('#class_feed_list_div').hide();
-			
-			return false;
-		});
+
 	}
 
 	,attachEventForLeft:function() {

@@ -82,12 +82,16 @@ class mAlbumPhotos extends mBase {
             return false;
         }*/
         $table_name = $this->_dAlbumPhotos->getTableName();
-        $sql = "select * from {$table_name} limit {$offset},{$limit}";
+        $sql = "select * from {$table_name} order by photo_id desc limit {$offset},{$limit}";
         return $this->_dAlbumPhotos->query($sql);
     }
     
     //相片总数
     public function getAllCount() {
         return $this->_dAlbumPhotos->getCount();
+    }
+    //获取最后执行的sql
+    public function getLastSql() {
+        return $this->_dAlbumPhotos->getLastSql();
     }
 }

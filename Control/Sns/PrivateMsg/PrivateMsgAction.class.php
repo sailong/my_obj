@@ -11,6 +11,8 @@ class PrivateMsgAction extends SnsController{
         
         $limit = 10;
         $offset = ($page - 1) * $limit;
+        
+        $class_code = $this->checkoutClassCode();
         $mPrivateMsgRelation = ClsFactory::Create("Model.PrivateMsg.mPrivateMsgRelation");
         
         $private_msg_list = $mPrivateMsgRelation->getPrivateMsgRelationBySendUid($current_uid, null, $offset, $limit + 1);
@@ -70,6 +72,7 @@ class PrivateMsgAction extends SnsController{
         }
         
         $this->assign("is_end_page", $is_end_page);
+        $this->assign('class_code',$class_code);
         $this->assign("page", $page);
         $this->assign('private_list', $private_msg_list);
         $this->display("list");

@@ -72,13 +72,31 @@ class PhotouploadAction extends SnsController {
         if(empty($photo_id)) {
             $this->ajaxReturn('上传失败','',-1,'json');
         }
+        
         //添加动态
         import("@.Control.Api.FeedApi");
         $feed_api = new FeedApi();
+        
         if(!empty($class_code)) {
             $feed_api->class_create($class_code,$account,$photo_id,FEED_ALBUM, FEED_ACTION_PUBLISH);
         }else{
-            $feed_api->user_create($account, $photo_id, FEED_ALBUM,FEED_ACTION_PUBLISH);
+            //查看相册权限是否为"仅自己"
+            import("@.Control/Api/AlbumImpl/PersonAlbum");
+            $PersonAlbum = new PersonAlbum();
+            $album_info = $PersonAlbum->getPersonAlbumByAlbumId($album_id,$account);
+            if($album_info[$album_id]['grant'] != 2) {
+                $feed_api->user_create($account, $photo_id, FEED_ALBUM,FEED_ACTION_PUBLISH);
+            }
+        }
+        
+        //提交活跃度
+        import('@.Control.Api.ActiveApi');
+        $activeApi = new ActiveApi();
+        
+        if(!empty($class_code)) {
+            $activeApi->setactive($account, 204, 4);
+        }else{
+            $activeApi->setactive($account, 304, 11);
         }
         
         echo base64_encode(json_encode($file_attrs));

@@ -30,7 +30,8 @@ class CommentsAction extends SnsController {
         $blog_id = $this->objInput->postInt('blog_id');
         $up_id   = $this->objInput->postInt('up_id');
         $content = $this->objInput->postStr('content');
-        
+        $feed_id = $this->objInput->postInt('feed_id');
+
         if(empty($content)) {
             $this->ajaxReturn(null, '评论信息不能为空!', -1, 'json');
         }
@@ -64,6 +65,13 @@ class CommentsAction extends SnsController {
         if(empty($comment_id)) {
             $this->ajaxReturn(null, '日志评论发表失败!', -1, 'json');
         }
+        
+        //是否与我相关的填充。
+        if (!empty($feed_id)) {
+            import('@.Control.Api.FeedApi');
+            $FeedApi = new FeedApi();
+            $FeedApi->user_create_my($this->user['client_account'], $class_code, $feed_id, FEED_BLOG);
+        }      
         
         //获取日志的评论信息
         $comment_list = $BlogApi->getBlogCommentsById($comment_id);

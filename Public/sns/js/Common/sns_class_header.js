@@ -4,6 +4,12 @@ function sns_class_header(){
 
 sns_class_header.prototype.init = function(){
 	var me = this;	
+	
+	var client_type = $('#client_type').val();
+	if (client_type == 1) {
+		$('.class_change_ul').css('visibility', 'visible');	
+	}	
+
 	$('.class_change_ul > li').bind('mouseenter', openSubMenu);
 	$('.class_change_ul > li').bind('mouseleave', closeSubMenu);
 	
@@ -20,6 +26,7 @@ sns_class_header.prototype.init = function(){
 		var class_code = this.id;
 		window.location.href="/Sns/ClassIndex/Index/index/class_code/" + class_code;
 	});	
+
 };
 
 $(document).ready(function(){

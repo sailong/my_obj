@@ -15,7 +15,19 @@
 			icon:'succeed'
 		}).time(3);
 	};
+	
 })(jQuery);
+
+//jQuery.extend({
+//	handleError: function( s, xhr, status, e ) {
+//		// If a local callback was specified, fire it
+//		if ( s.error )
+//			s.error( xhr, status, e );
+//		// If we have some XML response text (e.g. from an AJAX call) then log it in the console
+//		else if(xhr.responseText)
+//			console.log(xhr.responseText);
+//	}
+//});
 
 //将动态的加载扩展到$全局变量
 $.fn.loadFeed=function(settings) {
@@ -209,6 +221,10 @@ feed.prototype = {
 		};
 		
 		var feed_type = feed_datas.feed_type || 1;
+		if (feed_type == 1) {
+			feed_datas.feed_content = $.parseFace.textFormat(feed_datas.feed_content);
+		}
+		
 		var divObj = $.createFeedUnit(feed_datas, feed_type_maps[feed_type], me.settings['skin']);
 		divObj.data('datas', feed_datas);
 		me.feedListDivObj.append(divObj);
@@ -226,8 +242,13 @@ feed.prototype = {
 				2 : 'blog',
 				3 : 'photo'
 			};
-			
+
 			var feed_type = feed_datas.feed_type || 1;
+			
+			if (feed_type == 1) {
+				feed_datas.feed_content = $.parseFace.textFormat(feed_datas.feed_content);
+			}			
+
 			var divObj = $.createFeedUnit(feed_datas, feed_type_maps[feed_type], me.settings['skin']);
 			divObj.data('datas', feed_datas);
 			me.feedListDivObj.prepend(divObj);

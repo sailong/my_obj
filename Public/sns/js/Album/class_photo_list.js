@@ -186,12 +186,10 @@ photo_list.prototype.delegateEvent=function() {
 		
 	});
 	
-
 	//评论
 	$(".list_photo_left").delegate('.comments', 'click', function(){
 		var dl_obj = $(this).parents('dl:first');
 		var photo_data = dl_obj.data('datas') || {};
-		var click_nums = dl_obj.data('click_nums') || 1;
 		var sendOptions = {
 				textareaObj:$("#comment_area"),
 				photo_id:photo_data.photo_id || {},
@@ -213,16 +211,16 @@ photo_list.prototype.delegateEvent=function() {
 					$(".pl_count", dl_obj).text($pl_count);
 				}
 		};
-		if(click_nums == 1) {
-			dl_obj[0].sendBoxObj = $.sendCommentBox(sendOptions);
-		}
-		dl_obj.data('click_nums', click_nums + 1);
+		$.sendCommentBox(sendOptions);
 		art.dialog({
 		    id: 'edit_comment_div_dialog',
 		    opacity: 0.5,	// 透明度
 		    content: $("#edit_comment_div").get(0),
 		    drag: false,
-			fixed: true //固定定位 ie 支持不好回默认转成绝对定位
+			fixed: true, //固定定位 ie 支持不好回默认转成绝对定位
+		    close: function(event, ui) {
+				$('.iwbQQFace:first').fadeOut(200);
+			} //这是关闭事件的回调函数,在这写你的逻辑
 		}).lock();
 	});
 	//修改照片名称
@@ -284,7 +282,7 @@ photo_list.prototype.fillAlbumList = function (album_list) {
 		a_str += '<a id="'+album_info.album_id+'" href="javascript:;"><span>'+album_info.album_name+'</span></a>';
 	}
 	$("p",move_obj).html('');
-	$(a_str).appendTo($("p",move_obj));
+	$(a_str).appendTo($("p",move_obj)).fadeIn(200);
 };
 
 //删除相册
@@ -353,7 +351,7 @@ photo_list.prototype.fillPhotoList=function(photo_list) {
 		}
 		var dlObj = dlClone.clone();
 		
-		dlObj.removeClass('clone_selector').insertBefore(insertPosDivObj).show();
+		dlObj.removeClass('clone_selector').insertBefore(insertPosDivObj).fadeIn(200);
 		dlObj.attr('id',i);
 		dlObj.data('datas', photo_datas).renderHtml(photo_datas);
 	}

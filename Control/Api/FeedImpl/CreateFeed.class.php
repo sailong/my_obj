@@ -25,7 +25,7 @@ class CreateFeed {
         
         //保存到 wmw_feed_person_relation wmw_feed_timeline
         $this->saveFeedToPerson($uid, $feed_id, $feed_type);
-        $this->saveFeedToTimeLine($uid, $feed_id, $feed_type);
+        $this->saveFeedToTimeLine($uid, 0, $feed_id, $feed_type);
         
         return $feed_id;
     }
@@ -56,7 +56,7 @@ class CreateFeed {
         
         //保存到 wmw_feed_class_relation wmw_feed_timeline
         $this->saveFeedToClass($class_code, $feed_id, $feed_type);
-        $this->saveFeedToTimeLine($uid, $feed_id, $feed_type);
+        $this->saveFeedToTimeLine($uid, $class_code, $feed_id, $feed_type);
                 
         return $feed_id;
     }
@@ -148,7 +148,7 @@ class CreateFeed {
      * @param  $timeline    时间戳
      * @return $id   成功：timeline表对应的主键，失败：false
      */
-    private function saveFeedToTimeLine($uid, $feed_id, $feed_type) {
+    private function saveFeedToTimeLine($uid, $class_code, $feed_id, $feed_type) {
        if(empty($uid) || empty($feed_id) || empty($feed_type)) {
            return false;
        }
@@ -158,6 +158,7 @@ class CreateFeed {
            'feed_type' => $feed_type,
            'client_account' => $uid,
            'timeline' => time(),
+           'from_class_code' => $class_code
        );
        
        $mFeedTimeLine = ClsFactory::Create('Model.Feed.mFeedTimeLine');

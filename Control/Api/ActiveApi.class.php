@@ -28,7 +28,7 @@ class ActiveApi extends ApiController {
         $param_list = array(
             "module" => $module,
             "action" => $action,
-            "uid" => $module,
+            "uid" => $uid,
         );
         
         $param_list = serialize($param_list);
@@ -43,11 +43,12 @@ class ActiveApi extends ApiController {
     public function client_active($client_account) {
         $mActive = ClsFactory::Create("Model.Active.mActive");
         $Active_list = $mActive->getActiveByClientAccount($client_account);
+        
         return !empty($Active_list) ? reset($Active_list) : false;
     }
     
     /**
-     * 得到用户活跃度记录
+     * 得到用户活跃度记录(每日活跃值)
      * @param unknown_type $client_account
      */
     public function client_active_log($client_account, $start_time=null, $end_time=null){
@@ -68,14 +69,22 @@ class ActiveApi extends ApiController {
         $current_person_active = $active_list[$UserInfog[$client_account]['client_type']];
         $action_list = C("action");
         $module_list = C("module");
+        
+        
         if(!empty($ActiveLog_list)) {
             foreach($ActiveLog_list as $log_id => $active_log) {
                 $user_add_value[$active_log['module'].$active_log['action']] += $active_log['value'];
                 $today_val += $active_log["value"];
             }
         }
-
+        
+        
         foreach($current_person_active as $module => $action){
+            if($module == 101 || $module ==301) {
+                unset($action);
+                continue;
+            }
+            
             $action = (array)$action;
             foreach($action as $sub_action) {
                 if(empty($user_add_value[$module.$sub_action])){
@@ -97,6 +106,69 @@ class ActiveApi extends ApiController {
             $new_ActiveLog_list[$module]["action_num"] = $new_ActiveLog_list[$module]["action_num"] > 1 ?  $new_ActiveLog_list[$module]["action_num"] + 1 : $new_ActiveLog_list[$module]["action_num"];
         }
 
+        return !empty($new_ActiveLog_list) ? array($new_ActiveLog_list, $today_val) : array(array(), 0);
+    }
+    
+    
+ /**
+     * 得到用户活跃度记录(一次性的活跃值)
+     * @param unknown_type $client_account
+     */
+    public function client_active_log_once($client_account, $start_time=null, $end_time=null){
+        $end_time = !empty($end_time) ? $end_time : mktime(0, 0, 0, date("m")   , date("d")+1, date("Y"))-1; //本天结束时间
+        $start_time = !empty($start_time) ? $start_time : mktime(0, 0, 0, date("m")   , date("d"), date("Y")); //本天开始时间
+        
+        $mActiveLog = ClsFactory::Create("Model.Active.mActiveLog");
+        $ActiveLog_list = $mActiveLog->getActiveLogByClientAccount($client_account,$start_time,$end_time);
+
+        $new_ActiveLog_list = array();
+        $today_val = 0;
+        
+        
+        C(include_once WEB_ROOT_DIR . '/Config/SnsActive/config.php');
+        $mUser = ClsFactory::Create("Model.mUser");
+        $UserInfog = $mUser->getClientAccountById($client_account);
+        $active_list = C("active_list");
+        $current_person_active = $active_list[$UserInfog[$client_account]['client_type']];
+        $action_list = C("action");
+        $module_list = C("module");
+        
+        
+        if(!empty($ActiveLog_list)) {
+            foreach($ActiveLog_list as $log_id => $active_log) {
+                $user_add_value[$active_log['module'].$active_log['action']] += $active_log['value'];
+                $today_val += $active_log["value"];
+            }
+        }
+        
+        
+        foreach($current_person_active as $module => $action){
+            if($module == 101 || $module == 301) {
+                $action = (array)$action;
+                foreach($action as $sub_action) {
+                    if(empty($user_add_value[$module.$sub_action])){
+                        $new_ActiveLog_list[$module]["message"] = $module_list[$module]['msg'];
+                        $new_ActiveLog_list[$module]["action_list"][$sub_action]["action"] = $action_list[$sub_action]; 
+                        $new_ActiveLog_list[$module]["action_list"][$sub_action]["value"] = 0;
+                    }else{
+                        $new_ActiveLog_list[$module]["message"] = $module_list[$module]['msg'];
+                        $new_ActiveLog_list[$module]["action_list"][$sub_action]["action"] = $action_list[$sub_action]; 
+                        $new_ActiveLog_list[$module]["action_list"][$sub_action]["value"] = $user_add_value[$module.$sub_action];
+                    }
+                    
+                    $new_ActiveLog_list[$module]["action_num"] +=1;
+                    
+                    $new_ActiveLog_list[$module]["action_list"][$sub_action]["day_limit"] = $module_list[$module][$sub_action]["day_limit"];
+                    $new_ActiveLog_list[$module]["action_list"][$sub_action]["add_value"] = $module_list[$module][$sub_action]["value"];
+                }
+             } else {
+                 unset($action);
+                 continue;
+             }
+             
+                $new_ActiveLog_list[$module]["action_num"] = $new_ActiveLog_list[$module]["action_num"] > 1 ?  $new_ActiveLog_list[$module]["action_num"] + 1 : $new_ActiveLog_list[$module]["action_num"];
+           }
+        
         return !empty($new_ActiveLog_list) ? array($new_ActiveLog_list, $today_val) : array(array(), 0);
     }
 

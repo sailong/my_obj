@@ -25,7 +25,7 @@ class mZsetUserChildren extends mFeedBase {
         
         $mFeedTimeLine = ClsFactory::Create('Model.Feed.mFeedTimeLine');
 
-        $datas_from_db = $mFeedTimeLine->getFeedByUids($uids, $lastFeedId, $limit);
+        $datas_from_db = $mFeedTimeLine->getAllFeedByUids($uids, $lastFeedId, $limit);
         
         $result = array();
         foreach ($datas_from_db as $key => $val) {

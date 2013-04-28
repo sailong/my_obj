@@ -133,9 +133,11 @@ class ContentAction extends SnsController {
             $comments_content[$comment_id]['header_pic_url'] = $user_info[$uid]['client_headimg_url'];
             $comments_content[$comment_id]['add_time'] = Date::timestamp($comments_content[$comment_id]['add_time']);
             
-            import("@.Control.Api.FeedApi");
-            $feed_api = new FeedApi();
-            $feed_api->class_create($class_code, $this->user['client_account'], $blog_id, FEED_ACTION_COMMENT);
+//            import("@.Control.Api.FeedApi");
+//            $feed_api = new FeedApi();
+//            $feed_api->class_create($class_code, $this->user['client_account'], $blog_id, FEED_ACTION_COMMENT);
+//            
+
         }
         
         

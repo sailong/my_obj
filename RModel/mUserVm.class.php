@@ -174,7 +174,7 @@ class mUserVm {
 	    $client_class_datas = $mHashClientClass->getClientClassbyUid($uid);
 	    $mSetClassStudent = ClsFactory::Create('RModel.Common.mSetClassStudent');
 	    $mSetClassTeacher = ClsFactory::Create('RModel.Common.mSetClassTeacher');
-	    $mSetClientParent = ClsFactory::Create('RModel.Common.mSetClientParent');
+	    $mSetClassFamily = ClsFactory::Create('RModel.Common.mSetClassFamily');
 	            
 	    $all_uids = array();
 	    
@@ -184,7 +184,7 @@ class mUserVm {
             
             $teachers = $mSetClassTeacher->getClassTeacherById($class_code);
             
-            $parents = $mSetClientParent->getClientParentByUid($class_code);
+            $parents = $mSetClassFamily->getClassFamilyById($class_code);
             
             if (empty($students)) $students = array();
             if (empty($teachers)) $teachers = array();

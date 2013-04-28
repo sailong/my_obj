@@ -138,6 +138,14 @@ class UserinfosAction extends UcController {
         $mHashClient = ClsFactory::Create('RModel.Common.mHashClient');
         $client_base = $mHashClient->getClientbyUid($account, true); 
         
+        //提交活跃度
+        import('@.Control.Api.ActiveApi');
+        $activeApi = new ActiveApi();
+        $activeApi->setactive($this->user['client_account'], 301, 14);
+        $activeApi->setactive($this->user['client_account'], 301, 15);
+        $activeApi->setactive($this->user['client_account'], 301, 16);
+        $activeApi->setactive($this->user['client_account'], 301, 17);
+        
         if($result || $result1) {
              $this->showSuccess("保存成功", "/Uc/Userinfos/UserBaseInfos");
         } else {

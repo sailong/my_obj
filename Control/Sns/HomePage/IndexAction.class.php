@@ -57,6 +57,12 @@ class IndexAction extends SnsController{
         if(empty($is_qd)) {
             $this->ajaxReturn(null, '签到失败', -1, 'json');
         }
+        
+        //提交活跃度
+        import('@.Control.Api.ActiveApi');
+        $activeApi = new ActiveApi();
+        $activeApi->setactive($this->user['client_account'], 103, 20);
+        
         $this->ajaxReturn(null, '签到成功', 1, 'json');
     }
 }

@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>waterfall</title>
+<link rel="stylesheet" href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/Common/sns_common.css" type="text/css" charset="utf-8">
+<link rel="stylesheet" href="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/css/Album/class_list_photo_p.css" type="text/css" charset="utf-8">
+
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/js/jquery-1.5.2.min.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/template/template.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/Album/demo/imgdelay.js"></script>
+<script type="text/javascript"> 
+{literal}
+$(function(){
+	$(".waterfall").waterfall({
+			jsonUrl:"/Sns/Album/Classphoto/getPhotosByAlbumId/class_code/23527/album_id/172/client_account/11070004",
+			dataType:"json"	
+	})
+})
+{/literal}
+</script>
+</head>
+
+<body>
+<div class="waterfall" id="container">
+   	<ul id="clone_selector" style="display:none;">
+   	   {literal}
+	   <li class="twc-item">
+	       <a class="twci-link" href="/Sns/Album/Classphoto/photo/album_id/{album_id}/photo_id/{photo_id}/class_code/{class_code}">
+	           <img class="twcil-img" alt="{name}" src="{file_middle_url}"/>
+	       </a>
+	       <p class="pinlun comments" style="display:none;">
+	       	<a href="javascript:;">评论（<span class="pl_count">{comments}</span>）</a>
+	       </p>
+	       <h4 class="twci-header ">
+	           <a class="twcih-txt" href="#">{name}</a> 
+	       </h4>
+	   </li>
+	   {/literal}
+   	</ul>
+</div>
+</body>
+</html>

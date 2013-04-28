@@ -45,7 +45,7 @@
 		
 		
 /* to_top */
-.to_top a,.to_top a:hover{background:url("/Public/sns/images/Album/albumlist/gotop.png") no-repeat}
+.to_top a,.to_top a:hover{background:url("/Public/sns/images/Album/class_album_list/gotop.png") no-repeat}
 .to_top a{
 	background-position:0 0;float:left;height:50px;overflow:hidden;width:50px;position:fixed;bottom:35px;cursor:pointer;right:20px;
 	_position:absolute;

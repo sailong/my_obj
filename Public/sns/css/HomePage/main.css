@@ -225,5 +225,19 @@
 			.share_main h2{font:14px "宋体"; color:#0756aa; height:30px; line-height:30px;}
 			.share_main p{line-height:24px;}	
 			
+			/*提示信息*/	   
+.tcc_msg{width:310px; color:#666; background:#fff;}
+	.tcc_msg_top{background:url(../../images/PersonIndex/main_first/tcc_msg_top.gif) 0 0 no-repeat; height:5px; overflow:hidden;}
+	.tcc_msg_center{background:url(../../images/PersonIndex/main_first/tcc_msg_center.gif) 0 0 repeat-y; padding:10px 20px;}
+	    .msg_center_main{width:270px;}
+	    	.msg_center_main dl{float:left; margin-right:8px;}
+			.msg_center_main p{float:left; font:normal 12px "宋体"; line-height:20px;}
+			.icon_question{background:url(../../images/PersonIndex/main_first/icon_question.gif) 0 0 no-repeat; width:8px; height:14px; display:inline-block; margin-right:8px;}
+			
+			.tcc_btn_right{text-align:right;}	
+			.qd_btn{background:url(../../images/PersonIndex/main_first/qd_btn.gif) 0 0 no-repeat; width:57px; height:24px; border:none; cursor:pointer;}
+		    .qx_btn{background:url(../../images/PersonIndex/main_first/qx_btn.gif) 0 0 no-repeat; width:57px; height:24px; border:none; cursor:pointer; color:#73797c; margin-left:10px;}
+			
+	.tcc_msg_bottom{background:url(../../images/PersonIndex/main_first/tcc_msg_bottom.gif) 0 0 no-repeat; height:5px; overflow:hidden;}		
 			
 			

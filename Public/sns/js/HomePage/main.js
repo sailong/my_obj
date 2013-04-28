@@ -19,7 +19,7 @@ main.prototype = {
 			panels:'emote,upload',
 			chars:140,
 			type:'post',
-			url:'/Sns/Mood/PersonMood/publishAjax',
+			url:'/Sns/Mood/PersonMood/publishAjax/resultType/feed_info',
 			dataType:'json',
 			success:function(json) {
 				if(json.status < 0) {
@@ -28,8 +28,7 @@ main.prototype = {
 				}
 				$.showSuccess(json.info);
 				
-				var data = json.data;
-				var feed_info = data.feed_info;
+				var feed_info = json.data;
 
 				$('#user_all_feed_div').prependChild(feed_info);
 
@@ -84,8 +83,18 @@ main.prototype = {
 			return false;
 		});
 		
-		new allphoto($('.xiangce'), $('#photo_img')[0], $('#next_photo_btn')[0]);
-		
+		//获取孩子动态
+		$('#user_children_feed_a').click(function() {
+			me.selectFeed({
+				a_id:'user_children_feed_a', 
+				div_id:'user_children_feed_div',
+				feed_url:'/Sns/Feed/List/getUserChildrenFeedAjax/client_account/'+ client_account
+			});
+			
+			return false;
+		});		
+
+		new allphoto($('.xiangce'), $('#photo_img')[0], $('#next_photo_btn')[0]);		
 	}
 
 	//选择当前的动态类型
@@ -104,7 +113,7 @@ main.prototype = {
 			aObj.data('inited', true);
 		}
 		
-		$('#user_all_feed_div,#class_feed_div,#user_friend_feed_div,#user_my_feed_div').hide();
+		$('#user_all_feed_div,#class_feed_div,#user_friend_feed_div,#user_my_feed_div,#user_children_feed_div').hide();
 		$('#' + options.div_id).show();
 	}	
 };

@@ -21,13 +21,25 @@ class mZsetUserAll extends mFeedBase {
             return false;
         }
         
+        $mHashClient = ClsFactory::Create('RModel.Common.mHashClient');
+	    $client_base = $mHashClient->getClientbyUid($id); 
+	    $client_type = $client_base['client_type'];       
+        
+        
         $uids = array();
 
-        // 通过用户账号获取用户所有关系成员，包括所有班级成员，用户好友,最终结果为去重后的数组
-        $mUserVm = ClsFactory::Create('RModel.mUserVm');
-        
-        $all_friends = $mUserVm->getUserAllRelations($id);
 
+        // 获取好友动态        
+        $mSetClientFriends = ClsFactory::Create('RModel.Common.mSetClientFriends');
+	    $all_friends = $mSetClientFriends->getClientFriendsByUid($uid);        
+        
+	    //家长需要加入孩子帐号：
+	    if ($client_type == CLIENT_TYPE_FAMILY) {
+	        $mSetClientChildren = ClsFactory::Create('RModel.Common.mSetClientChildren');
+	        $childrens = $mSetClientChildren->getClientChildrenByUid($id);
+	        $all_friends = array_merge($all_friends, $childrens);
+	    }
+	    
         if (empty($all_friends)) return false;
         
         $all_count = count($all_friends);
@@ -55,8 +67,38 @@ class mZsetUserAll extends mFeedBase {
         }
         array_unshift($uids, $id);
         $mFeedTimeLine = ClsFactory::Create('Model.Feed.mFeedTimeLine');
-
-        $datas_from_db = $mFeedTimeLine->getFeedByUids($uids, $lastFeedId, $limit);
+        
+        $datas_from_friends = array();
+        
+        if (!empty($uids)) {
+            $datas_from_friends = $mFeedTimeLine->getFeedByUids($uids, $lastFeedId, $limit);
+        }
+        
+        //获取班级动态
+	    $mHashClientClass = ClsFactory::Create('RModel.Common.mHashClientClass');
+	    $client_class_datas = $mHashClientClass->getClientClassbyUid($uid);
+	    
+	    $class_codes = array();
+	    foreach($client_class_datas as $key =>$val) {
+	        $class_codes[] = $val['class_code'];
+	    }
+	    
+        $datas_from_class = array();
+        
+        if (!empty($class_codes)) {
+            $datas_from_class = $mFeedTimeLine->getFeedByClassCodes($class_codes, $lastFeedId, $limit);
+        }
+        
+        
+        //最后将好友动态和班级动态进行合并排序
+        $datas_from_db = array_merge($datas_from_friends, $datas_from_class);
+        
+        $sort_arr = array();
+        
+        foreach ($datas_from_db as $key => $val) {
+          $sort_arr[$key] = $val['feed_id'];
+        }
+        array_multisort($sort_arr, SORT_ASC, $datas_from_db);          
         
         $result = array();
         foreach ($datas_from_db as $key => $val) {
@@ -64,6 +106,7 @@ class mZsetUserAll extends mFeedBase {
                 'value' => $val['feed_id'],
                 'score' => $val['feed_id'],
             );
+            if ($key >= $limit) break;
         }
         return $result;
     }

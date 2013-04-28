@@ -397,6 +397,12 @@ sendBox.prototype = {
 				return false;
 			}
 			
+			var content = $.trim($('textarea', me._jForm).val());
+			if(content.length > options.chars) {
+				$.showError('内容不能超过' + options.chars + '字!');
+				return false;
+			}			
+
 			//将后续追加的参数附加到form表单
 			if(!$.isEmptyObject(me.params)) {
 				for(var name in me.params) {
@@ -585,11 +591,9 @@ $.fn.val=function(value) {
 	        	}
 	        }]);
     	});
-	});
 	
-	//注册到全局初始化函数,初始化表层浮动层
-	sendBox.registorGlobalInit(function() {
-		  function createEmotion() {
+	    //注册到全局初始化函数,初始化表层浮动层
+	    function createEmotion() {
 			  var emotions="f14|微笑,f1|撇嘴,f2|色,f3|发呆,f4|得意,f5|流泪,f6|害羞,f7|闭嘴,f8|睡,f9|大哭,f10|尴尬,f11|发怒,f12|调皮,f13|呲牙,f0|惊讶,f15|难过,f16|酷,f96|冷汗,f18|抓狂,f19|吐,f20|偷笑,f21|可爱,f22|白眼,f23|傲慢,f24|饥饿,f25|困,f26|惊恐,f27|流汗,f28|憨笑,f29|大兵,f30|奋斗,f31|咒骂,f32|疑问,f33|嘘,f34|晕,f35|折磨,f36|衰,f37|骷髅,f38|敲打,f39|再见,f97|擦汗,f98|抠鼻,f99|鼓掌,f100|糗大了,f101|坏笑,f102|左哼哼,f103|右哼哼,f104|哈欠,f105|鄙视,f106|委屈,f107|快哭了,f108|阴险,f109|亲亲,f110|吓,f111|可怜,f112|菜刀,f89|西瓜,f113|啤酒,f114|篮球,f115|乒乓,f60|咖啡,f61|饭,f46|猪头,f63|玫瑰,f64|凋谢,f116|示爱,f66|爱心,f67|心碎,f53|蛋糕,f54|闪电,f55|炸弹,f56|刀,f57|足球,f117|瓢虫,f59|便便,f75|月亮,f74|太阳,f69|礼物,f49|拥抱,f76|强,f77|弱,f78|握手,f79|胜利,f118|抱拳,f119|勾引,f120|拳头,f121|差劲,f122|爱你,f123|NO,f124|OK,f42|爱情,f85|飞吻,f43|跳跳,f41|发抖,f86|怄火,f125|转圈,f126|磕头,f127|回头,f128|跳绳,f129|挥手,f130|激动,f131|街舞,f132|献吻,f133|左太极,f134|右太极";
 			  var emotionsArr = emotions.split(",");
 			  var emotionsHtml = "<div class=\"iwbAutoCloseLayer iwbQQFace\">"
@@ -614,13 +618,14 @@ $.fn.val=function(value) {
 				var left = options.left || 0;
 			 	var iwbQQFace = $(".iwbQQFace");
 		        iwbQQFace.css({
-		            top: top + 5 + "px",
-		            left: left - 60 + "px"
+		        	'z-index':'9999',
+		            top: top +0 + "px",
+		            left: left + "px"
 		        });
 		        iwbQQFace.hide().fadeIn(200);
 		        iwbQQFace.data('callback', options.callback || $.noop);
 			}
-		});
+		  });
 	    //防止表情层的点击事件的冒泡
 	  	$('.iwbQQFace').live('click', function(evt) {
 			evt.stopPropagation();
@@ -629,6 +634,7 @@ $.fn.val=function(value) {
 		$('.iwbQQFace .close').live('click', function() {
 			$(this).parents('.iwbQQFace:first').fadeOut(200);
 		});
+		
 		//表情a元素的点击事件
 		$('.iwbQQFace .qqFaceBox a').live({
 			mouseover:function() {

@@ -40,5 +40,11 @@ class mBlog extends mBase {
         return $this->_dBlog->delBlog($blog_id);   
     }
     
+    
+    //专攻导属于用的
+    public function getBlogInfo($offset,$limit) {
+        $sql = 'select blog_id from wmw_blog limit '.$offset.','.$limit;
+        return $this->_dBlog->query($sql);
+    }
    
 }

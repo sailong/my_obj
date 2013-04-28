@@ -46,7 +46,7 @@ class ManageAction extends SnsController{
     //初始化加载数据及搜索
     public function search_friend_json() {
         $search_name = $this->objInput->postStr('search_name');
-        $search_account = $this->objInput->postStr('search_account');
+        $search_account = $this->objInput->postInt('search_account');
         $client_account = $this->user['client_account'];
         $page = $this->objInput->getInt('page');
         $page = max($page,1);
@@ -72,7 +72,6 @@ class ManageAction extends SnsController{
         foreach($client_friends[$client_account] as $relation_id => $friendrelation_info) {
             $new_friend_accounts[] = $friendrelation_info['friend_account'];
         }
-        
         
         $new_friend_friend_arr = array();
         //判断好友的好友是否是登录人的好友
@@ -104,6 +103,7 @@ class ManageAction extends SnsController{
                 $client_account_list[$account]['is_friend'] = 3;//未发送好友请求标识
             }
         }
+        
         
         if(empty($client_account_list)) {
             $this->ajaxReturn(null,'获取好友失败！',-1,'json');
@@ -516,6 +516,8 @@ class ManageAction extends SnsController{
      * 展示我的好友请求列表
      */
     public function friend_request() {
+        $class_code = $this->checkoutClassCode();
+        $this->assign('class_code',$class_code);
         $this->display('friend_request');
     }
     
@@ -528,21 +530,22 @@ class ManageAction extends SnsController{
         $client_account  = $this->user['client_account'];
         $mMsgRequire = ClsFactory::Create('Model.Message.mMsgRequire');
         $to_account_infos = $mMsgRequire->getMsgRequireByToAccount($client_account,$offset,$limit);
-        
+
         $add_account_arr = array();
         foreach($to_account_infos[$client_account] as $req_id=>$req_info) {
             $add_account_arr[] = $req_info['add_account'];
-            $add_account_req_info[$req_info['add_account']] = $req_id;
+            $add_account_req_info[$req_info['add_account']] = $req_info;
         }
-        
+
         $mUser = ClsFactory::Create('Model.mUser');
         $client_account_list = $mUser->getUserBaseByUid($add_account_arr);
         
         foreach($client_account_list as $account=>$client_info) {
-           $client_info['req_id'] = $add_account_req_info[$account];
+           $client_info['req_id'] = $add_account_req_info[$account]['req_id'];
+           $client_info['req_content'] = $add_account_req_info[$account]['content'];
            $client_account_list[$account] = $client_info;
         }
-        
+
         if(empty($client_account_list)) {
             $this->ajaxReturn(null,'获取列表失败！',-1,'json');
         }
@@ -593,6 +596,13 @@ class ManageAction extends SnsController{
                 $resault = $mAccountrelation->addAccountRelation($accountrelation_arr);
                 $resault = $mAccountrelation->addAccountRelation($accountrelation_arr1);
             }
+            
+            //同步redis好友列表:
+            $mSetClientFriends = ClsFactory::Create('RModel.Common.mSetClientFriends');
+            
+            
+            $mSetClientFriends->setClientFriendsByUid($client_account, array($friend_account));
+	        $mSetClientFriends->setClientFriendsByUid($friend_account, array($client_account));
         }
         
         //删除消息请求

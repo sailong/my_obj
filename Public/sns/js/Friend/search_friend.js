@@ -163,6 +163,7 @@ Search_Friend.prototype.attachEventForSearch=function() {
 				async:false,
 				success:function(json) {
 					if(json.status < 0) {
+						$('#tip_info').html('未搜到符合的用户！');
 						return false;
 					}
 					

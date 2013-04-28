@@ -16,13 +16,13 @@ hotresource.prototype.getResource = function() {
 				for(var i in json.data.resource_info) {
 					var cloneObj = $('.clone',context).clone().removeClass('clone').show();
 					var data = json.data.resource_info[i];
-					var num_class = 'num_bj_hot';
-					var title_class = 'rmzytj_hot';
 					if(j>3) {
-						num_class = 'num_bj';
-						title_class = '';
+						$('td span',cloneObj).addClass('num_bj');
+					}else{
+						$('td span',cloneObj).addClass('num_bj_hot');
+						$('td a',cloneObj).addClass('rmzytj_hot');
 					}
-					data = $.extend(data,{num:j,num_class:num_class,title_class:title_class});
+					data = $.extend(data,{num:j});
 					cloneObj.renderHtml({
 						data:data || {}
 					});

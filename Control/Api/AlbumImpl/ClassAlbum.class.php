@@ -204,7 +204,7 @@ class ClassAlbum {
         $grant_arr = array(
             0=>"公开（所有人可见）",
             1=>"本班",
-            2=>"本学校"
+            //2=>"本学校"
         );
         if($grant_id === NULL) {
             return $grant_arr;

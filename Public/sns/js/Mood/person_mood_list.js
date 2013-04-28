@@ -29,7 +29,7 @@ person_mood_list.prototype = {
 			chars:120,
 			file_size:2,
 			type:'post',
-			url:'/Sns/Mood/PersonMood/publishAjax',
+			url:'/Sns/Mood/PersonMood/publishAjax/returnType/moon_info',
 			dataType:'json',
 			beforeSubmit:function() {
 				return true;
@@ -42,8 +42,7 @@ person_mood_list.prototype = {
 				$.showSuccess(json.info);
 				//追加到当前的说说列表中
 				if(!$.isEmptyObject(json.data)) {
-					var data = json.data;
-					var mood_info = data.mood_info;
+					var mood_info = json.data;
 					mood_unit.create(mood_info || {}).prependTo($('#show_mood_list_div'));
 				}
 				me.getPersonMoodStat();
@@ -188,6 +187,7 @@ mood_unit.prototype = {
 				$('.pl_textarea', ancestorObj).sendBox({
 					panels:'emote',
 					type:'post',
+					skin:'mini',
 					url:'/Sns/Mood/Comments/publishMoodCommentsAjax',
 					dataType:'json',
 					data:{

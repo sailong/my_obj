@@ -57,6 +57,13 @@ class ViewAction extends SnsController {
         //统计学生的信息
         $stat = $this->statClassExamScore($exam_score_list, $class_exam['exam_good'], $class_exam['exam_bad']);
         
+        if($this->user['client_type'] == CLIENT_TYPE_STUDENT || $this->user['client_type'] == CLIENT_TYPE_FAMILY) {
+            //提交活跃度
+            import('@.Control.Api.ActiveApi');
+            $activeApi = new ActiveApi();
+            $activeApi->setactive($this->user['client_account'], 203, 24);
+        }
+        
         $this->assign('exam_id', $exam_id);
         $this->assign('class_exam', $class_exam);
         $this->assign('exam_score_list', $exam_score_list);

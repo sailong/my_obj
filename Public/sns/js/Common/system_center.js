@@ -24,14 +24,14 @@ system_center.prototype = {
 		attachEvent : function() {
 			$("#icon_show").toggle(
 				function(){
-					$(this).attr('class','icon_show_down');
-					$(this).attr('title','展开');
+					$(this).attr('class','icon_show_up');
+					$(this).attr('title','收起');
 					$('div.shu',$("#system_center_selector")).slideToggle('slow');
 //					$('dl.heng',$(".heng_list")).slideToggle('slow');
 				},
 				function() {
-					$(this).attr('class','icon_show_up');
-					$(this).attr('title','收起');
+					$(this).attr('class','icon_show_down');
+					$(this).attr('title','展开');
 					$('div.shu',$("#system_center_selector")).slideToggle('slow');
 //					$('dl.heng',$(".heng_list")).slideToggle('slow');
 				}

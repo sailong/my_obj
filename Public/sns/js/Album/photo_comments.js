@@ -15,7 +15,7 @@ function sendCommentBox(sendOptions){
 		//限制文件上传大小,(单位是：m 兆)
 		file_size:2,
 		//设置编辑框对应的样式,对应查看sendbox相应的目录对应的css文件目录下的css文件中的样式名的后缀,
-		skin:'default',
+		skin:'mini',
 		//表单的提交类型，建议使用post的方式，支持(get, post)
 		type:'post',
 		//表单提交到的位置
@@ -170,19 +170,24 @@ function comment_1st_unit() {
 }
 
 comment_1st_unit.prototype = {
+	//关闭所有的回复对话框
+	closeAllSendBoxDiv:function(ancestorObj) {
+		$('.comm_area').hide();
+		$('.comm_area',ancestorObj).show();
+	},
 	delegateEvent:function() {
 		var me=this;
 		$('.reply_1st_selector').live('click', function() {
 			var aObj = $(this);
-			var ancestorObj = aObj.closest('.comment_1st_unit_selector');
 			var click_nums = aObj.data('click_nums') || 1;
 			var commentObj = aObj.parents(".comment_1st_unit_selector");
+			me.closeAllSendBoxDiv(commentObj);
 			var commentData = commentObj.data('datas') || {};
 			var up_id = commentData.comment_id || {};
 			var photo_id = commentData.photo_id || {};
 			if(click_nums == 1) {
 				aObj[0].sendBoxObj = sendCommentBox({
-						textareaObj:$('textarea:first', ancestorObj),
+						textareaObj:$('textarea:first', commentObj),
 						up_id:up_id,
 						photo_id:photo_id,
 						login_account:me.login_account || {},
@@ -203,11 +208,7 @@ comment_1st_unit.prototype = {
 						}
 				});
 			}
-			if(click_nums % 2 == 0) {
-				aObj[0].sendBoxObj.hide();
-			}else if(click_nums % 2 == 1){
-				aObj[0].sendBoxObj.show();
-			}
+			aObj[0].sendBoxObj.show();
 			aObj.data('click_nums', click_nums + 1);
 		});
 		

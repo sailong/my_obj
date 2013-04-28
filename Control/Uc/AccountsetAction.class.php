@@ -56,7 +56,11 @@ class AccountsetAction extends UcController {
     	} else if ($last_user_scode['security_code'] != $scode) {
 	    	$data['scode_span'] = '输入的验证码错误';
     	}
-
+        //提交活跃度
+        import('@.Control.Api.ActiveApi');
+        $activeApi = new ActiveApi();
+        $activeApi->setactive($this->user['client_account'], 301, 18);
+    	
     	empty($data) ? $this->ajaxReturn(null, '正确。', 1, 'JSON') : $this->ajaxReturn($data, '错误', -1, 'JSON');
     }
 

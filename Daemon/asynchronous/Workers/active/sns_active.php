@@ -45,7 +45,7 @@ class sns_active extends BackGroundController {
 
         $module = $module == 301 ? 307 : $module;
         $action = $action == 21 && $client_type == 0 ? 25 : $action;
-        $action = $action == 21 && $client_type == 3 ? 26 : $action;
+        $action = $action == 21 && $client_type == 2 ? 26 : $action;
 
         $headteacher_account = $ClassInfo['headteacher_account'];
 
