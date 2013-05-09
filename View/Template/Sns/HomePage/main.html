@@ -34,7 +34,7 @@
  <!-- 班级列表star-->
  	<div id="class_list_div" class="bjlb_style" style="display:none;">
  	{foreach from=$user_info.class_info item=class_info}
-       <a href="/Sns/HomePage/Index/index/class_code/{$class_info.class_code}">{$class_info.class_name}</a>
+       <a id="select_class" href="/Sns/HomePage/Index/index/class_code/{$class_info.class_code}">{$class_info.class_name}</a>
     {/foreach}
     </div>
 

@@ -155,7 +155,7 @@ student_edit.prototype.attachEvent=function() {
 		var new_datas = {
 			'client_account':client_account,
 			'client_name':new_client_name,
-			'client_class_role':new_client_class_role,
+			'client_class_role':new_client_class_role
 		};
 		
 		$.ajax({
@@ -223,7 +223,7 @@ student_delete.prototype.attachEvent=function() {
 			type:'post',
 			url:'/Sns/ClassAdmin/StudentList/removeStudentAjax/class_code/' + class_code,
 			data:{
-				'client_account':datas.client_account,
+				'client_account':datas.client_account
 			},
 			dataType:'json',
 			success:function(json) {

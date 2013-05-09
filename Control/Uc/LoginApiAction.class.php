@@ -333,8 +333,7 @@ class LoginapiAction extends UcController {
             $data['callback'] = "http://" . C('UC_DOMAIN') . '/Uc/Activate?callback=' . $callback;
         }
         
-	    //记录登录登录时间，加入用户在线库，异步操作
-        Gearman::send('default_usr_login', $client_account);
+
 	    
         //用户token, 格式看本函数注释
         $json = $this->oauth2->grantAccessToken();
@@ -347,6 +346,14 @@ class LoginapiAction extends UcController {
         if (isset($oauth_data['error'])) {
             $this->ajaxReturn(null, '登录失败', 0, 'json');
         }
+        
+	    //记录登录登录时间，加入用户在线库，异步操作
+        Gearman::send('default_usr_login', $client_account);        
+        
+        //每日登录活跃值
+        import('@.Control.Api.ActiveApi');
+        $activeApi = new ActiveApi();
+        $activeApi->setactive($client_account, 102, 19);
         
         $user_token = token_encode($oauth_data);
         

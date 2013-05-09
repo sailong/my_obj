@@ -3,12 +3,12 @@
 
 .bladkground{background:url(../../images/ClassIndex/blackboard_bj.jpg) 0 0 no-repeat; width:900px; height:220px; padding:49px 30px;}
 	.black_left{width:540px; float:left; height:220px;}
-		.black_left h3{font:normal 26px "微软雅黑"; color:#fff; text-align:center; height:30px; margin-bottom:10px;}
-		.black_left p{font:20px "微软雅黑"; color:#fff; padding:0px 40px; line-height:24px; padding-bottom:8px; width:460px;word-wrap:break-word;word-break:break-all;}
+		.black_left h3{font:normal 20px "微软雅黑"; color:#fff; text-align:center; height:30px; margin-bottom:10px;}
+		.black_left p{font:16px "微软雅黑"; color:#fff; padding:0px 40px; line-height:24px; padding-bottom:8px; width:460px;word-wrap:break-word;word-break:break-all;}
 		.align_right{text-align:right;}
 	
 	.black_right{width:220px; float:left; height:220px; color:#fff; margin-left:40px;}
-		.black_right h3{font:normal 26px "微软雅黑"; text-align:center; height:40px;}
+		.black_right h3{font:normal 20px "微软雅黑"; text-align:center; height:40px;}
 		.black_right p{height:30px; font:16px "微软雅黑";}
 			.black_right .line_bj{background:url(../../images/ClassIndex/black_p_line.jpg) 0 top no-repeat; height:5px; overflow:hidden;}
 			.black_right p a{color:#fff; font:16px "微软雅黑"; line-height:20px; display:inline-block; margin-top:4px;}

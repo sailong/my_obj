@@ -246,7 +246,7 @@ class WmwString {
 			} elseif(194 <= $t && $t <= 223) {
 				$n += 2; $length ++;
 			} elseif(224 <= $t && $t <= 239) {
-				$n += 3; $length += 2;
+				$n += 3; $length += $chiness_word_width;
 			} elseif(240 <= $t && $t <= 247) {
 				$n += 4; $length ++;
 			} elseif(248 <= $t && $t <= 251) {
@@ -487,6 +487,7 @@ class WmwString {
 		define('OPERATION_STRATEGY_GD',5);    	 //学校运营策略  5:广东联通
 		define('OPERATION_STRATEGY_LN',6);    	 //学校运营策略  6:辽宁联通
 		define('OPERATION_STRATEGY_CQ',7);    	 //学校运营策略  7:重庆联通
+		define('OPERATION_STRATEGY_SC',8);    	 //学校运营策略  8:四川联通
 	 */
 	public static function operatorArr($opernum){
 		if(empty($opernum)){
@@ -498,7 +499,7 @@ class WmwString {
 		//移动策略数组
 		$moveArr = array();
 		$moveNumArr = array(182,187,188,139,138,137,136,135,134,147,159,158,157,152,151,150);
-		$unicomArr = array(OPERATION_STRATEGY_HLJ,OPERATION_STRATEGY_JL,OPERATION_STRATEGY_GD,OPERATION_STRATEGY_LN,OPERATION_STRATEGY_CQ);
+		$unicomArr = array(OPERATION_STRATEGY_HLJ,OPERATION_STRATEGY_JL,OPERATION_STRATEGY_GD,OPERATION_STRATEGY_LN,OPERATION_STRATEGY_CQ,OPERATION_STRATEGY_SC);
 		$unicomNumArr = array(186,185,156,155,145,132,131,130);
 		$telecomArr = array(OPERATION_STRATEGY_CZ);
 		$telecomNumArr = array(133,153,180,189);

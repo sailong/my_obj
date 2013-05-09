@@ -22,14 +22,15 @@ define('OPERATION_STRATEGY_JL' , 4);    	 			//学校运营策略  4:吉林联�
 define('OPERATION_STRATEGY_GD' , 5);    	 			//学校运营策略  5:广东联通
 define('OPERATION_STRATEGY_LN' , 6);    	 			//学校运营策略  6:辽宁联通
 define('OPERATION_STRATEGY_CQ' , 7);    	 			//学校运营策略  7:重庆联通
+define('OPERATION_STRATEGY_SC' , 8);    	 			//学校运营策略  8:四川联通
 
 define('COPYRIGHT' , '版权所有 Copyright&copy; www.wmw.cn 京ICP备05067399号 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;地址：北京中青网脉科技发展有限公司 北京市东城区前门东大街五号 邮编：100006');
 define('COPYRIGHTBR' , '版权所有 Copyright&copy; www.wmw.cn 京ICP备05067399号<br />地址：北京中青网脉科技发展有限公司 北京市东城区前门东大街五号 邮编：100006');
 
 //UC之后的版权，以后用下边的定义，上边的版权定义会删掉
-define('WMW_COPYRIGHT' , '版权所有 Copyright&copy; www.wmw.cn 京ICP备05067399号');
-define('WMW_COMPANY' , '单位：北京中青网脉科技发展有限公司');
-define('WMW_ADDRESS' , '地址：北京市东城区前门东大街五号');
+define('WMW_COPYRIGHT' , '版权所有&nbsp;Copyright&copy; www.wmw.cn 京ICP备05067399号');
+define('WMW_COMPANY' , '公司名称 &nbsp;北京中青网脉科技发展有限公司');
+define('WMW_ADDRESS' , '公司址地 &nbsp;北京市东城区前门东大街五号');
 define('WMW_ZIP_CODE' , '邮编：100006');
 
 define('WMW_CS_PHONE' , '400-616-0300');				//WMW客服电话

@@ -81,9 +81,9 @@ class PhotouploadAction extends SnsController {
             $feed_api->class_create($class_code,$account,$photo_id,FEED_ALBUM, FEED_ACTION_PUBLISH);
         }else{
             //查看相册权限是否为"仅自己"
-            import("@.Control/Api/AlbumImpl/PersonAlbum");
-            $PersonAlbum = new PersonAlbum();
-            $album_info = $PersonAlbum->getPersonAlbumByAlbumId($album_id,$account);
+            import("@.Control.Api.AlbumApi");
+            $albumApi = new AlbumApi();
+            $album_info = $albumApi->getPersonAlbumByAlbumId($album_id,$account);
             if($album_info[$album_id]['grant'] != 2) {
                 $feed_api->user_create($account, $photo_id, FEED_ALBUM,FEED_ACTION_PUBLISH);
             }

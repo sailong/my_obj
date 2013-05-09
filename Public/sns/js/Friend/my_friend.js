@@ -13,13 +13,13 @@ Friend.prototype.init=function() {
 	var me = this;
 	
 	$('#load_more_a').data('page', 2);
-	$('#delete_friend_group_div').hide();
-	$('#add_friend_group_div').hide();
-	$('#add_friend_group_div').hide();
-	$('#edit_friend_group_div').hide();
-	$('#friend_group_menu_div').hide();
-	$('#delete_friend_relation_div').hide();
-	$('#send_private_msg_div').hide();
+//	$('#delete_friend_group_div').hide();
+//	$('#add_friend_group_div').hide();
+//	$('#add_friend_group_div').hide();
+//	$('#edit_friend_group_div').hide();
+//	$('#friend_group_menu_div').hide();
+//	$('#delete_friend_relation_div').hide();
+//	$('#send_private_msg_div').hide();
 	
 	//加载页面数据
 	Friend.registerFilters({

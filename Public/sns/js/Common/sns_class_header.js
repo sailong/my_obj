@@ -5,8 +5,8 @@ function sns_class_header(){
 sns_class_header.prototype.init = function(){
 	var me = this;	
 	
-	var client_type = $('#client_type').val();
-	if (client_type == 1) {
+	var user_client_type = $('#user_client_type').val();
+	if (user_client_type == 1) {
 		$('.class_change_ul').css('visibility', 'visible');	
 	}	
 
@@ -24,6 +24,7 @@ sns_class_header.prototype.init = function(){
 	
 	$('#class_list li').click(function(){
 		var class_code = this.id;
+		$.cookie("select_class_code", class_code, {domain:".wmw.cn", path:"/"});
 		window.location.href="/Sns/ClassIndex/Index/index/class_code/" + class_code;
 	});	
 

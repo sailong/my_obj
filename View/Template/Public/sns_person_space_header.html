@@ -1,10 +1,10 @@
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/Common/sns_person_space_header.js"></script>
  <!-- 个人空间 导航菜单 star-->
  	<div class="gezkxq" id="person_space_nav" style="display:none;">
-       <a href="#">说说</a>
+       <a href="/Sns/Mood/PersonMood/mood_list/client_account/{$space_uid}">说说</a>
        <a href="/Sns/Blog/PersonList/index/client_account/{$space_uid}">日志</a>
-       <a href="/Sns/Album/Person/albumlist/client_account/{$space_uid}">相册</a>
-       <a href="/Sns/Friend/Manage/index">好友</a>   
+       <a href="/Sns/Album/Personalbum/albumlist/client_account/{$space_uid}">相册</a>
+       <a href="{if $is_vuid == false}/Sns/Friend/Manage/index{else}/Sns/Friend/Manage/getFriendByAccountFriend/friend_account/{$space_uid}{/if}">好友</a>   
     </div>
  
  <!--个人空间 导航菜单 end-->

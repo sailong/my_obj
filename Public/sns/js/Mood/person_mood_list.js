@@ -6,6 +6,7 @@ function dump(obj) {
 }
 
 function person_mood_list() {
+	this.client_account = $("#client_account").val();
 	this.attachEvent();
 	this.init();
 }
@@ -69,7 +70,7 @@ person_mood_list.prototype = {
 		var hasNextPage = true;
 		$.ajax({
 			type:'get',
-			url:'/Sns/Mood/PersonMood/getPersonMoodListAjax/page/' + page,
+			url:'/Sns/Mood/PersonMood/getPersonMoodListAjax/client_account/'+me.client_account+'/page/' + page,
 			dataType:'json',
 			async:false,
 			success:function(json) {

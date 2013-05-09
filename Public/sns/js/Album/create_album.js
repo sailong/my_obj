@@ -94,8 +94,12 @@ create_album.prototype.attachEvent=function(){
 create_album.prototype.reflushCounter=function() {
 	var me = this;
 	var context = $('#create_album_div');
-	
-	var len = $.trim($('#album_explain', context).val()).toString().length;
+	var content = $.trim($('#album_explain', context).val()).toString();
+	var len = content.length;
+	if(len > me.max_length) {
+		content = content.substr(0,me.max_length);
+		$('#album_explain', context).val(content);
+	}
 	var show_nums = me.max_length - len;
 	show_nums = show_nums > 0 ? show_nums : 0;
 	$("#span_count", context).html(show_nums);

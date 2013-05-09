@@ -32,6 +32,13 @@ class PersonMoodAction extends SnsController {
      * 显示个人说说列表
      */
     public function mood_list() {
+        $client_account = $this->objInput->getInt('client_account');
+        if(empty($client_account)) {
+            $client_account = $this->user['client_account'];
+        }
+        
+        $this->assign('client_account',$client_account);
+        
         $this->display('person_list');
     }
     
@@ -53,14 +60,17 @@ class PersonMoodAction extends SnsController {
      */
     public function getPersonMoodListAjax() {
         $page = $this->objInput->getInt('page');
-        
+        $client_account = $this->objInput->getInt('client_account');
+        if(empty($client_account)) {
+            $client_account = $this->user['client_account'];
+        }
         $page = max(1, $page);
         
         $perpage = 10;
         $offset = ($page - 1) * $perpage;
         
         $MoodApi = ClsFactory::Create('@.Control.Api.MoodApi');
-        $mood_list = $MoodApi->getPersonMoodList($this->user['client_account'], $offset, $perpage);
+        $mood_list = $MoodApi->getPersonMoodList($client_account, $offset, $perpage);
         
         //dump($mood_list);
         

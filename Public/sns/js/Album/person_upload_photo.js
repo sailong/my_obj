@@ -68,6 +68,10 @@ class_photo_upload.prototype.attachEvent=function() {
 			me.no_album_tip();
 			return false;
 		}
+		if(select_upload_nums == 0) {
+			$.showError('请选择上传的文件!');
+			return false;
+		}
 		var postobj = { "secret_key" : secret_key, "client_account" : me.client_account, "album_id" :xcid};
 		me.swfu.setPostParams(postobj);
 		me.swfu.startUpload();

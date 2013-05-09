@@ -57,7 +57,7 @@ class dResourceInfo extends dBase{
             'is_system',
             'add_account',
             'is_system',
-            'resource_status',
+            //'resource_status',
         );
     }
     

@@ -511,6 +511,7 @@ class PublishAction extends SnsController{
             foreach($student_list as $uid=>$student) {
                 if(isset($score_list[$uid])) {
                     $score_datas = $score_list[$uid];
+                    $score_datas['score_py'] = WmwString::mbstrcut($score_datas['score_py'],0,60);
                 } else {
                     $score_datas = array(
                         'client_account' => $uid,
@@ -525,7 +526,6 @@ class PublishAction extends SnsController{
                 $new_score_list[$uid] = $score_datas;
             }
         }
-        
         $this->ajaxReturn($new_score_list, '导入成功!', 1, 'json');
     }
 

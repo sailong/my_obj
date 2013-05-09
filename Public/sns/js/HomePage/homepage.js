@@ -2,6 +2,7 @@
 function homepage() {
 	this.client_account = $("#client_account").val();
 	this.attachEvent();
+	this.setCookieSelectClass();
 }
 
 
@@ -22,7 +23,43 @@ homepage.prototype.attachEvent=function() {
 	  }
 	);
 };
-	
+
+homepage.prototype.setCookieSelectClass=function() {
+	var me = this;
+	var url = window.location.href;
+	var select_class_code;
+	if (url.indexOf('class_code') >= 0) {
+		select_class_code = me.parseUrlParams(url, 'class_code');
+	} else {
+		$('#class_list_div a').each(function(k) {
+			if (k == 0) {
+				url = $(this).attr('href');
+				select_class_code = me.parseUrlParams(url, 'class_code');
+			}
+		});				
+	}
+
+//    console.log('select_class_code =' + select_class_code);
+	//保持班级选择统一
+	//1. 先查看cookies 里面是否有已选择班级
+	//2. 如果没有，则默认列表第一个为选择班级，并更新到cookies中
+	//3. 切换班级，更新cookies
+	$.cookie("select_class_code", select_class_code, {domain:".wmw.cn", path:"/"});
+}
+
+homepage.prototype.parseUrlParams=function(url, name) {
+	var resultVal;
+	var urlParts = url.split('/');
+//	console.log(urlParts);	
+	$.each(urlParts, function(key,val) {
+//		console.log("key =" + key + " val =" + val);
+		if (val == name) {
+			resultVal = urlParts[key+1];
+		}
+	});
+	return resultVal;
+}
+
 homepage.prototype.checkin=function(obj) {
 	var me = this;
 	$.ajax({

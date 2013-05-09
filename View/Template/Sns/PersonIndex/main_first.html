@@ -2,23 +2,22 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+
 <title>个人空间首页</title>
 <link rel="stylesheet" href="__PUBLIC__/sns/css/Common/sns_common.css" type="text/css" charset="utf-8">
 <link rel="stylesheet" href="__PUBLIC__/sns/css/PersonIndex/main_first.css" type="text/css" charset="utf-8">
 
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/wmw_js/jquery-1.5.2.min.js"></script>
-
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/template/template.js"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/tip_msg/showtip.js"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/sendbox/sendbox.js"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/sendbox/parseFace.js"></script>
-<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/tool_js/template/template.js"></script>
-
-<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/PersonIndex/vistior.js"></script>
-<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/PersonIndex/friend.js"></script>
 
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/Feed/feed.js"></script>
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/Feed/feed_unit.js"></script>
+
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/PersonIndex/vistior.js"></script>
+<script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/PersonIndex/friend.js"></script>
 
 <script type="text/javascript" src="{$smarty.const.IMG_SERVER}__PUBLIC__/sns/js/PersonIndex/main_first.js"></script>
 
@@ -37,11 +36,11 @@
          <dl>
            <dt><a href="javascript:;"><img src="{$user_list.client_headimg_url}" class="photo_width140"></a></dt>
            <dd>{$user_list.client_name}<a href="/Sns/PersonIndex/Active/showActiveInfo" target="_blank" class="value_bj ml10">{$user_list.active_count_day}</a></dd>
-           {if $client_account == $vuid}<dd class="align_left"><span class="f_main_green">活跃值：{$user_list.active_count}</span></dd>{/if}
+           {if $is_vuid == false}<dd class="align_left"><span class="f_main_green">活跃值：{$user_list.active_count}</span></dd>{/if}
          </dl>
        </div>
        <div class="head_btn" style="display:none;" id="head_pic_id">
-       	{if $client_account == $vuid}<a href="/Uc/Userinfos/head_photo" class="gray_btn" >更换头像</a>{/if}
+       	{if $is_vuid == false}<a href="/Uc/Userinfos/head_photo" class="gray_btn" >更换头像</a>{/if}
        </div>
     </div>
    <!--banner end--> 
@@ -52,7 +51,7 @@
        <div class="first_main_left">
          <p></p>
          <table width="100%" border="0" cellspacing="0" cellpadding="0">
-         {if $vuid == $client_account}
+         {if $is_vuid == false}
           <tr onMouseOver="this.className='li_on'" onMouseOut="this.className=''">
             <td class="td_icon_width"><a href="/Sns/PrivateMsg/PrivateMsg/index"><span class="icon_sx"></span></a></td>
             <td><a href="/Sns/PrivateMsg/PrivateMsg/index" class="f_16">私信</a></td>
@@ -60,23 +59,23 @@
           </tr>
           {/if}
           <tr onMouseOver="this.className='li_on'" onMouseOut="this.className=''">
-            <td><a href=""><span class="icon_say"></span></a></td>
-            <td><a href="/Sns/Mood/PersonMood/mood_list" class="f_16">说说</a></td>
+            <td><a href="/Sns/Mood/PersonMood/mood_list/client_account/{$vuid}"><span class="icon_say"></span></a></td>
+            <td><a href="/Sns/Mood/PersonMood/mood_list/client_account/{$vuid}" class="f_16">说说</a></td>
             <td>&nbsp;</td>
           </tr>
           <tr onMouseOver="this.className='li_on'" onMouseOut="this.className=''">
-            <td><a href="/Sns/Album/Person/albumlist/client_account/{$vuid}"><span class="icon_photo"></span></a></td>
+            <td><a href="/Sns/Album/Personalbum/albumlist/client_account/{$vuid}"><span class="icon_photo"></span></a></td>
             <td><a href="/Sns/Album/Personalbum/albumlist/client_account/{$vuid}" class="f_16">相册</a></td>
-            <td>{if $vuid == $client_account}<a href="/Sns/Album/Personphoto/uplaodPhoto/client_account/{$vuid}" class="f_666" >上传</a>{/if}</td>
+            <td>{if $is_vuid == false}<a href="/Sns/Album/Personphoto/uplaodPhoto/client_account/{$vuid}" class="f_666" >上传</a>{/if}</td>
           </tr>
           <tr onMouseOver="this.className='li_on'" onMouseOut="this.className=''">
             <td><a href="/Sns/Blog/PersonList/index/client_account/{$vuid}"><span class="icon_rz"></span></a></td>
             <td><a href="/Sns/Blog/PersonList/index/client_account/{$vuid}" class="f_16">日志</a></td>
-            <td>{if $vuid == $client_account}<a href="/Sns/Blog/PersonPublish/index" class="f_666" class="f_16">发表</a>{/if}</td>
+            <td>{if $is_vuid == false}<a href="/Sns/Blog/PersonPublish/index" class="f_666" class="f_16">发表</a>{/if}</td>
           </tr>
           <tr onMouseOver="this.className='li_on'" onMouseOut="this.className=''">
-            <td><a href="/Sns/Friend/Manage/index"><span class="icon_friend"></span></a></td>
-            <td><a href="/Sns/Friend/Manage/index" class="f_16">好友</a></td>
+            <td><a href="{if $is_vuid == false}/Sns/Friend/Manage/index/client_account/{$vuid}{else}/Sns/Friend/Manage/getFriendByAccountFriend/friend_account/{$vuid}{/if}"><span class="icon_friend"></span></a></td>
+            <td><a href="{if $is_vuid == false}/Sns/Friend/Manage/index/client_account/{$vuid}{else}/Sns/Friend/Manage/getFriendByAccountFriend/friend_account/{$vuid}{/if}" class="f_16">好友</a></td>
             <td>&nbsp;</td>
           </tr>
         </table>

@@ -26,12 +26,12 @@ include_once(dirname(dirname(dirname(__FILE__))) . '/Daemon.inc.php');
 
 //学生
 
-$modules = array(101 => 21,301 =>14);
+$modules = array(101 => 21);
 
-$student_uid = 95469975;
+$student_uid = 12060013;
 foreach ($modules as $module => $action) {
     $i = 1;
-    while ($i <=10 ) {
+    while ($i <=1 ) {
         $param_list = array(
             "module" => $module,
             "action" => $action,

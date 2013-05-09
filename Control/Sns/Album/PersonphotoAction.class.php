@@ -126,9 +126,11 @@ class PersonphotoAction extends SnsController {
         $album_id   = $this->objInput->getInt('album_id');
         $client_account = $this->objInput->getInt('client_account');
         $page       = $this->objInput->getInt('page');
-        if($page !== false) {
+        $js_page       = $this->objInput->getInt('js_page');
+        $offset = null;
+        $limit = null;
+        if(empty($js_page)) {
             $limit = 20;
-            $offset = null;
             $page = max(1,$page);
             $offset = ($page-1)*$limit;
         }

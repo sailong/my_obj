@@ -25,6 +25,8 @@
 <!--tip star-->
 
 <!--tip end-->
+<!--per_tip star-->
+{insert name="sns_person_second_header" uid = $client_account}
 <!--content star-->
 <div class="content pt20">
   <!--mood_main star-->
@@ -136,6 +138,6 @@
 
 {include file="Sns/Mood/Subtemplate/pop_div.html"}
 {include file="Sns/Mood/Subtemplate/mood_comment.html"}
-
+<input type="hidden" id="client_account" value="{$client_account}">
 </body>
 </html>

@@ -186,38 +186,6 @@ class MailbookAction extends SnsController{
     }
     
     
-	/**
-     * 通过手机号发送短信
-     */
-    public function maillist_send_phone() {
-        $class_code = $this->objInput->getInt('class_code');
-        
-        $parent_account = $this->objInput->postInt('parent_account');
-        if(empty($parent_account)) {
-            exit;
-        }
-        
-        $sms_content = $this->objInput->postStr('sms_content');
-        
-        //获取当前学校的运营策略    
-        $operationStrategy = $this->getOperationStrategy();
-        $mBusinesphone  = ClsFactory::Create('Model.mBusinessphone');
-		$phone_list = array_shift($mBusinesphone->getbusinessphonebyalias_id($parent_account));
-		
-        import('@.Common_wmw.WmwString');
-		$sms_content = strip_tags(WmwString::unhtmlspecialchars($sms_content));
-		
-        import('@.Control.Api.Smssend.Smssendapi');
-        $smssendapi_obj = new Smssendapi();
-        $addSmsSendResult = $smssendapi_obj->send($phone_list['account_phone_id2'], $sms_content, $operationStrategy);
-        
-        if(!empty($addSmsSendResult)) {
-            $this->ajaxReturn($addSmsSendResult, '发送短信成功！', 1, 'json');
-        } else {
-            $this->ajaxReturn(null, '发送短信失败！', -1, 'json');
-        }
-    }
-    
     
  	/**
      * 通过学生帐号发送短信入库公用方法
@@ -227,11 +195,14 @@ class MailbookAction extends SnsController{
         $operationStrategy = $this->getOperationStrategy();
         
         $mFamilyRelation = ClsFactory::Create('Model.mFamilyRelation');
-        $FamilyInfos = array_shift($mFamilyRelation->getFamilyRelationByUid($accepters_accounts));
+        $FamilyInfos = $mFamilyRelation->getFamilyRelationByUid($accepters_accounts);
         //获取家长帐号
         $parents_account = array();
-        foreach($FamilyInfos as $relation_id=>$relationinfo) {
-            $parents_account[] = $relationinfo['family_account'];
+        foreach($FamilyInfos as $account=>$familyinfo) {
+            foreach($familyinfo as $relation_id=>$relationinfo) {
+                $parents_account[] = $relationinfo['family_account'];
+            }
+            
         }
         
         //通过家长账号获得business_phones

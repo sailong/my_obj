@@ -17,7 +17,7 @@ photoShowPer.prototype.init=function() {
 		galleria_config:{
 			client_account:self.client_account,
 			album_id:self.album_id,
-			url:'/Sns/Album/Personphoto/getPhotosByAlbumId',
+			url:'/Sns/Album/Personphoto/getPhotosByAlbumId/js_page/1',
 			showSize:self.showSize,
 			preloadSize:self.preloadSize,
 			photo_id: self.photo_id

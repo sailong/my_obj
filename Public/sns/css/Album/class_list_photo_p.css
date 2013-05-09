@@ -16,16 +16,24 @@
 .tw-container {
     margin: 0 auto;
     padding: 0 0 10px;
-    position: relative;
     width: 852px;
 }
+.twc-item-li {
+	list-style:none;
+	float:left;
+	padding: 0 0 10px;
+    width: 274px;
+    margin-left:10px;
+    margin-bottom:12px;
+}
+
 .twc-item {
     background: none repeat scroll 0 0 #FFFFFF;
     border: 1px solid #DFDFDF;
+    position:relative;
     box-shadow: 2px 2px 2px #E8E8E8, -2px -2px 2px #E8E8E8;
     float: left;
     padding: 0 0 10px;
-    position: absolute;
     width: 274px;
     margin-left:10px;
     margin-bottom:12px;

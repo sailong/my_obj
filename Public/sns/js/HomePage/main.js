@@ -94,7 +94,7 @@ main.prototype = {
 			return false;
 		});		
 
-		new allphoto($('.xiangce'), $('#photo_img')[0], $('#next_photo_btn')[0]);		
+		new allphoto(client_account, $('.xiangce'), $('#photo_img')[0], $('#next_photo_btn')[0]);		
 	}
 
 	//选择当前的动态类型
@@ -124,7 +124,8 @@ main.prototype = {
  * @param elem
  * @return
  */
-function allphoto(parentObj, elem, next_btn) {
+function allphoto(client_account, parentObj, elem, next_btn) {
+	this.client_account = client_account;
 	this.parentObj = parentObj;
 	this.elem = elem;
 	this.$elem = $(elem);
@@ -170,10 +171,11 @@ allphoto.prototype = {
     //预加载图片的相关信息
     ,preload:function() {
     	var me = this;
-    	
+    	var url = '/Sns/Feed/List/getAblumAllFeedAjax/last_id/0';
+    	url = url + '/client_account/' + me.client_account;
     	$.ajax({
 			type:'get',
-			url:'/Sns/Feed/List/getAblumAllFeedAjax/last_id/0',
+			url:url,
 			dataType:'json',
 			async:false,
 			success:function(json) {

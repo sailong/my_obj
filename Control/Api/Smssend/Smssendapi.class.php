@@ -11,7 +11,8 @@ class Smssendapi extends ApiController {
     protected $oneToOne_Strategy_list = array(
                    OPERATION_STRATEGY_GD,
                    OPERATION_STRATEGY_LN,
-                   OPERATION_STRATEGY_CQ
+                   OPERATION_STRATEGY_CQ,
+                   OPERATION_STRATEGY_SC
                );
     //黑龙江特殊运营策略（40条手机记录一组）
     protected $oneToHLJ_Strategy_list = array(

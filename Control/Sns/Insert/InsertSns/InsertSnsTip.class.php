@@ -25,6 +25,7 @@ class InsertSnsTip implements InsertInterface {
         $smarty->assign('class_list', $class_list);
         $smarty->assign('class_info', $class_info);
         $smarty->assign('school_name', $school_info['school_name']);
+        $smarty->assign('user_client_type', $userinfo['client_type']);
         
     	return $smarty->fetch("./Public/sns_class_header.html");
     }

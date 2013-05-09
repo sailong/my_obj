@@ -113,9 +113,7 @@ class ClassphotoAction extends SnsController {
         $offset = null;
         $limit = null;
         if(empty($js_page)) {
-            $page = max(1,$page);
             $limit = 20;
-            $offset = null;
             $page = max(1,$page);
             $offset = ($page-1)*$limit;
         }
@@ -171,11 +169,7 @@ class ClassphotoAction extends SnsController {
             $photo_list = $PhotoInfo->getPhotoByPhotoId($photo_id);
             $photo_list = reset($photo_list);
             $album_id = $photo_list['album_id'];
-        }
-        
-        if(empty($client_account)) {
-            $client_account = $login_account;
-        }
+         }
         
         //检测登陆者是否有编辑的权限
         $is_edit = false;
@@ -186,6 +180,11 @@ class ClassphotoAction extends SnsController {
             $this->showError('数据错误','/Sns/ClassIndex/Index');exit;
         }
         $album_list = reset($album_list);
+        
+        if (empty($client_account)) {
+            $client_account = $album_list['add_account'];
+        }
+        
         $grant = $album_list['grant'];
         $tmp_class_code = $this->check_class_code($class_code);
         if($tmp_class_code == $class_code) {

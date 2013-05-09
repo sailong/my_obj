@@ -1,8 +1,20 @@
 function main_first() {
+	this.init();
 	this.attachEvent();
 }
 
 main_first.prototype = {
+                        
+	init:function() {
+		//加载用户动态信息
+		var vuid = $('#vuid').val();
+		$('#my_feed_list_div').loadFeed({
+			url:'/Sns/Feed/List/getUserMyFeedAjax/client_account/' + vuid,
+			skin:'mini'
+		});
+//		$('#my_feed_list_div').data('inited', true);
+	},	
+
 	attachEvent:function() {
 		//发布个人说说的相关事件的绑定
 		$('.say_textarea', $('#send_mood_div')).sendBox({
@@ -22,14 +34,6 @@ main_first.prototype = {
 
 				$('#my_feed_list_div').prependChild(feed_info);
 			}
-		});
-		
-		
-		//加载用户动态信息
-		var vuid = $('#vuid').val();
-		$('#my_feed_list_div').loadFeed({
-			url:'/Sns/Feed/List/getUserMyFeedAjax/client_account/' + vuid,
-			skin:'mini'
 		});
 	}
 };

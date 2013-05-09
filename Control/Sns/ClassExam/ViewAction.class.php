@@ -14,6 +14,7 @@ class ViewAction extends SnsController {
     
     public function index() {
         $exam_id  = $this->objInput->getInt('exam_id');
+        $class_code = $this->objInput->getInt('class_code');
         
         if(empty($exam_id)) {
             $this->showError('考试信息不存在!', '/Sns/ClassExam/Exam/index');   
@@ -64,6 +65,7 @@ class ViewAction extends SnsController {
             $activeApi->setactive($this->user['client_account'], 203, 24);
         }
         
+        $this->assign('class_code',$class_code);
         $this->assign('exam_id', $exam_id);
         $this->assign('class_exam', $class_exam);
         $this->assign('exam_score_list', $exam_score_list);

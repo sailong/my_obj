@@ -28,6 +28,8 @@
 })(jQuery);
 
 function exam_score_edit() {
+	this.max_length = 60;
+	this.limitInterval = null;
 	this.attachEvent();
 	this.attachEventUserDefine();
 }
@@ -46,6 +48,7 @@ exam_score_edit.prototype.attachEventUserDefine=function() {
 				content:$('#exam_score_edit_div').get(0),
 				init:function() {
 					me.fillDatas(options.score_datas || {});
+					me.reflushCounter();
 				}
 			}).lock();
 		},
@@ -84,6 +87,35 @@ exam_score_edit.prototype.attachEvent=function() {
 		//阻止a元素的事件冒泡和默认行为
 		return false;
 	});
+	//输入框验证
+	$('#score_py', context).keypress(function(evt) {
+		var content = $.trim($(this).val()).toString();
+		if(content.length >= me.max_length) {
+			var keyCode = evt.keyCode || evt.which;
+			//字符超过限制后只有Backspace键能够按
+			if(keyCode != 8) {
+				$.showError('评语内容不能超过60字!');
+				return false;
+			}
+		}
+	}).focus(function() {
+		me.limitInterval = setInterval(function() {
+			me.reflushCounter();
+		}, 1000);
+	}).blur(function() {
+		clearInterval(me.limitInterval);
+	});
+};
+exam_score_edit.prototype.reflushCounter=function() {
+	var me = this;
+	var context = $('#exam_score_edit_div');
+	var contentObj =$('#score_py',context);
+	var content =  $.trim(contentObj.val()).toString();
+	var len = content.length;
+	if(len > me.max_length) {
+		content = content.substr(0,me.max_length);
+		contentObj.val(content);
+	}
 };
 
 //异步提交编辑后的数据

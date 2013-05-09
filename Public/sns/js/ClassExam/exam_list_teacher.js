@@ -195,9 +195,10 @@ examCls.prototype.delegateEventForExamList=function() {
 	//查看按钮
 	$('#exam_tab').delegate('.view_a', 'click', function() {
 		var ancestorTrObj = $(this).parents('tr:first');
+		var class_code = $('#class_code').val();
 		var exam_datas = ancestorTrObj.data('exam_datas') || {};
 		var exam_id = exam_datas.exam_id;
-		window.location.href = "/Sns/ClassExam/View/index/exam_id/" + exam_id;
+		window.location.href = "/Sns/ClassExam/View/index/exam_id/" + exam_id +"/class_code/"+class_code;
 	});
 };
 

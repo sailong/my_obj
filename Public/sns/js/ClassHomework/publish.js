@@ -15,6 +15,12 @@
 			icon:'succeed'
 		}).lock().time(3);
 	};
+	Array.prototype.S=String.fromCharCode(2);
+	Array.prototype.in_array=function(e){
+	    var r=new RegExp(this.S+e+this.S);
+	    return (r.test(this.S+this.join(this.S)+this.S));
+	};
+
 })(jQuery);
 
 //去掉页面标签
@@ -29,6 +35,7 @@ function Publish() {
 	this.max_length = 180;
 	this.attachEvent();
 	this.attachEventUserDefine();
+	this.suffix_str = 'doc,docx,ppt,pptx,xls,xlsx,pdf,rar,zip,wps,txt';
 }
 
 
@@ -228,6 +235,13 @@ Publish.prototype.validator=function() {
 		$.showError('请填写作业内容!');
 		return false;
 	}
+	var context = $('#publish_main');
+	var file_suffix = ($('#file_name', context).val().toString().split('.') || []).pop();
+	var suffix_arr = (me.suffix_str).split(',');
+	if(!suffix_arr.in_array(file_suffix) && file_suffix != ''){
+		$.showError('附件文件格式不正确!');
+		return false;
+	};
 	if(!me.isSelectAccepters()) {
 		$.showError('请选择接受对象!');
 		return false;
@@ -241,10 +255,16 @@ Publish.prototype.isSelectAccepters=function() {
 };
 Publish.prototype.reflushCounter=function() {
 	var me = this;
-	var len = $.trim($('#content').val()).toString().length;
+	var content= $.trim($('#content').val()).toString();
+	var len = content.length;
+	if(len > me.max_length) {
+		content = content.substr(0,me.max_length);
+		$("#content").val(content);
+	}
 	var show_nums = me.max_length - len;
 	show_nums = show_nums > 0 ? show_nums : 0;
 	$("#content_counter").html(show_nums);
+	
 };
 
 $(document).ready(function() {

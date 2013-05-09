@@ -11,9 +11,10 @@ class IndexAction extends SnsController {
         $client_account = $this->user['client_account'];
         
         $vuid = empty($vuid) ? $client_account : $vuid;
-        
         //判断是否有新的访客
+        $is_vuid = false;
         if($vuid != $client_account) {
+            $is_vuid = true;
             if(!$this->check_space($vuid)) {
                 $this->showError('个人空间访问受限！','/Sns/ClassIndex/Index/index');
             }
@@ -50,6 +51,7 @@ class IndexAction extends SnsController {
         $this->assign('user_list',array_shift($user_list));
         $this->assign('vuid',$vuid);
         $this->assign('client_account', $client_account);
+        $this->assign('is_vuid', $is_vuid);
         
         $this->display("main_first");
     }

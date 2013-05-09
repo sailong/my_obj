@@ -17,7 +17,6 @@
 		var html = this.html().toString().replace('%s', str);
 		this.html(html);
 	};
-	
 })(jQuery);
 
 /**
@@ -54,14 +53,17 @@ Pub.prototype.attachEventForUserDefine=function() {
 		}
 		//修改表单提交的位置
 		$(this).attr('action', '/Sns/ClassExam/Publish/publishDraft');
-		self.packExamScoreDatas();
-		$(this).submit();
+		if(self.packExamScoreDatas()){
+			$(this).submit();
+		};
+		
 	}).bind('submitEvent', function() {
 		$('#is_draft').remove();
 		//修改表单提交的位置
 		$(this).attr('action', "/Sns/ClassExam/Publish/Publish");
-		self.packExamScoreDatas();
-		$(this).submit();
+		if(self.packExamScoreDatas()){
+			$(this).submit();
+		};
 	});
 };
 
@@ -243,10 +245,16 @@ Pub.prototype.packExamScoreDatas=function() {
 	//当前最新数据的获取
 	for(var uid in exam_score_list) {
 		var data = exam_score_list[uid];
+		if(data.py_content.length > 60) {
+			$.showError('学生：<span style="color:red;">'+data.client_name+'</span>的评语不可超过60个字符!');
+			return false;
+		}
+			
 		$('<input class="score_set" type="hidden" name="exam_score_list[' + uid + '][client_account]" value="' + data.client_account + '"/>').appendTo(parentObj);
 		$('<input class="score_set" type="hidden" name="exam_score_list[' + uid + '][exam_score]" value="' + data.exam_score + '"/>').appendTo(parentObj);
 		$('<input class="score_set" type="hidden" name="exam_score_list[' + uid + '][score_py]" value="' + data.py_content + '"/>').appendTo(parentObj);
 	};
+	return true;
 };
 
 //提取考试成绩列表信息

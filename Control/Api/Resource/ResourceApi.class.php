@@ -32,7 +32,7 @@ class ResourceApi extends ApiController {
         $wheresql = array(
             'title' => "title like '%$title%'",
             'product_id' => 'product_id=1',
-            'resource_status' => 'resource_status=1',
+            //'resource_status' => 'resource_status=1',
         );
         
         $mResourceInfo = ClsFactory::Create('Model.Resource.mResourceInfo');

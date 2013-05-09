@@ -66,9 +66,11 @@ py_input.prototype.attachEvent=function() {
 		me.limitInterval = setInterval(function() {
 			var len = $.trim($('#aInput').val()).toString().length;
 			if(len > me.max_length){
+				$('#isure_btn',context).attr('disabled',true);
 				$(".pcountTxt").html("超出<b><font size=3 color=red>" + (len - me.max_length) + "</font></b>字无法进行保存!");
 				return false;
 			}
+			$('#isure_btn',context).attr('disabled',false);
 			$(".pcountTxt").html("还能输入" + (me.max_length - len) + "字");
 			return true;
 		}, 10);

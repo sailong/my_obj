@@ -68,18 +68,19 @@ photo_list.prototype.init=function() {
 photo_list.prototype.delegateEvent=function() {
 	var me = this;
 	//显示评论操作
-	$('#container').delegate('li', 'mouseover', function() {
+	$('li').delegate('.twc-item', 'mouseover', function() {
+		var photo_info = $(this).data('datas');
 		$('.comments', $(this)).show();
 	});
 	
 	//隐藏设为封面，删除，移动操作
-	$('#container').delegate('li', 'mouseleave', function() {
+	$('li').delegate('.twc-item', 'mouseleave', function() {
 		$('.comments', $(this)).hide();
 	});
 	
 	//评论
-	$("#container").delegate('.comments', 'click', function(){
-		var div_obj = $(this).parents('li:first');
+	$(".comments",$(".twc-item")).live('click', function(){
+		var div_obj = $(this).parents('.twc-item');
 		var photo_data = div_obj.data("datas") || {};
 		var up_id = 0;
 		var sendOptions = {
@@ -131,106 +132,73 @@ photo_list.prototype.loadMorePhoto=function(options) {
 	}
 	var is_success = true;
 	$.ajax({
-		type:"get",
-		url:"/Sns/Album/Classphoto/getPhotosByAlbumId/class_code/" + me.class_code + '/album_id/'+ me.album_id + '/client_account/' + me.client_account + serilize_params,
-		dataType:"json",
-		async:false,
-		success:function(json) {
+		url : '/Sns/Album/Classphoto/getPhotosByAlbumId/class_code/' + me.class_code + '/album_id/'+ me.album_id + '/client_account/' + me.client_account + serilize_params,
+		dataType : 'json',
+		success : function(json){
 			if(json.status < 0) {
 				is_success = false;
 				return false;
 			}
-			me.fillPhotoList(json.data || {});
+			if(typeof json == 'object')
+			{
+				var page = $('#more').data('page');
+				page = page+1;
+				$('#more').data('page',page);
+				var photo_list = json.data || {};
+				var oProduct, $row, $item, iHeight, iTempHeight;
+				var divClone = $('#clone_selector');
+				
+				for(var i in photo_list)
+				{
+					oProduct = photo_list[i];
+					// 找出当前高度最小的列, 新内容添加到该列
+					iHeight = -1;
+					
+					$('#container li').each(function(){
+						iTempHeight = Number( $(this).height() );
+						if(iHeight==-1 || iHeight>iTempHeight)
+						{
+							iHeight = iTempHeight;
+							$row = $(this);
+						}
+						
+					});
+					oProduct = $.extend(oProduct,{'class_code':me.class_code});
+					if(!oProduct.small_img) {
+						oProduct.small_img = img_server + "sns/images/Album/class_list_photo_n/pic01.jpg";
+					}
+					var divObj = divClone.clone().attr('id','');
+					divObj.data('datas', oProduct).renderHtml(oProduct);
+					$row.append(divObj);
+					divObj.fadeIn();
+				}
+			}
 		}
 	});
+
 	return is_success;
 };
 
-photo_list.prototype.fillPhotoList=function(photo_list) {
-	var me = this;
-	photo_list = photo_list || {};
-	var img_server = me.img_server || {};
-	var parentObj = $('#container');
-	var divClone = $('#clone_selector');
-	for(var i in photo_list) {
-		var photo_datas = photo_list[i] || {};
-		photo_datas = $.extend(photo_datas,{'class_code':me.class_code});
-		if(!photo_datas.small_img) {
-			photo_datas.small_img = img_server + "sns/images/Album/class_list_photo_n/pic01.jpg";
-		}
-		var dlObj = divClone.clone().attr('id','').appendTo(parentObj).fadeIn(200);
-		dlObj.data('datas', photo_datas).renderHtml(photo_datas);
-	}
-};
-
-photo_list.prototype._renderItem=function(data) {
-	var me = this;
-	var img_server = me.img_server || {};
-	var parentObj = $('#container');
-	var divClone = $('#clone_selector');
-	var photo_datas = data || {};
-	photo_datas = $.extend(photo_datas,{'class_code':me.class_code});
-	if(!photo_datas.small_img) {
-		photo_datas.small_img = img_server + "sns/images/Album/class_list_photo_n/pic01.jpg";
-	}
-	var dlObj = divClone.clone().attr('id','').appendTo(parentObj).fadeIn(200);
-	dlObj.data('datas', photo_datas).renderHtml(photo_datas);
-	
-	return dlObj;
-};
 
 
 
 $(document).ready(function() {
 	var object = new photo_list();
-    var $container = $('#container');
-    
-    $container.imagesLoaded(function(){
-      $container.masonry({
-        itemSelector: 'li'
-        //columnWidth: 100
-      });
-    });
-    
-    //翻页插件加载
-	$container.infinitescroll({
-	
-		// callback		: function () { console.log('using opts.callback'); },
-		navSelector  : '#more',    // selector for the paged navigation 
-		nextSelector : '#more a',  // selector for the NEXT link (to page 2)
-		itemSelector 	: "li",
-		animate : true,
-		debug		 	: false,
-		dataType	 	: 'json',
-		appendCallback	: false
-
-    }, function( response ) {
-    	var jsonData = $.parseJSON(response) || {};
-    	var datas = jsonData.data || {};
-    	var status = jsonData.status || '-1';
-    	
-    	if (status == '-1') {
-    	// 如果最后一页，则取消绑定事件，不在加载
-    		$(window).unbind('.infscr');
-    	}
-    	setTimeout(function() {
-    		for(var i in datas) {
-            	var item = object._renderItem(datas[i]);
-            	$container.masonry( 'appended', item, true ); 
-    		}
-    	},1000);
-		
-	 });
-
-    //返回顶部相关的代码
+	//返回顶部相关的代码
 	$(window).scroll(function(){
-		if($(window).scrollTop() > 600) {
+		if($(this).scrollTop() > 600) {
 			$("#gotopbtn").css('display','').click(function(){
 				$(window).scrollTop(0);
 			});
 		} else {
 			$("#gotopbtn").css('display','none');
 		}
-		
+		// 当滚动到最底部以上100像素时， 加载新内容
+		if ($(document).height() - $(this).scrollTop() - $(this).height()<1){
+			var page = $('#more').data('page');
+			object.loadMorePhoto({
+				page:page
+			});
+		} 
 	});
 });

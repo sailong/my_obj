@@ -1,6 +1,11 @@
 function header() {
 	this.init();
-	this.setNavPos();
+
+	this.homepage_nav = ['HomePage'];
+	this.class_nav = ['Class', 'class_code'];
+	this.person_nav = ['Person', 'PrivateMsg', 'Friend'];
+	
+	this.setNavPos();	
 };
 
 header.prototype.init = function(){
@@ -26,34 +31,60 @@ header.prototype.init = function(){
 		$(this).find('ul').css('visibility', 'hidden');	
 	};
 	
-	$('#head_nav a').click(function() {
-		$.cookie("head_nav", this.id, {domain:".wmw.cn", path:"/"});
-		me.setNavPos();
+	var select_class_code = $.cookie('select_class_code');
+	
+	$("#ha1").click(function(){
+		var url = '/Sns/HomePage/Index/index';
+		if (select_class_code.length > 0) {
+			url = url + '/class_code/' + select_class_code;
+		}
+		window.location.href = url;
 	});
+
+	$("#ha2").click(function(){
+		var url = '/Sns/ClassIndex/Index/index';
+		if (select_class_code.length > 0) {
+			url = url + '/class_code/' + select_class_code;
+		}
+		window.location.href = url;
+	});  
 	
 };
 
 header.prototype.setNavPos=function(obj) {
-	var head_nav = $("#head_nav");
-	var cur_nav = $.cookie('head_nav');
-	var url = window.location.href; 
+	
+	var url = window.location.href;
 
-	var is_homepage = false;
-	if (url.indexOf('Sns/HomePage') >= 0) {
-		is_homepage = true;
-	}
-	if (cur_nav && !is_homepage) {
-
-		$('#head_nav a').each(function(i) {
-			if (this.id == cur_nav) {
-				$(this).addClass("ha" + (i + 1));
-			} else {
-				$(this).removeClass("ha" + (i + 1));
+	var i = 0;
+	$.each(this.homepage_nav,function(key,val){
+		if (url.indexOf(val) >= 0) {
+			i = 1;
+		}
+	})
+	
+	if (i == 0) {
+		$.each(this.class_nav,function(key,val){
+			if (url.indexOf(val) >= 0) {
+				i = 2;
 			}
 		});
-	} else {
-		$('#ha1').addClass("ha1");
 	}
+	
+	if (i == 0) {
+		$.each(this.person_nav,function(key,val){
+			if (url.indexOf(val) >= 0) {
+				i = 3;
+			}
+		});
+	}
+
+	$('#head_nav a').each(function(k) {
+			if (i == (k + 1)) {
+				$(this).addClass("ha" + i);
+			} else {
+				$(this).removeClass("ha" + i);
+			}
+	});	
 };
 
 $(document).ready(function(){

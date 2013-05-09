@@ -144,7 +144,7 @@ class ExamAction extends SnsController{
 
         $this->assign('subject_list', $subject_list);
         $this->assign('class_name', $class_name);
-        $this->assign('class_code',   $class_code);
+        $this->assign('class_code', $class_code);
         $this->display('exam_list_teacher');
     }
     

@@ -7,6 +7,9 @@ class ManageAction extends SnsController{
     /**********第一视觉我的好友***************/
     
     public function index() {
+        $client_account = $this->user['client_account'];
+        $this->assign('client_account',$client_account);
+        
         $this->display('my_friend');
     }
     
@@ -156,8 +159,10 @@ class ManageAction extends SnsController{
     public function getMyFriendListAjax() {
         //$class_code = $this->objInput->getInt('class_code');
         //$class_code = $this->checkoutClassCode($class_code);
-        
-        $client_account = $this->user['client_account'];
+        $client_account = $this->objInput->getInt('client_account');
+        if(empty($client_account)) {
+            $client_account = $this->user['client_account'];
+        }
         $page = $this->objInput->getInt('page');
         $limit = 5;
         $page = max($page,1);
@@ -178,7 +183,10 @@ class ManageAction extends SnsController{
     public function getMyFriendByGroupIdAjax() {
         $page = $this->objInput->getInt('page');
         $group_id = $this->objInput->postInt('group_id');
-        $client_account = $this->user['client_account'];
+        $client_account = $this->objInput->getInt('client_account');
+        if(empty($client_account)) {
+            $client_account = $this->user['client_account'];
+        }
         
         if($group_id < 0) {
              $this->ajaxReturn(null,'获取好友列表失败!',-1,'json');
@@ -316,7 +324,10 @@ class ManageAction extends SnsController{
      *
      */
     public function getFriendGroupAjax() {
-        $add_account = $this->user['client_account'];
+        $add_account = $this->objInput->getInt('client_account');
+        if(empty($add_account)) {
+            $add_account = $this->user['client_account'];
+        }
         $mClientgroup = ClsFactory::Create('Model.mClientgroup');
         $ClientGrouplist = $mClientgroup->getClientGroupByaddAccount($add_account);
         
@@ -352,7 +363,6 @@ class ManageAction extends SnsController{
             $ClientGrouplist[$group_id]['count'] = $count;
             $total_count += $count;
         }
-        
         $this->ajaxReturn($ClientGrouplist, $total_count, 1, 'json');
     }
     

@@ -37,8 +37,8 @@ a{text-decoration:none;}
   
   
   .koowleadge_point{margin:10px 0px;}
-    .know_top{background:url(../../images/resource/know_bj1.gif) 0 0 no-repeat; height:5px; font-size:0px;}
-	.know_center{background:url(../../images/resource/know_bj2.gif) repeat-y; padding:0px 20px 10px;}
+    /*.know_top{background:url(../../images/resource/know_bj1.gif) 0 0 no-repeat; height:5px; font-size:0px;}*/
+	/*.know_center{background:url(../../images/resource/know_bj2.gif) repeat-y; padding:0px 20px 10px;}*/
 	  .know_center h3{font:bold 16px "宋体"; color:#cd150e; border-bottom:1px #f8dcdb dashed; height:26px; line-height:26px;}
 	  .know_center_unit{clear:both;padding:10px 0px 0px 0px;}
 	  .know_center_unit .unit_font{position:relative; z-index:10; float:left; margin-bottom:10px; margin-right:26px; algin:center;}
@@ -49,7 +49,7 @@ a{text-decoration:none;}
 	  .know_center_unit .unit li{clear:left; margin:0px; line-height:40xp;}
 	  .know_center_unit .unit li a{color:#585858; text-decoration:underline; width:60px; height:20px; line-height:20px;}
 	  
-	.know_bottom{background:url(../../images/resource/know_bj3.gif) 0 0 no-repeat; height:4px;font-size:0px;}
+	/*.know_bottom{background:url(../../images/resource/know_bj3.gif) 0 0 no-repeat; height:4px;font-size:0px;}*/
   
 
 .subnav{background:url(../../images/resource/subnav_bj.gif) repeat-x; height:35px; padding:6px 0px 0px 10px; margin-bottom:10px; position:relative;z-index:8;}

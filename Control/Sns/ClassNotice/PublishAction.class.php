@@ -127,12 +127,14 @@ class PublishAction extends SnsController {
             
             //获取家长帐号信息
             $mFamilyRelation = ClsFactory::Create('Model.mFamilyRelation');
-            $FamilyInfos = array_shift($mFamilyRelation->getFamilyRelationByUid($student_accounts));
+            $FamilyInfos = $mFamilyRelation->getFamilyRelationByUid($student_accounts);
             
             //获取家长帐号
             $parents_account = array();
-            foreach($FamilyInfos as $relation_id=>$relationinfo) {
-                $parents_account[] = $relationinfo['family_account'];
+            foreach($FamilyInfos as $account=>$familyinfo) {
+                foreach($familyinfo as $relation_id=>$relationinfo) {
+                    $parents_account[] = $relationinfo['family_account'];
+                }
             }
             
             //通过家长账号获得business_phones

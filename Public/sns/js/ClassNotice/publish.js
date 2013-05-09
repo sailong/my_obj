@@ -123,7 +123,12 @@ Publish.prototype.attachEventForPreviewDiv=function() {
 
 Publish.prototype.reflushCounter=function() {
 	var me = this;
-	var len = $.trim($('#content').val()).toString().length;
+	var content= $.trim($('#content').val()).toString();
+	var len = content.length;
+	if(len > me.max_length) {
+		content = content.substr(0,me.max_length);
+		$("#content").val(content);
+	}
 	var show_nums = me.max_length - len;
 	show_nums = show_nums > 0 ? show_nums : 0;
 	$("#content_counter").html(show_nums);
