@@ -36,7 +36,7 @@ class ExamAction extends SnsController{
         //参数处理校验
         $class_code = $this->checkoutClassCode($class_code);
         if(empty($class_code)) {
-            $this->showError('班级信息不存在!', '/Homeuser/Index/spacehome/spaceid/' . $this->user['client_account']); 
+            $this->showError('班级信息不存在!', '/Sns/HomePage/Index'); 
         }
         
         $page = max(1, $page);
@@ -130,7 +130,7 @@ class ExamAction extends SnsController{
         
         $class_code = $this->checkoutClassCode($class_code);
         if(empty($class_code)) {
-            $this->showError('您没有权限查看!', "");
+            $this->showError('您没有权限查看!', '/Sns/HomePage/Index');
         }
         //如果不是老师跳转到学生页面
         if($this->user['client_type'] != CLIENT_TYPE_TEACHER) {

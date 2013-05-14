@@ -81,7 +81,7 @@ class StudentSortAction extends SnsController {
             
             //校验sort_seq的值，范围为:0~9999
             $sort_seq = intval($sort_seq);
-            $sort_seq = $sort_seq > 0 && $sort_seq < 9999 ? $sort_seq : 0;
+            $sort_seq = $sort_seq > 0 && $sort_seq <= 9999 ? $sort_seq : 0;
             
             //排出sort_seq值未发生变化的学生
             $old_sort_seq = $client_class['sort_seq'];

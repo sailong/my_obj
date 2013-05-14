@@ -11,10 +11,14 @@ class PublishAction extends SnsController {
      */
     public function index() {
         $class_code = $this->objInput->getInt('class_code');
+    	$class_code = $this->checkoutClassCode($class_code);
+    	if(empty($class_code)) {
+             $this->showError('班级信息不存在', '/Sns/HomePage/Index');
+        }
+        
         $client_account = $this->getCookieAccount();
         $subject_infos = $this->getSubjectInfoByClientAccout($client_account);
         
-        $class_code = $this->checkoutClassCode($class_code);
         //获取用户的管理权限
         import('@.Control.Sns.ClassHomework.Ext.HomeworkContext');
         $context = new HomeworkContext($this->user,$class_code);

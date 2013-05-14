@@ -109,6 +109,7 @@ function settings() {
 			feed_id:'{feed_id}',
 			feed_type:'{feed_type}',
 			from_id:'{from_id}',
+		    can_replay:'{can_replay}',
 			publish_comment_url:'/Sns/Blog/Comments/publishBlogCommentAjax',
 			get_comments_url:'/Sns/Blog/Comments/getBlogCommentsForFeedAjax/blog_id/{from_id}/page/1',
 			post_params:{
@@ -122,6 +123,8 @@ function settings() {
 			publish_comment_url:'/Sns/Blog/Comments/publishBlogCommentAjax',
 			delete_comment_url:'/Sns/Blog/Comments/deleteBlogCommentsAjax/comment_id/{comment_id}',
 			child_items_name:'child_items',
+			
+			can_replay:'{can_replay}',
 			post_params: {
 				blog_id:'{blog_id}',
 				up_id:'{comment_id}',
@@ -131,6 +134,7 @@ function settings() {
 		
 		,comment_2nd_unit:{
 			delete_comment_url:'/Sns/Blog/Comments/deleteBlogCommentsAjax/comment_id/{comment_id}'
+			
 		}
 	};
 	
@@ -139,6 +143,7 @@ function settings() {
 			feed_id:'{feed_id}',
 			feed_type:'{feed_type}',
 			from_id:'{from_id}',
+			can_replay:'{can_replay}',
 			publish_comment_url:'/Sns/Mood/Comments/publishMoodCommentsAjax',
 			get_comments_url:'/Sns/Mood/Comments/getMoodCommentsForFeedAjax/mood_id/{from_id}/page/1',
 			post_params:{
@@ -152,6 +157,8 @@ function settings() {
 			publish_comment_url:'/Sns/Mood/Comments/publishMoodCommentsAjax',
 			delete_comment_url:'/Sns/Mood/Comments/deleteMoodCommentsAjax/comment_id/{comment_id}',
 			child_items_name:'child_items',
+			
+			can_replay:'{can_replay}',
 			post_params: {
 				mood_id:'{mood_id}',
 				up_id:'{comment_id}',
@@ -169,8 +176,9 @@ function settings() {
 			feed_id:'{feed_id}',
 			feed_type:'{feed_type}',
 			from_id:'{from_id}',
-			publish_comment_url:'/Sns/Album/PhotoComments/publishPhotoCommentsAjax',
-			get_comments_url:'/Sns/Album/PhotoComments/getPhotoCommentsForFeedAjax/photo_id/{from_id}/page/1',
+			can_replay:'{can_replay}',
+			publish_comment_url:'/Sns/Album/Photocomments/publishPhotoCommentsAjax',
+			get_comments_url:'/Sns/Album/Photocomments/getPhotoCommentsForFeedAjax/photo_id/{from_id}/page/1',
 			post_params:{
 				photo_id : '{from_id}',
 				up_id:0,
@@ -179,9 +187,10 @@ function settings() {
 		}
 		
 		,comment_1st_unit:{
-			publish_comment_url:'/Sns/Album/PhotoComments/publishPhotoCommentsAjax',
-			delete_comment_url:'/Sns/Album/PhotoComments/deletePhotoCommentsAjax/comment_id/{comment_id}',
+			publish_comment_url:'/Sns/Album/Photocomments/publishPhotoCommentsAjax',
+			delete_comment_url:'/Sns/Album/Photocomments/deletePhotoCommentsAjax/comment_id/{comment_id}',
 			child_items_name:'child_items',
+			can_replay:'{can_replay}',
 			post_params: {
 				photo_id:'{photo_id}',
 				up_id:'{comment_id}',
@@ -190,7 +199,7 @@ function settings() {
 		}
 		
 		,comment_2nd_unit:{
-			delete_comment_url:'/Sns/Album/PhotoComments/deletePhotoCommentsAjax/comment_id/{comment_id}'
+			delete_comment_url:'/Sns/Album/Photocomments/deletePhotoCommentsAjax/comment_id/{comment_id}'
 		}
 	};
 }
@@ -308,9 +317,7 @@ feed_unit.prototype = {
 	//创建一个孩子节点
 	,createChildren:function(comment_datas) {
 		var me = this;
-		
 		var containObj = $('#first_comment_list', me.divObj);
-		
 		var comment1stUnit = new comment_1st_unit(comment_datas, me.feed_type);
 		var childDivObj = comment1stUnit.getElement();
 		
@@ -330,7 +337,7 @@ feed_unit.prototype = {
 	}
 
 	//加载一级评论信息
-	,loadComments:function() {
+	,loadComments:function(can_replay) {
 		var me = this;
 		//加载实体的评论信息
 		$.ajax({
@@ -341,7 +348,10 @@ feed_unit.prototype = {
 			success:function(json) {
 				var comment_list = json.data || {};
 				for(var i in comment_list) {
-					me.createChildren(comment_list[i] || {});
+					
+					var item = comment_list[i] || {};
+					item['can_replay'] = can_replay;
+					me.createChildren(item);
 				}
 			}
 		});
@@ -379,6 +389,7 @@ feed_unit.prototype = {
 function comment_1st_unit(comment_datas, feed_type) {
 	this.divObj = {};
 	this.comment_datas = comment_datas || {};
+
 	this.feed_type = feed_type;
 	
 	this.params = $.getFeedParams(feed_type, 'comment_1st_unit', comment_datas);
@@ -416,7 +427,12 @@ comment_1st_unit.prototype = {
 		var me = this;
 		
 		var parentObj = $('#second_comment_list', me.divObj);
-		
+
+		var can_replay = me.params['can_replay'];
+		if (child_comment) {
+			child_comment['can_replay'] = can_replay;
+		}
+
 		var comment2ndUnit = new comment_2nd_unit(child_comment, me.feed_type);
 		var childDivObj =comment2ndUnit.getElement();
 		childDivObj.data('datas', child_comment);
@@ -534,10 +550,11 @@ comment_events.prototype = {
 			var handler = ancestorObj[0].handler;
 			var params = handler.getParams();
 			var toggled_nums = aObj.data('toggled_nums') || 1;
+			var can_replay = params['can_replay'];
 			//初始化动态对应的评论层信息
 			if(toggled_nums == 1) {
 				//加载以及评论信息
-				handler.loadComments();
+				handler.loadComments(can_replay);
 			}
 			
 			if(toggled_nums % 2 == 0) {

@@ -19,7 +19,11 @@ class ClassphotoAction extends SnsController {
         if(empty($client_account)) {
             $client_account = $this->user['client_account'];
         }
-        
+        $client_type = $this->user['client_type'];
+        $is_reply = true;
+        if($client_type == CLIENT_TYPE_FAMILY) {
+            $is_reply = false;
+        }
         $is_edit = false;
         import("@.Control/Api/AlbumApi");
         $AlbumApi = new AlbumApi();
@@ -44,7 +48,7 @@ class ClassphotoAction extends SnsController {
                 $this->showError("没有权限查看","/Sns/Album/Classalbum/albumlist/class_code/{$class_code}");exit;
             }
         }
-        
+        $this->assign('is_reply', $is_reply);
         $this->assign('album_list', $album_list);
         $this->assign('is_edit', $is_edit);
         $this->assign('class_code', $class_code);
@@ -69,6 +73,11 @@ class ClassphotoAction extends SnsController {
         if(empty($client_account)) {
             $client_account = $login_account;
         }
+        $client_type = $this->user['client_type'];
+        $is_reply = true;
+        if($client_type == CLIENT_TYPE_FAMILY) {
+            $is_reply = false;
+        }
         //检测登陆者是否有编辑的权限
         $is_edit = false;
         import("@.Control/Api/AlbumApi");
@@ -91,7 +100,7 @@ class ClassphotoAction extends SnsController {
                 $this->showError("没有权限查看","/Sns/Album/Classalbum/albumlist/class_code/{$class_code}");exit;
             }
         }
-        
+        $this->assign('is_reply', $is_reply);
         $this->assign('is_edit', $is_edit);
         $this->assign('class_code', $class_code);
         $this->assign('album_id', $album_id);
@@ -170,7 +179,11 @@ class ClassphotoAction extends SnsController {
             $photo_list = reset($photo_list);
             $album_id = $photo_list['album_id'];
          }
-        
+        $client_type = $this->user['client_type'];
+        $is_reply = true;
+        if($client_type == CLIENT_TYPE_FAMILY) {
+            $is_reply = false;
+        }
         //检测登陆者是否有编辑的权限
         $is_edit = false;
         import("@.Control/Api/AlbumApi");
@@ -198,6 +211,7 @@ class ClassphotoAction extends SnsController {
                 $this->showError("没有权限查看","/Sns/Album/Classalbum/albumlist/class_code/{$class_code}");exit;
             }
         }
+        $this->assign('is_reply', $is_reply);
         $this->assign('album', $album_list);
         $this->assign('photo_id', $photo_id);
         $this->assign('is_edit', $is_edit);

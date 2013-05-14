@@ -8,16 +8,25 @@
 
 <!-- 班级功能模块列表 star-->
 <div class="bj_gn_list">
+{if $class_code != ""}
 	<div class="bj_mc_list" id="show_class_list">
     	<span class="bj_dqmc">{$user_info.class_info[$class_code].class_name}</span>
         <a href="#" class="bj_list_btn"></a>                    
     </div>
+    
     <div class="bj_gn_list_border">
+    	{if $user_info.client_type == $smarty.const.CLIENT_TYPE_TEACHER}
         	<a href="/Sns/ClassNotice/Publish/index/class_code/{$class_code}" class="gg">发布公告</a>
             <a href="/Sns/ClassHomework/Publish/index/class_code/{$class_code}" class="zy">布置作业</a>
             <a href="/Sns/ClassExam/Publish/index/class_code/{$class_code}" class="cj">发布成绩</a>
-            <a href="/Sns/Resource/Resource/upload_resource" class="sczy" target="_blank">上传资源</a> 
-    </div>
+            <a href="/Sns/Resource/Resource/upload_resource" class="sczy" target="_blank">上传资源</a>
+        {else}
+        	<a href="/Sns/ClassNotice/Published/index/class_code/{$class_code}" class="gg">查看公告</a>
+            <a href="/Sns/ClassHomework/Published/index/class_code/{$class_code}" class="zy">查看作业</a>
+            <a href="/Sns/ClassExam/Exam/index/class_code/{$class_code}" class="cj">查看成绩</a>
+        {/if}
+	    </div>
+{/if}
     
     <div class="gr_gn_list_border">
     	<a href="/Sns/Mood/PersonMood/mood_list/client_account/{$user_info.client_account}" class="ss">个人说说</a>
@@ -26,8 +35,13 @@
     </div>
     
     <div class="zh_gn_list_border">
+    	<a href="/Sns/SchoolIndex/School/Campus" class="xymh" target="_blank">校园门户</a>
+    	{if $user_info.client_type == $smarty.const.CLIENT_TYPE_TEACHER}
     	<a href="/Oa/Index/index" class="jzbg" target="_blank">集中办公平台</a>
+    	{/if}
+    	{if $user_info.client_type == $smarty.const.CLIENT_TYPE_TEACHER || $user_info.client_type == $smarty.const.CLIENT_TYPE_STUDENT}
         <a href="http://zuoye.wmw.cn" class="zycp" target="_blank">作业评测系统</a>
+        {/if}
         <a href="http://www.zscy.cn" class="cyzz" target="_blank">雏鹰争章</a>
         <a href="http://www.wm616.cn" class="lydh" target="_blank">乐优导航</a>
     </div>

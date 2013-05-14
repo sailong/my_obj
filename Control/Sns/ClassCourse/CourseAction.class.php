@@ -14,7 +14,7 @@ class CourseAction extends SnsController {
         $class_code = $this->objInput->getInt('class_code');
         $class_code = $this->checkoutClassCode($class_code);
         if(empty($class_code)) {
-            $this->showError('班级信息不存在!', '/Homeuser/Index/spacehome/spaceid/' . $this->user['client_account']);  //tudo 没有班级跳转到那
+            $this->showError('班级信息不存在!', '/Sns/HomePage/Index');  //tudo 没有班级跳转到那
         }
         
         $isEditCourse = $this->isEditCourse($class_code); //是否具有修改课程表的权限

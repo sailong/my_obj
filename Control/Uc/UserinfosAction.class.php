@@ -141,10 +141,8 @@ class UserinfosAction extends UcController {
         //提交活跃度
         import('@.Control.Api.ActiveApi');
         $activeApi = new ActiveApi();
-        $activeApi->setactive($this->user['client_account'], 301, 14);
-        $activeApi->setactive($this->user['client_account'], 301, 15);
-        $activeApi->setactive($this->user['client_account'], 301, 16);
-        $activeApi->setactive($this->user['client_account'], 301, 17);
+        $activeApi->setactive($this->user['client_account'], 307, 14);
+        $activeApi->setactive($this->user['client_account'], 308, 15);
         
         if($result || $result1) {
              $this->showSuccess("保存成功", "/Uc/Userinfos/UserBaseInfos");

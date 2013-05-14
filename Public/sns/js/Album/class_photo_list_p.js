@@ -51,7 +51,7 @@ function photo_list() {
 	this.albumObj = $("#album_list_json").val();
 	this.is_edit = $("#is_edit").val();
 	this.img_server = $("#img_server").val();
-	
+	this.is_reply = $("#is_reply").val();
 	this.delegateEvent();
 	this.init();
 };
@@ -80,6 +80,9 @@ photo_list.prototype.delegateEvent=function() {
 	
 	//评论
 	$(".comments",$(".twc-item")).live('click', function(){
+		if(!me.is_reply) {
+			return false;
+		}
 		var div_obj = $(this).parents('.twc-item');
 		var photo_data = div_obj.data("datas") || {};
 		var up_id = 0;

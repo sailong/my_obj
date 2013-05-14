@@ -50,11 +50,11 @@ function photo_list() {
 	this.photo_num = $("#photo_num").val();
 	$("#photo_num").remove();
 	this.is_edit = $("#is_edit").val();
+	this.is_reply = $("#is_reply").val();
 	this.img_server = $("#img_server").val();
 	this.delegateEvent();
 	this.init();
 	this.attachEvent();
-	
 };
 
 
@@ -188,6 +188,9 @@ photo_list.prototype.delegateEvent=function() {
 	
 	//评论
 	$(".list_photo_left").delegate('.comments', 'click', function(){
+		if(!me.is_reply) {
+			return false;
+		}
 		var dl_obj = $(this).parents('dl:first');
 		var photo_data = dl_obj.data('datas') || {};
 		var sendOptions = {

@@ -71,7 +71,7 @@ class SystemcenterAction extends SnsController{
             $data_arr['exam']['sys_img'] = IMG_SERVER.'/Public/sns/images/HomePage/main/icon_exam.jpg';
             $data_arr['exam']['sys_id'] = $exam_info['exam_id'];
             $data_arr['exam']['sys_title'] = '<a href="/Sns/ClassExam/View/index/exam_id/'.$exam_info['exam_id'].'" class="fc_4f9f32 f14">'.$exam_info['exam_name'].'</a>';
-            $data_arr['exam']['sys_content'] = '考试日期 '.date('Y.m.d',$exam_info['exam_date']);
+            $data_arr['exam']['sys_content'] = '考试日期 '.date('Y.m.d',$exam_info['exam_time']);
             $data_arr['exam']['sys_time'] = date('Y.m.d H.i',$exam_info['add_time']);
             $data_arr['exam']['client_name'] = $client_info['client_name'];
             

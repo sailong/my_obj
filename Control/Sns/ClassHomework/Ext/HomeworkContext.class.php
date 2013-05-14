@@ -30,7 +30,7 @@ class HomeworkContext {
                 import('@.Control.Sns.ClassHomework.Ext.HomeworkAccess.HomeworkTeacher');
                 $object = new HomeworkTeacher($this->user, $this->class_code);
                 break;
-            case CLINET_TYPE_FAMILY:
+            case CLIENT_TYPE_FAMILY:
                 import('@.Control.Sns.ClassHomework.Ext.HomeworkAccess.HomeworkFamily');
                 $object = new HomeworkFamily($this->user, $this->class_code);
                 break;

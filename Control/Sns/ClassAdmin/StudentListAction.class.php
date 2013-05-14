@@ -61,8 +61,8 @@ class StudentListAction extends SnsController {
                 $student['client_name'],
                 $student['client_class_role_name'],
                 $student['client_account'],
-                $student['family_list'][1]['client_account'],
-                $student['family_list'][2]['client_account'],
+                $student['family_list'][1]['family_account'],
+                $student['family_list'][2]['family_account'],
             );
             unset($student_list[$uid]);
         }

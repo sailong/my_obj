@@ -35,7 +35,7 @@ header.prototype.init = function(){
 	
 	$("#ha1").click(function(){
 		var url = '/Sns/HomePage/Index/index';
-		if (select_class_code.length > 0) {
+		if (select_class_code) {
 			url = url + '/class_code/' + select_class_code;
 		}
 		window.location.href = url;
@@ -43,7 +43,7 @@ header.prototype.init = function(){
 
 	$("#ha2").click(function(){
 		var url = '/Sns/ClassIndex/Index/index';
-		if (select_class_code.length > 0) {
+		if (select_class_code) {
 			url = url + '/class_code/' + select_class_code;
 		}
 		window.location.href = url;

@@ -89,8 +89,17 @@
     right: 30px;
     width: 27px;
 }
+#fhxc {
+    background: url("../../images/Album/class_list_photo_p/fhxc.gif") repeat scroll 0 0 transparent;
+    top: 150px;
+    display: none;
+    height: 74px;
+    position: fixed;
+    right: 30px;
+    width: 27px;
+}
 #loading {
-    background: url("../../images/Album/class_list_photo_p2/load.gif") no-repeat scroll center center #EEEEEE;
+    background: url("../../images/Album/class_list_photo_p/load.gif") no-repeat scroll center center #EEEEEE;
     border: 1px solid #C6C6C6;
     box-shadow: 3px 3px 1px #E8E8E8;
     height: 45px;

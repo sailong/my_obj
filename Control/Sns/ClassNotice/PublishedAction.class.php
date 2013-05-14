@@ -11,6 +11,10 @@ class PublishedAction extends SnsController {
         $class_code = $this->objInput->getInt('class_code');
         $class_code = $this->checkoutClassCode($class_code);
         
+     	if(empty($class_code)) {
+            $this->showError('班级信息不存在', '/Sns/HomePage/Index');
+        }
+        
         //获取用户的管理权限
         import('@.Control.Sns.ClassNotice.Ext.NoticeContext');
         $context = new NoticeContext($this->user);

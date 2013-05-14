@@ -16,8 +16,10 @@
 	         	<span>{comment.add_time_format}</span>
 	         </td>
 	         <td class="comment_btn">
-
+				{if comment.can_replay != "false"}
 	         	<a href="javascript:;" class="reply_btn reply_2nd_simple_selector "></a>
+	         	{/if}
+	         	
 	         	{if comment.can_del}
 	         	<a href="javascript:;" class="delete_btn comment_1st_delete_selector">删除</a>
 	         	{/if}	         	
@@ -36,7 +38,7 @@
 	             </p>
 	             {/if}
 	             <!--二级评论 end-->
-	            
+	             
 	             <!--默认回复样式 star-->
 	             <table class="mr_huifu reply_2nd_simple_div_selector simple_reply_div_selector" style="display:none;">
 	                 <tr>
@@ -53,6 +55,7 @@
 	                 </tr>
 	             </table>
 	             <!--默认回复样式 end-->
+				 
 	         </td>
 	     </tr>
 	</table>

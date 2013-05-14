@@ -7,6 +7,7 @@ function photoShowCls() {
 	this.album_id = $("#album_id").val();
 	this.photo_id = $("#photo_id").val();
 	this.is_edit = $("#is_edit").val();
+	this.is_reply = $("#is_reply").val();
 	this.showSize = $("#photo_num").val();
 	this.preloadSize = 10;
 	this.delegateEvent();

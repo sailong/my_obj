@@ -64,7 +64,7 @@ class mClassHomeworkSend extends mBase{
 	        $wherearr = array_merge($wherearr, (array)$where_appends);
 	    }
 	    
-	    return $this->_dClassHomeworkSend->getInfo($wherearr, null, $offset, $limit);
+	    return $this->_dClassHomeworkSend->getInfo($wherearr, 'homework_id desc', $offset, $limit);
 	}
 	
 	//根据作业id和接收人查询发送对象信息

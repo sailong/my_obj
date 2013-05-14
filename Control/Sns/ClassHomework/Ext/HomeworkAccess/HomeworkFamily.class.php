@@ -1,6 +1,6 @@
 <?php
 import('@.Control.Sns.ClassHomework.Ext.HomeworkAccess.HomeworkAccessBase');
-class HomeworkFamily extends NoticeAccessBase {
+class HomeworkFamily extends HomeworkAccessBase {
     
     public function getUserAccessList() {
         return array(

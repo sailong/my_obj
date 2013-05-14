@@ -66,6 +66,7 @@ class ActiveApi extends ApiController {
         $mUser = ClsFactory::Create("Model.mUser");
         $UserInfog = $mUser->getClientAccountById($client_account);
         $active_list = C("active_list");
+        $active_once = C("active_once");
         $current_person_active = $active_list[$UserInfog[$client_account]['client_type']];
         $action_list = C("action");
         $module_list = C("module");
@@ -77,10 +78,10 @@ class ActiveApi extends ApiController {
                 $today_val += $active_log["value"];
             }
         }
-        
-        
+
         foreach($current_person_active as $module => $action){
-            if($module == 101 || $module ==301) {
+            
+            if (isset($active_once[$module])) {
                 unset($action);
                 continue;
             }
@@ -129,6 +130,8 @@ class ActiveApi extends ApiController {
         $mUser = ClsFactory::Create("Model.mUser");
         $UserInfog = $mUser->getClientAccountById($client_account);
         $active_list = C("active_list");
+        $active_once = C("active_once");
+
         $current_person_active = $active_list[$UserInfog[$client_account]['client_type']];
         $action_list = C("action");
         $module_list = C("module");
@@ -143,7 +146,7 @@ class ActiveApi extends ApiController {
         
         
         foreach($current_person_active as $module => $action){
-            if($module == 101 || $module == 301) {
+            if (isset($active_once[$module])) {
                 $action = (array)$action;
                 foreach($action as $sub_action) {
                     if(empty($user_add_value[$module.$sub_action])){

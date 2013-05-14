@@ -31,7 +31,7 @@ class ListAction extends SnsController {
         
         $class_code = $this->checkoutClassCode($class_code);
         if (empty($class_code)) {
-            $this->showError('班级信息不存在', '/Homeuser/Index/spacehome/spaceid/' . $this->user['client_account']);
+            $this->showError('班级信息不存在', '/Sns/HomePage/Index');
         }
         
         $this->assign('can_publish_blog', $this->canPublishBlog($class_code));
@@ -51,7 +51,7 @@ class ListAction extends SnsController {
         
         $class_code = $this->checkoutClassCode($class_code);
         if(empty($class_code)) {
-            $this->showError('班级信息不存在', '/Homeuser/Index/spacehome/spaceid/' . $this->user['client_account']);
+            $this->showError('班级信息不存在', '/Sns/HomePage/Index');
         }
         
         $blogObj = $this->_initBlogObj($class_code);

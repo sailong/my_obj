@@ -13,9 +13,9 @@ class PublishedAction extends SnsController {
         $class_code = $this->objInput->getStr('class_code');
         
         $class_code = $this->checkoutClassCode($class_code);
-        
+
         if(empty($class_code)) {
-            $this->showError('您暂时没有权限查看该班的作业信息', '/Sns/ClassHomework/Published/index');
+             $this->showError('班级信息不存在', '/Sns/HomePage/Index');
         }
         
          //获取用户的管理权限
@@ -87,7 +87,21 @@ class PublishedAction extends SnsController {
             $this->ajaxReturn(null, '您暂时没有权限查看该班的作业信息!', -1, 'json');
         }
         
+        $perpage = 10;
+        $offset = ($page -1) * $perpage;
+        
+         $client_account = $this->getCookieAccount();
+        $mClassHomeworkSend = ClsFactory::Create('Model.ClassHomework.mClassHomeworkSend');
+        $homeworksend_list = $mClassHomeworkSend->getHomeworkSendByAccount($client_account,null, $offset, $perpage);
+        
+        $homework_ids = array();
+        foreach((array)$homeworksend_list as $homework_send) {
+            $homework_ids[$homework_send['homework_id']] = $homework_send['homework_id'];
+        }
+        
         $wherearr = array();
+        $wherearr[] = "homework_id in('" . implode("','", (array)$homework_ids) . "')";
+        
         
         $wherearr[] = "class_code='$class_code'";
         
@@ -111,11 +125,11 @@ class PublishedAction extends SnsController {
             }
         }
         
-        $perpage = 10;
-        $offset = ($page -1) * $perpage;
         
         $mClassHomework = ClsFactory::Create('Model.ClassHomework.mClassHomework');
-        $homework_list = $mClassHomework->getClassHomework($wherearr, 'homework_id desc', $offset, $perpage);
+        $homework_list = $mClassHomework->getClassHomework($wherearr,'homework_id desc');
+        
+        
         $homework_list = $this->ConvertHomeworkInfos($homework_list);
         if($page == 1) {
             if($this->user['client_type'] == CLIENT_TYPE_STUDENT || $this->user['client_type'] == CLIENT_TYPE_FAMILY) {
@@ -125,6 +139,7 @@ class PublishedAction extends SnsController {
                 $activeApi->setactive($this->user['client_account'], 202, 23);
             }
         }
+        
         
         if(empty($homework_list)) {
            $this->ajaxReturn(null, '没有更多作业了!', -1, 'json');

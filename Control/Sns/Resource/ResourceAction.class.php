@@ -389,7 +389,7 @@ class ResourceAction extends SnsController{
      */
     public function synchroresource() {
         if (!in_array($this->getuserlevel($this->user ['client_account']), array(1,3))) {
-            $this->showError("你没有查看此类资源的权限", "/Homeuser/Index/spacehome/spaceid/" . $this->user['client_account']);
+            $this->showError("你没有查看此类资源的权限", '/Sns/HomePage/Index');
         }
         if(strtolower($_SERVER['REQUEST_METHOD']) == 'get') {
             $nav_str = $this->objInput->getStr('screening');

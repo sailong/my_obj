@@ -35,6 +35,11 @@ class ListAction extends SnsController {
                 $feed['can_del'] = false;
             }
             
+            $feed['can_replay'] = true;
+            if ($this->user['client_type'] == 2 && $feed['from_class_code'] > 0) {
+                $feed['can_replay'] = false;
+            }
+            
             $feed_list[$feed_id] = $feed;        
         }
         
@@ -148,6 +153,12 @@ class ListAction extends SnsController {
             if($feed['add_account'] == $this->user['client_account']) {
                 $feed['can_del'] = true;
             }
+            
+            $feed['can_replay'] = true;
+            if ($this->user['client_type'] == 2 && $feed['from_class_code'] > 0) {
+                $feed['can_replay'] = false;
+            }            
+            
             $feed_list[$feed_id] = $feed;
         }
         

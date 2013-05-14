@@ -59,7 +59,7 @@ class AccountsetAction extends UcController {
         //提交活跃度
         import('@.Control.Api.ActiveApi');
         $activeApi = new ActiveApi();
-        $activeApi->setactive($this->user['client_account'], 301, 18);
+        $activeApi->setactive($this->user['client_account'], 309, 18);
     	
     	empty($data) ? $this->ajaxReturn(null, '正确。', 1, 'JSON') : $this->ajaxReturn($data, '错误', -1, 'JSON');
     }

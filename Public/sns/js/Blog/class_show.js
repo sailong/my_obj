@@ -1,7 +1,13 @@
 
 function class_show(){
+	this.is_rely = $("#client_type").val();
 	this.hasNextPage = true;
-	this.init();
+	if(!this.is_rely) {
+		this.init();
+	}else{
+		$("#1st_comments_content").remove();
+		$(".reply_1st_selector").remove();
+	}
 	this.loadDatas(1);
 	this.deleteBlog();
 	this.nextPage();
@@ -126,6 +132,8 @@ class_show.prototype = {
 				}
 			}
 		});
+		
+		
 	}
 };
 
@@ -208,6 +216,7 @@ comment_1st_unit.prototype = {
 			aObj.data('click_nums', click_nums + 1);
 		});
 	}
+	
 };
 
 comment_1st_unit.create=function(comment) {

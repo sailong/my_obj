@@ -7,7 +7,7 @@ $redirect_url_list = array(
     //'ams' => '/Amscontrol/Amslogin/index',
     'ams' => '/Amscontrol/Index/index',
     'bms' => '/Basecontrol/Index/index',
-    'sns' => '/Homeuser/index',
+    'sns' => '/Sns/HomePage/Index',
     'wms' => '/Adminbase/Body/index',
 );
 

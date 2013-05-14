@@ -6,7 +6,8 @@ class sns_active extends BackGroundController {
     public function run($job, &$log) {
         $workload = $job->workload();
         $workload = unserialize($workload);
-        
+//        print_r("run ============================ \n");
+//        print_r($workload);
         $uid = $workload['uid'];
         $module = $workload['module'];
         $action = $workload['action'];
@@ -37,14 +38,18 @@ class sns_active extends BackGroundController {
                 
         $time = strtotime(date('Y-m-d'));
         $mActiveLog = ClsFactory::Create("Model.Active.mActiveLog");
-        
+//        print_r("\n isDailyLimit \n");
+//        print_r("uid = $uid \n");
+//        print_r("module = $module \n");
+//        print_r("action = $action \n");        
         $active_config = $this->getActiveConfig();
         //查看是否是一次性加分配置
         $is_once = $active_config['module'][$module][$action]['is_once'];
-        
+//        print_r("is_once = $is_once \n");   
         //一次性加分，则看是否已经加过，有记录则不需要在加分了
         if (!empty($is_once)) {
             $ActiveLog_list = $mActiveLog->getActive($uid, $module, $action);
+            print_r($ActiveLog_list);   
             if (empty($ActiveLog_list)) {
                 return true;
             }
@@ -62,6 +67,7 @@ class sns_active extends BackGroundController {
         
         //查找配置每天上限值
         $day_limit = $active_config['module'][$module][$action]['day_limit'];
+//        print_r("day_limit = $day_limit \n");
         if (empty($day_limit)) $day_limit = 0;
         $max = 0;
         foreach ($ActiveLog_list as $key => $value) {
@@ -69,7 +75,7 @@ class sns_active extends BackGroundController {
                 $max += (int)$value['value'];
             }
         }
-
+//        print_r("max = $max \n");
         return $max >=  (int)$day_limit ? false : true;
     }    
     
@@ -140,8 +146,7 @@ class sns_active extends BackGroundController {
         }
         
     }
-        
-    
+
     /**
      * 学生操作活跃度加分，关联的班主任也相应加分，设计操作是  激活帐号和完善个人资料
      * @param string $uid     用户帐号
@@ -158,29 +163,32 @@ class sns_active extends BackGroundController {
         if($client_type == 1) {
             return false;
         }
+        C(include_once WEB_ROOT_DIR . '/Config/SnsActive/config.php');
+        $can_active_list = C('active_list');
+        $header_teacher = $can_active_list['header_teacher'];
         
-        //可以关联加分的模块： 301 完善个人资料
-        $can_modules = array(101=>'激活帐号', 301=>'完善个人资料');
         
+        if (!isset($header_teacher[$module])) return false;
+        if (!isset($header_teacher[$module][$client_type])) return false;
+//        print_r($header_teacher);
+
         //可以关联加分的操作: 21 激活帐号
-        $can_actions = array(21=>'激活帐号');
-//        print_r(" isset action =  " .isset($can_actions[$action]) . "\n");
-//        print_r(" isset module =  " .isset($can_modules[$module]). "\n");
-        if ( isset($can_actions[$action]) || isset($can_modules[$module]) ) {
-            $class_code = key($current_user_info[$uid]["client_class"]);
-//            print_r("class_code = $class_code \n");
-            //找到班主任帐号
-            $mClassInfo = ClsFactory::Create("RModel.Common.mHashClass");
-            $ClassInfo = $mClassInfo->getClassById($class_code);
-            $headteacher_account = $ClassInfo['headteacher_account'];
-//            print_r("headteacher_account = $headteacher_account \n");
-            
-            $module = $module == 301 ? 307 :$module;        
-            $action = $action == 21 && $client_type == 0 ? 25 : $action;
-            $action = $action == 21 && $client_type == 1 ? 26 : $action;
-    
-            $this->addActiveinfo($headteacher_account, $module, $action);
+        $class_code = key($current_user_info[$uid]["client_class"]);
+//        print_r("class_code = $class_code \n");
+        //找到班主任帐号
+        $mClassInfo = ClsFactory::Create("RModel.Common.mHashClass");
+        $ClassInfo = $mClassInfo->getClassById($class_code);
+        $headteacher_account = $ClassInfo['headteacher_account'];
+         
+        $relation_acitve_list =  $header_teacher[$module][$client_type];
+
+        
+        foreach ($relation_acitve_list as $key=>$value) {
+            $module = $key;
+            $action = $value;
         }
+        
+        $this->addActiveinfo($headteacher_account, $module, $action);
     }
 
     /**

@@ -21,6 +21,11 @@ class ContentAction extends SnsController {
         $user_info = reset($mUser->getUserBaseByUid($add_account));
         $mBlog = ClsFactory::Create();
         $blog_info["add_time"] = Date::timestamp($blog_info["add_time"]);
+        if($this->user['client_type'] == CLIENT_TYPE_FAMILY) {
+            $client_type = true;
+        } 
+        
+        $this->assign('client_type',$client_type);
         $this->assign("add_blog_client_name", $user_info['client_name']);
         $this->assign("head_pic_url_", $user_info["client_headimg_url"]);
         $this->assign("blog_info", $blog_info);

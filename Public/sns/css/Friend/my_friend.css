@@ -28,9 +28,9 @@
 		.per_right_tab{width:680px; border-bottom:1px #ccc dashed; padding:0px 10px 10px; margin-bottom:10px;}
 			.photo_width{width:70px;}
 				.photo_width img{width:60px; height:60px;}
-			.mail_btn{background:url(../../images/Friend/my_friend/mail_btn.gif) 0 0 no-repeat; width:44px; height:18px; display:inline-block;cursor:pointer; font:13px "宋体"; color:#fff; padding:5px 0px 0px 30px;}
+			.mail_btn{background:url(../../images/Friend/my_friend/mail_btn.gif) 0 0 no-repeat; height:23px; display:inline-block;cursor:pointer; color:#fff; font:13px/23px "宋体";text-align:center;padding-left:20px;width:54px;}
 			.mail_btn:hover{text-decoration:none;}
-			.yj_green_btn{background:url(../../images/Friend/my_friend/yj_green_btn.gif) 0 0 no-repeat; width:74px; height:23px;line-height:26px; border:none; cursor:pointer; color:#fff;}
+			.yj_green_btn{background:url(../../images/Friend/my_friend/yj_green_btn.gif) 0 0 no-repeat; width:74px; height:23px;font:13px/23px "宋体";text-align:center; border:none; cursor:pointer; color:#fff;display:inline-block;}
 			.mr10{margin-right:10px;}
 			
 				.pull_down span{float:left; cursor:pointer; color:#464646;}

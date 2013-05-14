@@ -28,7 +28,7 @@ class PublishAction extends SnsController {
         //验证班级信息
         $class_code = $this->checkoutClassCode($class_code);
         if(empty($class_code)) {
-            $this->showError('班级信息不存在!', '/Homeuser/Index/spacehome/spaceid/' . $this->user['client_account']);
+            $this->showError('班级信息不存在!', '/Sns/HomePage/Index');
         }
         
         //验证是否有发布权限（只有家长没有发布权限）

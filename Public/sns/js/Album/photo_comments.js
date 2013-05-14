@@ -19,7 +19,7 @@ function sendCommentBox(sendOptions){
 		//表单的提交类型，建议使用post的方式，支持(get, post)
 		type:'post',
 		//表单提交到的位置
-		url:'/Sns/Album/PhotoComments/publishPhotoCommentsAjax',
+		url:'/Sns/Album/Photocomments/publishPhotoCommentsAjax',
 		//数据返回格式，支持：json,html等数据格式，于success回调函数的数据格式保持一致
 		data:paramData,
 		dataType:'json',
@@ -48,9 +48,14 @@ function class_show(){
 	this.is_edit = $("#is_edit").val();
 	this.img_server = $("#img_server").val();
 	$('#comment_list_div').data('is_edit',this.is_edit);
+	this.is_reply = $("#is_reply").val();
 	this.cacheSendBox = {};
-	this.attachEventDefine();
 	this.delegateEvent();
+	if(!this.is_reply) {
+		$("#photo_comments").remove();
+		$(".reply_1st_selector").remove();
+	}
+	this.attachEventDefine();
 };
 class_show.create=function(comment_list,sort_key) {
 	comment_list = comment_list || {};
@@ -79,7 +84,7 @@ class_show.delComment=function(obj) {
 	$.ajax({
 		type:"get",
 		dataType:"json",
-		url:"/Sns/Album/PhotoComments/deletePhotoCommentsAjax/comment_id/"+comment_id,
+		url:"/Sns/Album/Photocomments/deletePhotoCommentsAjax/comment_id/"+comment_id,
 		success:function(json) {
 			if(json.status < 0) {
 				$.showError('操作失败');

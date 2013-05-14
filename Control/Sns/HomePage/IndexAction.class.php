@@ -7,12 +7,18 @@ class IndexAction extends SnsController{
     public function index() {
         $client_account = $this->user['client_account'];
         $class_code = $this->objInput->getInt('class_code');
+        
         if(empty($class_code)) {
             $class_code = key($this->user['class_info']);
         }
-        if(!in_array($class_code,array_keys($this->user['class_info']))) {
-            $this->showError('操作错误','/Sns/HomePage/Index');
+        
+        if(!empty($class_code)) {
+	        if(!in_array($class_code,array_keys($this->user['class_info']))) {
+	        	$this->showError('操作错误','/Sns/HomePage/Index');
+	        }
         }
+        
+        
         //日期
         $today_date = date('m.d',time());
         //星期

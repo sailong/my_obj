@@ -111,7 +111,7 @@ class UploadphotoAction extends SnsController {
     	         //提交活跃度
                 import('@.Control.Api.ActiveApi');
                 $activeApi = new ActiveApi();
-                $activeApi->setactive($uid, 301, 14);
+                $activeApi->setactive($uid, 307, 14);
     	        
     	        $fp = fopen(WEB_ROOT_DIR.'/er.txt', 'a+');
     	        fwrite($fp, $dataarr['img_path']);

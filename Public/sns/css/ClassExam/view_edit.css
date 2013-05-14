@@ -83,14 +83,14 @@
 			   .library_right_commmet ul li{background:url(../../images/ClassExam/view_edit/icon_square.gif) left center no-repeat;height:32px; line-height:32px; border-bottom:1px #e8e7e7 dashed;}
 			   .library_right_commmet ul li a{margin-left:10px; color:#464646; display:inline-block; line-height:12px;}
 			   
-			   .library_right_commmet ul li .width_logn{width:540px; display:inline-block;}
+			   .library_right_commmet ul li .width_logn{width:520px; display:inline-block;}
 			   .library_right_commmet ul li a:hover{color:#3a8a00;}
 			   
 /*我收藏的评语*/
 .comment_p{padding:8px 20px; background:#f7f7f7; font:14px "微软雅黑"; height:16px; width:600px;}
 	.comment_p p{float:left; width:500px;}		
 	.comment_p span{float:right; display:block;}	   
-	.right_comment_width ul li .width_logn{width:566px;}				
+	.right_comment_width ul li .width_logn{width:520px;}				
 				
 				
 				

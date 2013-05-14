@@ -34,7 +34,7 @@ class PublishAction extends SnsController{
         //检查班级code
         $class_code = $this->checkoutClassCode($class_code);
         if(empty($class_code)) {
-            $this->showError('班级信息不存在!', '/Homeuser/Index/spacehome/spaceid/' . $this->user['client_account']);
+            $this->showError('班级信息不存在!', '/Sns/HomePage/Index');
         }
 
         //判断用户是否有发布成绩的权限
@@ -124,7 +124,7 @@ class PublishAction extends SnsController{
         
         $class_code = $this->checkoutClassCode($class_code);
         if(empty($class_code)) {
-            $this->showError('班级信息不存在!', '/Homeuser/Index/spacehome/spaceid/' . $this->user['client_account']);
+            $this->showError('班级信息不存在!', '/Sns/HomePage/Index');
         }
         //权限判断
         if(!$this->canPublishExam($class_code)){
@@ -401,13 +401,13 @@ class PublishAction extends SnsController{
         
         $class_code = $this->checkoutClassCode($class_code);
         if(empty($class_code)) {
-            $this->showError('班级信息不存在!', '/Homeuser/Index/spacehome/spaceid/' . $this->user['client_account']);
+            $this->showError('班级信息不存在!', '/Sns/HomePage/Index');
         }
 
         //验证是否具有权限
         $can_pulish = $this->canPublishExam($class_code);
         if(empty($can_pulish)) {
-            $this->showError('您没有权限下载模板!', '/Homeuser/Index/spacehome/spaceid/' . $this->user['client_account']);
+            $this->showError('您没有权限下载模板!', '/Sns/HomePage/Index');
         }
 
         //临时文件的命名规则和class_code相关: exam_excel_{$class_code}
@@ -507,6 +507,8 @@ class PublishAction extends SnsController{
         //保证输出的顺序一致
         $new_score_list = array();
         $num_id = 1;
+        
+        import('@.Common_wmw.WmwString');
         if(!empty($student_list)) {
             foreach($student_list as $uid=>$student) {
                 if(isset($score_list[$uid])) {

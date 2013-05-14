@@ -11,9 +11,9 @@ class IndexAction extends SnsController {
         
         //todolist 跳转到个人空间
         $class_code = $this->checkoutClassCode($class_code);
-        
+
         if(empty($class_code)) {
-            $this->showError('您暂时不能进入班级空间!', '/Sns/');
+            $this->showError('班级信息不存在!', '/Sns/HomePage/Index');
         }
         
         $this->assign('user', $this->user);
